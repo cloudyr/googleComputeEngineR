@@ -1,0 +1,13 @@
+language: r
+cache: packages
+notifications:
+  slack: edmondsons:kgTokxui4ZzTsqdD19tCoozf
+  email:
+    on_success: change
+    on_failure: change
+r_packages:
+- knitr
+- covr
+- drat
+after_success:
+- Rscript -e 'library("covr");codecov()'

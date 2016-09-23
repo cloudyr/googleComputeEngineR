@@ -1,0 +1,23 @@
+Package: googleComputeEngineR
+Type: Package
+Version: 0.0.9000
+Title: R Interface with Google Compute Engine
+Description: Interact with Google Compute Engine API in R.
+Authors@R: c(person("Mark", "Edmondson",email = "r@sunholo.com",
+                  role = c("aut", "cre")))
+URL: http://code.markedmondson.me/googleComputeEngineR/
+BugReports: https://github.com/cloudyr/googleComputeEngineR/issues
+Depends:
+    R (>= 3.3.0)
+Imports:
+    googleAuthR (>= 0.4.0),
+    testthat(>= 1.0.2)
+Suggests:
+    knitr,
+    covr,
+    rmarkdown,
+    testthat
+License: MIT + file LICENSE
+LazyData: true
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
