@@ -11,3 +11,8 @@ r_packages:
 - drat
 after_success:
 - Rscript -e 'library("covr");codecov()'
+before_install:
+- openssl aes-256-cbc -K $encrypted_440eac6d6480_key -iv $encrypted_440eac6d6480_iv
+  -in auth.json.enc -out auth.json -d
+- openssl aes-256-cbc -K $encrypted_440eac6d6480_key -iv $encrypted_440eac6d6480_iv
+  -in auth.json.enc -out tests/testthat/auth.json -d
