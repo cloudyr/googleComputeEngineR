@@ -12,18 +12,20 @@
 #' }
 #' 
 #' 
-#' @param project Project ID for this request
-#' @param zone The name of the zone for this request
+
 #' @param filter Sets a filter expression for filtering listed resources, in the form filter={expression}
 #' @param maxResults The maximum number of results per page that should be returned
 #' @param pageToken Specifies a page token to use
+#' @param project Project ID for this request
+#' @param zone The name of the zone for this request
+#' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_list_instances <- function(project, 
-                               zone, 
-                               filter = NULL, 
+gce_list_instances <- function(filter = NULL, 
                                maxResults = NULL, 
-                               pageToken = NULL) {
+                               pageToken = NULL,
+                               project = gcs_get_global_project(), 
+                               zone = gcs_get_global_zone()) {
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
   pars <- list(filter = filter, 
@@ -53,17 +55,18 @@ gce_list_instances <- function(project,
 #' }
 #' 
 #' 
-#' @param project Project ID for this request
-#' @param zone The name of the zone for this request
-#' @param instance Name of the instance resource to return
+#' @param instance Name of the instance resource
+#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_instance <- function(project, 
-                             zone, 
-                             instance) {
+gce_get_instance <- function(instance,
+                             project = gcs_get_global_project(), 
+                             zone = gcs_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
-                 instance, project, zone)
+                 project, zone, instance)
   # compute.instances.get
   f <- gar_api_generator(url, 
                          "GET", 
@@ -103,19 +106,19 @@ InstancesSetMachineTypeRequest <- function(machineType = NULL) {
 #' }
 #' 
 #' @param machineType Full or partial URL of the machine type resource
-#' @param project Project ID for this request
-#' @param zone The name of the zone for this request
-#' @param instance Name of the instance scoping this request
+#' @param instance Name of the instance resource to stop
+#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
 #' @importFrom googleAuthR gar_api_generator
 #' @family InstancesSetMachineTypeRequest functions
 #' @export
 gce_set_machinetype <- function(machineType, 
-                                     project, 
-                                     zone, 
-                                     instance) {
+                                instance,
+                                project = gcs_get_global_project(), 
+                                zone = gcs_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMachineType", 
-                 instance, project, zone)
+                 project, zone, instance)
   
   the_machine <- InstancesSetMachineTypeRequest(machineType = machineType)
   # compute.instances.setMachineType

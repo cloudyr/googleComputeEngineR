@@ -19,7 +19,7 @@
 #' @param project Project ID for this request
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_project <- function(project) {
+gce_get_project <- function(project = gcs_get_global_project()) {
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s", project)
   # compute.projects.get
   f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
@@ -44,7 +44,7 @@ gce_get_project <- function(project) {
 #' @return The project name (invisibly)
 #'
 #' @export
-gce_global_project <- function(project){
+gce_global_project <- function(project = gcs_get_global_project()){
   
   if(inherits(project, "gce_project")){
     project <- project$name

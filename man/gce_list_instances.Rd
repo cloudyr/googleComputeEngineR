@@ -4,19 +4,19 @@
 \alias{gce_list_instances}
 \title{Retrieves the list of instances contained within the specified zone.}
 \usage{
-gce_list_instances(project, zone, filter = NULL, maxResults = NULL,
-  pageToken = NULL)
+gce_list_instances(filter = NULL, maxResults = NULL, pageToken = NULL,
+  project = gcs_get_global_project(), zone = gcs_get_global_zone())
 }
 \arguments{
-\item{project}{Project ID for this request}
-
-\item{zone}{The name of the zone for this request}
-
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}
 
 \item{maxResults}{The maximum number of results per page that should be returned}
 
 \item{pageToken}{Specifies a page token to use}
+
+\item{project}{Project ID for this request}
+
+\item{zone}{The name of the zone for this request}
 }
 \description{
 Retrieves the list of instances contained within the specified zone.

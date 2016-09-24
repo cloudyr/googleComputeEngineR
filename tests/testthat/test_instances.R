@@ -30,13 +30,13 @@ test_that("We list instances", {
   
 })
 
-# test_that("We can get an instance", {
-#   skip_on_cran()
-#   
-#   the_inst <- gce_get_instance(project = "mark-edmondson-gde",
-#                                zone = "europe-west1-b",
-#                                instance = "mc-server")
-#   
-#   expect_equal(the_list$kind, "compute#instanceList")
-#   
-# })
+test_that("We can get an instance", {
+  skip_on_cran()
+
+  the_inst <- gce_get_instance(project = "mark-edmondson-gde",
+                               zone = "europe-west1-b",
+                               instance = "mc-server")
+
+  expect_equal(the_inst$kind, "compute#instance")
+
+})

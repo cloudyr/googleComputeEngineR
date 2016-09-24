@@ -4,16 +4,17 @@
 \alias{gce_set_machinetype}
 \title{Changes the machine type for a stopped instance to the machine type specified in the request.}
 \usage{
-gce_set_machinetype(machineType, project, zone, instance)
+gce_set_machinetype(machineType, instance, project = gcs_get_global_project(),
+  zone = gcs_get_global_zone())
 }
 \arguments{
 \item{machineType}{Full or partial URL of the machine type resource}
 
-\item{project}{Project ID for this request}
+\item{instance}{Name of the instance resource to stop}
 
-\item{zone}{The name of the zone for this request}
+\item{project}{Project ID for this request, default as set by \link{gcs_get_global_project()}}
 
-\item{instance}{Name of the instance scoping this request}
+\item{zone}{The name of the zone for this request, default as set by \link{gcs_get_global_zone()}}
 }
 \description{
 Changes the machine type for a stopped instance to the machine type specified in the request.

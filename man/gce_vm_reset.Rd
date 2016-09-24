@@ -4,14 +4,15 @@
 \alias{gce_vm_reset}
 \title{Performs a hard reset on the instance.}
 \usage{
-gce_vm_reset(project, zone, instance)
+gce_vm_reset(instance, project = gcs_get_global_project(),
+  zone = gcs_get_global_zone())
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{instance}{Name of the instance resource}
 
-\item{zone}{The name of the zone for this request}
+\item{project}{Project ID for this request, default as set by \link{gcs_get_global_project()}}
 
-\item{instance}{Name of the instance scoping this request}
+\item{zone}{The name of the zone for this request, default as set by \link{gcs_get_global_zone()}}
 }
 \description{
 Performs a hard reset on the instance.

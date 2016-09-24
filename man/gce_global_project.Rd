@@ -4,7 +4,7 @@
 \alias{gce_global_project}
 \title{Set global project name}
 \usage{
-gce_global_project(project)
+gce_global_project(project = gcs_get_global_project())
 }
 \arguments{
 \item{project}{project name you want this session to use by default, or a project object}

@@ -4,14 +4,15 @@
 \alias{gce_get_instance}
 \title{Returns the specified Instance resource.}
 \usage{
-gce_get_instance(project, zone, instance)
+gce_get_instance(instance, project = gcs_get_global_project(),
+  zone = gcs_get_global_zone())
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{instance}{Name of the instance resource}
 
-\item{zone}{The name of the zone for this request}
+\item{project}{Project ID for this request, default as set by \link{gcs_get_global_project()}}
 
-\item{instance}{Name of the instance resource to return}
+\item{zone}{The name of the zone for this request, default as set by \link{gcs_get_global_zone()}}
 }
 \description{
 Returns the specified Instance resource.

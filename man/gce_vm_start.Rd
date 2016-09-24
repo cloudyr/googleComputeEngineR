@@ -4,14 +4,15 @@
 \alias{gce_vm_start}
 \title{Starts an instance that was stopped using the using the instances().stop method.}
 \usage{
-gce_vm_start(project, zone, instance)
+gce_vm_start(instance, project = gcs_get_global_project(),
+  zone = gcs_get_global_zone())
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{instance}{Name of the instance resource}
 
-\item{zone}{The name of the zone for this request}
+\item{project}{Project ID for this request, default as set by \link{gcs_get_global_project()}}
 
-\item{instance}{Name of the instance resource to start}
+\item{zone}{The name of the zone for this request, default as set by \link{gcs_get_global_zone()}}
 }
 \description{
 Starts an instance that was stopped using the using the instances().stop method.

@@ -4,14 +4,15 @@
 \alias{gce_vm_stop}
 \title{Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time.}
 \usage{
-gce_vm_stop(project, zone, instance)
+gce_vm_stop(instance, project = gcs_get_global_project(),
+  zone = gcs_get_global_zone())
 }
 \arguments{
-\item{project}{Project ID for this request}
-
-\item{zone}{The name of the zone for this request}
-
 \item{instance}{Name of the instance resource to stop}
+
+\item{project}{Project ID for this request, default as set by \link{gcs_get_global_project()}}
+
+\item{zone}{The name of the zone for this request, default as set by \link{gcs_get_global_zone()}}
 }
 \description{
 Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time.
