@@ -28,6 +28,6 @@ Authentication scopes used by this function are:
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 
-Other InstancesSetMachineTypeRequest.functions: \code{\link{InstancesSetMachineTypeRequest}}
+Other InstancesSetMachineTypeRequest functions: \code{\link{InstancesSetMachineTypeRequest}}
 }
 

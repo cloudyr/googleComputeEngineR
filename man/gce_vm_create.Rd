@@ -51,6 +51,6 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 
-Other Instance.functions: \code{\link{Instance}}
+Other Instance functions: \code{\link{Instance}}
 }
 

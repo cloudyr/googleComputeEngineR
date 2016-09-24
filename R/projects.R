@@ -1,3 +1,7 @@
+## store bucket name
+.gce_env <- new.env(parent = emptyenv())
+
+
 #' Returns the specified Project resource.
 #' 
 #' 
@@ -19,6 +23,60 @@ gce_get_project <- function(project) {
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s", project)
   # compute.projects.get
   f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
-  f()
+  
+  proj <- f()
+  
+  structure(proj, class = "gce_project")
   
 }
+
+
+#' Set global project name
+#'
+#' Set a project name used for this R session
+#'
+#' @param project project name you want this session to use by default, or a project object
+#'
+#' @details
+#'   This sets a project to a global environment value so you don't need to
+#' supply the project argument to other API calls.
+#'
+#' @return The project name (invisibly)
+#'
+#' @export
+gce_global_project <- function(project){
+  
+  if(inherits(project, "gce_project")){
+    project <- project$name
+  }
+  
+  stopifnot(inherits(project, "character"),
+            length(project) == 1)
+  
+  .gce_env$project <- project
+  message("Set default project name to '", project,"'")
+  return(invisible(.gce_env$project))
+  
+}
+
+#' Get global project name
+#'
+#' Project name set this session to use by default
+#'
+#' @return Project name
+#'
+#' @details
+#'   Set the project name via \link{gcs_global_project}
+#'
+#' @family project functions
+#' @export
+gcs_get_global_project <- function(){
+  
+  if(!exists("project", envir = .gce_env)){
+    stop("Project is NULL and couldn't find global project name.
+         Set it via gcs_global_project")
+  }
+  
+  .gce_env$project
+  
+  }

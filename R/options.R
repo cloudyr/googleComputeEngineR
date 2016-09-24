@@ -23,10 +23,15 @@
     options(googleAuthR.webapp.client_id = Sys.getenv("GCE_WEB_CLIENT_SECRET"))
   }
   
-  # if(Sys.getenv("GCE_DEFAULT_BUCKET") != ""){
-  #   .gcs_env$bucket <- Sys.getenv("GCS_DEFAULT_BUCKET")
-  #   packageStartupMessage("Set default bucket name to '", Sys.getenv("GCS_DEFAULT_BUCKET"),"'")
-  # }
+  if(Sys.getenv("GCE_DEFAULT_PROJECT") != ""){
+    .gce_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT")
+    packageStartupMessage("Set default project name to '", Sys.getenv("GCE_DEFAULT_PROJECT"),"'")
+  }
+  
+  if(Sys.getenv("GCE_DEFAULT_ZONE") != ""){
+    .gce_env$zone <- Sys.getenv("GCE_DEFAULT_ZONE")
+    packageStartupMessage("Set default zone to '", Sys.getenv("GCE_DEFAULT_ZONE"),"'")
+  }
   
   invisible()
   

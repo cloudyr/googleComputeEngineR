@@ -40,7 +40,7 @@ Instance Object
 An Instance resource.
 }
 \seealso{
-Other Instance.functions: \code{\link{gce_vm_create}}
+Other Instance functions: \code{\link{gce_vm_create}}
 }
 \keyword{internal}
 

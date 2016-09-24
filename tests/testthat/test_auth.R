@@ -18,3 +18,11 @@ test_that("We can see a project resource", {
   
 })
 
+context("Auto projects")
+
+test_that("We can set auto project", {
+  
+  
+  
+})
+

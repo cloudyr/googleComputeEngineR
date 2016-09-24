@@ -25,7 +25,9 @@ gce_get_zone <- function(project,
   f <- gar_api_generator(url, 
                          "GET", 
                          data_parse_function = function(x) x)
-  f()
+  zone <- f()
+  
+  structure(zone, class = "gce_zone")
   
 }
 
@@ -77,4 +79,52 @@ gce_list_zones <- function(project,
 }
 
 
+#' Set global zone name
+#'
+#' Set a zone name used for this R session
+#'
+#' @param zone zone name you want this session to use by default, or a zone object
+#'
+#' @details
+#'   This sets a zone to a global environment value so you don't need to
+#' supply the zone argument to other API calls.
+#'
+#' @return The zone name (invisibly)
+#'
+#' @export
+gce_global_zone <- function(zone){
+  
+  if(inherits(zone, "gce_zone")){
+    zone <- zone$name
+  }
+  
+  stopifnot(inherits(zone, "character"),
+            length(zone) == 1)
+  
+  .gce_env$zone <- zone
+  message("Set default zone name to '", zone,"'")
+  return(invisible(.gce_env$zone))
+  
+}
 
+#' Get global zone name
+#'
+#' zone name set this session to use by default
+#'
+#' @return zone name
+#'
+#' @details
+#'   Set the zone name via \link{gcs_global_zone}
+#'
+#' @family zone functions
+#' @export
+gcs_get_global_zone <- function(){
+  
+  if(!exists("zone", envir = .gce_env)){
+    stop("zone is NULL and couldn't find global zone name.
+         Set it via gcs_global_zone")
+  }
+  
+  .gce_env$zone
+  
+  }
