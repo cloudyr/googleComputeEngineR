@@ -7,8 +7,8 @@
 gce_vm_create(canIpForward = NULL, description = NULL, disks = NULL,
   machineType = NULL, metadata = NULL, name = NULL,
   networkInterfaces = NULL, scheduling = NULL, serviceAccounts = NULL,
-  tags = NULL, project = gcs_get_global_project(),
-  zone = gcs_get_global_zone())
+  tags = NULL, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}

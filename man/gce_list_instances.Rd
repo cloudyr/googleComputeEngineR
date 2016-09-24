@@ -5,7 +5,7 @@
 \title{Retrieves the list of instances contained within the specified zone.}
 \usage{
 gce_list_instances(filter = NULL, maxResults = NULL, pageToken = NULL,
-  project = gcs_get_global_project(), zone = gcs_get_global_zone())
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}

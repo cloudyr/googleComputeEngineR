@@ -57,14 +57,14 @@ Instance <- function(canIpForward = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_delete <- function(instance,
-                          project = gcs_get_global_project(), 
-                          zone = gcs_get_global_zone() 
+                          project = gce_get_global_project(), 
+                          zone = gce_get_global_zone() 
                           ) {
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
                  project, zone, instance)
@@ -107,8 +107,8 @@ gce_vm_create <- function(canIpForward = NULL,
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
                           tags = NULL,
-                          project = gcs_get_global_project(), 
-                          zone = gcs_get_global_zone()) {
+                          project = gce_get_global_project(), 
+                          zone = gce_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
@@ -148,13 +148,13 @@ gce_vm_create <- function(canIpForward = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_reset <- function(instance,
-                         project = gcs_get_global_project(), 
-                         zone = gcs_get_global_zone()) {
+                         project = gce_get_global_project(), 
+                         zone = gce_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/reset", 
                  project, zone, instance)
@@ -183,13 +183,13 @@ gce_vm_reset <- function(instance,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_start <- function(instance,
-                         project = gcs_get_global_project(), 
-                         zone = gcs_get_global_zone()
+                         project = gce_get_global_project(), 
+                         zone = gce_get_global_zone()
                          ) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/start", 
@@ -219,14 +219,14 @@ gce_vm_start <- function(instance,
 #'   will continue to be charged until they are deleted.
 #'   
 #' @param instance Name of the instance resource to stop
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_stop <- function(instance,
-                        project = gcs_get_global_project(), 
-                        zone = gcs_get_global_zone() 
+                        project = gce_get_global_project(), 
+                        zone = gce_get_global_zone() 
                         ) {
   
   url <- 

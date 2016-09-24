@@ -24,8 +24,8 @@
 gce_list_instances <- function(filter = NULL, 
                                maxResults = NULL, 
                                pageToken = NULL,
-                               project = gcs_get_global_project(), 
-                               zone = gcs_get_global_zone()) {
+                               project = gce_get_global_project(), 
+                               zone = gce_get_global_zone()) {
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
   pars <- list(filter = filter, 
@@ -56,14 +56,14 @@ gce_list_instances <- function(filter = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_get_instance <- function(instance,
-                             project = gcs_get_global_project(), 
-                             zone = gcs_get_global_zone()) {
+                             project = gce_get_global_project(), 
+                             zone = gce_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
                  project, zone, instance)
@@ -107,15 +107,15 @@ InstancesSetMachineTypeRequest <- function(machineType = NULL) {
 #' 
 #' @param machineType Full or partial URL of the machine type resource
 #' @param instance Name of the instance resource to stop
-#' @param project Project ID for this request, default as set by \link{gcs_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gcs_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
 #' @importFrom googleAuthR gar_api_generator
 #' @family InstancesSetMachineTypeRequest functions
 #' @export
 gce_set_machinetype <- function(machineType, 
                                 instance,
-                                project = gcs_get_global_project(), 
-                                zone = gcs_get_global_zone()) {
+                                project = gce_get_global_project(), 
+                                zone = gce_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMachineType", 
                  project, zone, instance)
