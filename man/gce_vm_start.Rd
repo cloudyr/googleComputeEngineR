@@ -10,9 +10,9 @@ gce_vm_start(instance, project = gce_get_global_project(),
 \arguments{
 \item{instance}{Name of the instance resource}
 
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project()}}
+\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone()}}
+\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \description{
 Starts an instance that was stopped using the using the instances().stop method.

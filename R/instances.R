@@ -57,8 +57,8 @@ Instance <- function(canIpForward = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
@@ -148,8 +148,8 @@ gce_vm_create <- function(canIpForward = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_reset <- function(instance,
@@ -183,8 +183,8 @@ gce_vm_reset <- function(instance,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_start <- function(instance,
@@ -219,8 +219,8 @@ gce_vm_start <- function(instance,
 #'   will continue to be charged until they are deleted.
 #'   
 #' @param instance Name of the instance resource to stop
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export

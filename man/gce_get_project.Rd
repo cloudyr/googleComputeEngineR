@@ -4,7 +4,7 @@
 \alias{gce_get_project}
 \title{Returns the specified Project resource.}
 \usage{
-gce_get_project(project = gcs_get_global_project())
+gce_get_project(project = gce_get_global_project())
 }
 \arguments{
 \item{project}{Project ID for this request}

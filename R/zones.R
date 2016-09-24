@@ -114,15 +114,15 @@ gce_global_zone <- function(zone){
 #' @return zone name
 #'
 #' @details
-#'   Set the zone name via \link{gcs_global_zone}
+#'   Set the zone name via \link{gce_global_zone}
 #'
 #' @family zone functions
 #' @export
-gcs_get_global_zone <- function(){
+gce_get_global_zone <- function(){
   
   if(!exists("zone", envir = .gce_env)){
     stop("zone is NULL and couldn't find global zone name.
-         Set it via gcs_global_zone")
+         Set it via gce_global_zone")
   }
   
   .gce_env$zone

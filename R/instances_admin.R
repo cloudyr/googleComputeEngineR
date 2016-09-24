@@ -56,8 +56,8 @@ gce_list_instances <- function(filter = NULL,
 #' 
 #' 
 #' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
@@ -107,8 +107,8 @@ InstancesSetMachineTypeRequest <- function(machineType = NULL) {
 #' 
 #' @param machineType Full or partial URL of the machine type resource
 #' @param instance Name of the instance resource to stop
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project()}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone()}
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
 #' @family InstancesSetMachineTypeRequest functions
 #' @export

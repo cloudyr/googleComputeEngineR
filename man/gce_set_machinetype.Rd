@@ -12,9 +12,9 @@ gce_set_machinetype(machineType, instance, project = gce_get_global_project(),
 
 \item{instance}{Name of the instance resource to stop}
 
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project()}}
+\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone()}}
+\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \description{
 Changes the machine type for a stopped instance to the machine type specified in the request.
