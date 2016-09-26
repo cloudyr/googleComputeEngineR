@@ -7,9 +7,9 @@
 gce_check_zone_op(job_name, wait = 3)
 }
 \arguments{
-\item{wait}{Time in seconds between checks, default 3 seconds.}
+\item{job_name}{The job name}
 
-\item{The}{job name}
+\item{wait}{Time in seconds between checks, default 3 seconds.}
 }
 \value{
 The completed job object, invisibly

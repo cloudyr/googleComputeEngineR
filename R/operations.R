@@ -104,7 +104,7 @@ gce_list_zone_op <- function(filter = NULL,
 #' 
 #' Will periodically check an operation until it is "DONE"
 #' 
-#' @param The job name
+#' @param job_name The job name
 #' @param wait Time in seconds between checks, default 3 seconds.
 #' 
 #' @return The completed job object, invisibly
