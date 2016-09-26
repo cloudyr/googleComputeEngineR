@@ -40,4 +40,26 @@ test_that("We can get auto project", {
   
 })
 
+context("Auto Zone")
+
+test_that("We can set auto zones", {
+  skip_on_cran()
+  
+  z <- gce_global_zone("europe-west1-a")
+  expect_equal(z, "europe-west1-a")
+  
+  z <- gce_global_zone("europe-west1-b")
+  expect_equal(z, "europe-west1-b")
+  
+})
+
+test_that("We can get auto zone", {
+  skip_on_cran()
+  
+  proj <- gce_get_global_zone()
+  
+  expect_equal(proj, "mark-edmondson-gde")
+  
+})
+
 
