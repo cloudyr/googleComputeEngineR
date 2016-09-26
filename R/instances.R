@@ -169,7 +169,7 @@ gce_vm_reset <- function(instance,
 
 
 
-#' Starts an instance that was stopped using the using the instances().stop method.
+#' Starts an instance that was stopped using the using the stop method.
 #' 
 #' 
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
@@ -185,6 +185,9 @@ gce_vm_reset <- function(instance,
 #' @param instance Name of the instance resource
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' 
+#' @return An Operation object with pending status
+#' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_start <- function(instance,

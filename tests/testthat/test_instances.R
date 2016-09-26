@@ -40,3 +40,64 @@ test_that("We can get an instance", {
   expect_equal(the_inst$kind, "compute#instance")
 
 })
+
+context("Start up cycle")
+
+test_that("We can start an instance", {
+  skip_on_cran()
+  
+  job <- gce_vm_start("markdev")
+  
+  expect_equal(job$kind, "compute#operation")
+  
+  gce_check_zone_op(job$name)
+  
+  cat("\nmarkdev VM started")
+  inst <- gce_get_instance("markdev")
+  
+  expect_equal(inst$status, "RUNNING")
+  
+})
+
+
+
+test_that("We list operation jobs", {
+  skip_on_cran()
+  
+  jobs <- gce_list_zone_op()
+  expect_equal(jobs$kind, "compute#operationList")
+  
+})
+
+test_that("We can reset a VM", {
+  skip_on_cran()
+  Sys.sleep(20)
+  job <- gce_vm_reset("markdev")
+  
+  expect_equal(job$kind, "compute#operation")
+  
+  gce_check_zone_op(job$name, wait = 20)
+  
+  cat("\nmarkdev VM reset")
+  inst <- gce_get_instance("markdev")
+  
+  expect_equal(inst$status, "RUNNING")
+  
+})
+
+test_that("We can stop a VM", {
+  skip_on_cran()
+  Sys.sleep(20)
+  job <- gce_vm_stop("markdev")
+  
+  expect_equal(job$kind, "compute#operation")
+  
+  gce_check_zone_op(job$name, wait = 20)
+  
+  cat("\nmarkdev VM stopped")
+  inst <- gce_get_instance("markdev")
+  
+  expect_equal(inst$status, "TERMINATED")
+  
+  
+})
