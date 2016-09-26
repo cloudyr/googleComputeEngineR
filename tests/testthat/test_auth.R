@@ -58,7 +58,7 @@ test_that("We can get auto zone", {
   
   proj <- gce_get_global_zone()
   
-  expect_equal(proj, "mark-edmondson-gde")
+  expect_equal(proj, "europe-west1-b")
   
 })
 
