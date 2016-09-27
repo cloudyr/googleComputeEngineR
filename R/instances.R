@@ -6,7 +6,7 @@
 #' @param canIpForward Allows this instance to send and receive packets with non-matching destination or source IPs
 #' @param description An optional description of this resource
 #' @param disks Array of disks associated with this instance
-#' @param machineType Full or partial URL of the machine type resource to use for this instance, in the format: zones/zone/machineTypes/machine-type
+#' @param machineType Full or partial URL of the machine type resource to use for this instance, in the format: \code{zones/zone/machineTypes/machine-type}
 #' @param metadata The metadata key/value pairs assigned to this instance
 #' @param name The name of the resource, provided by the client when initially creating the resource
 #' @param networkInterfaces An array of configurations for this interface
@@ -18,12 +18,12 @@
 #' 
 #' @family Instance functions
 #' @keywords internal
-Instance <- function(canIpForward = NULL, 
+Instance <- function(name = NULL,
+                     machineType = NULL, 
+                     canIpForward = NULL, 
                      description = NULL, 
                      disks = NULL, 
-                     machineType = NULL, 
                      metadata = NULL, 
-                     name = NULL, 
                      networkInterfaces = NULL, 
                      scheduling = NULL, 
                      serviceAccounts = NULL, 
@@ -91,18 +91,21 @@ gce_vm_delete <- function(instance,
 #' 
 #' 
 #' @inheritParams Instance
+#' @inheritParams gce_make_machinetype_url
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @family Instance functions
 #' @export
-gce_vm_create <- function(canIpForward = NULL, 
+gce_vm_create <- function(name,
+                          predefined_type,
+                          cpus,
+                          memory,
+                          canIpForward = NULL, 
                           description = NULL, 
                           disks = NULL, 
-                          machineType = NULL, 
                           metadata = NULL, 
-                          name = NULL, 
                           networkInterfaces = NULL, 
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
@@ -112,6 +115,15 @@ gce_vm_create <- function(canIpForward = NULL,
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
+  
+  if(missing(predefined_type)){
+    stopifnot(all(!missing(cpus), !missing(memory)))
+  }
+  
+  machineType <- gce_make_machinetype_url(predefined_type = predefined_type,
+                                          cpus = cpus,
+                                          memory = memory,
+                                          zone = zone)
   
   the_instance <- Instance(canIpForward = canIpForward, 
                            description = description, 

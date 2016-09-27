@@ -4,23 +4,23 @@
 \alias{Instance}
 \title{Instance Object}
 \usage{
-Instance(canIpForward = NULL, description = NULL, disks = NULL,
-  machineType = NULL, metadata = NULL, name = NULL,
+Instance(name = NULL, machineType = NULL, canIpForward = NULL,
+  description = NULL, disks = NULL, metadata = NULL,
   networkInterfaces = NULL, scheduling = NULL, serviceAccounts = NULL,
   tags = NULL)
 }
 \arguments{
+\item{name}{The name of the resource, provided by the client when initially creating the resource}
+
+\item{machineType}{Full or partial URL of the machine type resource to use for this instance, in the format: \code{zones/zone/machineTypes/machine-type}}
+
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
 
 \item{description}{An optional description of this resource}
 
 \item{disks}{Array of disks associated with this instance}
 
-\item{machineType}{Full or partial URL of the machine type resource to use for this instance, in the format: zones/zone/machineTypes/machine-type}
-
 \item{metadata}{The metadata key/value pairs assigned to this instance}
-
-\item{name}{The name of the resource, provided by the client when initially creating the resource}
 
 \item{networkInterfaces}{An array of configurations for this interface}
 

@@ -4,24 +4,28 @@
 \alias{gce_vm_create}
 \title{Creates an instance resource in the specified project using the data included in the request.}
 \usage{
-gce_vm_create(canIpForward = NULL, description = NULL, disks = NULL,
-  machineType = NULL, metadata = NULL, name = NULL,
+gce_vm_create(name, predefined_type, cpus, memory, canIpForward = NULL,
+  description = NULL, disks = NULL, metadata = NULL,
   networkInterfaces = NULL, scheduling = NULL, serviceAccounts = NULL,
   tags = NULL, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 }
 \arguments{
+\item{name}{The name of the resource, provided by the client when initially creating the resource}
+
+\item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
+
+\item{cpus}{If not predefined, number of CPUs}
+
+\item{memory}{If not predefined, amount of memory}
+
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
 
 \item{description}{An optional description of this resource}
 
 \item{disks}{Array of disks associated with this instance}
 
-\item{machineType}{Full or partial URL of the machine type resource to use for this instance, in the format: zones/zone/machineTypes/machine-type}
-
 \item{metadata}{The metadata key/value pairs assigned to this instance}
-
-\item{name}{The name of the resource, provided by the client when initially creating the resource}
 
 \item{networkInterfaces}{An array of configurations for this interface}
 

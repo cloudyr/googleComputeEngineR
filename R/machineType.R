@@ -1,0 +1,157 @@
+#' Construct a machineType URL
+#' 
+#' @param zone zone for URL
+#' @param predefined_type A predefined machine type from \link{gce_list_machinetype}
+#' @param cpus If not predefined, number of CPUs
+#' @param memory If not predefined, amount of memory
+#' 
+#' @details 
+#' 
+#' \code{cpus} must be in multiples of 2 up to 32
+#' \code{memory} must be in multiples of 256
+#' 
+#' @return A url for use in instance creation
+#' @export
+gce_make_machinetype_url <- function(predefined_type,
+                                     cpus,
+                                     memory,
+                                     zone = gce_get_global_zone()){
+  
+  if(missing(predefined_type)){
+    stopifnot(all(!missing(cpus), !missing(memory)))
+    
+    testthat::expect_equal(cpus %% 2, 0)
+    testthat::expect_lt(cpus, 33)
+    testthat::expect_equal(memory %% 256, 0)
+    
+    out <- sprintf("zones/%s/machineTypes/custom-%s-%s", zone, cpus, memory)
+    
+  } else {
+    
+    out <- sprintf("zones/%s/machineTypes/%s", zone, predefined_type)
+    
+  }
+  
+  out
+  
+}
+
+
+
+
+
+#' Retrieves an aggregated list of machine types from all zones.
+#' 
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' \item https://www.googleapis.com/auth/compute.readonly
+#' }
+#' 
+#' @param project Project ID for this request
+#' @param filter Sets a filter expression for filtering listed resources, in the form filter={expression}
+#' @param maxResults The maximum number of results per page that should be returned
+#' @param pageToken Specifies a page token to use
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_list_machinetype_all <- function(filter = NULL, 
+                                     maxResults = NULL, 
+                                     pageToken = NULL,
+                                     project = gce_get_global_project()) {
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/aggregated/machineTypes", 
+                 project)
+  
+  pars <- list(filter = filter, 
+               maxResults = maxResults, 
+               pageToken = pageToken)
+  pars <- rmNullObs(pars)
+  # compute.machineTypes.aggregatedList
+  f <- gar_api_generator(url, 
+                         "GET", 
+                         pars_args = pars, 
+                         data_parse_function = function(x) x)
+  f()
+  
+}
+
+#' Returns the specified machine type.
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' \item https://www.googleapis.com/auth/compute.readonly
+#' }
+#' 
+#' @param project Project ID for this request
+#' @param zone The name of the zone for this request
+#' @param machineType Name of the machine type to return
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_get_machinetype <- function(machineType, 
+                                project = gce_get_global_project(), 
+                                zone = gce_get_global_zone()) {
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/machineTypes/%s", 
+                 project, zone, machineType)
+  
+  # compute.machineTypes.get
+  f <- gar_api_generator(url, 
+                         "GET", 
+                         data_parse_function = function(x) x)
+  f()
+  
+}
+
+#' Retrieves a list of machine types available to the specified project.
+#' 
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' \item https://www.googleapis.com/auth/compute.readonly
+#' }
+#' 
+#' @param filter Sets a filter expression for filtering listed resources, in the form filter={expression}
+#' @param maxResults The maximum number of results per page that should be returned
+#' @param pageToken Specifies a page token to use
+#' @param project Project ID for this request
+#' @param zone The name of the zone for this request
+#' 
+#' 
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_list_machinetype <- function(filter = NULL, 
+                                 maxResults = NULL, 
+                                 pageToken = NULL,
+                                 project = gce_get_global_project(), 
+                                 zone = gce_get_global_zone()) {
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/machineTypes", 
+                 project, zone)
+  
+  pars <- list(filter = filter, 
+               maxResults = maxResults, 
+               pageToken = pageToken)
+  pars <- rmNullObs(pars)
+  # compute.machineTypes.list
+  f <- gar_api_generator(url, 
+                         "GET", 
+                         pars_args = pars, 
+                         data_parse_function = function(x) x)
+  f()
+  
+}
