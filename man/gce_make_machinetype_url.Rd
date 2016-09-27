@@ -10,9 +10,9 @@ gce_make_machinetype_url(predefined_type, cpus, memory,
 \arguments{
 \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
 
-\item{cpus}{If not predefined, number of CPUs}
+\item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
 
-\item{memory}{If not predefined, amount of memory}
+\item{memory}{If not defining \code{predefined_type}, amount of memory}
 
 \item{zone}{zone for URL}
 }

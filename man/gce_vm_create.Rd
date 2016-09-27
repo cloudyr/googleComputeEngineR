@@ -15,9 +15,9 @@ gce_vm_create(name, predefined_type, cpus, memory, canIpForward = NULL,
 
 \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
 
-\item{cpus}{If not predefined, number of CPUs}
+\item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
 
-\item{memory}{If not predefined, amount of memory}
+\item{memory}{If not defining \code{predefined_type}, amount of memory}
 
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
 
@@ -48,6 +48,9 @@ Authentication scopes used by this function are:
   \item https://www.googleapis.com/auth/cloud-platform
 \item https://www.googleapis.com/auth/compute
 }
+
+\code{cpus} must be in multiples of 2 up to 32
+\code{memory} must be in multiples of 256
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}

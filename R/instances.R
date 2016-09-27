@@ -89,6 +89,9 @@ gce_vm_delete <- function(instance,
 #' \item https://www.googleapis.com/auth/compute
 #' }
 #' 
+#' \code{cpus} must be in multiples of 2 up to 32
+#' \code{memory} must be in multiples of 256
+#' 
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url

@@ -2,8 +2,8 @@
 #' 
 #' @param zone zone for URL
 #' @param predefined_type A predefined machine type from \link{gce_list_machinetype}
-#' @param cpus If not predefined, number of CPUs
-#' @param memory If not predefined, amount of memory
+#' @param cpus If not defining \code{predefined_type}, the number of CPUs
+#' @param memory If not defining \code{predefined_type}, amount of memory
 #' 
 #' @details 
 #' 
@@ -140,6 +140,8 @@ gce_list_machinetype <- function(filter = NULL,
                                  project = gce_get_global_project(), 
                                  zone = gce_get_global_zone()) {
   
+  
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/machineTypes", 
                  project, zone)
   
@@ -153,5 +155,57 @@ gce_list_machinetype <- function(filter = NULL,
                          pars_args = pars, 
                          data_parse_function = function(x) x)
   f()
+  
+}
+
+#' Changes the machine type for a stopped instance to the machine type specified in the request.
+#' 
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' }
+#' 
+#' @inheritParams gce_make_machinetype_url
+#' @param instance Name of the instance resource to change
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' @importFrom googleAuthR gar_api_generator
+#' 
+#' @return A zone operation job
+#' @export
+gce_set_machinetype <- function(predefined_type,
+                                cpus,
+                                memory, 
+                                instance,
+                                project = gce_get_global_project(), 
+                                zone = gce_get_global_zone()) {
+  
+  if(missing(predefined_type)){
+    stopifnot(all(!missing(cpus), !missing(memory)))
+  }
+  
+  machineType <- gce_make_machinetype_url(predefined_type = predefined_type,
+                                          cpus = cpus,
+                                          memory = memory,
+                                          zone = zone)
+  
+  url <- 
+    sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMachineType", 
+                 project, zone, instance)
+  
+  the_machine <- list(
+    machineType = machineType
+  )
+  # compute.instances.setMachineType
+  f <- gar_api_generator(url, 
+                         "POST", 
+                         data_parse_function = function(x) x)
+  
+  f(the_body = the_machine)
   
 }

@@ -44,3 +44,26 @@ test_that("We can make a custom machine type URL ", {
   
   
 })
+
+test_that("We can change a machine type", {
+  skip_on_cran()
+  
+  mt <- gce_set_machinetype("f1-micro", instance = "markdev")
+  
+  expect_equal(mt$kind, "compute#operation")
+  
+  job <- gce_check_zone_op(mt$name)
+  
+  expect_equal(job$status, "DONE")
+  
+  ## change it back
+  Sys.sleep(10)
+  mt <- gce_set_machinetype("n1-standard-1", instance = "markdev")
+  
+  expect_equal(mt$kind, "compute#operation")
+  
+  job <- gce_check_zone_op(mt$name)
+  
+  expect_equal(job$status, "DONE")
+  
+})
