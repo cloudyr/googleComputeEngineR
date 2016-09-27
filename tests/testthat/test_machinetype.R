@@ -12,7 +12,7 @@ test_that("We can list machinetypes", {
 test_that("We can list aggregated machinetypes", {
   skip_on_cran()
   
-  the_list <- gce_list_agg_machinetype()
+  the_list <- gce_list_machinetype_all()
   expect_equal(the_list$kind, "compute#machineTypeAggregatedList")
   
   
