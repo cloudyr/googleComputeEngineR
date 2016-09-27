@@ -22,7 +22,7 @@ test_that("We can get a machine type", {
   skip_on_cran()
   
   the_mt <- gce_get_machinetype("f1-micro")
-  expect_equal(the_list$kind, "compute#machineType")
+  expect_equal(the_mt$kind, "compute#machineType")
   
   
 })
