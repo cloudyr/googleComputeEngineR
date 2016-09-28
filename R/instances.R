@@ -92,7 +92,7 @@ gce_vm_delete <- function(instance,
 #' \code{cpus} must be in multiples of 2 up to 32
 #' \code{memory} must be in multiples of 256
 #' 
-#' One of \code{image} or \link{image_family} must be supplied
+#' One of \code{image} or \code{image_family} must be supplied
 #' 
 #' To create an instance you need to specify:
 #' 
