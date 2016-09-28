@@ -4,10 +4,10 @@
 \alias{gce_get_image_family}
 \title{Returns the latest image that is part of an image family and is not deprecated.}
 \usage{
-gce_get_image_family(project, family)
+gce_get_image_family(image_project, family)
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{image_project}{Project ID for this request}
 
 \item{family}{Name of the image family to search for}
 }
@@ -23,6 +23,6 @@ Authentication scopes used by this function are:
 }
 }
 \seealso{
-\href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+\href{https://cloud.google.com/compute/docs/images}{Google Documentation}
 }
 

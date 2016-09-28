@@ -5,7 +5,7 @@
 #' 
 #' @param canIpForward Allows this instance to send and receive packets with non-matching destination or source IPs
 #' @param description An optional description of this resource
-#' @param disks Array of disks associated with this instance
+#' @param disks The source image used to create this disk
 #' @param machineType Full or partial URL of the machine type resource to use for this instance, in the format: \code{zones/zone/machineTypes/machine-type}
 #' @param metadata The metadata key/value pairs assigned to this instance
 #' @param name The name of the resource, provided by the client when initially creating the resource
@@ -22,7 +22,7 @@ Instance <- function(name = NULL,
                      machineType = NULL, 
                      canIpForward = NULL, 
                      description = NULL, 
-                     disks = NULL, 
+                     disks = NULL,
                      metadata = NULL, 
                      networkInterfaces = NULL, 
                      scheduling = NULL, 
@@ -31,15 +31,15 @@ Instance <- function(name = NULL,
   
   structure(list(canIpForward = canIpForward,
                  description = description, 
-                 disks = disks, 
                  machineType = machineType, 
                  metadata = metadata, 
                  name = name, 
+                 disks = disks,
                  networkInterfaces = networkInterfaces, 
                  scheduling = scheduling, 
                  serviceAccounts = serviceAccounts, 
                  tags = tags), 
-            class = "gar_Instance")
+            class = c("list","gar_Instance"))
 }
 
 
@@ -92,9 +92,27 @@ gce_vm_delete <- function(instance,
 #' \code{cpus} must be in multiples of 2 up to 32
 #' \code{memory} must be in multiples of 256
 #' 
+#' One of \code{image} or \link{image_family} must be supplied
+#' 
+#' To create an instance you need to specify:
+#' 
+#' \itemize{
+#'   \item Name
+#'   \item Project [if not default]
+#'   \item Zone [if not default]
+#'   \item Machine type - either a predefined type or custom CPU and memory
+#'   \item Network - usually default, specifies open ports etc.
+#'   \item Image - a source image containing the operating system
+#'  }
+#' 
+#' 
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
+#' @inheritParams gce_get_image_family
+#' @inheritParams gce_get_image
+#' @param disk_source Specifies a valid URL to an existing Persistent Disk resource.
+#' @param network The name of the network interface
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' 
@@ -102,14 +120,17 @@ gce_vm_delete <- function(instance,
 #' @family Instance functions
 #' @export
 gce_vm_create <- function(name,
-                          predefined_type,
+                          predefined_type = "f1-micro",
+                          image_project = "debian-cloud",
+                          image_family = "debian-8",
                           cpus,
                           memory,
+                          image = "",
+                          disk_source = NULL,
+                          network = "default", 
                           canIpForward = NULL, 
                           description = NULL, 
-                          disks = NULL, 
                           metadata = NULL, 
-                          networkInterfaces = NULL, 
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
                           tags = NULL,
@@ -122,29 +143,70 @@ gce_vm_create <- function(name,
   if(missing(predefined_type)){
     stopifnot(all(!missing(cpus), !missing(memory)))
   }
+
+  ## if an image project is defined, create a source_image_url
+  if(nchar(image_project) > 0){
+
+    if(nchar(image_family) > 0){
+      
+      ## creation from image_family
+      source_image_url <- gce_make_image_source_url(image_project, family = image_family)
+    } else {
+      ## creation from image
+      stopifnot(nchar(image) > 0)
+      source_image_url <- gce_make_image_source_url(image_project, image = image)
+    }
+    
+    if(is.null(source_image_url)){
+      stop("image_project specified but no source image URL was found")
+    }
+    
+  } else {
+    source_image_url <- NULL
+  }
   
+  ## make image initialisation
+  init_disk <- list(
+    list(
+      initializeParams = list(
+        sourceImage = source_image_url
+      ),
+      source = disk_source,
+      ## not in docs apart from https://cloud.google.com/compute/docs/instances/create-start-instance
+      autoDelete = TRUE,
+      boot = TRUE,
+      type = "PERSISTENT"
+    )
+  )
+
+  ## make machine type
   machineType <- gce_make_machinetype_url(predefined_type = predefined_type,
                                           cpus = cpus,
                                           memory = memory,
                                           zone = zone)
   
+  ## make network interface
+  networkInterfaces <- gce_make_network(network, project = project)
+
+  ## make instance object
   the_instance <- Instance(canIpForward = canIpForward, 
                            description = description, 
-                           disks = disks, 
                            machineType = machineType, 
                            metadata = metadata, 
+                           disks = init_disk,
                            name = name, 
                            networkInterfaces = networkInterfaces, 
                            scheduling = scheduling, 
                            serviceAccounts = serviceAccounts, 
                            tags = tags)
+  
   # compute.instances.insert
   f <- gar_api_generator(url, 
                          "POST", 
                          data_parse_function = function(x) x)
   stopifnot(inherits(the_instance, "gar_Instance"))
   
-  f(the_body = the_instance)
+  f(the_body = rmNullObs(the_instance))
   
 }
 

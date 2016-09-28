@@ -4,11 +4,11 @@
 \alias{gce_list_images}
 \title{Retrieves the list of private images available to the specified project.}
 \usage{
-gce_list_images(project, filter = NULL, maxResults = NULL,
+gce_list_images(image_project, filter = NULL, maxResults = NULL,
   pageToken = NULL)
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{image_project}{Project ID for this request}
 
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}
 
@@ -33,6 +33,6 @@ If you want to get a list of publicly-available images,
  such as debian-cloud, windows-cloud or google-containers.
 }
 \seealso{
-\href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+\href{https://cloud.google.com/compute/docs/images}{Google Documentation}
 }
 

@@ -4,30 +4,35 @@
 \alias{gce_vm_create}
 \title{Creates an instance resource in the specified project using the data included in the request.}
 \usage{
-gce_vm_create(name, predefined_type, cpus, memory, canIpForward = NULL,
-  description = NULL, disks = NULL, metadata = NULL,
-  networkInterfaces = NULL, scheduling = NULL, serviceAccounts = NULL,
-  tags = NULL, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_vm_create(name, predefined_type = "f1-micro",
+  image_project = "debian-cloud", image_family = "debian-8", cpus, memory,
+  image = "", disk_source = NULL, network = "default",
+  canIpForward = NULL, description = NULL, metadata = NULL,
+  scheduling = NULL, serviceAccounts = NULL, tags = NULL,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
 
 \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
 
+\item{image_project}{Project ID for this request}
+
 \item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
 
 \item{memory}{If not defining \code{predefined_type}, amount of memory}
+
+\item{image}{Name of the image resource to return}
+
+\item{disk_source}{Specifies a valid URL to an existing Persistent Disk resource.}
+
+\item{network}{The name of the network interface}
 
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
 
 \item{description}{An optional description of this resource}
 
-\item{disks}{Array of disks associated with this instance}
-
 \item{metadata}{The metadata key/value pairs assigned to this instance}
-
-\item{networkInterfaces}{An array of configurations for this interface}
 
 \item{scheduling}{Scheduling options for this instance}
 
@@ -51,6 +56,19 @@ Authentication scopes used by this function are:
 
 \code{cpus} must be in multiples of 2 up to 32
 \code{memory} must be in multiples of 256
+
+One of \code{image} or \link{image_family} must be supplied
+
+To create an instance you need to specify:
+
+\itemize{
+  \item Name
+  \item Project [if not default]
+  \item Zone [if not default]
+  \item Machine type - either a predefined type or custom CPU and memory
+  \item Network - usually default, specifies open ports etc.
+  \item Image - a source image containing the operating system
+ }
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}

@@ -4,10 +4,10 @@
 \alias{gce_get_image}
 \title{Returns the specified image.}
 \usage{
-gce_get_image(project, image)
+gce_get_image(image_project, image)
 }
 \arguments{
-\item{project}{Project ID for this request}
+\item{image_project}{Project ID of where the image lies}
 
 \item{image}{Name of the image resource to return}
 }
@@ -23,7 +23,7 @@ https://www.googleapis.com/auth/compute.readonly }
 You may want to use \link{gce_get_image_family} instead to ensure the most up to date image is used.
 }
 \seealso{
-\href{https://developers.google.com/compute/docs/reference/latest/}{Google
+\href{https://cloud.google.com/compute/docs/images}{Google
   Documentation}
 }
 

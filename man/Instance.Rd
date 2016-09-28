@@ -18,7 +18,7 @@ Instance(name = NULL, machineType = NULL, canIpForward = NULL,
 
 \item{description}{An optional description of this resource}
 
-\item{disks}{Array of disks associated with this instance}
+\item{disks}{The source image used to create this disk}
 
 \item{metadata}{The metadata key/value pairs assigned to this instance}
 
