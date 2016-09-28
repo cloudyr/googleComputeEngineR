@@ -106,11 +106,11 @@ gce_vm_delete <- function(instance,
 #'  }
 #' 
 #' 
-#' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
-#' @inheritParams gce_get_image_family
-#' @inheritParams gce_get_image
+#' @param image_project Project ID of where the image lies
+#' @param image Name of the image resource to return
+#' @param image_family Name of the image family to search for
 #' @param disk_source Specifies a valid URL to an existing Persistent Disk resource.
 #' @param network The name of the network interface
 #' @param project Project ID for this request

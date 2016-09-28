@@ -16,7 +16,9 @@ gce_vm_create(name, predefined_type = "f1-micro",
 
 \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
 
-\item{image_project}{Project ID for this request}
+\item{image_project}{Project ID of where the image lies}
+
+\item{image_family}{Name of the image family to search for}
 
 \item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
 
