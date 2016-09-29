@@ -5,10 +5,10 @@
 \title{Creates a persistent disk in the specified project using the data in the request.}
 \usage{
 gce_make_disk(name, sourceImage = NULL, sizeGb = NULL, description = NULL,
-  diskEncryptionKey = NULL, licenses = NULL,
-  sourceImageEncryptionKey = NULL, sourceSnapshot = NULL,
-  sourceSnapshotEncryptionKey = NULL, type = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+  diskEncryptionKey = NULL, licenses = NULL, sourceSnapshot = NULL,
+  sourceImageEncryptionKey = NULL, sourceSnapshotEncryptionKey = NULL,
+  type = NULL, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{name}{Name of the resource}
@@ -23,9 +23,9 @@ gce_make_disk(name, sourceImage = NULL, sizeGb = NULL, description = NULL,
 
 \item{licenses}{Any applicable publicly visible licenses}
 
-\item{sourceImageEncryptionKey}{The customer-supplied encryption key of the source image}
-
 \item{sourceSnapshot}{The source snapshot used to create this disk}
+
+\item{sourceImageEncryptionKey}{The customer-supplied encryption key of the source image}
 
 \item{sourceSnapshotEncryptionKey}{The customer-supplied encryption key of the source snapshot}
 
@@ -34,6 +34,9 @@ gce_make_disk(name, sourceImage = NULL, sizeGb = NULL, description = NULL,
 \item{project}{Project ID for this request}
 
 \item{zone}{The name of the zone for this request}
+}
+\value{
+a zone operation
 }
 \description{
 You can create a disk with a sourceImage, a sourceSnapshot, or create an empty 500 GB data disk by omitting all properties.
@@ -50,7 +53,5 @@ Authentication scopes used by this function are:
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
-
-Other Disk functions: \code{\link{Disk}}
 }
 
