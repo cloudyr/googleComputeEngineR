@@ -122,7 +122,6 @@ gce_vm_delete <- function(instance,
 #' @param zone The name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
-#' @family Instance functions
 #' @export
 gce_vm_create <- function(name,
                           predefined_type = "f1-micro",

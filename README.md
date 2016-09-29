@@ -240,7 +240,7 @@ This includes useful utilities such as `startup-script` and `shutdown-script` th
 There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file:
 
 ```r
- vm <- gce_containervm_create(cloud_init = system.file("cloudconfig", 
+ vm <- gce_vm_container(cloud_init = system.file("cloudconfig", 
                                                         "example.yml", 
                                                         package = "googleComputeEngineR"),
                                name = "test-container",

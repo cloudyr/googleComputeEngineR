@@ -47,11 +47,24 @@ test_that("We can make a VM with metadata", {
 
 test_that("We can make a container VM",{
   
-  vm <- gce_containervm_create(cloud_init = system.file("cloudconfig", 
-                                                        "example.yml", 
-                                                        package = "googleComputeEngineR"),
-                               name = "test-container",
-                               predefined_type = "f1-micro")
+  vm <- gce_vm_container(cloud_init = system.file("cloudconfig", 
+                                                  "example.yaml", 
+                                                  package = "googleComputeEngineR"),
+                         name = "test-container",
+                         predefined_type = "f1-micro")
+  
+  expect_equal(vm$kind, "compute#operation")
+  
+  vm <- gce_check_zone_op(vm$name, wait = 20)
+  
+  expect_equal(vm$status, "DONE")  
+  
+  ins <- gce_get_instance("test-container")
+  expect_equal(ins$kind, "compute#instance")
+  expect_equal(ins$status, "RUNNING")
+  
+  expect_equal(ins$metadata$items$key, "user-data")
+  
   
 })
 

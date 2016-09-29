@@ -15,5 +15,10 @@ Metadata object
 \description{
 Metadata Object
 }
+\seealso{
+Other res: \code{\link{Disk}}, \code{\link{Instance}},
+  \code{\link{gce_get_global_project}},
+  \code{\link{gce_get_global_zone}}
+}
 \keyword{internal}
 

@@ -1,10 +1,16 @@
-#' Launch a container-VM image
+#' Create a template container VM
 #' 
-#' This lets you specify docker images when creating the VM
+#' This lets you specify templates for the VM you wnat to launch
+#' It passes the template on to \link{gce_containervm_create}
 #' 
-#' @param cloud_init template name or filepath to a cloud-init configuration file
+#' @param template The template available
+#' @param username username if needed (RStudio)
+#' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
+#' @param browse If TRUE will attempt to open browser to server once deployed
 #' @param ... Other arguments passed to \link{gce_vm_create}
+#' 
+#' @details 
 #' 
 #' Templates available are:
 #' 
@@ -14,43 +20,101 @@
 #'   \item opencpu An OpenCPU docker image
 #'  }
 #'  
-#'  If not one of the above, then the function expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
+#' @return The VM object
+#' @export  
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
+                            username=NULL,
+                            password=NULL,
+                            image_family = "gci-stable",
+                            browse = TRUE,
+                            ...){
+  
+  dots <- list(...)
+  
+  template <- match.arg(template)
+  
+  cloud_init <- switch(template,
+                       rstudio = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
+                       shiny   = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
+                       opencpu = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR")
+  )
+  
+  cloud_init_file <- readChar(cloud_init, nchars = 32768)
+  
+  ## Add the username and password to the config file
+  if(template == "rstudio"){
+    if(any(is.null(username), is.null(password))){
+      stop("Must supply a username and password for RStudio Server templates")
+    }
+    cloud_init_file <- sprintf(cloud_init_file, username, password)
+  }
+  
+  job <- gce_vm_container(cloud_init = cloud_init_file,
+                          image_family = image_family,
+                          ...)
+  
+  done <- gce_check_zone_op(job$name, wait = 20)
+  testthat::expect_equal(done$status, "DONE")
+  
+  ins <- gce_get_instance(dots$name)
+  expect_equal(ins$kind, "compute#instance")
+  expect_equal(ins$status, "RUNNING")
+  
+  ip <- gce_get_external_ip(dots$name)
+  
+  ip_suffix <- switch(template,
+                    rstudio = ":8787",
+                    shiny   = ":3838",
+                    opencpu = "/ocpu/"         
+                    )
+  
+  cat("\n## ", paste0(template, " running at ", ip,ip_suffix),"\n")
+  
+  if(browse){
+    browseURL(paste0("http://",ip,ip_suffix))
+  }
+  
+  ins
+
+}
+
+#' Launch a container-VM image
+#' 
+#' This lets you specify docker images when creating the VM
+#' 
+#' @param file file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied
+#' @param cloud_init contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}
+#' @param image_family An image-family.  It must come from the \code{google-containers} family.
+#' @param ... Other arguments passed to \link{gce_vm_create}
+#' 
+#'  
+#' \code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
 #' 
 #' \code{image_project} will be ignored if set, overriden to \code{google-containers}
 #' 
 #' @return A zone operation
 #' @export
-gce_containervm_create <- function(cloud_init, 
-                                   image_family = "gci-stable", 
-                                   ...){
+gce_vm_container <- function(file,
+                             cloud_init, 
+                             image_family = "gci-stable", 
+                             ...){
   
-  testthat::expect_type(cloud_init, "character")
-  testthat::expect_gt(nchar(cloud_init), 0)
+  if(missing(file)){
+    stopifnot(!missing(cloud_init))
+  }
+  
+  if(missing(cloud_init)){
+    stopifnot(!missing(file))
+    testthat::expect_type(file, "character")
+    testthat::expect_gt(nchar(file), 0)
+    cloud_init <-  readChar(cloud_init, nchars = 32768)
+  }
   
   dots <- list(...)
   
-  templates <- c("rstudio","shiny","opencpu")
-  
-  if(cloud_init %in% templates){
-    
-    cloud_init <- switch(cloud_init,
-          rstudio = system.file("cloudconfig", "rstudio.yml", package = "googleComputeEngineR"),
-          shiny   = system.file("cloudconfig", "shiny.yml",   package = "googleComputeEngineR"),
-          opencpu = system.file("cloudconfig", "opencpu.yml", package = "googleComputeEngineR")
-                              )
-    cloud_init_file <- readChar(system.file("cloudconfig", 
-                                            cloud_init, 
-                                            package = "googleComputeEngineR"), 
-                                nchars = 32768)
-    
-  } else {
-    cloud_init_file <- readChar(cloud_init, nchars = 32768)
-  }
-  
   ## add to any existing metadata
   metadata <- c(dots$metadata, 
-                `user-data` = cloud_init_file)
-  
+                `user-data` = cloud_init)
   
   gce_vm_create(..., 
                 image_family = image_family,
