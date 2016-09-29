@@ -1,18 +1,62 @@
+#' Get the external IP of an instance
+#' 
+#' @param instance Name of the instance to find the external IP for
+#' @param ... passed to \link{gce_get_instance}
+#' 
+#' This is a helper to extract the external IP of an instance
+#' @return The external IP
+#' @export
+gce_get_external_ip <- function(instance, 
+                                ...){
+  
+  dots <- list(...)
+  
+  inst <- gce_get_instance(instance, ...)
+  
+  ip <- inst$networkInterfaces$accessConfigs[[1]]$natIP
+  
+  cat("\n External IP for instance", instance, " : ", ip, "\n")
+  
+  ip
+}
+
 #' Make a network interface for instance creation
 #' 
+#' @param name Name of the access config
 #' @param network Name of network resource
+#' @param externalIP An external IP you have created previouly, leave NULL to have one assigned or "none" for none
 #' @param project Project ID for this request
 #' 
+#' You need to provide accessConfig explicitly if you want an ephemeral IP assigned, see \code{https://cloud.google.com/compute/docs/vm-ip-addresses}
+#' 
 #' @return A Network object
-gce_make_network <- function(network = "default",
+#' @keywords internal
+gce_make_network <- function(name,
+                             network = "default",
+                             externalIP = NULL,
                              project = gce_get_global_project()){
   
   net <- gce_get_network(network, project = project)
   
+  if(!is.null(externalIP)){
+    if(externalIP == "none"){
+      ac <- NULL
+    }
+  } else {
+    ac <- list(
+      list(
+      natIP = jsonlite::unbox(externalIP),
+      type = jsonlite::unbox("ONE_TO_ONE_NAT"),
+      name = jsonlite::unbox(name)
+      )
+    )
+  }
+  
   structure(
     list(
       list(
-        network = net$selfLink
+        network = jsonlite::unbox(net$selfLink),
+        accessConfigs = ac
       )
     ),
     class = c("list","gce_networkInterface")

@@ -85,6 +85,15 @@ test_that("We can reset a VM", {
   
 })
 
+test_that("We can get an external IP", {
+  skip_on_cran()
+  
+  ip <- gce_get_external_ip("mc-server")
+  
+  expect_equal(ip, "146.148.24.37")
+})
+
+
 test_that("We can stop a VM", {
   skip_on_cran()
   Sys.sleep(20)
@@ -101,3 +110,4 @@ test_that("We can stop a VM", {
   
   
 })
+

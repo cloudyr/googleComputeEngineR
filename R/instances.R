@@ -7,7 +7,7 @@
 #' @param description An optional description of this resource
 #' @param disks The source image used to create this disk
 #' @param machineType Full or partial URL of the machine type resource to use for this instance, in the format: \code{zones/zone/machineTypes/machine-type}
-#' @param metadata The metadata key/value pairs assigned to this instance
+#' @param metadata A named list of metadata key/value pairs assigned to this instance
 #' @param name The name of the resource, provided by the client when initially creating the resource
 #' @param networkInterfaces An array of configurations for this interface
 #' @param scheduling Scheduling options for this instance
@@ -32,7 +32,7 @@ Instance <- function(name = NULL,
   structure(list(canIpForward = canIpForward,
                  description = description, 
                  machineType = machineType, 
-                 metadata = metadata, 
+                 metadata = Metadata(metadata), 
                  name = name, 
                  disks = disks,
                  networkInterfaces = networkInterfaces, 
@@ -104,6 +104,10 @@ gce_vm_delete <- function(instance,
 #'   \item Network - usually default, specifies open ports etc.
 #'   \item Image - a source image containing the operating system
 #'  }
+#'  
+#'  You can add metadata to the server such as \code{startup-script} and \code{shutdown-script}.  Details available here: \url{https://cloud.google.com/compute/docs/storing-retrieving-metadata}
+#'  
+#'  If you want to not have an external IP then modify the instance afterwards
 #' 
 #' 
 #' @inheritParams Instance
@@ -113,6 +117,7 @@ gce_vm_delete <- function(instance,
 #' @param image_family Name of the image family to search for
 #' @param disk_source Specifies a valid URL to an existing Persistent Disk resource.
 #' @param network The name of the network interface
+#' @param externalIP An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' 
@@ -128,6 +133,7 @@ gce_vm_create <- function(name,
                           image = "",
                           disk_source = NULL,
                           network = "default", 
+                          externalIP = NULL,
                           canIpForward = NULL, 
                           description = NULL, 
                           metadata = NULL, 
@@ -146,6 +152,9 @@ gce_vm_create <- function(name,
 
   ## if an image project is defined, create a source_image_url
   if(nchar(image_project) > 0){
+    if(!is.null(disk_source)){
+      stop("Can specify only one of image_project or disk_source")
+    }
 
     if(nchar(image_family) > 0){
       
@@ -163,6 +172,9 @@ gce_vm_create <- function(name,
     
   } else {
     source_image_url <- NULL
+    if(!is.null(disk_source)){
+      stop("Need to specify either an image_project or a disk_source")
+    }
   }
   
   ## make image initialisation
@@ -173,9 +185,10 @@ gce_vm_create <- function(name,
       ),
       source = disk_source,
       ## not in docs apart from https://cloud.google.com/compute/docs/instances/create-start-instance
-      autoDelete = TRUE,
-      boot = TRUE,
-      type = "PERSISTENT"
+      autoDelete = jsonlite::unbox(TRUE),
+      boot = jsonlite::unbox(TRUE),
+      type = jsonlite::unbox("PERSISTENT"),
+      deviceName = jsonlite::unbox(paste0(name,"-boot-disk"))
     )
   )
 
@@ -186,7 +199,10 @@ gce_vm_create <- function(name,
                                           zone = zone)
   
   ## make network interface
-  networkInterfaces <- gce_make_network(network, project = project)
+  networkInterfaces <- gce_make_network(name = paste0(name, "-ip"),
+                                        network = network, 
+                                        externalIP = externalIP,
+                                        project = project)
 
   ## make instance object
   the_instance <- Instance(canIpForward = canIpForward, 

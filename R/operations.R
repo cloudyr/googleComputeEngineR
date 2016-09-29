@@ -13,6 +13,8 @@
 #' @param project Project ID for this request
 #' @param zone Name of the zone for this request
 #' 
+#' @return TRUE if successful
+#' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_delete_zone_op <- function(operation,
@@ -22,7 +24,10 @@ gce_delete_zone_op <- function(operation,
                  project, zone, operation)
   # compute.zoneOperations.delete
   f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) x)
-  f()
+  
+  suppressWarnings(f())
+  myMessage("Operation cancelled", level = 3)
+  TRUE
   
 }
 

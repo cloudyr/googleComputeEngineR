@@ -20,7 +20,7 @@ Instance(name = NULL, machineType = NULL, canIpForward = NULL,
 
 \item{disks}{The source image used to create this disk}
 
-\item{metadata}{The metadata key/value pairs assigned to this instance}
+\item{metadata}{A named list of metadata key/value pairs assigned to this instance}
 
 \item{networkInterfaces}{An array of configurations for this interface}
 

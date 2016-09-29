@@ -14,6 +14,9 @@ gce_delete_zone_op(operation, project = gce_get_global_project(),
 
 \item{zone}{Name of the zone for this request}
 }
+\value{
+TRUE if successful
+}
 \description{
 Deletes the specified zone-specific Operations resource.
 }

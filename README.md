@@ -54,7 +54,7 @@ Each new R session will need to run `gce_auth()` to authenticate future API call
 
 Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created `.httr-oauth` token in a system environment:
 
-        Sys.setenv("GCS_AUTH_FILE" = "/fullpath/to/auth.json")
+        Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")
 
 You can set default projects, zone and authentication via an `.Renviron` file or `Sys.setenv()`.
 
@@ -136,6 +136,15 @@ inst$status
 [1] "TERMINATED"  
 ```
 
+### External IP
+
+You can view the external IP for an instance via `gce_get_external_ip()`
+
+```r
+> ip <- gce_get_external_ip("xxxxx")
+ External IP for instance xxxxxx  :  146.1xx.24.xx 
+```
+
 ## Creating an instance
 
 To create an instance you need to specify:
@@ -186,17 +195,25 @@ The defaults are:
 
 You can examine different options via the various list commands:
 
+#### Machine type
+
 A list of the predefined machine types:
 ```r
 gce_list_machinetype()
 ```
+
+#### Images
 
 A list of the image projects and families available is here: `https://cloud.google.com/compute/docs/images`
 ```r
 gce_list_images(image_project = "debian-cloud")
 ```
 
+#### Network
+
 Most of the time you will want to leave network to the default, at present you can only configure this in the UI.
+
+#### Disks
 
 You can also create another disk to attach to the VM via:
 
@@ -205,3 +222,30 @@ gce_make_disk("my-disk")
 ```
 
 By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the `disk_source` argument set to the disk resource URL.
+
+#### Metadata
+
+You can add custom metadata by passing a named list to the instance.  More details from Google documentation is here `https://cloud.google.com/compute/docs/storing-retrieving-metadata`
+
+```r
+vm <- gce_vm_create(name = "test-vm2", 
+                      predefined_type = "f1-micro",
+                      metadata = list(start_date = as.character(Sys.Date())))
+```
+
+This includes useful utilities such as `startup-script` and `shutdown-script` that you can use to run shell scripts.  In those cases the named list should include the script as its value.
+
+### Container based VMs
+
+There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file:
+
+```r
+ vm <- gce_containervm_create(cloud_init = system.file("cloudconfig", 
+                                                        "example.yml", 
+                                                        package = "googleComputeEngineR"),
+                               name = "test-container",
+                               predefined_type = "f1-micro")
+
+```
+
+There will eventually be support for RStudio, Shiny and OpenCPU docker images. 

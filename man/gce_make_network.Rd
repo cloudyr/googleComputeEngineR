@@ -4,12 +4,19 @@
 \alias{gce_make_network}
 \title{Make a network interface for instance creation}
 \usage{
-gce_make_network(network = "default", project = gce_get_global_project())
+gce_make_network(name, network = "default", externalIP = NULL,
+  project = gce_get_global_project())
 }
 \arguments{
+\item{name}{Name of the access config}
+
 \item{network}{Name of network resource}
 
-\item{project}{Project ID for this request}
+\item{externalIP}{An external IP you have created previouly, leave NULL to have one assigned or "none" for none}
+
+\item{project}{Project ID for this request
+
+You need to provide accessConfig explicitly if you want an ephemeral IP assigned, see \code{https://cloud.google.com/compute/docs/vm-ip-addresses}}
 }
 \value{
 A Network object
@@ -17,4 +24,5 @@ A Network object
 \description{
 Make a network interface for instance creation
 }
+\keyword{internal}
 

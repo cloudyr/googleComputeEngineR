@@ -7,9 +7,10 @@
 gce_vm_create(name, predefined_type = "f1-micro",
   image_project = "debian-cloud", image_family = "debian-8", cpus, memory,
   image = "", disk_source = NULL, network = "default",
-  canIpForward = NULL, description = NULL, metadata = NULL,
-  scheduling = NULL, serviceAccounts = NULL, tags = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+  externalIP = NULL, canIpForward = NULL, description = NULL,
+  metadata = NULL, scheduling = NULL, serviceAccounts = NULL,
+  tags = NULL, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
@@ -30,11 +31,13 @@ gce_vm_create(name, predefined_type = "f1-micro",
 
 \item{network}{The name of the network interface}
 
+\item{externalIP}{An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.}
+
 \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
 
 \item{description}{An optional description of this resource}
 
-\item{metadata}{The metadata key/value pairs assigned to this instance}
+\item{metadata}{A named list of metadata key/value pairs assigned to this instance}
 
 \item{scheduling}{Scheduling options for this instance}
 
@@ -71,6 +74,10 @@ To create an instance you need to specify:
   \item Network - usually default, specifies open ports etc.
   \item Image - a source image containing the operating system
  }
+ 
+ You can add metadata to the server such as \code{startup-script} and \code{shutdown-script}.  Details available here: \url{https://cloud.google.com/compute/docs/storing-retrieving-metadata}
+ 
+ If you want to not have an external IP then modify the instance afterwards
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
