@@ -1,7 +1,7 @@
 #' Create a template container VM
 #' 
 #' This lets you specify templates for the VM you wnat to launch
-#' It passes the template on to \link{gce_containervm_create}
+#' It passes the template on to \link{gce_vm_container}
 #' 
 #' @param template The template available
 #' @param username username if needed (RStudio)
@@ -21,6 +21,7 @@
 #'  }
 #'  
 #' @return The VM object
+#' @importFrom utils browseURL
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
                             username=NULL,
@@ -54,12 +55,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
                           ...)
   
   done <- gce_check_zone_op(job$name, wait = 20)
-  testthat::expect_equal(done$status, "DONE")
   
   ins <- gce_get_instance(dots$name)
-  expect_equal(ins$kind, "compute#instance")
-  expect_equal(ins$status, "RUNNING")
-  
   ip <- gce_get_external_ip(dots$name)
   
   ip_suffix <- switch(template,
@@ -71,7 +68,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
   cat("\n## ", paste0(template, " running at ", ip,ip_suffix),"\n")
   
   if(browse){
-    browseURL(paste0("http://",ip,ip_suffix))
+    utils::browseURL(paste0("http://",ip,ip_suffix))
   }
   
   ins

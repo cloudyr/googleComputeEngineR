@@ -26,7 +26,7 @@ The VM object
 }
 \description{
 This lets you specify templates for the VM you wnat to launch
-It passes the template on to \link{gce_containervm_create}
+It passes the template on to \link{gce_vm_container}
 }
 \details{
 Templates available are:
