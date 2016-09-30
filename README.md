@@ -14,6 +14,14 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 5. Run `vm <- gce_vm_template("rstudio", name = "rstudio-server", predefined_type = "f1-micro",username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
 6. Wait for it to install, login via the returned URL.
 
+## Install
+
+Its not on CRAN yet:
+
+```r
+devtools::install_github("MarkEdmondson1234/googleComputeEngineR")
+```
+
 ## Setup
 
 Google Compute Engine lets you create and run virtual machines on Google infrastructure.  See the [documentation here](https://cloud.google.com/compute/docs/).

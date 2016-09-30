@@ -77,16 +77,9 @@ test_that("We can make a template VM", {
                         username = "mark", 
                         password = "mark1234")
   
-  expect_equal(vm$kind, "compute#operation")
-  vm <- gce_check_zone_op(vm$name, wait = 10)
+  expect_equal(vm$kind, "compute#instance")
   
-  expect_equal(vm$status, "DONE")  
-  
-  ins <- gce_get_instance("rstudio-test")
-  expect_equal(ins$kind, "compute#instance")
-  expect_equal(ins$status, "RUNNING")
-  
-  expect_equal(ins$metadata$items$key, "user-data")
+  expect_equal(vm$metadata$items$key, "user-data")
   
   ## check can fetch rstudio login screen?
   
