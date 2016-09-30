@@ -1,0 +1,24 @@
+#cloud-config
+
+users:
+- name: cloudservice
+  uid: 2000
+
+write_files:
+- path: /etc/systemd/system/cloudservice.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=R Base
+
+    [Service]
+    Environment="HOME=/home/cloudservice"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run --rm rocker/r-base
+    ExecStop=/usr/bin/docker stop rstudio
+    ExecStopPost=/usr/bin/docker rm rstudio
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start cloudservice.service

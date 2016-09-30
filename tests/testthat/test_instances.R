@@ -71,12 +71,12 @@ test_that("We list operation jobs", {
 
 test_that("We can reset a VM", {
   skip_on_cran()
-  Sys.sleep(20)
+  Sys.sleep(10)
   job <- gce_vm_reset("markdev")
   
   expect_equal(job$kind, "compute#operation")
   
-  gce_check_zone_op(job$name, wait = 20)
+  gce_check_zone_op(job$name, wait = 10)
   
   cat("\nmarkdev VM reset")
   inst <- gce_get_instance("markdev")
@@ -96,12 +96,12 @@ test_that("We can get an external IP", {
 
 test_that("We can stop a VM", {
   skip_on_cran()
-  Sys.sleep(20)
+  Sys.sleep(10)
   job <- gce_vm_stop("markdev")
   
   expect_equal(job$kind, "compute#operation")
   
-  gce_check_zone_op(job$name, wait = 20)
+  gce_check_zone_op(job$name, wait = 10)
   
   cat("\nmarkdev VM stopped")
   inst <- gce_get_instance("markdev")

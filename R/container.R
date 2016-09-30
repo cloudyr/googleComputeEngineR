@@ -18,12 +18,13 @@
 #'   \item rstudio An RStudio server docker image
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
+#'   \item r_base Latest version of R stable
 #'  }
 #'  
 #' @return The VM object
 #' @importFrom utils browseURL
 #' @export  
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base"),
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",
@@ -37,7 +38,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
   cloud_init <- switch(template,
                        rstudio = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
                        shiny   = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
-                       opencpu = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR")
+                       opencpu = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
+                       r_base = system.file("cloudconfig", "r-base.yaml", package = "googleComputeEngineR")
   )
   
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
@@ -54,11 +56,13 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
                           image_family = image_family,
                           ...)
   
-  done <- gce_check_zone_op(job$name, wait = 20)
+  gce_check_zone_op(job$name, wait = 10)
   
   ins <- gce_get_instance(dots$name)
   ip <- gce_get_external_ip(dots$name)
   
+  ## where to find application
+  ip_suffix <- ""
   ip_suffix <- switch(template,
                     rstudio = ":8787",
                     shiny   = ":3838",

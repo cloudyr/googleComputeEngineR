@@ -31,7 +31,7 @@ test_that("We can make a VM with metadata", {
   
   expect_equal(vm$kind, "compute#operation")
   
-  vm <- gce_check_zone_op(vm$name, wait = 20)
+  vm <- gce_check_zone_op(vm$name, wait = 10)
 
   expect_equal(vm$status, "DONE")  
   
@@ -55,7 +55,7 @@ test_that("We can make a container VM",{
   
   expect_equal(vm$kind, "compute#operation")
   
-  vm <- gce_check_zone_op(vm$name, wait = 20)
+  vm <- gce_check_zone_op(vm$name, wait = 10)
   
   expect_equal(vm$status, "DONE")  
   
@@ -76,7 +76,7 @@ test_that("We can delete the test VMs",{
   del2 <- gce_vm_delete("test-container")
   expect_equal(del$kind, "compute#operation")
   
-  vm <- gce_check_zone_op(del$name, wait = 20)
+  vm <- gce_check_zone_op(del$name, wait = 10)
   
   expect_equal(vm$kind, "compute#operation")
   expect_equal(vm$status, "DONE")

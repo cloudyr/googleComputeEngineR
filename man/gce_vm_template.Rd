@@ -4,7 +4,7 @@
 \alias{gce_vm_template}
 \title{Create a template container VM}
 \usage{
-gce_vm_template(template = c("rstudio", "shiny", "opencpu"),
+gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r_base"),
   username = NULL, password = NULL, image_family = "gci-stable",
   browse = TRUE, ...)
 }
@@ -35,6 +35,7 @@ Templates available are:
   \item rstudio An RStudio server docker image
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
+  \item r_base Latest version of R stable
  }
 }
 
