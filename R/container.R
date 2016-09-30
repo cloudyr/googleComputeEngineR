@@ -72,6 +72,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "
                     )
   
   cat("\n## ", paste0(template, " running at ", ip,ip_suffix),"\n")
+  cat("\n You may need to wait a few minutes for the inital docker container to download and install before logging in.")
   
   if(browse){
     utils::browseURL(paste0("http://",ip,ip_suffix))

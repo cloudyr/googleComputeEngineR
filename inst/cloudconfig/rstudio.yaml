@@ -13,7 +13,7 @@ write_files:
     Description=RStudio Server
 
     [Service]
-    ExecStart=/usr/bin/docker run -u 2000 -p 8787:8787 -e ROOT=TRUE -e USER=%s -e PASSWORD=%s --name=rstudio rocker/rstudio
+    ExecStart=/usr/bin/docker run -p 8787:8787 -e ROOT=TRUE -e USER=%s -e PASSWORD=%s --name=rstudio rocker/rstudio
     ExecStop=/usr/bin/docker stop rstudio
 
 runcmd:

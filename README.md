@@ -5,6 +5,15 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 [![Build Status](https://travis-ci.org/MarkEdmondson1234/googleComputeEngineR.png?branch=master)](https://travis-ci.org/MarkEdmondson1234/googleComputeEngineR)
 [![Coverage Status](https://img.shields.io/codecov/c/github/MarkEdmondson1234/googleComputeEngineR/master.svg)](https://codecov.io/github/MarkEdmondson1234/googleComputeEngineR?branch=master)
 
+## TL;DR
+
+1. Configure a Google Cloud Project with billing
+2. Download a service acount key JSON file
+3. Put your default project, zone and JSON file location in your `.Renviron`
+4. Run `library(googleComputeEngineR)` and auto-authenticate
+5. Run `vm <- gce_vm_template("rstudio", name = "rstudio-server",predefined_type = "f1-micro",username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
+6. Wait for it to install, login via the returned URL.
+
 ## Setup
 
 Google Compute Engine lets you create and run virtual machines on Google infrastructure.  See the [documentation here](https://cloud.google.com/compute/docs/).
@@ -284,8 +293,19 @@ There is support for RStudio, Shiny and OpenCPU docker images using the above to
 To launch those, use the `gce_vm_template()` function:
 
 ```r
-vm <- gce_vm_template("rstudio",
-                      name = "rstudio-server",
-                      predefined_type = "f1-micro")
+> vm <- gce_vm_template("rstudio",
+                        name = "rstudio-server",
+                        predefined_type = "f1-micro",
+                        username = "mark", password = "mark1234")
+
+Checking job....
+Job running:  0 /100
+Job running:  0 /100
+Operation complete in 22 secs
+ External IP for instance rstudio  :  130.211.62.2 
+
+##  rstudio running at 130.211.62.2:8787 
+
+ You may need to wait a few minutes for the inital docker container to download and install before logging in.
 
 ```
