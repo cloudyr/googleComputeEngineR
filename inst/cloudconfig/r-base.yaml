@@ -13,11 +13,8 @@ write_files:
     Description=R Base
 
     [Service]
-    Environment="HOME=/home/cloudservice"
-    ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run --rm rocker/r-base
-    ExecStop=/usr/bin/docker stop rstudio
-    ExecStopPost=/usr/bin/docker rm rstudio
+    ExecStart=/usr/bin/docker run -u 2000 --name=rbase rocker/r-base R --save
+    ExecStop=/usr/bin/docker stop rbase
 
 runcmd:
 - systemctl daemon-reload

@@ -19,16 +19,17 @@
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
+#'   \item example A non-R test container running busybox
 #'  }
 #'  
 #' @return The VM object
 #' @importFrom utils browseURL
 #' @export  
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base"),
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "example"),
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",
-                            browse = TRUE,
+                            browse = FALSE,
                             ...){
   
   dots <- list(...)
@@ -39,7 +40,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base"),
                        rstudio = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
                        shiny   = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
                        opencpu = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
-                       r_base = system.file("cloudconfig", "r-base.yaml", package = "googleComputeEngineR")
+                       r_base = system.file("cloudconfig", "r-base.yaml", package = "googleComputeEngineR"),
+                       example = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
   )
   
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
