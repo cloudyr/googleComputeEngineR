@@ -237,15 +237,55 @@ This includes useful utilities such as `startup-script` and `shutdown-script` th
 
 ### Container based VMs
 
-There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file:
+There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file.
+
+Here is the example from the [Google documentation](https://cloud.google.com/compute/docs/containers/vm-image/) - save this file locally:
+
+```yaml
+#cloud-config
+
+users:
+- name: cloudservice
+  uid: 2000
+
+write_files:
+- path: /etc/systemd/system/cloudservice.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=Start a simple docker container
+
+    [Service]
+    Environment="HOME=/home/cloudservice"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
+    ExecStop=/usr/bin/docker stop mycloudservice
+    ExecStopPost=/usr/bin/docker rm mycloudservice
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start cloudservice.service
+```
+
+If the above is saved as `example.yaml` you can then launch a VM using its configuration via the `gce_vm_container()` function:
 
 ```r
- vm <- gce_vm_container(cloud_init = system.file("cloudconfig", 
-                                                        "example.yml", 
-                                                        package = "googleComputeEngineR"),
-                               name = "test-container",
-                               predefined_type = "f1-micro")
+ vm <- gce_vm_container(cloud_init = "example.yml",
+                        name = "test-container",
+                        predefined_type = "f1-micro")
 
 ```
 
-There will eventually be support for RStudio, Shiny and OpenCPU docker images. 
+### Templated Container based VMs
+
+There is support for RStudio, Shiny and OpenCPU docker images using the above to launch configurations.  The configurations are located in the [`/inst/cloudconfig`](https://github.com/MarkEdmondson1234/googleComputeEngineR/tree/master/inst/cloudconfig) package folder.
+
+To launch those, use the `gce_vm_template()` function:
+
+```r
+vm <- gce_vm_template("rstudio",
+                      name = "rstudio-server",
+                      predefined_type = "f1-micro")
+
+```

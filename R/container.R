@@ -87,6 +87,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu"),
 #'  
 #' \code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
 #' 
+#' A configuration file must be less than 32768 characters.
+#' 
 #' \code{image_project} will be ignored if set, overriden to \code{google-containers}
 #' 
 #' @return A zone operation
@@ -104,7 +106,12 @@ gce_vm_container <- function(file,
     stopifnot(!missing(file))
     testthat::expect_type(file, "character")
     testthat::expect_gt(nchar(file), 0)
-    cloud_init <-  readChar(cloud_init, nchars = 32768)
+    cloud_init <-  readChar(file, nchars = 32768)
+    
+    if(!grepl("^#cloud-config\n",cloud_init)){
+      stop("file contents does not start with #cloud-config.  Must be a valid cloud-init file.
+           Got: ", cloud_init)
+    }
   }
   
   dots <- list(...)

@@ -47,9 +47,9 @@ test_that("We can make a VM with metadata", {
 
 test_that("We can make a container VM",{
   
-  vm <- gce_vm_container(cloud_init = system.file("cloudconfig", 
-                                                  "example.yaml", 
-                                                  package = "googleComputeEngineR"),
+  vm <- gce_vm_container(file = system.file("cloudconfig", 
+                                             "example.yaml", 
+                                             package = "googleComputeEngineR"),
                          name = "test-container",
                          predefined_type = "f1-micro")
   

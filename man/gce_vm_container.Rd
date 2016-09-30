@@ -18,6 +18,8 @@ gce_vm_container(file, cloud_init, image_family = "gci-stable", ...)
  
 \code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
 
+A configuration file must be less than 32768 characters.
+
 \code{image_project} will be ignored if set, overriden to \code{google-containers}}
 }
 \value{

@@ -146,13 +146,15 @@ gce_vm_create <- function(name,
                  project, zone)
   
   if(missing(predefined_type)){
-    stopifnot(all(!missing(cpus), !missing(memory)))
+    if(any(missing(cpus), missing(memory))){
+     stop("Must supply one of 'predefined_type', or both 'cpus' and 'memory' arguments.") 
+    }
   }
 
   ## if an image project is defined, create a source_image_url
   if(nchar(image_project) > 0){
     if(!is.null(disk_source)){
-      stop("Can specify only one of image_project or disk_source")
+      stop("Can specify only one of 'image_project' or 'disk_source' arguments.")
     }
 
     if(nchar(image_family) > 0){
@@ -166,7 +168,7 @@ gce_vm_create <- function(name,
     }
     
     if(is.null(source_image_url)){
-      stop("image_project specified but no source image URL was found")
+      stop("No source image URL was found for selected image")
     }
     
   } else {
@@ -185,8 +187,8 @@ gce_vm_create <- function(name,
       source = disk_source,
       ## not in docs apart from https://cloud.google.com/compute/docs/instances/create-start-instance
       autoDelete = jsonlite::unbox(TRUE),
-      boot = jsonlite::unbox(TRUE),
-      type = jsonlite::unbox("PERSISTENT"),
+      boot       = jsonlite::unbox(TRUE),
+      type       = jsonlite::unbox("PERSISTENT"),
       deviceName = jsonlite::unbox(paste0(name,"-boot-disk"))
     )
   )
