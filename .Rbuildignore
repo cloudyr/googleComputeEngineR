@@ -3,7 +3,7 @@
 ^\.httr-oauth$
 cran-comments\.md
 \.travis\.yml
-test_signedurls.RData
+test_signedurls\.RData
 ^codecov\.yml$
 ^CONTRIBUTING\.md$
 ^Readme\.md$
@@ -12,3 +12,5 @@ test_signedurls.RData
 ^drat\.sh$
 ^revdep
 ^\.travis\.yml$
+^docs
+_staticdocs\.yml

@@ -2,8 +2,8 @@
 An R interface to the Google Cloud Compute Engine API, for launching virtual machines.
 
 [![CRAN](http://www.r-pkg.org/badges/version/googleComputeEngineR)](http://cran.r-project.org/package=googleComputeEngineR)
-[![Build Status](https://travis-ci.org/MarkEdmondson1234/googleComputeEngineR.png?branch=master)](https://travis-ci.org/MarkEdmondson1234/googleComputeEngineR)
-[![Coverage Status](https://img.shields.io/codecov/c/github/MarkEdmondson1234/googleComputeEngineR/master.svg)](https://codecov.io/github/MarkEdmondson1234/googleComputeEngineR?branch=master)
+[![Build Status](https://travis-ci.org/cloudyr/googleComputeEngineR.png?branch=master)](https://travis-ci.org/cloudyr/googleComputeEngineR)
+[![Coverage Status](https://img.shields.io/codecov/c/github/cloudyr/googleComputeEngineR/master.svg)](https://codecov.io/github/cloudyr/googleComputeEngineR?branch=master)
 
 ## TL;DR
 
@@ -173,7 +173,7 @@ To create an instance you need to specify:
 * Network - usually default, specifies open ports etc.
 * Image - a source disk image containing the operating system, that may come from another image project or a snapshot
 
-## Default settings
+### Default settings
 
 The default settings let you create a VM like so:
 
@@ -317,3 +317,17 @@ Operation complete in 22 secs
  You may need to wait a few minutes for the inital docker container to download and install before logging in.
 
 ```
+
+You can then use `gce_vm_stop`, `gce_vm_start` etc. for your server.  You are only charged for when the VM is running, so you can stop it until you need it.
+
+## Logging in to your instance
+
+Google Cloud comes with a browser based SSH application, which you can launch via `gce_ssh_browser` to set it up further to your liking.
+
+```r
+library(googleComputeEngineR)
+gce_ssh_browser("my-server")
+```
+
+![](http://g.recordit.co/TpM4IfRLgf.gif)
+
