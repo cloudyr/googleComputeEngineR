@@ -74,3 +74,4 @@ gce_get_instance <- function(instance,
   f()
   
 }
+

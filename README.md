@@ -11,8 +11,12 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 2. Download a service acount key JSON file
 3. Put your default project, zone and JSON file location in your `.Renviron`
 4. Run `library(googleComputeEngineR)` and auto-authenticate
-5. Run `vm <- gce_vm_template("rstudio", name = "rstudio-server", predefined_type = "f1-micro",username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
+5. Run `vm <- gce_vm_template("rstudio", name = "rstudio-server", predefined_type = "f1-micro", username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
 6. Wait for it to install, login via the returned URL.
+
+## Thanks to:
+
+Scott Chamberlin for the [analogsea](https://github.com/sckott/analogsea) package for launching Digital Ocean VMs, which inspired the SSH connector functions for this one.
 
 ## Install
 

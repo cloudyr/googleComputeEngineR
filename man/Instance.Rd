@@ -39,10 +39,5 @@ Instance Object
 \details{
 An Instance resource.
 }
-\seealso{
-Other res: \code{\link{Disk}}, \code{\link{Metadata}},
-  \code{\link{gce_get_global_project}},
-  \code{\link{gce_get_global_zone}}
-}
 \keyword{internal}
 

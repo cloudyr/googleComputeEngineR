@@ -17,3 +17,56 @@ Metadata <- function(items) {
   structure(list(items = key_values), 
             class = c("list","gar_Metadata"))
 }
+
+#' Sets metadata for the specified instance to the data included in the request.
+#' 
+#' Set, change and append metadata for an instance.
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' }
+#' 
+#' To append to existing metadata passed a named list.
+#' 
+#' To change existing metadata pass a named list with the same key and modified value you will change.
+#' 
+#' To delete metadata pass an empty string \code{""} with the same key
+#' 
+#' @param metadata A named list of metadata key/value pairs to assign to this instance
+#' @param instance Name of the instance scoping this request
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' @importFrom googleAuthR gar_api_generator
+#' @family Metadata functions
+#' @export
+gce_set_metadata <- function(metadata, 
+                             instance, 
+                             project = gce_get_global_project(), 
+                             zone = gce_get_global_zone()) {
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMetadata", 
+                 project, zone, instance)
+  
+  ins <- gce_get_instance(instance, project = project, zone = zone)
+
+  meta_now <- ins$metadata$items
+  ## turn data.frame back into named list
+  meta_now_nl <- setNames(lapply(meta_now$key, function(x) meta_now[meta_now$key == x, "value"]), meta_now$key)
+  
+  meta <- Metadata(modifyList(meta_now_nl, metadata))
+  ## need current fingerprint to allow modification
+  meta$fingerprint <- ins$metadata$fingerprint
+  
+  stopifnot(inherits(meta, "gar_Metadata"))
+  
+  # compute.instances.setMetadata  
+  f <- gar_api_generator(url, "POST", data_parse_function = function(x) x)
+
+  f(the_body = meta)
+  
+}

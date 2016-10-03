@@ -39,10 +39,5 @@ Disk Object
 \details{
 A Disk resource.
 }
-\seealso{
-Other res: \code{\link{Instance}}, \code{\link{Metadata}},
-  \code{\link{gce_get_global_project}},
-  \code{\link{gce_get_global_zone}}
-}
 \keyword{internal}
 

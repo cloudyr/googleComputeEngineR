@@ -3,8 +3,10 @@ Type: Package
 Version: 0.0.9000
 Title: R Interface with Google Compute Engine
 Description: Interact with Google Compute Engine API in R.
-Authors@R: c(person("Mark", "Edmondson",email = "r@sunholo.com",
-                  role = c("aut", "cre")))
+Authors@R: c(
+      person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
+      person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com")
+      )
 URL: http://code.markedmondson.me/googleComputeEngineR/
 BugReports: https://github.com/cloudyr/googleComputeEngineR/issues
 Depends:
