@@ -10,7 +10,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
   externalIP = NULL, canIpForward = NULL, description = NULL,
   metadata = NULL, scheduling = NULL, serviceAccounts = NULL,
   tags = NULL, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  zone = gce_get_global_zone(), dry_run = FALSE)
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
@@ -48,6 +48,8 @@ gce_vm_create(name, predefined_type = "f1-micro",
 \item{project}{Project ID for this request}
 
 \item{zone}{The name of the zone for this request}
+
+\item{dry_run}{whether to just create the request JSON}
 }
 \description{
 Creates an instance resource in the specified project using the data included in the request.

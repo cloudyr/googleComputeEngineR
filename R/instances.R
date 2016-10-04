@@ -120,6 +120,7 @@ gce_vm_delete <- function(instance,
 #' @param externalIP An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
+#' @param dry_run whether to just create the request JSON
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
@@ -140,7 +141,8 @@ gce_vm_create <- function(name,
                           serviceAccounts = NULL, 
                           tags = NULL,
                           project = gce_get_global_project(), 
-                          zone = gce_get_global_zone()) {
+                          zone = gce_get_global_zone(),
+                          dry_run = FALSE) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
@@ -210,7 +212,7 @@ gce_vm_create <- function(name,
     serviceAccounts = list(
       list(
         email = jsonlite::unbox(jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email),
-        scopes = jsonlite::unbox("https://www.googleapis.com/auth/cloud-platform")
+        scopes = list("https://www.googleapis.com/auth/cloud-platform")
       )
     )
   }
@@ -227,6 +229,9 @@ gce_vm_create <- function(name,
                            scheduling = scheduling, 
                            serviceAccounts = serviceAccounts, 
                            tags = tags)
+  if(dry_run){
+    return(jsonlite::toJSON(the_instance, pretty = TRUE))
+  }
   
   # compute.instances.insert
   f <- gar_api_generator(url, 
