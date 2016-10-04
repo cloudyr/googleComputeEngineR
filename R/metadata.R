@@ -42,6 +42,7 @@ Metadata <- function(items) {
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
+#' @importFrom utils modifyList
 #' @family Metadata functions
 #' @export
 gce_set_metadata <- function(metadata, 

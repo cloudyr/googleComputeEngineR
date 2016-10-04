@@ -20,6 +20,8 @@ gce_ssh_setup(key.pub, instance, project = gce_get_global_project(),
 You will need to generate a new SSH key-pair if you have not connected to the instance before. Instructions for this can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.  Once you have generated run this function once to initiate setup
 }
 \seealso{
+\url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
+
 Other ssh functions: \code{\link{gce_ssh_browser}},
   \code{\link{gce_ssh}}
 }

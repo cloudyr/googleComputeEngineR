@@ -145,7 +145,15 @@ gce_check_zone_op <- function(job_name, wait = 3){
   }
   
   cat("\nOperation complete in", 
-      format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)))
+      format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)),
+      "\n")
+  
+  if(!is.null(check$error)){
+    errors <- check$error$errors
+    e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")
+    cat("\n# Error: ", e.m)
+    cat("\n# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
+  }
   
   invisible(check)
 }

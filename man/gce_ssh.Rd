@@ -6,7 +6,7 @@
 \alias{gce_ssh_upload}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., user = "root", verbose = FALSE,
+gce_ssh(instance, ..., user, verbose = FALSE,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
 gce_ssh_upload(instance, local, remote, user = "root", verbose = FALSE,
@@ -22,7 +22,7 @@ gce_ssh_download(instance, remote, local, user = "root", verbose = FALSE,
 \item{...}{Shell commands to run. Multiple commands are combined with
 \code{&&} so that execution will halt after the first failure.}
 
-\item{user}{User name. Defaults to "root".}
+\item{user}{User name. This is the login username for your local workstation}
 
 \item{verbose}{If TRUE, will print command before executing it.}
 
@@ -59,6 +59,8 @@ everything inside the directory will also be downloaded.
 Scott Chamberlin \email{myrmecocystus@gmail.com}
 }
 \seealso{
+\url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
+
 Other ssh functions: \code{\link{gce_ssh_browser}},
   \code{\link{gce_ssh_setup}}
 }

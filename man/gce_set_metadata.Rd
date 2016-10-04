@@ -17,7 +17,7 @@ gce_set_metadata(metadata, instance, project = gce_get_global_project(),
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \description{
-Sets metadata for the specified instance to the data included in the request.
+Set, change and append metadata for an instance.
 }
 \details{
 Authentication scopes used by this function are:
@@ -25,6 +25,12 @@ Authentication scopes used by this function are:
   \item https://www.googleapis.com/auth/cloud-platform
 \item https://www.googleapis.com/auth/compute
 }
+
+To append to existing metadata passed a named list.
+
+To change existing metadata pass a named list with the same key and modified value you will change.
+
+To delete metadata pass an empty string \code{""} with the same key
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
