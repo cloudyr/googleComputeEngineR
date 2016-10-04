@@ -204,6 +204,17 @@ gce_vm_create <- function(name,
                                         network = network, 
                                         externalIP = externalIP,
                                         project = project)
+  
+  ## make serviceAccounts
+  if(is.null(serviceAccounts)){
+    serviceAccounts = list(
+      list(
+        email = jsonlite::unbox(jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email),
+        scopes = jsonlite::unbox("https://www.googleapis.com/auth/cloud-platform")
+      )
+    )
+  }
+  
 
   ## make instance object
   the_instance <- Instance(canIpForward = canIpForward, 
