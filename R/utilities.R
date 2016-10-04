@@ -1,3 +1,14 @@
+#' Get auth email
+#' If it includes '@' then assume the email, otherwise an environment file
+auth_email <- function(source){
+  
+  if(!grepl("@", source)){
+    jsonlite::fromJSON(Sys.getenv(source))$client_email
+  } else {
+    source
+  }
+  
+}
 
 #' Timestamp to R date
 #' @keywords internal

@@ -121,6 +121,7 @@ gce_vm_delete <- function(instance,
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' @param dry_run whether to just create the request JSON
+#' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
@@ -140,6 +141,7 @@ gce_vm_create <- function(name,
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
                           tags = NULL,
+                          auth_email = "GCE_AUTH_FILE",
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone(),
                           dry_run = FALSE) {
@@ -211,7 +213,7 @@ gce_vm_create <- function(name,
   if(is.null(serviceAccounts)){
     serviceAccounts = list(
       list(
-        email = jsonlite::unbox(jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email),
+        email = jsonlite::unbox(auth_email(auth_email)),
         scopes = list("https://www.googleapis.com/auth/cloud-platform")
       )
     )
