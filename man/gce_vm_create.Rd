@@ -9,8 +9,9 @@ gce_vm_create(name, predefined_type = "f1-micro",
   image = "", disk_source = NULL, network = "default",
   externalIP = NULL, canIpForward = NULL, description = NULL,
   metadata = NULL, scheduling = NULL, serviceAccounts = NULL,
-  tags = NULL, project = gce_get_global_project(),
-  zone = gce_get_global_zone(), dry_run = FALSE)
+  tags = NULL, auth_email = "GCE_AUTH_FILE",
+  project = gce_get_global_project(), zone = gce_get_global_zone(),
+  dry_run = FALSE)
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
@@ -44,6 +45,8 @@ gce_vm_create(name, predefined_type = "f1-micro",
 \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
 
 \item{tags}{A list of tags to apply to this instance}
+
+\item{auth_email}{If it includes '@' then assume the email, otherwise an environment file var that includes the email}
 
 \item{project}{Project ID for this request}
 
