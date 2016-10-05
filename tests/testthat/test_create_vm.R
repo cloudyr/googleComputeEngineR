@@ -28,7 +28,7 @@ test_that("We can make a VM with metadata", {
   vm <- gce_vm_create(name = "test-vm", 
                       predefined_type = "f1-micro",
                       metadata = list(test_date = today),
-                      auth_email = "TRAVIS_GCE_AUTH_EMAIL")
+                      auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(vm$kind, "compute#operation")
   
@@ -53,7 +53,7 @@ test_that("We can make a container VM",{
                                              package = "googleComputeEngineR"),
                          name = "test-container",
                          predefined_type = "f1-micro",
-                         auth_email = "TRAVIS_GCE_AUTH_EMAIL")
+                         auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(vm$kind, "compute#operation")
   
@@ -78,7 +78,7 @@ test_that("We can make a template VM", {
                         predefined_type = "f1-micro", 
                         username = "mark", 
                         password = "mark1234",
-                        auth_email = "TRAVIS_GCE_AUTH_EMAIL")
+                        auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(vm$kind, "compute#instance")
   
