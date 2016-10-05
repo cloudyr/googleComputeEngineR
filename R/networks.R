@@ -17,7 +17,7 @@ gce_get_external_ip <- function(instance,
   
   cat("\n External IP for instance", instance, " : ", ip, "\n")
   
-  ip
+  invisible(ip)
 }
 
 #' Make a network interface for instance creation

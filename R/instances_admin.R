@@ -37,7 +37,12 @@ gce_list_instances <- function(filter = NULL,
                          "GET", 
                          pars_args = pars, 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
+  
+  structure(
+    out,
+    class = c("list","gce_instanceList")
+  )
   
 }
 
