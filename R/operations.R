@@ -111,11 +111,12 @@ gce_list_zone_op <- function(filter = NULL,
 #' 
 #' @param job_name The job name
 #' @param wait Time in seconds between checks, default 3 seconds.
+#' @param verbose Whether to give user feedback
 #' 
 #' @return The completed job object, invisibly
 #' 
 #' @export
-gce_check_zone_op <- function(job_name, wait = 3){
+gce_check_zone_op <- function(job_name, wait = 3, verbose = TRUE){
   
   testthat::expect_type(job_name, "character")
   testthat::expect_true(grepl("^operation-",job_name))
@@ -132,11 +133,11 @@ gce_check_zone_op <- function(job_name, wait = 3){
       
     } else if(check$status == "RUNNING"){
       
-      cat("\nJob running: ", check$progress, "/100")
+      if(verbose) cat("\nJob running: ", check$progress, "/100")
 
     } else {
       
-      cat("\nChecking job....")
+      if(verbose) cat("\nChecking job....")
       
     }
     
@@ -144,9 +145,10 @@ gce_check_zone_op <- function(job_name, wait = 3){
     
   }
   
-  cat("\nOperation complete in", 
-      format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)),
-      "\n")
+  if(verbose) 
+    cat("\nOperation complete in", 
+        format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), 
+        "\n")
   
   if(!is.null(check$error)){
     errors <- check$error$errors

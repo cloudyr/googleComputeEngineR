@@ -1,22 +1,24 @@
 #' Get the external IP of an instance
 #' 
 #' @param instance Name of the instance to find the external IP for
+#' @param verbose Give a user message about the IP
 #' @param ... passed to \link{gce_get_instance}
 #' 
 #' This is a helper to extract the external IP of an instance
 #' @return The external IP
 #' @export
 gce_get_external_ip <- function(instance, 
+                                verbose = TRUE,
                                 ...){
-  
-  dots <- list(...)
   
   inst <- gce_get_instance(instance, ...)
   
   ip <- inst$networkInterfaces$accessConfigs[[1]]$natIP
   
-  cat("\n External IP for instance", instance, " : ", ip, "\n")
-  
+  if(verbose){
+    cat("\n External IP for instance", instance, " : ", ip, "\n")
+  }
+
   invisible(ip)
 }
 

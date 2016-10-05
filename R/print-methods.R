@@ -17,6 +17,6 @@ print.gce_instanceList <- function(x, ...){
 
   
   print_cols <- c("name","machineType","status","zone","externalIP","creationTimestamp")
-  cat("==Google Cloud Engine Instance List==\n")
+  cat("==Google Compute Engine Instance List==\n")
   print(out[, print_cols])
 }

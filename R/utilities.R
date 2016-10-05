@@ -1,5 +1,6 @@
 #' Get auth email
 #' If it includes '@' then assume the email, otherwise an environment file
+#' @param source where the email comes from
 auth_email <- function(source){
   
   if(!grepl("@", source)){

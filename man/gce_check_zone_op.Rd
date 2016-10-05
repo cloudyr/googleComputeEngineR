@@ -4,12 +4,14 @@
 \alias{gce_check_zone_op}
 \title{Wait for an operation to finish}
 \usage{
-gce_check_zone_op(job_name, wait = 3)
+gce_check_zone_op(job_name, wait = 3, verbose = TRUE)
 }
 \arguments{
 \item{job_name}{The job name}
 
 \item{wait}{Time in seconds between checks, default 3 seconds.}
+
+\item{verbose}{Whether to give user feedback}
 }
 \value{
 The completed job object, invisibly

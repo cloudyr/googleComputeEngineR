@@ -7,6 +7,9 @@ If it includes '@' then assume the email, otherwise an environment file}
 \usage{
 auth_email(source)
 }
+\arguments{
+\item{source}{where the email comes from}
+}
 \description{
 Get auth email
 If it includes '@' then assume the email, otherwise an environment file

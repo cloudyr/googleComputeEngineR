@@ -4,10 +4,12 @@
 \alias{gce_get_external_ip}
 \title{Get the external IP of an instance}
 \usage{
-gce_get_external_ip(instance, ...)
+gce_get_external_ip(instance, verbose = TRUE, ...)
 }
 \arguments{
 \item{instance}{Name of the instance to find the external IP for}
+
+\item{verbose}{Give a user message about the IP}
 
 \item{...}{passed to \link{gce_get_instance}
 

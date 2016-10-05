@@ -6,7 +6,7 @@
 \alias{gce_ssh_upload}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., user, verbose = FALSE,
+gce_ssh(instance, ..., user, key.pub = NULL, key.private = NULL,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
 gce_ssh_upload(instance, local, remote, user = "root", verbose = FALSE,
@@ -22,15 +22,19 @@ gce_ssh_download(instance, remote, local, user = "root", verbose = FALSE,
 \item{...}{Shell commands to run. Multiple commands are combined with
 \code{&&} so that execution will halt after the first failure.}
 
-\item{user}{User name. This is the login username for your local workstation}
+\item{user}{User name used to generate ssh-keys. Usually your login to your local workstation or Google account alias.}
 
-\item{verbose}{If TRUE, will print command before executing it.}
+\item{key.pub}{The filepath location of the public key, only needed first call per session}
+
+\item{key.private}{The filepath location of the private key, only needed first call per session}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 
 \item{local, remote}{Local and remote paths.}
+
+\item{verbose}{If TRUE, will print command before executing it.}
 
 \item{overwrite}{If TRUE, then overwrite destination files if they already
 exist.}
