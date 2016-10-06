@@ -1,3 +1,12 @@
+#' Docker S3 method for use with harbor package
+#' 
+#' @param host The GCE instance
+#' @param cmd The command to pass to docker
+#' @param args arguments to the command
+#' @param docker_opts options for docker
+#' @param capture_text whether to return the output
+#' @param ... other arguments passed to \link{gce_ssh}
+#' 
 #' @export
 docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
                                     docker_opts = NULL, capture_text = FALSE, ...) {
