@@ -5,6 +5,8 @@
 as.gce_instance_name <- function(x){
   if(inherits(x, "gce_instance")){
     out <- x$name
+  } else if(inherits(x, "gce_zone_operation")){
+    out <- basename(x$targetLink)
   } else if(inherits(x, "character")) {
     out <- x
   } else {

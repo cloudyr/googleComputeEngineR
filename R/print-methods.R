@@ -39,9 +39,9 @@ print.gce_zone_operation <- function(x, ...){
   
   cat("==Operation", x$operationType, ": ", x$status)
   cat("\nStarted: ", as.character(timestamp_to_r(x$insertTime)))
-  cat0("\nEnded:", as.character(timestamp_to_r(x$endTime)))
   
   if(!is.null(x$endTime)){
+    cat0("\nEnded:", as.character(timestamp_to_r(x$endTime)))
     cat("Operation complete in", 
         format(timestamp_to_r(x$endTime) - timestamp_to_r(x$insertTime)), 
         "\n")

@@ -124,10 +124,10 @@ gce_list_zone_op <- function(filter = NULL,
 #' @export
 gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
-  if(operation$kind == "compute#operation"){
-    job_name <- operation$name
-  } else if(inherits(operation, "character")){
+  if(inherits(operation, "character")){
     job_name <- operation
+  } else if(operation$kind == "compute#operation"){
+    job_name <- operation$name
   } else {
     stop("Operation was not a compute#operation or name")
   }
