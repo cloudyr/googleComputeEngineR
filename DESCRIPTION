@@ -5,7 +5,8 @@ Title: R Interface with Google Compute Engine
 Description: Interact with Google Compute Engine API in R.
 Authors@R: c(
       person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
-      person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com")
+      person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com"),
+      person("Winston", "Chang", role = "ctb", email = "winston@stdout.org")
       )
 URL: http://code.markedmondson.me/googleComputeEngineR/
 BugReports: https://github.com/cloudyr/googleComputeEngineR/issues

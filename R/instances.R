@@ -123,6 +123,8 @@ gce_vm_delete <- function(instance,
 #' @param dry_run whether to just create the request JSON
 #' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' 
+#' @return A zone operation
+#' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_vm_create <- function(name,

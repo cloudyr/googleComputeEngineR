@@ -133,11 +133,11 @@ gce_check_zone_op <- function(job_name, wait = 3, verbose = TRUE){
       
     } else if(check$status == "RUNNING"){
       
-      if(verbose) cat("\nJob running: ", check$progress, "/100")
+      if(verbose) cat("\nOperation running: ", check$progress, "/100")
 
     } else {
       
-      if(verbose) cat("\nChecking job....")
+      if(verbose) cat("\nChecking operation....")
       
     }
     

@@ -20,7 +20,7 @@ AttachedDisk(autoDelete = NULL, boot = NULL, deviceName = NULL,
 
 \item{index}{Assigns a zero-based index to this disk, where 0 is reserved for the boot disk}
 
-\item{initializeParams}{[Input Only] Specifies the parameters for a new disk that will be created alongside the new instance}
+\item{initializeParams}{A \link{gce_make_boot_disk} object for creating boot disks. Cannot be used with \code{source} also defined.}
 
 \item{interface}{Specifies the disk interface to use for attaching this disk, which is either SCSI or NVME}
 

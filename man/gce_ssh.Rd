@@ -9,10 +9,10 @@
 gce_ssh(instance, ..., user, key.pub = NULL, key.private = NULL,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_upload(instance, local, remote, user = "root", verbose = FALSE,
+gce_ssh_upload(instance, local, remote, user, verbose = FALSE,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_download(instance, remote, local, user = "root", verbose = FALSE,
+gce_ssh_download(instance, remote, local, user, verbose = FALSE,
   overwrite = FALSE, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 }

@@ -1,3 +1,22 @@
+extract_ip <- function(ii){
+  vapply(ii$items$networkInterfaces, function(x) {
+    y <- x$accessConfigs[[1]]$natIP
+    if(is.null(y)) y <- "No external IP"
+    y
+  }, character(1))
+}
+
+# Given a string, indent every line by some number of spaces.
+# The exception is to not add spaces after a trailing \n.
+#' @author Winston Chang \email{winston@@stdout.org}
+indent <- function(str, indent = 0) {
+  gsub("(^|\\n)(?!$)",
+       paste0("\\1", paste(rep(" ", indent), collapse = "")),
+       str,
+       perl = TRUE
+  )
+}
+
 #' Get auth email
 #' If it includes '@' then assume the email, otherwise an environment file
 #' @param source where the email comes from

@@ -76,7 +76,12 @@ gce_get_instance <- function(instance,
   f <- gar_api_generator(url, 
                          "GET", 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
+  
+  structure(
+    out,
+    class = c("list","gce_instance")
+  )
   
 }
 

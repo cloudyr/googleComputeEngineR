@@ -16,7 +16,8 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 
 ## Thanks to:
 
-Scott Chamberlin for the [analogsea](https://github.com/sckott/analogsea) package for launching Digital Ocean VMs, which inspired the SSH connector functions for this one.
+* Scott Chamberlin for the [analogsea](https://github.com/sckott/analogsea) package for launching Digital Ocean VMs, which inspired the SSH connector functions for this one.
+* Winston Chang for the [harbor](https://github.com/wch/harbor/) package where the docker functions come from.  If `harbor` will be published to CRAN, it will become a dependency for this one.
 
 ## Install
 

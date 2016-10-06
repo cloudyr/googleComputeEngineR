@@ -25,7 +25,7 @@ test_that("We list instances", {
   
   the_list <- gce_list_instances(project = "mark-edmondson-gde",
                                  zone = "europe-west1-b")
-  
+  print(the_list)
   expect_equal(the_list$kind, "compute#instanceList")
   
 })
