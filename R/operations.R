@@ -1,3 +1,8 @@
+# sets operation class
+as.zone_operation <- function(x){
+  structure(x, class = c("list", "gce_zone_operation"))
+}
+
 #' Deletes the specified zone-specific Operations resource.
 #' 
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
@@ -25,9 +30,9 @@ gce_delete_zone_op <- function(operation,
   # compute.zoneOperations.delete
   f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) x)
   
-  suppressWarnings(f())
+  suppressWarnings(out <- f())
   myMessage("Operation cancelled", level = 3)
-  TRUE
+  as.zone_operation(out)
   
 }
 
@@ -59,8 +64,9 @@ gce_get_zone_op <- function(operation,
                  project, zone, operation)
   # compute.zoneOperations.get
   f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
-  f()
+  out <- f()
   
+  as.zone_operation(out)
 }
 
 #' Retrieves a list of Operation resources contained within the specified zone.
@@ -109,14 +115,22 @@ gce_list_zone_op <- function(filter = NULL,
 #' 
 #' Will periodically check an operation until it is "DONE"
 #' 
-#' @param job_name The job name
+#' @param operation The operation object or name
 #' @param wait Time in seconds between checks, default 3 seconds.
 #' @param verbose Whether to give user feedback
 #' 
 #' @return The completed job object, invisibly
 #' 
 #' @export
-gce_check_zone_op <- function(job_name, wait = 3, verbose = TRUE){
+gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
+  
+  if(operation$kind == "compute#operation"){
+    job_name <- operation$name
+  } else if(inherits(operation, "character")){
+    job_name <- operation
+  } else {
+    stop("Operation was not a compute#operation or name")
+  }
   
   testthat::expect_type(job_name, "character")
   testthat::expect_true(grepl("^operation-",job_name))
@@ -153,9 +167,9 @@ gce_check_zone_op <- function(job_name, wait = 3, verbose = TRUE){
   if(!is.null(check$error)){
     errors <- check$error$errors
     e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")
-    cat("\n# Error: ", e.m)
-    cat("\n# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
+    warning("\n# Error: ", e.m)
+    warning("\n# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
   }
   
-  invisible(check)
+  as.zone_operation(check)
 }

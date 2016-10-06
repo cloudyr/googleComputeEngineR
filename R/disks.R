@@ -127,8 +127,9 @@ gce_attach_disk <- function(instance,
                             type = type)
   stopifnot(inherits(attach_me, "gar_AttachedDisk"))
   
-  f(the_body = attach_me)
+  out <- f(the_body = attach_me)
   
+  as.zone_operation(out)
 }
 
 
@@ -234,8 +235,9 @@ gce_make_disk <- function(name,
                          "POST", 
                          data_parse_function = function(x) x)
   
-  f(the_body = a_disk)
+  out <- f(the_body = a_disk)
   
+  as.zone_operation(out)
 }
 
 

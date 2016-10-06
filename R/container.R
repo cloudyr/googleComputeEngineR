@@ -134,21 +134,4 @@ gce_vm_container <- function(file,
   
 }
 
-#' Container images
-#' 
-#' https://cloud.google.com/container-registry/docs/advanced-authentication
-#' 
-#' Upload project JSON auth file for login
-#' docker login -e 1234@5678.com -u _json_key -p "$(cat keyfile.json)" https://gcr.io
-#' 
-#' https://cloud.google.com/container-registry/docs/using-with-google-cloud-platform
-#' 
-#' https://cloudinit.readthedocs.io/en/latest/topics/examples.html#yaml-examples
-#' 
-#' https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd/
-#' 
-#' https://cloud.google.com/compute/docs/storing-retrieving-metadata
-#' 
-
-
 

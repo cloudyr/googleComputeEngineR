@@ -37,6 +37,7 @@ test_that("We can get an instance", {
                                zone = "europe-west1-b",
                                instance = "mc-server")
 
+  print(the_inst)
   expect_equal(the_inst$kind, "compute#instance")
 
 })
@@ -50,8 +51,8 @@ test_that("We can start an instance", {
   
   expect_equal(job$kind, "compute#operation")
   
-  gce_check_zone_op(job$name)
-  
+  op <- gce_check_zone_op(job$name)
+  print(op)
   cat("\nmarkdev VM started")
   inst <- gce_get_instance("markdev")
   

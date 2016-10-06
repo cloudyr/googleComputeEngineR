@@ -9,6 +9,8 @@
 #' @keywords internal
 Metadata <- function(items) {
   
+  if(is.null(items)) return(NULL)
+  
   testthat::expect_named(items)
   
   key_values <- lapply(names(items), function(x) list(key = jsonlite::unbox(x), 
@@ -69,6 +71,7 @@ gce_set_metadata <- function(metadata,
   # compute.instances.setMetadata  
   f <- gar_api_generator(url, "POST", data_parse_function = function(x) x)
 
-  f(the_body = meta)
+  out <- f(the_body = meta)
+  as.zone_operation(out)
   
 }

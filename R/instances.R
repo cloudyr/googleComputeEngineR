@@ -90,8 +90,9 @@ gce_vm_delete <- function(instance,
   f <- gar_api_generator(url, 
                          "DELETE", 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
   
+  as.zone_operation(out)
 }
 
 
@@ -261,8 +262,9 @@ gce_vm_create <- function(name,
                          data_parse_function = function(x) x)
   stopifnot(inherits(the_instance, "gar_Instance"))
   
-  f(the_body = rmNullObs(the_instance))
+  out <- f(the_body = rmNullObs(the_instance))
   
+  as.zone_operation(out)
 }
 
 
@@ -294,8 +296,9 @@ gce_vm_reset <- function(instance,
   f <- gar_api_generator(url, 
                          "POST", 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
   
+  as.zone_operation(out)
 }
 
 
@@ -333,8 +336,9 @@ gce_vm_start <- function(instance,
   f <- gar_api_generator(url, 
                          "POST", 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
   
+  as.zone_operation(out)
 }
 
 #' Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time. 
@@ -372,7 +376,8 @@ gce_vm_stop <- function(instance,
   f <- gar_api_generator(url, 
                          "POST",
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
   
+  as.zone_operation(out)
 }
 
