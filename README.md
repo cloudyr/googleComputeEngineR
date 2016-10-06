@@ -357,4 +357,11 @@ gce_ssh("your-instance", "cd", user = "mark")
 
 You can also call `gce_ssh` directly which will call `gce_ssh_setup` if it has not been run already.
 
+## Docker commands
+
+For docker containers, you can use the package `harbor` to speak to the docker containers on the instance.  You can also develop your docker container locally first using BootToDocker or similar before pushing it up.
+
+```r
+## for now, install this fork: devtools::install_github("MarkEdmondson1234/harbor")
+library(harbor)
 

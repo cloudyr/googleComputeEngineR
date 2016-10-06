@@ -20,6 +20,7 @@ Suggests:
     covr,
     rmarkdown,
     testthat
+Remotes: MarkEdmondson1234/harbor
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

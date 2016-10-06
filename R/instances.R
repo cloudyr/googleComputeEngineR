@@ -1,3 +1,20 @@
+#' Get the instance name if passed an instance
+#' @param a character name or gce_instance object
+#' 
+#' @keywords internal
+as.gce_instance_name <- function(x){
+  if(inherits(x, "gce_instance")){
+    out <- x$name
+  } else if(inherits(x, "character")) {
+    out <- x
+  } else {
+    stop("Instance supplied was not a character name or gce_instance")
+  }
+  
+  out
+}
+
+
 #' Instance Object
 #' 
 #' @details 
@@ -56,7 +73,7 @@ Instance <- function(name = NULL,
 #' }
 #' 
 #' 
-#' @param instance Name of the instance resource
+#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
@@ -66,6 +83,7 @@ gce_vm_delete <- function(instance,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone() 
                           ) {
+  instance <- as.gce_instance_name(instance)
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
                  project, zone, instance)
   # compute.instances.delete
@@ -261,7 +279,7 @@ gce_vm_create <- function(name,
 #' }
 #' 
 #' 
-#' @param instance Name of the instance resource
+#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
@@ -269,7 +287,7 @@ gce_vm_create <- function(name,
 gce_vm_reset <- function(instance,
                          project = gce_get_global_project(), 
                          zone = gce_get_global_zone()) {
-  
+  instance <- as.gce_instance_name(instance)
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/reset", 
                  project, zone, instance)
   # compute.instances.reset
@@ -296,7 +314,7 @@ gce_vm_reset <- function(instance,
 #' }
 #' 
 #' 
-#' @param instance Name of the instance resource
+#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
@@ -308,7 +326,7 @@ gce_vm_start <- function(instance,
                          project = gce_get_global_project(), 
                          zone = gce_get_global_zone()
                          ) {
-  
+  instance <- as.gce_instance_name(instance)
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/start", 
                  project, zone, instance)
   # compute.instances.start
@@ -335,7 +353,7 @@ gce_vm_start <- function(instance,
 #'   such as persistent disks and static IP addresses, 
 #'   will continue to be charged until they are deleted.
 #'   
-#' @param instance Name of the instance resource to stop
+#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
@@ -345,6 +363,7 @@ gce_vm_stop <- function(instance,
                         project = gce_get_global_project(), 
                         zone = gce_get_global_zone() 
                         ) {
+  instance <- as.gce_instance_name(instance)
   
   url <- 
     sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/stop",

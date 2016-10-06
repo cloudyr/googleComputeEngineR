@@ -3,7 +3,7 @@
 <html>
   <head>
   <meta charset="utf-8">
-<title>AttachedDisk. googleComputeEngineR</title>
+<title>gce_make_boot_disk. googleComputeEngineR</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -66,62 +66,44 @@
         </header>
 
         <div class="page-header">
-  <h1>AttachedDisk Object</h1>
+  <h1>Make a boot disk for attachment to an instance</h1>
 </div>
 
 <div class="row">
   <div class="col-md-9">
     
-    <p>AttachedDisk Object</p>
+    <p>Make a boot disk for attachment to an instance</p>
     
 
-    <pre><span class='fu'>AttachedDisk</span>(<span class='kw'>autoDelete</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>boot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>deviceName</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>diskEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>initializeParams</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>interface</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>licenses</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mode</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre><span class='fu'>gce_make_boot_disk</span>(<span class='kw'>diskName</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>diskSizeGb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>diskType</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sourceImage</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceImageEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>autoDelete</dt>
-      <dd>Specifies whether the disk will be auto-deleted when the instance is deleted (but not when the disk is detached from the instance)</dd>
-      <dt>boot</dt>
-      <dd>Indicates that this is a boot disk</dd>
-      <dt>deviceName</dt>
-      <dd>Specifies a unique device name of your choice that is reflected into the /dev/disk/by-id/google-* tree of a Linux operating system running within the instance</dd>
-      <dt>diskEncryptionKey</dt>
-      <dd>Encrypts or decrypts a disk using a customer-supplied encryption key</dd>
-      <dt>index</dt>
-      <dd>Assigns a zero-based index to this disk, where 0 is reserved for the boot disk</dd>
-      <dt>initializeParams</dt>
-      <dd>A gce_make_boot_disk object for creating boot disks. Cannot be used with <code>source</code> also defined.</dd>
-      <dt>interface</dt>
-      <dd>Specifies the disk interface to use for attaching this disk, which is either SCSI or NVME</dd>
-      <dt>licenses</dt>
-      <dd>[Output Only] Any valid publicly visible licenses</dd>
-      <dt>mode</dt>
-      <dd>The mode in which to attach this disk, either READ_WRITE or READ_ONLY</dd>
-      <dt>source</dt>
-      <dd>Specifies a valid partial or full URL to an existing Persistent Disk resource</dd>
-      <dt>type</dt>
-      <dd>Specifies the type of the disk, either SCRATCH or PERSISTENT</dd>
+      <dt>diskName</dt>
+      <dd>Specifies the disk name</dd>
+      <dt>diskSizeGb</dt>
+      <dd>Specifies the size of the disk in base-2 GB</dd>
+      <dt>diskType</dt>
+      <dd>Specifies the disk type to use to create the instance</dd>
+      <dt>sourceImage</dt>
+      <dd>The source image used to create this disk</dd>
+      <dt>sourceImageEncryptionKey</dt>
+      <dd>The customer-supplied encryption key of the source image</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
 
-      <p>AttachedDisk object</p>
+      <p>AttachedDiskInitializeParams object</p>
     </div>
 
     <div class="Details">
       <h2>Details</h2>
 
-      <p>An instance-attached disk resource.</p>
-    </div>
-
-    <div class="See also">
-      <h2>See also</h2>
-
-      <p>Other AttachedDisk functions: <code>gce_attach_disk</code></p>
+      <p>Specifies the parameters for a new disk that will be created alongside the new instance.</p>
+      <p>Use initialization parameters to create boot disks or local SSDs attached to the new instance.</p>
+      <p>This property is mutually exclusive with the source property; you can only define one or the other, but not both.</p>
     </div>
       </div>
   <div class="col-md-3">

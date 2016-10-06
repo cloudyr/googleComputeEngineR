@@ -98,7 +98,7 @@
       <dt>index</dt>
       <dd>Assigns a zero-based index to this disk, where 0 is reserved for the boot disk</dd>
       <dt>initializeParams</dt>
-      <dd>[Input Only] Specifies the parameters for a new disk that will be created alongside the new instance</dd>
+      <dd>A gce_make_boot_disk object for creating boot disks. Cannot be used with <code>source</code> also defined.</dd>
       <dt>interface</dt>
       <dd>Specifies the disk interface to use for attaching this disk, which is either SCSI or NVME</dd>
       <dt>licenses</dt>
