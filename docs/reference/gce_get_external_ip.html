@@ -75,12 +75,14 @@
     <p>Get the external IP of an instance</p>
     
 
-    <pre><span class='fu'>gce_get_external_ip</span>(<span class='no'>instance</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>gce_get_external_ip</span>(<span class='no'>instance</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
       <dt>instance</dt>
       <dd>Name of the instance to find the external IP for</dd>
+      <dt>verbose</dt>
+      <dd>Give a user message about the IP</dd>
       <dt>...</dt>
       <dd>passed to gce_get_instance
 

@@ -78,9 +78,11 @@
 <li>Put your default project, zone and JSON file location in your <code>.Renviron</code>
 </li>
 <li>Run <code>library(googleComputeEngineR)</code> and auto-authenticate</li>
-<li>Run <code>vm &lt;- gce_vm_template("rstudio", name = "rstudio-server", predefined_type = "f1-micro",username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
+<li>Run <code>vm &lt;- gce_vm_template("rstudio", name = "rstudio-server", predefined_type = "f1-micro", username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
 <li>Wait for it to install, login via the returned URL.</li>
 </ol>
+<h2 id="thanks-to">Thanks to:</h2>
+<p>Scott Chamberlin for the <a href="https://github.com/sckott/analogsea">analogsea</a> package for launching Digital Ocean VMs, which inspired the SSH connector functions for this one.</p>
 <h2 id="install">Install</h2>
 <p>Its not on CRAN yet:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"MarkEdmondson1234/googleComputeEngineR"</span>)</code></pre></div>
@@ -301,6 +303,19 @@ Operation complete in <span class="dv">22</span> secs
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 <span class="kw"><a href="reference/gce_ssh_browser.html">gce_ssh_browser</a></span>(<span class="st">"my-server"</span>)</code></pre></div>
 <p><img src="http://g.recordit.co/TpM4IfRLgf.gif"></p>
+<h2 id="ssh-commands">SSH commands</h2>
+<p>You can also send ssh commands to your running instance from R via the <code><a href="reference/gce_ssh.html">gce_ssh()</a></code> commands.</p>
+<p>For this you will need to either connect first via the <code>gcloud compute ssh</code> command that generates SSH-keys, or generate them yourself following this guide.</p>
+<p>Once you have generated for your username, the public and private key, you can connect via:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+<span class="kw"><a href="reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(<span class="dt">username =</span> <span class="st">"mark"</span>, 
+              <span class="dt">instance =</span> <span class="st">"your-instance"</span>, 
+              <span class="dt">key.pub =</span> <span class="st">"filepath.to.public.key"</span>,
+              <span class="dt">key.private =</span> <span class="st">"filepath.to.private.key"</span>)
+              
+<span class="kw"><a href="reference/gce_ssh.html">gce_ssh</a></span>(<span class="st">"your-instance"</span>, <span class="st">"cd"</span>, <span class="dt">user =</span> <span class="st">"mark"</span>)</code></pre></div>
+<p>You can also call <code>gce_ssh</code> directly which will call <code>gce_ssh_setup</code> if it has not been run already.</p>
 
   </div>
 </div>

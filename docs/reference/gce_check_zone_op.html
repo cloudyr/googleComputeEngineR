@@ -75,7 +75,7 @@
     <p>Will periodically check an operation until it is &quot;DONE&quot;</p>
     
 
-    <pre><span class='fu'>gce_check_zone_op</span>(<span class='no'>job_name</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
+    <pre><span class='fu'>gce_check_zone_op</span>(<span class='no'>job_name</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
@@ -83,6 +83,8 @@
       <dd>The job name</dd>
       <dt>wait</dt>
       <dd>Time in seconds between checks, default 3 seconds.</dd>
+      <dt>verbose</dt>
+      <dd>Whether to give user feedback</dd>
     </dl>
     
     <div class="Value">

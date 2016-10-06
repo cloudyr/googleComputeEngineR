@@ -3,7 +3,7 @@
 <html>
   <head>
   <meta charset="utf-8">
-<title>Disk. googleComputeEngineR</title>
+<title>gce_set_metadata. googleComputeEngineR</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -66,54 +66,50 @@
         </header>
 
         <div class="page-header">
-  <h1>Disk Object</h1>
+  <h1>Sets metadata for the specified instance to the data included in the request.</h1>
 </div>
 
 <div class="row">
   <div class="col-md-9">
     
-    <p>Disk Object</p>
+    <p>Set, change and append metadata for an instance.</p>
     
 
-    <pre><span class='fu'>Disk</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceImage</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sizeGb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>diskEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>licenses</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceImageEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceSnapshot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceSnapshotEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre><span class='fu'>gce_set_metadata</span>(<span class='no'>metadata</span>, <span class='no'>instance</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_project</span>(),
+  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_zone</span>())</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>Name of the resource</dd>
-      <dt>sourceImage</dt>
-      <dd>The source image used to create this disk</dd>
-      <dt>sizeGb</dt>
-      <dd>Size of the persistent disk, specified in GB</dd>
-      <dt>description</dt>
-      <dd>An optional description of this resource</dd>
-      <dt>diskEncryptionKey</dt>
-      <dd>Encrypts the disk using a customer-supplied encryption key</dd>
-      <dt>licenses</dt>
-      <dd>Any applicable publicly visible licenses</dd>
-      <dt>sourceImageEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source image</dd>
-      <dt>sourceSnapshot</dt>
-      <dd>The source snapshot used to create this disk</dd>
-      <dt>sourceSnapshotEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source snapshot</dd>
-      <dt>type</dt>
-      <dd>URL of the disk type resource describing which disk type to use to create the disk</dd>
+      <dt>metadata</dt>
+      <dd>A named list of metadata key/value pairs to assign to this instance</dd>
+      <dt>instance</dt>
+      <dd>Name of the instance scoping this request</dd>
+      <dt>project</dt>
+      <dd>Project ID for this request, default as set by gce_get_global_project</dd>
+      <dt>zone</dt>
+      <dd>The name of the zone for this request, default as set by gce_get_global_zone</dd>
     </dl>
     
-    <div class="Value">
-      <h2>Value</h2>
-
-      <p>Disk object</p>
-    </div>
-
     <div class="Details">
       <h2>Details</h2>
 
-      <p>A Disk resource.</p>
+      <p>Authentication scopes used by this function are:
+<ul>
+<li> https://www.googleapis.com/auth/cloud-platform
+</li>
+<li> https://www.googleapis.com/auth/compute
+</li>
+</ul></p>
+      <p>To append to existing metadata passed a named list.</p>
+      <p>To change existing metadata pass a named list with the same key and modified value you will change.</p>
+      <p>To delete metadata pass an empty string <code>&quot;&quot;</code> with the same key</p>
+    </div>
+
+    <div class="See also">
+      <h2>See also</h2>
+
+      <p><a href = 'Google Documentation'>https://developers.google.com/compute/docs/reference/latest/</a></p>
+      <p>Other Metadata functions: <code>Metadata</code></p>
     </div>
       </div>
   <div class="col-md-3">

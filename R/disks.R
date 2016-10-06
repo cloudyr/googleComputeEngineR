@@ -18,7 +18,7 @@
 #' @return AttachedDisk object
 #' 
 #' @family AttachedDisk functions
-#' @export
+#' @keywords internal
 AttachedDisk <- function(autoDelete = NULL, 
                          boot = NULL, 
                          deviceName = NULL, 
@@ -59,7 +59,7 @@ AttachedDisk <- function(autoDelete = NULL,
 #' @return AttachedDiskInitializeParams object
 #' 
 #' @family AttachedDiskInitializeParams functions
-#' @export
+#' @keywords internal
 AttachedDiskInitializeParams <- function(diskName = NULL, diskSizeGb = NULL, diskType = NULL, 
                                          sourceImage = NULL, sourceImageEncryptionKey = NULL) {
   structure(list(diskName = diskName, diskSizeGb = diskSizeGb, diskType = diskType, 

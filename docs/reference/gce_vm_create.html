@@ -80,8 +80,9 @@
   <span class='kw'>image</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>disk_source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>network</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
   <span class='kw'>externalIP</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>canIpForward</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>metadata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scheduling</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serviceAccounts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_project</span>(),
-  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_zone</span>())</pre>
+  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auth_email</span> <span class='kw'>=</span> <span class='st'>"GCE_AUTH_FILE"</span>,
+  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_project</span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_zone</span>(),
+  <span class='kw'>dry_run</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
@@ -117,10 +118,14 @@
       <dd>A list of service accounts, with their specified scopes, authorized for this instance</dd>
       <dt>tags</dt>
       <dd>A list of tags to apply to this instance</dd>
+      <dt>auth_email</dt>
+      <dd>If it includes &#39;@&#39; then assume the email, otherwise an environment file var that includes the email</dd>
       <dt>project</dt>
       <dd>Project ID for this request</dd>
       <dt>zone</dt>
       <dd>The name of the zone for this request</dd>
+      <dt>dry_run</dt>
+      <dd>whether to just create the request JSON</dd>
     </dl>
     
     <div class="Details">

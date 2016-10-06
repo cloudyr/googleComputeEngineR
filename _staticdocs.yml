@@ -51,11 +51,19 @@ reference:
       Networks are rules governing how your instance connects to other machines
     contents: 
       - matches("network")
-  - title: Utilities
-    contents: 
-      - gce_ssh_browser
-      - gce_check_zone_op
-      - gce_delete_zone_op
-      - gce_get_zone_op
-      - gce_list_zone_op
-      
+  - title: SSH
+    desc: >
+      These functions let you connect to your running instance via SSH
+    contents:
+      - matches("ssh")
+  - title: Metadata
+    desc: >
+      Setting metadata for your instance, such as startup scripts.
+    contents:
+      - matches("metadata")
+  - title: Operations
+    desc: >
+      A lot of the functions return an operation object whilst GCE works on your request.
+      These functions let you work with those.
+    contents:
+      - matches("zone_op")

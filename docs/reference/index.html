@@ -175,6 +175,8 @@
       <p class="section-desc"><p>Disks are those you create or are attached to running instances</p></p>
 
       <dl class="dl-horizontal">
+        <dt><a href="gce_attach_disk.html">gce_attach_disk</a></dt>
+        <dd>Attaches a Disk resource to an instance.</dd>
         <dt><a href="gce_delete_disk.html">gce_delete_disk</a></dt>
         <dd>Deletes the specified persistent disk.</dd>
         <dt><a href="gce_get_disk.html">gce_get_disk</a></dt>
@@ -212,8 +214,32 @@
       </dl>
     </div>
     <div class="section ">
-      <h2>Utilities</h2>
-      <p class="section-desc"></p>
+      <h2>SSH</h2>
+      <p class="section-desc"><p>These functions let you connect to your running instance via SSH</p></p>
+
+      <dl class="dl-horizontal">
+        <dt><a href="gce_global_ssh_private.html">gce_global_ssh_private</a></dt>
+        <dd>Get the saved private ssh key</dd>
+        <dt><a href="gce_ssh_browser.html">gce_ssh_browser</a></dt>
+        <dd>Open a cloud SSH browser for an instance</dd>
+        <dt><a href="gce_ssh_setup.html">gce_ssh_setup</a></dt>
+        <dd>Setup a SSH connection with GCE from a new SSH key-pair</dd>
+        <dt><a href="gce_ssh.html">gce_ssh</a></dt><dt><a href="gce_ssh.html">gce_ssh_download</a></dt><dt><a href="gce_ssh.html">gce_ssh_upload</a></dt>
+        <dd>Remotely execute ssh code, upload &amp; download files.</dd>
+      </dl>
+    </div>
+    <div class="section ">
+      <h2>Metadata</h2>
+      <p class="section-desc"><p>Setting metadata for your instance, such as startup scripts.</p></p>
+
+      <dl class="dl-horizontal">
+        <dt><a href="gce_set_metadata.html">gce_set_metadata</a></dt>
+        <dd>Sets metadata for the specified instance to the data included in the request.</dd>
+      </dl>
+    </div>
+    <div class="section ">
+      <h2>Operations</h2>
+      <p class="section-desc"><p>A lot of the functions return an operation object whilst GCE works on your request. These functions let you work with those.</p></p>
 
       <dl class="dl-horizontal">
         <dt><a href="gce_check_zone_op.html">gce_check_zone_op</a></dt>
@@ -224,8 +250,6 @@
         <dd>Retrieves the specified zone-specific Operations resource.</dd>
         <dt><a href="gce_list_zone_op.html">gce_list_zone_op</a></dt>
         <dd>Retrieves a list of Operation resources contained within the specified zone.</dd>
-        <dt><a href="gce_ssh_browser.html">gce_ssh_browser</a></dt>
-        <dd>Open a cloud SSH browser for an instance</dd>
       </dl>
     </div>
   </div>

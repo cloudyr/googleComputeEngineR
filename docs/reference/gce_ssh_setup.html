@@ -3,7 +3,7 @@
 <html>
   <head>
   <meta charset="utf-8">
-<title>Disk. googleComputeEngineR</title>
+<title>gce_ssh_setup. googleComputeEngineR</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -66,54 +66,55 @@
         </header>
 
         <div class="page-header">
-  <h1>Disk Object</h1>
+  <h1>Setup a SSH connection with GCE from a new SSH key-pair</h1>
 </div>
 
 <div class="row">
   <div class="col-md-9">
     
-    <p>Disk Object</p>
+    <p>Uploads ssh-keys to an instance</p>
     
 
-    <pre><span class='fu'>Disk</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceImage</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sizeGb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>diskEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>licenses</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceImageEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceSnapshot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceSnapshotEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre><span class='fu'>gce_ssh_setup</span>(<span class='no'>username</span>, <span class='no'>instance</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_project</span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'>gce_get_global_zone</span>())</pre>
     
     <h2>Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>Name of the resource</dd>
-      <dt>sourceImage</dt>
-      <dd>The source image used to create this disk</dd>
-      <dt>sizeGb</dt>
-      <dd>Size of the persistent disk, specified in GB</dd>
-      <dt>description</dt>
-      <dd>An optional description of this resource</dd>
-      <dt>diskEncryptionKey</dt>
-      <dd>Encrypts the disk using a customer-supplied encryption key</dd>
-      <dt>licenses</dt>
-      <dd>Any applicable publicly visible licenses</dd>
-      <dt>sourceImageEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source image</dd>
-      <dt>sourceSnapshot</dt>
-      <dd>The source snapshot used to create this disk</dd>
-      <dt>sourceSnapshotEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source snapshot</dd>
-      <dt>type</dt>
-      <dd>URL of the disk type resource describing which disk type to use to create the disk</dd>
+      <dt>username</dt>
+      <dd>The username you used to generate the key-pair</dd>
+      <dt>instance</dt>
+      <dd>Name of the instance of run ssh command upon</dd>
+      <dt>key.pub</dt>
+      <dd>The filepath location of the public key, only needed first call per session</dd>
+      <dt>key.private</dt>
+      <dd>The filepath location of the private key, only needed first call per session</dd>
+      <dt>project</dt>
+      <dd>Project ID for this request, default as set by gce_get_global_project</dd>
+      <dt>zone</dt>
+      <dd>The name of the zone for this request, default as set by gce_get_global_zone</dd>
     </dl>
     
     <div class="Value">
       <h2>Value</h2>
 
-      <p>Disk object</p>
+      <p>TRUE if successful</p>
     </div>
 
     <div class="Details">
       <h2>Details</h2>
 
-      <p>A Disk resource.</p>
+      <p>This loads a public ssh-key to an instance&#39;s metadata.  It does not use the project SSH-Keys, that may be set seperatly.</p>
+      <p>You will need to generate a new SSH key-pair if you have not connected to the instance before.</p>
+      <p>Instructions for this can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.  Once you have generated run this function once to initiate setup.</p>
+      <p>If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  These will be looked for and used if found, at <code>file.path(Sys.getenv(&quot;HOME&quot;), &quot;.ssh&quot;, &quot;google_compute_engine.pub&quot;)</code></p>
+    </div>
+
+    <div class="See also">
+      <h2>See also</h2>
+
+      <p><a href = 'https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys'>https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys</a></p>
+      <p>Other ssh functions: <code>gce_ssh_browser</code>,
+  <code>gce_ssh</code></p>
     </div>
       </div>
   <div class="col-md-3">

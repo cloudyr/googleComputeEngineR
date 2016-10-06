@@ -14,4 +14,5 @@ auth_email(source)
 Get auth email
 If it includes '@' then assume the email, otherwise an environment file
 }
+\keyword{internal}
 
