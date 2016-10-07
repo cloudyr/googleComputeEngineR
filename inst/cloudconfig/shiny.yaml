@@ -1,24 +1,32 @@
 #cloud-config
 
 users:
-- name: cloudservice
+- name: gcer
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/cloudservice.service
+- path: /etc/systemd/system/shinyserver.service
   permissions: 0644
   owner: root
   content: |
     [Unit]
-    Description=Start a simple docker container
+    Description=Shiny Server
+    Requires=docker.service
+    After=docker.service
 
     [Service]
-    Environment="HOME=/home/cloudservice"
+    Restart=always
+    Environment="HOME=/home/gcer"
     ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
-    ExecStop=/usr/bin/docker stop mycloudservice
-    ExecStopPost=/usr/bin/docker rm mycloudservice
+    ExecStart=/usr/bin/docker run -e "R_LIBS_USER=/library/" \
+                                  -v /home/gcer/library/:/library/ \
+                                  --name=shinyserver \
+                                  -p 80:3838 \
+                                  -v /home/gcer/shinyapps/:/srv/shiny-server/ \
+                                  -v /home/gcer/srv/shinylog/:/var/log/ \
+                                  rocker/shiny
+    ExecStop=/usr/bin/docker stop shiny
 
 runcmd:
 - systemctl daemon-reload
-- systemctl start cloudservice.service
+- systemctl start shinyserver.service

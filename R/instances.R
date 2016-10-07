@@ -169,6 +169,8 @@ gce_vm_create <- function(name,
                           zone = gce_get_global_zone(),
                           dry_run = FALSE) {
   
+  stopifnot(inherits(name, "character"))
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
   

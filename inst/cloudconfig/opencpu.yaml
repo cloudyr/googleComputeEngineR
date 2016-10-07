@@ -1,24 +1,27 @@
 #cloud-config
 
 users:
-- name: cloudservice
+- name: gcer
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/cloudservice.service
+- path: /etc/systemd/system/opencpu.service
   permissions: 0644
   owner: root
   content: |
     [Unit]
-    Description=Start a simple docker container
+    Description=Start OpenCPU with RStudio
 
     [Service]
-    Environment="HOME=/home/cloudservice"
+    Restart=always
+    Environment="HOME=/home/gcer"
     ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
-    ExecStop=/usr/bin/docker stop mycloudservice
-    ExecStopPost=/usr/bin/docker rm mycloudservice
+    ExecStart=/usr/bin/docker run -p 80:80 \
+                                  -p 8004:8004 \
+                                  --name=opencpu \
+                                  opencpu/rstudio
+    ExecStop=/usr/bin/docker stop opencpu
 
 runcmd:
 - systemctl daemon-reload
-- systemctl start cloudservice.service
+- systemctl start opencpu.service

@@ -26,12 +26,6 @@ print.gce_instance <- function(x, ...){
   cat("\nDisks: \n")
   print(x$disks[ , c("deviceName","type","mode","boot","autoDelete")])
   
-  if(!is.null(x$metadata$items)){
-    cat("\nMetadata:\n")
-    print(x$metadata$items)
-  }
-  
-  
 }
 
 #' @export

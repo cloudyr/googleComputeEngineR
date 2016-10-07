@@ -6,14 +6,16 @@
 \alias{gce_ssh_upload}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., user, key.pub = NULL, key.private = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_ssh(instance, ..., user = gce_get_global_ssh_user(), key.pub = NULL,
+  key.private = NULL, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 
-gce_ssh_upload(instance, local, remote, user, verbose = FALSE,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_ssh_upload(instance, local, remote, user = gce_get_global_ssh_user(),
+  verbose = FALSE, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 
-gce_ssh_download(instance, remote, local, user, verbose = FALSE,
-  overwrite = FALSE, project = gce_get_global_project(),
+gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
+  verbose = FALSE, overwrite = FALSE, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 }
 \arguments{
@@ -58,6 +60,15 @@ When you have generated it run \link{gce_ssh_setup} once to initiate setup.
 
 Uploads and downloads are recursive, so if you specify a directory,
 everything inside the directory will also be downloaded.
+}
+\examples{
+
+\dontrun{
+
+  gce_ssh("rbase", "sudo journalctl -u rbase", user = "mark")
+
+}
+
 }
 \author{
 Scott Chamberlin \email{myrmecocystus@gmail.com}

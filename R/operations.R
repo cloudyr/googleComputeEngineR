@@ -136,10 +136,14 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   testthat::expect_true(grepl("^operation-",job_name))
   
   DO_IT <- TRUE
+  
+  cat("\nStarting operation....\n")
+  
   while(DO_IT){
     
     check <- gce_get_zone_op(job_name)
     testthat::expect_equal(check$kind, "compute#operation")
+    check
     
     if(check$status == "DONE"){
       
@@ -147,11 +151,11 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
       
     } else if(check$status == "RUNNING"){
       
-      if(verbose) cat("\nOperation running: ", check$progress, "/100")
+      if(verbose) cat("\nOperation running...\n")
 
     } else {
       
-      if(verbose) cat("\nChecking operation....")
+      if(verbose) cat("\nChecking operation....\n")
       
     }
     

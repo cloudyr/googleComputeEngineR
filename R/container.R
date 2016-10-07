@@ -7,7 +7,6 @@
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
-#' @param browse If TRUE will attempt to open browser to server once deployed
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
 #' @details 
@@ -24,12 +23,30 @@
 #'  
 #' @return The VM object
 #' @importFrom utils browseURL
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#'  library(googleComputeEngineR)
+#'  library(harbor)
+#'  
+#'  ## make instance using R-base
+#'  vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")
+#'  
+#'  ## run an R function on the instance within the R-base docker image
+#'  docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"), user = "mark")
+#'  #> [1] 2
+#'  
+#' 
+#' }
+#' 
+#' 
 #' @export  
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "example"),
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "example"),
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",
-                            browse = FALSE,
                             ...){
   
   dots <- list(...)
@@ -37,11 +54,11 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "
   template <- match.arg(template)
   
   cloud_init <- switch(template,
-                       rstudio = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
-                       shiny   = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
-                       opencpu = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
-                       r_base = system.file("cloudconfig", "r-base.yaml", package = "googleComputeEngineR"),
-                       example = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
+                       rstudio  = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
+                       shiny    = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
+                       opencpu  = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
+                       `r-base` = system.file("cloudconfig", "r-base.yaml",  package = "googleComputeEngineR"),
+                       example  = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
   )
   
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
@@ -56,6 +73,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "
   
   job <- gce_vm_container(cloud_init = cloud_init_file,
                           image_family = image_family,
+                          tags = list(items = list("http-server")),
                           ...)
   
   gce_check_zone_op(job$name, wait = 10)
@@ -66,17 +84,13 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r_base", "
   ## where to find application
   ip_suffix <- ""
   ip_suffix <- switch(template,
-                    rstudio = ":8787",
-                    shiny   = ":3838",
+                    rstudio = "",
+                    shiny   = "",
                     opencpu = "/ocpu/"         
                     )
   
   cat("\n## ", paste0(template, " running at ", ip,ip_suffix),"\n")
-  cat("\n You may need to wait a few minutes for the inital docker container to download and install before logging in.")
-  
-  if(browse){
-    utils::browseURL(paste0("http://",ip,ip_suffix))
-  }
+  cat("\n You may need to wait a few minutes for the inital docker container to download and install before logging in.\n")
   
   ins
 

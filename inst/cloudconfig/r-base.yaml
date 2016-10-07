@@ -1,21 +1,29 @@
 #cloud-config
 
 users:
-- name: cloudservice
+- name: gcer
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/cloudservice.service
+- path: /etc/systemd/system/rbase.service
   permissions: 0644
   owner: root
   content: |
     [Unit]
     Description=R Base
+    Requires=docker.service
+    After=docker.service
 
     [Service]
-    ExecStart=/usr/bin/docker run -u 2000 --name=rbase rocker/r-base R --save
-    ExecStop=/usr/bin/docker stop rbase
+    Restart=always
+    Environment="HOME=/home/gcer"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run --name=r-base \
+                                  -e "R_LIBS_USER=/library/" \
+                                  -v /home/gcer/library/:/library/ \
+                                  rocker/r-base
+    ExecStop=/usr/bin/docker stop r-base
 
 runcmd:
 - systemctl daemon-reload
-- systemctl start cloudservice.service
+- systemctl start rbase.service

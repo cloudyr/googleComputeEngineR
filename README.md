@@ -436,3 +436,71 @@ con
 # Destroy the virtual machine from Google Compute Engine
 gce_vm_delete(ghost)
 ```
+
+To run R commands within a docker image in the cloud:
+
+```r
+library(googleComputeEngineR)
+library(harbor)
+
+## make instance using R-base
+vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")
+
+## run an R function on the instance within the R-base docker image
+docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"), user = "mark")
+#> [1] 2
+
+gce_vm_delete(vm)
+#> ==Operation delete :  PENDING
+#> Started:  2016-10-07 02:37:14
+
+gce_check_zone_op(.Last.value)
+#> Operation complete in 33 secs 
+#> ==Operation delete :  DONE
+#> Started:  2016-10-07 02:37:14
+#> Ended: 2016-10-07 02:37:47 
+#> Operation complete in 33 secs 
+```
+
+Using `harbor` you can see other metadata about your container from your local R:
+
+```r
+library(googleComputeEngineR)
+library(harbor)
+
+vm <- gce_vm_template("rstudio", 
+                      username = "mark", 
+                      password = "mark1234", 
+                      predefined_type = "f1-micro")
+                                         
+## get running rstudio container
+cont <- containers(vm)
+names(cont)
+"rstudio"
+
+## see if its running
+container_running(con$rstudio)
+[1] TRUE
+
+## get logs from container
+container_logs(con$rstudio)
+
+## get metadata
+container_update_info(con$rstudio)
+<container>
+  ID:       05c5437ac968 
+  Name:     rstudio 
+  Image:    rocker/rstudio 
+  Command:  /init 
+  Host:     ==Google Compute Engine Instance==
+  
+  Name:                rstudio-dev
+  Created:             2016-10-07 03:30:24
+  Machine Type:        f1-micro
+  Status:              RUNNING
+  Zone:                europe-west1-b
+  External IP:         104.199.19.222
+  Disks: 
+               deviceName       type       mode boot autoDelete
+  1 rstudio-dev-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+```

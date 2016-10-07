@@ -4,9 +4,9 @@
 \alias{gce_vm_template}
 \title{Create a template container VM}
 \usage{
-gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r_base",
+gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
   "example"), username = NULL, password = NULL,
-  image_family = "gci-stable", browse = FALSE, ...)
+  image_family = "gci-stable", ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -16,8 +16,6 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r_base",
 \item{password}{password if needed (RStudio)}
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
-
-\item{browse}{If TRUE will attempt to open browser to server once deployed}
 
 \item{...}{Other arguments passed to \link{gce_vm_create}}
 }
@@ -38,5 +36,24 @@ Templates available are:
   \item r_base Latest version of R stable
   \item example A non-R test container running busybox
  }
+}
+\examples{
+
+\dontrun{
+
+ library(googleComputeEngineR)
+ library(harbor)
+ 
+ ## make instance using R-base
+ vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")
+ 
+ ## run an R function on the instance within the R-base docker image
+ docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"), user = "mark")
+ #> [1] 2
+ 
+
+}
+
+
 }
 

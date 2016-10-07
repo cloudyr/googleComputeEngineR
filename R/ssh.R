@@ -18,6 +18,8 @@ gce_ssh_browser <- function(instance,
                             project = gce_get_global_project(), 
                             zone = gce_get_global_zone()){
   
+  instance <- as.gce_instance_name(instance)
+  
   ssh_url <- sprintf("https://ssh.cloud.google.com/projects/%s/zones/%s/instances/%s?projectNumber=%s",
                      project, zone, instance, project)
   
@@ -55,6 +57,8 @@ gce_ssh_browser <- function(instance,
 #' 
 #' @return TRUE if successful
 #' 
+
+#' 
 #' @export
 #' @family ssh functions
 gce_ssh_setup <- function(username,
@@ -63,6 +67,8 @@ gce_ssh_setup <- function(username,
                           key.private = NULL,
                           project = gce_get_global_project(),
                           zone = gce_get_global_zone()){
+  
+  instance <- as.gce_instance_name(instance)
   
   ## Check to see if they have been set already
   g_public  <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")
@@ -98,6 +104,9 @@ gce_ssh_setup <- function(username,
   
   myMessage("Set private SSH key", level = 3)
   
+  ## set global ssh username
+  gce_set_global_ssh_user(username)
+  
   ## get existing metadata
   ins <- gce_get_instance(instance, project = project, zone = zone)
   ins_meta <- ins$metadata$items
@@ -128,9 +137,33 @@ gce_ssh_setup <- function(username,
   
 }
 
-#' Get the saved private ssh key
+## Get the saved private ssh key
 gce_global_ssh_private <- function(){
   .gce_env$ssh_key
+}
+
+## Get the saved ssh user
+gce_get_global_ssh_user <- function(){
+
+  if(!exists("user", envir = .gce_env)){
+    myMessage("SSH username not set globally, run gce_ssh_setup() to set it.")
+    return(NULL)
+  }
+  
+  .gce_env$user
+  
+}
+
+## Set the global SSH username
+gce_set_global_ssh_user <- function(username = NULL){
+  
+  if(is.null(username)){
+    stop("No global SSH username set, username is NULL")
+  }
+  
+  myMessage("Set SSH Username to ", username, level = 3)
+  .gce_env$user <- username
+  .gce_env$user
 }
 
 #' Remotely execute ssh code, upload & download files.
@@ -165,15 +198,27 @@ gce_global_ssh_private <- function(){
 #' @author Scott Chamberlin \email{myrmecocystus@@gmail.com}
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
 #' @return On failure, throws an error.
+#' 
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#'   gce_ssh("rbase", "sudo journalctl -u rbase", user = "mark")
+#' 
+#' }
+#' 
 #' @export
 #' @family ssh functions
 gce_ssh <- function(instance, 
                     ..., 
-                    user, 
+                    user = gce_get_global_ssh_user(), 
                     key.pub = NULL,
                     key.private = NULL,
                     project = gce_get_global_project(),
                     zone = gce_get_global_zone()) {
+  
+  instance <- as.gce_instance_name(instance)
   
   if(is.null(gce_global_ssh_private())){
     myMessage("Setting up ssh keys...")
@@ -207,11 +252,13 @@ ssh_options <- function() {
 gce_ssh_upload <- function(instance,
                            local, 
                            remote, 
-                           user, 
+                           user = gce_get_global_ssh_user(), 
                            verbose = FALSE,
                            project = gce_get_global_project(), 
                            zone = gce_get_global_zone()) {
 
+  instance <- as.gce_instance_name(instance)
+  
   cmd <- paste0(
     "scp -r ", ssh_options(),
     " ", local,
@@ -226,12 +273,14 @@ gce_ssh_upload <- function(instance,
 gce_ssh_download <- function(instance,
                              remote, 
                              local, 
-                             user,
+                             user = gce_get_global_ssh_user(),
                              verbose = FALSE, 
                              overwrite = FALSE,
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
 
+  instance <- as.gce_instance_name(instance)
+  
   local <- normalizePath(local, mustWork = FALSE)
 
   if (file.exists(local) && file.info(local)$isdir) {
@@ -289,6 +338,9 @@ do_system <- function(instance,
                       cmd, 
                       project = gce_get_global_project(), 
                       zone = gce_get_global_zone()) {
+  
+  instance <- as.gce_instance_name(instance)
+  
   cli_tools()
   external_ip <- gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE)
   # check to make sure port 22 open, otherwise ssh commands will fail
