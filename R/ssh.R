@@ -91,6 +91,8 @@ gce_ssh_setup <- function(username,
     key.pub.content <- readChar(g_public, 10000)
 
   } else {
+    ## if on OSX or linux setup the SSH key-pair using 
+    ## system(ssh-keygen -t rsa -f ~/.ssh/[KEY_FILE_NAME] -C [USERNAME])
     
     myMessage("Using ssh-key files given as ", 
               key.pub," / ", key.private, 

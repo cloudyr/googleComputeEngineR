@@ -148,4 +148,66 @@ gce_vm_container <- function(file,
   
 }
 
+#' Save the docker container to the private Google Container Registry
+#' 
+#' Saves the docker image to your projects Google Cloud Storage.
+#' 
+#' @param instance The VM to run within
+#' @param container_name The name for the saved container
+#' @param template_name The template you used to start the instance.
+#' @param container_url The URL of where to save container
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' 
+#' This will only work on the Google Container optimised containers of image_family google_containers.
+#' Otherwise you will need to get a container authentication yourself (for now)
+#' 
+#' It will start the push but it may take a long time to finish, espeically the first time, 
+#'   this function will return whilst waiting but don't turn off the VM until its finished.
+#' @return TRUE if commands finish
+#' @export
+gce_save_container <- function(instance,
+                               container_name,
+                               template_name = "rstudio",
+                               container_url = "gcr.io",
+                               project = gce_get_global_project()){
+  
+  instance <- as.gce_instance_name(instance)
+  
+  build_tag <- paste0(container_url, "/", project, "/", container_name)
+  
+  docker_cmd.gce_instance(instance, "commit", args = c(template_name, build_tag))
+  
+  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  
+  docker_cmd.gce_instance(instance, "push", build_tag, wait = FALSE)
+  
+  TRUE
+  
+}
 
+#' Load a previously saved private Google Container
+#' 
+#' @param instance The VM to run within
+#' @param container_name The name of the saved container
+#' @param container_url The URL of where the container was saved
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' 
+#' After starting a VM, you can load the container again using this command.
+#' 
+#' @return TRUE if successful
+#' @importFrom harbor docker_run
+#' @export
+gce_load_container <- function(instance,
+                               container_name,
+                               container_url = "gcr.io",
+                               project = gce_get_global_project()){
+  
+  instance <- as.gce_instance_name(instance)
+  
+  build_tag <- paste0(container_url, "/", project, "/", container_name)
+  
+  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  
+  harbor::docker_run(instance, build_tag)
+  
+}
