@@ -65,6 +65,7 @@ gce_ssh_setup <- function(username,
                           instance,
                           key.pub = NULL,
                           key.private = NULL,
+
                           project = gce_get_global_project(),
                           zone = gce_get_global_zone()){
   
@@ -194,6 +195,7 @@ gce_set_global_ssh_user <- function(username = NULL){
 #'   exist.
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' @param wait Whether then SSH output should be waited for or run it asynchronously.
 #' 
 #' @author Scott Chamberlin \email{myrmecocystus@@gmail.com}
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
@@ -215,6 +217,7 @@ gce_ssh <- function(instance,
                     user = gce_get_global_ssh_user(), 
                     key.pub = NULL,
                     key.private = NULL,
+                    wait = TRUE,
                     project = gce_get_global_project(),
                     zone = gce_get_global_zone()) {
   
@@ -233,7 +236,7 @@ gce_ssh <- function(instance,
     " ", user, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
     " ", shQuote(lines)
   )
-  do_system(instance, cmd, project = project, zone = zone)
+  do_system(instance, cmd, wait = wait, project = project, zone = zone)
 }
 
 ssh_options <- function() {
@@ -254,6 +257,7 @@ gce_ssh_upload <- function(instance,
                            remote, 
                            user = gce_get_global_ssh_user(), 
                            verbose = FALSE,
+                           wait = TRUE,
                            project = gce_get_global_project(), 
                            zone = gce_get_global_zone()) {
 
@@ -265,7 +269,7 @@ gce_ssh_upload <- function(instance,
     " ", user, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE), ":", remote
   )
 
-  do_system(instance, cmd, project = project, zone = zone)
+  do_system(instance, cmd, wait = wait, project = project, zone = zone)
 }
 
 #' @export
@@ -276,6 +280,7 @@ gce_ssh_download <- function(instance,
                              user = gce_get_global_ssh_user(),
                              verbose = FALSE, 
                              overwrite = FALSE,
+                             wait = TRUE,
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
 
@@ -330,14 +335,16 @@ gce_ssh_download <- function(instance,
     sprintf("(cd %s && tar xz)", local_tempdir)
   )
 
-  do_system(instance, cmd, project = project, zone = zone)
+  do_system(instance, cmd, wait = wait, project = project, zone = zone)
 }
 
 
 do_system <- function(instance, 
                       cmd, 
+                      wait = TRUE,
                       project = gce_get_global_project(), 
-                      zone = gce_get_global_zone()) {
+                      zone = gce_get_global_zone()
+                      ) {
   
   instance <- as.gce_instance_name(instance)
   
@@ -348,7 +355,7 @@ do_system <- function(instance,
     stop("port 22 is not open for ", external_ip, call. = FALSE)
   }
   myMessage(cmd, level = 2)
-  status <- system(cmd)
+  status <- system2(cmd, wait = wait)
   if (status != 0) {
     stop("ssh failed\n", cmd, call. = FALSE)
   }

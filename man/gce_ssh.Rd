@@ -7,16 +7,16 @@
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
 gce_ssh(instance, ..., user = gce_get_global_ssh_user(), key.pub = NULL,
-  key.private = NULL, project = gce_get_global_project(),
+  key.private = NULL, wait = TRUE, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 
 gce_ssh_upload(instance, local, remote, user = gce_get_global_ssh_user(),
-  verbose = FALSE, project = gce_get_global_project(),
+  verbose = FALSE, wait = TRUE, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 
 gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
-  verbose = FALSE, overwrite = FALSE, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  verbose = FALSE, overwrite = FALSE, wait = TRUE,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -29,6 +29,8 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 \item{key.pub}{The filepath location of the public key, only needed first call per session}
 
 \item{key.private}{The filepath location of the private key, only needed first call per session}
+
+\item{wait}{Whether then SSH output should be waited for or run it asynchronously.}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
