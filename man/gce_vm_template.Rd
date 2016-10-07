@@ -17,6 +17,8 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
+\item{name}{The name of the resource, provided by the client when initially creating the resource}
+
 \item{...}{Other arguments passed to \link{gce_vm_create}}
 }
 \value{

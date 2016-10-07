@@ -98,8 +98,8 @@ test_that("We can run SSH on an instance", {
   expect_equal(vm$kind, "compute#instance")
   
   worked <- gce_ssh_setup("travis", "rstudio-test", 
-                key.pub = "./auth/travis-ssh-key.pub", 
-                key.private = "./auth/travis-ssh-key")
+                          key.pub = "auth/travis-ssh-key.pub", 
+                          key.private = "auth/travis-ssh-key")
   
   expect_true(worked, "SSH connected successfully")
   

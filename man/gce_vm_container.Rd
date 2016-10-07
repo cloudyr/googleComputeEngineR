@@ -14,6 +14,10 @@ gce_vm_container(file, cloud_init, image_family = "gci-stable",
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
+\item{metadata}{A named list of metadata key/value pairs assigned to this instance}
+
+\item{name}{The name of the resource, provided by the client when initially creating the resource}
+
 \item{...}{Other arguments passed to \link{gce_vm_create}
 
  
