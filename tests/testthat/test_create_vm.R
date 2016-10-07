@@ -88,6 +88,23 @@ test_that("We can make a template VM", {
   
 })
 
+context("SSH tests")
+
+test_that("We can run SSH on an instance", {
+  skip_on_cran()
+  
+  vm <- gce_get_instance("rstudio-test")
+  
+  expect_equal(vm$kind, "compute#instance")
+  
+  worked <- gce_ssh_setup("travis", "rstudio-test", 
+                key.pub = "./auth/travis-ssh-key.pub", 
+                key.private = "./auth/travis-ssh-key")
+  
+  expect_true(worked, "SSH connected successfully")
+  
+})
+
 context("Metadata")
 
 test_that("We can set metadata on a VM", {

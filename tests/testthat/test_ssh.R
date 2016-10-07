@@ -7,3 +7,4 @@ test_that("The SSH URL is made", {
   
   expect_equal(sshurl, "https://ssh.cloud.google.com/projects/mark-edmondson-gde/zones/europe-west1-b/instances/mc-server?projectNumber=mark-edmondson-gde")
 })
+

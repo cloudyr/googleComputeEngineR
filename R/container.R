@@ -139,13 +139,13 @@ gce_vm_container <- function(file,
   dots <- list(...)
   
   ## add to any existing metadata
-  metadata <- c(dots$metadata, 
+  metadata_new <- c(dots$metadata, 
                 `user-data` = cloud_init)
   
   gce_vm_create(..., 
                 image_family = image_family,
                 image_project = "google-containers",
-                metadata = metadata)
+                metadata = metadata_new)
   
 }
 

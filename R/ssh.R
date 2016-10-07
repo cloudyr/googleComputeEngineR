@@ -71,29 +71,7 @@ gce_ssh_setup <- function(username,
   
   instance <- as.gce_instance_name(instance)
   
-  ## Check to see if they have been set already
-  g_public  <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")
-  
-  if(file.exists(g_public)){
-    ## you already have the key
-    g_private <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine")
-
-    myMessage("Using existing key in ", 
-              g_public, 
-              level = 3)
-    
-    if(file.exists(g_private)){
-      .gce_env$ssh_key <- g_private
-    } else {
-      stop("Problem reading google_compute_engine key. Recreate ssh-keys and try again.")
-    }
-    
-    key.pub.content <- readChar(g_public, 10000)
-
-  } else {
-    ## if on OSX or linux setup the SSH key-pair using 
-    ## system(ssh-keygen -t rsa -f ~/.ssh/[KEY_FILE_NAME] -C [USERNAME])
-    
+  if(!is.null(key.pub) & !is.null(key.private)){
     myMessage("Using ssh-key files given as ", 
               key.pub," / ", key.private, 
               level = 3)
@@ -101,8 +79,30 @@ gce_ssh_setup <- function(username,
     stopifnot(file.exists(key.pub))
     stopifnot(file.exists(key.private))
     
-    .gce_env$ssh_key <- key.private
+    .gce_env$ssh_key <- normalizePath(key.private)
     key.pub.content  <- readChar(key.pub, 10000)
+  } else {
+    ## Check to see if they have been set already
+    g_public  <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")
+    
+    if(file.exists(g_public)){
+      ## you already have the key
+      g_private <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine")
+      
+      myMessage("Using existing key in ", 
+                g_public, 
+                level = 3)
+      
+      if(file.exists(g_private)){
+        .gce_env$ssh_key <- g_private
+      } else {
+        stop("Problem reading google_compute_engine key. Recreate ssh-keys and try again.")
+      }
+      
+      key.pub.content <- readChar(g_public, 10000)
+      
+      }
+    
   }
   
   myMessage("Set private SSH key", level = 3)
@@ -161,7 +161,7 @@ gce_get_global_ssh_user <- function(){
 gce_set_global_ssh_user <- function(username = NULL){
   
   if(is.null(username)){
-    stop("No global SSH username set, username is NULL")
+    return(NULL)
   }
   
   myMessage("Set SSH Username to ", username, level = 3)
@@ -225,11 +225,12 @@ gce_ssh <- function(instance,
   
   instance <- as.gce_instance_name(instance)
   
-  if(is.null(gce_global_ssh_private())){
+  if(is.null(gce_global_ssh_private()) | is.null(gce_get_global_ssh_user())){
     myMessage("Setting up ssh keys...")
     gce_ssh_setup(user, instance = instance, project = project, zone = zone)
   }
   
+  if(is.null(gce_get_global_ssh_user())) stop("Must set username")
   
   lines <- paste(c(...), collapse = " \\\n&& ")
   if (lines == "") stop("Provide commands", call. = FALSE)
@@ -357,7 +358,7 @@ do_system <- function(instance,
     stop("port 22 is not open for ", external_ip, call. = FALSE)
   }
   myMessage(cmd, level = 2)
-  status <- system2(cmd, wait = wait)
+  status <- system(cmd, wait = wait)
   if (status != 0) {
     stop("ssh failed\n", cmd, call. = FALSE)
   }
