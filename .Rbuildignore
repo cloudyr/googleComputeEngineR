@@ -14,3 +14,5 @@ test_signedurls\.RData
 ^\.travis\.yml$
 ^docs
 _staticdocs\.yml
+^auth
+^secrets\.tar.\enc$

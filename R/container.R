@@ -74,6 +74,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
   job <- gce_vm_container(cloud_init = cloud_init_file,
                           image_family = image_family,
                           tags = list(items = list("http-server")),
+                          metadata = list(template = template),
                           ...)
   
   gce_check_zone_op(job$name, wait = 10)

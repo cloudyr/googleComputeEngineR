@@ -5,3 +5,9 @@
 .httr-oauth-SUSPENDED
 inst/doc
 auth.json
+
+auth/travis-ssh-key
+
+auth/travis-ssh-key.pub
+
+secrets.tar
