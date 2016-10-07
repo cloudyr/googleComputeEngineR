@@ -4,6 +4,7 @@
 #' It passes the template on to \link{gce_vm_container}
 #' 
 #' @inheritParams Instance
+#' @inheritParams gce_make_machinetype_url
 #' @param template The template available
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
@@ -111,6 +112,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 #' This lets you specify docker images when creating the VM
 #' 
 #' @inheritParams Instance
+#' @inheritParams gce_make_machinetype_url
 #' @param file file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied
 #' @param cloud_init contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
