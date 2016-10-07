@@ -195,7 +195,6 @@ gce_save_container <- function(instance,
 #' After starting a VM, you can load the container again using this command.
 #' 
 #' @return TRUE if successful
-#' @importFrom harbor docker_run
 #' @export
 gce_load_container <- function(instance,
                                container_name,
@@ -210,4 +209,5 @@ gce_load_container <- function(instance,
   
   harbor::docker_run(instance, build_tag)
   
+  TRUE
 }

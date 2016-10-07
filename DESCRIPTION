@@ -14,7 +14,8 @@ Depends:
     R (>= 3.3.0)
 Imports:
     googleAuthR (>= 0.4.0),
-    jsonlite (>= 1.1)
+    jsonlite (>= 1.1),
+    harbor
 Suggests:
     knitr,
     covr,
