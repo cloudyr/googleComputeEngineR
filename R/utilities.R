@@ -23,11 +23,17 @@ indent <- function(str, indent = 0) {
 #' @keywords internal
 auth_email <- function(source){
   
-  if(!grepl("@", source)){
-    jsonlite::fromJSON(Sys.getenv(source))$client_email
-  } else {
-    source
+  if(Sys.getenv(source) == ""){
+    stop("No email source found")
   }
+  
+  if(!grepl("@", source)){
+    out <- jsonlite::fromJSON(Sys.getenv(source))$client_email
+  } else {
+    out <- source
+  }
+  
+  out
   
 }
 

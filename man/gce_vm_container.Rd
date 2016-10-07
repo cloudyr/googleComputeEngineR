@@ -4,7 +4,8 @@
 \alias{gce_vm_container}
 \title{Launch a container-VM image}
 \usage{
-gce_vm_container(file, cloud_init, image_family = "gci-stable", ...)
+gce_vm_container(file, cloud_init, image_family = "gci-stable",
+  metadata = NULL, name, predefined_type, cpus, memory, ...)
 }
 \arguments{
 \item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}

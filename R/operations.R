@@ -137,7 +137,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
   DO_IT <- TRUE
   
-  cat("\nStarting operation....\n")
+  cat("\nStarting operation...\n")
   
   while(DO_IT){
     
@@ -155,7 +155,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
 
     } else {
       
-      if(verbose) cat("\nChecking operation....\n")
+      if(verbose) cat("\nChecking operation...\n")
       
     }
     

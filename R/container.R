@@ -3,6 +3,7 @@
 #' This lets you specify templates for the VM you wnat to launch
 #' It passes the template on to \link{gce_vm_container}
 #' 
+#' @inheritParams gce_vm_create
 #' @param template The template available
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
@@ -47,6 +48,10 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",
+                            name,
+                            predefined_type,
+                            cpus,
+                            memory,
                             ...){
   
   dots <- list(...)
@@ -75,12 +80,16 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
                           image_family = image_family,
                           tags = list(items = list("http-server")),
                           metadata = list(template = template),
+                          name = name,
+                          predefined_type = predefined_type,
+                          cpus = cpus,
+                          memory = memory,
                           ...)
   
   gce_check_zone_op(job$name, wait = 10)
   
-  ins <- gce_get_instance(dots$name)
-  ip <- gce_get_external_ip(dots$name)
+  ins <- gce_get_instance(name)
+  ip <- gce_get_external_ip(name)
   
   ## where to find application
   ip_suffix <- ""
@@ -101,6 +110,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 #' 
 #' This lets you specify docker images when creating the VM
 #' 
+#' @inheritParams gce_vm_create
 #' @param file file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied
 #' @param cloud_init contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
@@ -118,6 +128,11 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 gce_vm_container <- function(file,
                              cloud_init, 
                              image_family = "gci-stable", 
+                             metadata = NULL,
+                             name,
+                             predefined_type,
+                             cpus,
+                             memory,
                              ...){
   
   if(missing(file)){
@@ -142,10 +157,14 @@ gce_vm_container <- function(file,
   metadata_new <- c(dots$metadata, 
                 `user-data` = cloud_init)
   
-  gce_vm_create(..., 
+  gce_vm_create(name = name,
+                predefined_type = predefined_type,
+                cpus = cpus,
+                memory = memory,
                 image_family = image_family,
                 image_project = "google-containers",
-                metadata = metadata_new)
+                metadata = metadata_new,
+                ...)
   
 }
 
