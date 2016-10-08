@@ -11,3 +11,7 @@ auth/travis-ssh-key
 auth/travis-ssh-key.pub
 
 secrets.tar
+
+tests/testthat/travis-ssh-key
+
+tests/testthat/travis-ssh-key.pub
