@@ -109,6 +109,7 @@ gce_ssh_setup <- function(username,
   
   ## set global ssh username
   gce_set_global_ssh_user(username)
+  myMessage("Set SSH username", username, level = 3)
   
   ## get existing metadata
   ins <- gce_get_instance(instance, project = project, zone = zone)
@@ -250,7 +251,9 @@ ssh_options <- function() {
     UserKnownHostsFile = file.path(tempdir(), "hosts")
   )
   
-  paste0("-o ", names(opts), "=", opts," -i ", gce_global_ssh_private(), collapse = " ")
+  paste0(paste0("-o ", names(opts), "=", opts, collapse = " "), 
+         " -i ", 
+         gce_global_ssh_private())
 }
 
 

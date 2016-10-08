@@ -98,7 +98,7 @@ test_that("We can set SSH settings", {
   expect_equal(vm$kind, "compute#instance")
   
   worked <- gce_ssh_setup(vm,
-                          username = "travis", 
+                          username = "mark", 
                           key.pub = "travis-ssh-key.pub", 
                           key.private = "travis-ssh-key")
   
