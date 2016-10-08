@@ -111,10 +111,12 @@ test_that("We can run SSH on an instance", {
   
   vm <- gce_get_instance("rstudio-test")
   
-  cmd <- gce_ssh(vm, "echo foo",
-                 username = "travis", 
-                 key.pub = "travis-ssh-key.pub", 
-                 key.private = "travis-ssh-key")
+  gce_ssh_setup(vm,
+                user = "mark", 
+                key.pub = "travis-ssh-key.pub", 
+                key.private = "travis-ssh-key")
+  
+  cmd <- gce_ssh(vm, "echo foo")
   
   expect_true(cmd, "SSH connected")
   
@@ -125,12 +127,14 @@ test_that("We can upload via SSH", {
   
   vm <- gce_get_instance("rstudio-test")
   
+  gce_ssh_setup(vm,
+                user = "travis", 
+                key.pub = "travis-ssh-key.pub", 
+                key.private = "travis-ssh-key")
+  
   cmd <- gce_ssh_upload(vm, 
                         local = "test_auth.R",
-                        remote = "test_auth_up.R",
-                        user = "travis", 
-                        key.pub = "travis-ssh-key.pub", 
-                        key.private = "travis-ssh-key")
+                        remote = "test_auth_up.R")
   
   expect_true(cmd, "SSH upload")
   
@@ -141,13 +145,15 @@ test_that("We can download via SSH", {
   
   vm <- gce_get_instance("rstudio-test")
   
+  gce_ssh_setup(vm,
+                user = "travis", 
+                key.pub = "travis-ssh-key.pub", 
+                key.private = "travis-ssh-key")
+  
   cmd <- gce_ssh_download(vm, 
                           remote = "test_auth_up.R",
                           local = "test_auth_down.R",
-                          overwrite = TRUE,
-                          user = "travis", 
-                          key.pub = "travis-ssh-key.pub", 
-                          key.private = "travis-ssh-key") 
+                          overwrite = TRUE) 
   
   expect_true(cmd, "SSH download")
   
