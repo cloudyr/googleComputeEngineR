@@ -11,12 +11,13 @@ gce_ssh(instance, ..., user = gce_get_global_ssh_user(), key.pub = NULL,
   zone = gce_get_global_zone())
 
 gce_ssh_upload(instance, local, remote, user = gce_get_global_ssh_user(),
-  verbose = FALSE, wait = TRUE, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 
 gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
-  verbose = FALSE, overwrite = FALSE, wait = TRUE,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+  key.pub = NULL, key.private = NULL, verbose = FALSE,
+  overwrite = FALSE, wait = TRUE, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -41,9 +42,6 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 \item{verbose}{If TRUE, will print command before executing it.}
 
 \item{overwrite}{If TRUE, will overwrite the local file if exists.}
-
-\item{overwrite}{If TRUE, then overwrite destination files if they already
-exist.}
 }
 \value{
 On failure, throws an error.

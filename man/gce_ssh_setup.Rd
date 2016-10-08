@@ -4,11 +4,11 @@
 \alias{gce_ssh_setup}
 \title{Setup a SSH connection with GCE from a new SSH key-pair}
 \usage{
-gce_ssh_setup(username, instance, key.pub = NULL, key.private = NULL,
+gce_ssh_setup(user, instance, key.pub = NULL, key.private = NULL,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
-\item{username}{The username you used to generate the key-pair}
+\item{user}{The username you used to generate the key-pair}
 
 \item{instance}{Name of the instance of run ssh command upon}
 
