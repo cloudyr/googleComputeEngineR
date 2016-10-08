@@ -108,7 +108,7 @@ test_that("We can set SSH settings", {
 
 test_that("We can run SSH on an instance", {
   skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   
   vm <- gce_get_instance("rstudio-test")
   

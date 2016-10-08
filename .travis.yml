@@ -19,6 +19,8 @@ before_install:
 - cp auth.json tests/testthat/auth.json
 - cp auth/travis-ssh-key tests/testthat/travis-ssh-key
 - cp auth/travis-ssh-key.pub tests/testthat/travis-ssh-key.pub
+- eval "$(ssh-agent -s)"
+- ssh-add tests/testthat/travis-ssh-key
 env:
   global:
     secure: AfUqQSeIySgjKrOloUhvInzjOPhSJkLb5ahKrcQ4h8z5CmuHETC/X2QV9FFDHuxUDUUvA+JPP/tZvrUU1kJfhgEflzgV1mgnsJrTws1LQFjpzhaRUG8zSupFMzGUgX+z+kPu1rV1euTYvdNXVuj8PUVomaLR7bVPKgWYzVuyoVliyfApPIWm+IgDNClvOpCokm5lqdoM/vTnPwh5xaC8z8SK2xE0KcVgrqD53Y10KNs31/abVHGD+8Cdv6j7RElQZMfT1AWYW2auWfvTdeMZZAwr+Uq74c0yWwMq6iQLLPMCGegN7CLp0xWfZ76WfRijkvew8IWf/hCMbetFT2dqtS1vRbfgzzYrQQk1OQSf6bNlZSakwiNAje2enz1bs+41pNcNYBH9E56Jn1cmtKaIgdVBcNBvLe4lf3cAfouro7Adr9bZq+heVfVK4L7ZNCQEfEDewyOJCZXJSD+LmqCeT7hBN7yfoQuPTJ1DTfj++xzAgYZMB2i1mfgbAIiu9tOqkPO6T1oxtWcnrkvofTA0oWgSs8OZSO0ZUOcbHkIhMx8/EjJbw/8NJOI43vQj5xwpfzRAjTX65GdZdjxwuTYKVCPjsMcjwNcDDS49zQO7qfqtVET9ZA0QZP6k5LZugkD7y1+iTTAV+2exptmxcOdJzoWDpf12CkFu8phpOeiNJDI=
