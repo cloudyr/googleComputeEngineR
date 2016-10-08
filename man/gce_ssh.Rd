@@ -40,6 +40,8 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 
 \item{verbose}{If TRUE, will print command before executing it.}
 
+\item{overwrite}{If TRUE, will overwrite the local file if exists.}
+
 \item{overwrite}{If TRUE, then overwrite destination files if they already
 exist.}
 }

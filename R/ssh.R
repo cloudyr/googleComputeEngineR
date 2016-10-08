@@ -192,6 +192,7 @@ gce_set_global_ssh_user <- function(username = NULL){
 #'   \code{&&} so that execution will halt after the first failure.
 #' @param user User name used to generate ssh-keys. Usually your login to your local workstation or Google account alias.
 #' @param local,remote Local and remote paths.
+#' @param overwrite If TRUE, will overwrite the local file if exists.
 #' @param verbose If TRUE, will print command before executing it.
 #' @param overwrite If TRUE, then overwrite destination files if they already
 #'   exist.
