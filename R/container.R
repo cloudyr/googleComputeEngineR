@@ -213,6 +213,7 @@ gce_save_container <- function(instance,
 #' @param container_name The name of the saved container
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param pull_only If TRUE, will not run the container, only pull to the VM
 #' 
 #' After starting a VM, you can load the container again using this command.
 #' 
@@ -221,6 +222,7 @@ gce_save_container <- function(instance,
 gce_load_container <- function(instance,
                                container_name,
                                container_url = "gcr.io",
+                               pull_only = FALSE,
                                project = gce_get_global_project()){
   
   instance <- as.gce_instance_name(instance)
@@ -229,7 +231,12 @@ gce_load_container <- function(instance,
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  harbor::docker_run(instance, build_tag)
+  if(pull_only){
+    harbor::docker_pull(instance, build_tag)
+  } else {
+    harbor::docker_run(instance, build_tag)
+  }
+
   
   TRUE
 }

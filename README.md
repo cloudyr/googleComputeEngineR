@@ -504,3 +504,45 @@ container_update_info(con$rstudio)
                deviceName       type       mode boot autoDelete
   1 rstudio-dev-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
 ```
+
+## Using private Google Containers
+
+Google Cloud comes with a [private container registry](https://cloud.google.com/container-registry/) that is available to all VMs created in the that project, where you can store docker containers.
+
+You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.
+
+For this you need SSH access set up via `gce_ssh_setup` and the `harbor` package to manipulate the docker images:
+
+```r
+library(googleComputeEngineR)
+library(harbor)
+
+vm <- gce_vm_template("rstudio", 
+                      name = "rstudio-dev", 
+                      username = "mark",  password = "mark1234", 
+                      predefined_type = "f1-micro")
+
+># External IP:         104.199.19.222
+```
+
+Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  This can take some time (5mins +) if its a new container.
+ 
+```r
+gce_save_container(vm, "my-rstudio")
+```
+
+The container `my-rstudio` with your changes is now saved, and can be used to launch new containers.
+
+To load onto another VM, use a Google container optimised instance with `image_project = "google-containers"`:
+
+```r
+vm2 <-  gce_vm_create(name = "new_instance",
+                      predefined_type = "f1-micro",
+                      image_family = "gci-stable",
+                      image_project = "google-containers")
+
+## load and run the container from previous setup
+gce_load_container(vm2, "my-rstudio")
+
+```
+
