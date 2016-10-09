@@ -5,7 +5,7 @@
 \title{Load a previously saved private Google Container}
 \usage{
 gce_load_container(instance, container_name, container_url = "gcr.io",
-  project = gce_get_global_project())
+  pull_only = FALSE, project = gce_get_global_project())
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -14,9 +14,11 @@ gce_load_container(instance, container_name, container_url = "gcr.io",
 
 \item{container_url}{The URL of where the container was saved}
 
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}
+\item{pull_only}{If TRUE, will not run the container, only pull to the VM
 
 After starting a VM, you can load the container again using this command.}
+
+\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 }
 \value{
 TRUE if successful

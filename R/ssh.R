@@ -197,10 +197,11 @@ gce_set_global_ssh_user <- function(username = NULL){
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @param wait Whether then SSH output should be waited for or run it asynchronously.
+#' @param capture_text whether to return the output of the SSH command into an R text
 #' 
 #' @author Scott Chamberlin \email{myrmecocystus@@gmail.com}
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
-#' @return On failure, throws an error.
+#' @return If capture_text is TRUE, the text of the SSH command result.
 #' 
 #' 
 #' @examples 
@@ -219,6 +220,7 @@ gce_ssh <- function(instance,
                     key.pub = NULL,
                     key.private = NULL,
                     wait = TRUE,
+                    capture_text = FALSE,
                     project = gce_get_global_project(),
                     zone = gce_get_global_zone()) {
   
@@ -240,7 +242,23 @@ gce_ssh <- function(instance,
     " ", user, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
     " ", shQuote(lines)
   )
-  do_system(instance, cmd, wait = wait, project = project, zone = zone)
+  
+  if (capture_text) {
+    # Assume that the remote host uses /tmp as the temp dir
+    temp_remote <- tempfile("gcer_cmd", tmpdir = "/tmp")
+    temp_local <- tempfile("gcer_cmd")
+    on.exit(unlink(temp_local))
+    
+    cmd <- paste(cmd, ">", temp_remote)
+    do_system(instance, cmd, wait = wait, project = project, zone = zone)
+    gce_ssh_download(instance, temp_remote, temp_local, project = project, zone = zone)
+    
+    text <- readLines(temp_local, warn = FALSE)
+    return(text)
+    
+  } else {
+    return(do_system(instance, cmd, wait = wait, project = project, zone = zone))
+  }
 }
 
 ssh_options <- function() {

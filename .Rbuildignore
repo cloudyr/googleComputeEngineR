@@ -15,4 +15,4 @@ test_signedurls\.RData
 ^docs
 _staticdocs\.yml
 ^auth
-^secrets\.tar\.
+^secrets\.tar

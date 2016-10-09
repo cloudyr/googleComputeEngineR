@@ -7,8 +7,8 @@
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
 gce_ssh(instance, ..., user = gce_get_global_ssh_user(), key.pub = NULL,
-  key.private = NULL, wait = TRUE, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  key.private = NULL, wait = TRUE, capture_text = FALSE,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 
 gce_ssh_upload(instance, local, remote, user = gce_get_global_ssh_user(),
   key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE,
@@ -33,6 +33,8 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 
 \item{wait}{Whether then SSH output should be waited for or run it asynchronously.}
 
+\item{capture_text}{whether to return the output of the SSH command into an R text}
+
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
@@ -44,7 +46,7 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 \item{overwrite}{If TRUE, will overwrite the local file if exists.}
 }
 \value{
-On failure, throws an error.
+If capture_text is TRUE, the text of the SSH command result.
 }
 \description{
 Assumes that you have ssh & scp installed.
