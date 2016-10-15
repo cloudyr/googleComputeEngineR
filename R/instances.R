@@ -1,8 +1,22 @@
+#' Get the instance name(s) if passed instance(s)
+#' @param A list or a single instance 
+#' 
+#' @keywords internal
+as.gce_instance_name <- function(x){
+
+  if(inherits(x, "gce_instance") || inherits(x, "gce_zone_operation") || inherits(x, "character")){
+    return(as.gce_instance_name_one(x))
+  } else {
+    return(vapply(as.list(x), as.gce_instance_name_one, character(1)))
+  }
+ 
+}
+
 #' Get the instance name if passed an instance
 #' @param a character name or gce_instance object
 #' 
 #' @keywords internal
-as.gce_instance_name <- function(x){
+as.gce_instance_name_one <- function(x){
   if(inherits(x, "gce_instance")){
     out <- x$name
   } else if(inherits(x, "gce_zone_operation")){

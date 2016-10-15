@@ -341,7 +341,7 @@ gce_ssh_browser("my-server")
 
 You can also send ssh commands to your running instance from R via the `gce_ssh()` commands.
 
-For this you will need to either connect first via the `gcloud compute ssh` command that generates SSH-keys, or generate them yourself following this guide.
+For this you will need to either connect first via the `gcloud compute ssh` command that generates SSH-keys, or generate them yourself following this [Google guide](https://cloud.google.com/compute/docs/instances/connecting-to-instance).
 
 Once you have generated for your username, the public and private key, you can connect via:
 

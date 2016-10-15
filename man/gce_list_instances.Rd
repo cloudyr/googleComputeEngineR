@@ -28,6 +28,9 @@ Authentication scopes used by this function are:
 \item https://www.googleapis.com/auth/compute
 \item https://www.googleapis.com/auth/compute.readonly
 }
+
+To filter you need a single string in the form \code{field_name eq|ne string} 
+  e.g. \code{gce_list_instances("status eq RUNNING")} where \code{eq} is 'equals' and \code{ne} is 'not-equals'.
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}

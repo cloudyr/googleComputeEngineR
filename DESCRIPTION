@@ -22,7 +22,9 @@ Suggests:
     testthat,
     harbor,
     devtools
-Remotes: MarkEdmondson1234/harbor
+Remotes: 
+  MarkEdmondson1234/harbor,
+  HenrikBengtsson/future@develop
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

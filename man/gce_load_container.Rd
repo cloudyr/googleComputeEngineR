@@ -5,7 +5,7 @@
 \title{Load a previously saved private Google Container}
 \usage{
 gce_load_container(instance, container_name, container_url = "gcr.io",
-  pull_only = FALSE, project = gce_get_global_project())
+  pull_only = FALSE, project = gce_get_global_project(), ...)
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -14,11 +14,18 @@ gce_load_container(instance, container_name, container_url = "gcr.io",
 
 \item{container_url}{The URL of where the container was saved}
 
-\item{pull_only}{If TRUE, will not run the container, only pull to the VM
-
-After starting a VM, you can load the container again using this command.}
+\item{pull_only}{If TRUE, will not run the container, only pull to the VM}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
+
+\item{...}{Other arguments passed to docker_run
+
+After starting a VM, you can load the container again using this command.
+
+\itemize{
+  \item For Shiny based containers, pass "-p 80:3838" to run it at the URL
+  \item For RStudio based containers, pass "-p 80:8787" to run it at the URL
+ }}
 }
 \value{
 TRUE if successful

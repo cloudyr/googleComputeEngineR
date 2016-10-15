@@ -7,7 +7,7 @@
 gce_get_external_ip(instance, verbose = TRUE, ...)
 }
 \arguments{
-\item{instance}{Name of the instance to find the external IP for}
+\item{instance}{Name or instance object to find the external IP for}
 
 \item{verbose}{Give a user message about the IP}
 

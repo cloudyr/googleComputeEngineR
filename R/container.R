@@ -214,8 +214,14 @@ gce_save_container <- function(instance,
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param pull_only If TRUE, will not run the container, only pull to the VM
+#' @param ... Other arguments passed to docker_run
 #' 
 #' After starting a VM, you can load the container again using this command.
+#' 
+#' \itemize{
+#'   \item For Shiny based containers, pass "-p 80:3838" to run it at the URL
+#'   \item For RStudio based containers, pass "-p 80:8787" to run it at the URL
+#'  }
 #' 
 #' @return TRUE if successful
 #' @export
@@ -223,7 +229,8 @@ gce_load_container <- function(instance,
                                container_name,
                                container_url = "gcr.io",
                                pull_only = FALSE,
-                               project = gce_get_global_project()){
+                               project = gce_get_global_project(),
+                               ...){
   
   instance <- as.gce_instance_name(instance)
   
@@ -234,7 +241,7 @@ gce_load_container <- function(instance,
   if(pull_only){
     harbor::docker_pull(instance, build_tag)
   } else {
-    harbor::docker_run(instance, build_tag)
+    harbor::docker_run(instance, build_tag, detach = TRUE, ...)
   }
 
   

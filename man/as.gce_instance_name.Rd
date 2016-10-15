@@ -2,15 +2,15 @@
 % Please edit documentation in R/instances.R
 \name{as.gce_instance_name}
 \alias{as.gce_instance_name}
-\title{Get the instance name if passed an instance}
+\title{Get the instance name(s) if passed instance(s)}
 \usage{
 as.gce_instance_name(x)
 }
 \arguments{
-\item{a}{character name or gce_instance object}
+\item{A}{list or a single instance}
 }
 \description{
-Get the instance name if passed an instance
+Get the instance name(s) if passed instance(s)
 }
 \keyword{internal}
 

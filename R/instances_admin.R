@@ -11,8 +11,11 @@
 #' \item https://www.googleapis.com/auth/compute.readonly
 #' }
 #' 
+#' @details 
 #' 
-
+#' To filter you need a single string in the form \code{field_name eq|ne string} 
+#'   e.g. \code{gce_list_instances("status eq RUNNING")} where \code{eq} is 'equals' and \code{ne} is 'not-equals'.
+#' 
 #' @param filter Sets a filter expression for filtering listed resources, in the form filter={expression}
 #' @param maxResults The maximum number of results per page that should be returned
 #' @param pageToken Specifies a page token to use
