@@ -17,7 +17,7 @@ Metadata <- function(items) {
                                                       value = jsonlite::unbox(items[[x]])))
   
   structure(list(items = key_values), 
-            class = c("list","gar_Metadata"))
+            class = c("gar_Metadata", "list"))
 }
 
 #' Sets metadata for the specified instance to the data included in the request.
