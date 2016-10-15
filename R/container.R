@@ -240,3 +240,29 @@ gce_load_container <- function(instance,
   
   TRUE
 }
+
+#' Install packages in a instance's container
+#' 
+#' @param instance The instance running the container
+#' @param container The container name running R to install packages within
+#' @param cran_packages A character vector of CRAN packages to be installed
+#' @param github_packages A character vector of devtools packages to be installed
+#' @param auth_token A Github PAT for private repos if needed
+#' 
+#' @return TRUE if successful
+#' @export
+gce_install_packages_container <- function(instance,
+                                           container,
+                                           cran_packages = NULL,
+                                           github_packages = NULL,
+                                           auth_token = devtools::github_pat()){
+  
+  instance <- as.gce_instance_name(instance)
+  
+  if(!is.null(cran_packages)){
+    ## install in folder on instance and load.packages() from that library /home/gcer/library
+  }
+  
+  
+}
+

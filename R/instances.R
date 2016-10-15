@@ -152,8 +152,8 @@ gce_vm_create <- function(name,
                           predefined_type = "f1-micro",
                           image_project = "debian-cloud",
                           image_family = "debian-8",
-                          cpus,
-                          memory,
+                          cpus = NULL,
+                          memory = NULL,
                           image = "",
                           disk_source = NULL,
                           network = "default", 
@@ -174,8 +174,8 @@ gce_vm_create <- function(name,
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
   
-  if(missing(predefined_type)){
-    if(any(missing(cpus), missing(memory))){
+  if(missing(predefined_type) && !is.character(predefined_type)){
+    if(any(is.null(cpus), is.null(memory))){
      stop("Must supply one of 'predefined_type', or both 'cpus' and 'memory' arguments.") 
     }
   }

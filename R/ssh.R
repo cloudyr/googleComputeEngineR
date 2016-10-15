@@ -108,7 +108,6 @@ gce_ssh_setup <- function(user,
   
   ## set global ssh username
   gce_set_global_ssh_user(user)
-  myMessage("Set SSH username", user, level = 3)
   
   ## get existing metadata
   ins <- gce_get_instance(instance, project = project, zone = zone)
@@ -141,11 +140,13 @@ gce_ssh_setup <- function(user,
 }
 
 ## Get the saved private ssh key
+#' @export
 gce_global_ssh_private <- function(){
   .gce_env$ssh_key
 }
 
 ## Get the saved ssh user
+#' @export
 gce_get_global_ssh_user <- function(){
 
   if(!exists("user", envir = .gce_env)){
@@ -158,10 +159,16 @@ gce_get_global_ssh_user <- function(){
 }
 
 ## Set the global SSH username
+#' @export
 gce_set_global_ssh_user <- function(username = NULL){
   
   if(is.null(username)){
-    return(NULL)
+    user_env <- Sys.getenv("GCE_SSH_USER")
+    if(user_env == "") {
+      return(NULL)
+    } else {
+      username <- user_env
+    }
   }
   
   myMessage("Set SSH Username to ", username, level = 3)
@@ -190,7 +197,7 @@ gce_set_global_ssh_user <- function(username = NULL){
 #' @param instance Name of the instance of run ssh command upon
 #' @param ... Shell commands to run. Multiple commands are combined with
 #'   \code{&&} so that execution will halt after the first failure.
-#' @param user User name used to generate ssh-keys. Usually your login to your local workstation or Google account alias.
+#' @param username User name used to generate ssh-keys. Usually your login to your local workstation or Google account alias.
 #' @param local,remote Local and remote paths.
 #' @param overwrite If TRUE, will overwrite the local file if exists.
 #' @param verbose If TRUE, will print command before executing it.
@@ -216,7 +223,7 @@ gce_set_global_ssh_user <- function(username = NULL){
 #' @family ssh functions
 gce_ssh <- function(instance, 
                     ..., 
-                    user = gce_get_global_ssh_user(), 
+                    username = gce_get_global_ssh_user(), 
                     key.pub = NULL,
                     key.private = NULL,
                     wait = TRUE,
@@ -228,37 +235,50 @@ gce_ssh <- function(instance,
   
   if(is.null(gce_global_ssh_private()) | is.null(gce_get_global_ssh_user())){
     myMessage("Setting up ssh keys...")
-    gce_ssh_setup(user, instance = instance, project = project, zone = zone,
+
+    gce_ssh_setup(username, instance = instance, project = project, zone = zone,
                   key.pub = key.pub,
                   key.private = key.private)
   }
   
   if(is.null(gce_get_global_ssh_user())) stop("Must set username")
   
+  username <- gce_get_global_ssh_user()
+  
   lines <- paste(c(...), collapse = " \\\n&& ")
   if (lines == "") stop("Provide commands", call. = FALSE)
-  cmd <- paste0(
-    "ssh ", ssh_options(),
-    " ", user, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
-    " ", shQuote(lines)
-  )
-  
-  if (capture_text) {
+
+  if(capture_text) {
     # Assume that the remote host uses /tmp as the temp dir
     temp_remote <- tempfile("gcer_cmd", tmpdir = "/tmp")
     temp_local <- tempfile("gcer_cmd")
     on.exit(unlink(temp_local))
     
-    cmd <- paste(cmd, ">", temp_remote)
+    cmd <- paste0(
+      "ssh ", ssh_options(),
+      " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
+      " ", shQuote(paste(lines, ">", temp_remote))
+    )
+    
     do_system(instance, cmd, wait = wait, project = project, zone = zone)
     gce_ssh_download(instance, temp_remote, temp_local, project = project, zone = zone)
-    
+
     text <- readLines(temp_local, warn = FALSE)
-    return(text)
+    out <- text
     
   } else {
-    return(do_system(instance, cmd, wait = wait, project = project, zone = zone))
+    
+    cmd <- paste0(
+      "ssh ", ssh_options(),
+      " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
+      " ", shQuote(lines)
+    )
+    
+    out <- do_system(instance, cmd, wait = wait, project = project, zone = zone)
+    
   }
+  
+  out
 }
 
 ssh_options <- function() {
@@ -269,7 +289,7 @@ ssh_options <- function() {
   )
   private_key <- gce_global_ssh_private()
   
-  if(!file.exists(private_key)) stop("Could't find private key")
+  if(!file.exists(private_key)) stop("Couldn't find private key")
   
   paste0(paste0("-o ", names(opts), "=", opts, collapse = " "), 
          " -i ", 

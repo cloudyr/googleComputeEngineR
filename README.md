@@ -86,6 +86,7 @@ Example entries:
 GCE_AUTH_FILE="/Users/mark/xxxxx/auth.json"
 GCE_DEFAULT_PROJECT="mark-xxxxxxx"
 GCE_DEFAULT_ZONE="europe-west1-a"
+GCE_SSH_USER="mark"
 ```
 
 This file will then used for authentication via `gce_auth()` when you load the library:
@@ -355,7 +356,7 @@ gce_ssh_setup(username = "mark",
 gce_ssh("your-instance", "cd", user = "mark")
 ```
 
-You can also call `gce_ssh` directly which will call `gce_ssh_setup` if it has not been run already.
+You can also call `gce_ssh` directly which will call `gce_ssh_setup` if it has not been run already.  It will look for a username via `Sys.getenv("GCE_SSH_USER")` or you will need to specify it in the first call you make.
 
 ## Docker commands
 
@@ -525,7 +526,7 @@ vm <- gce_vm_template("rstudio",
 ># External IP:         104.199.19.222
 ```
 
-Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  This can take some time (5mins +) if its a new container.
+Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  This can take some time (5mins +) if its a new container. You should be able to see the image in the web UI when it is done at `https://console.cloud.google.com/kubernetes/images/list`.
  
 ```r
 gce_save_container(vm, "my-rstudio")
@@ -545,4 +546,8 @@ vm2 <-  gce_vm_create(name = "new_instance",
 gce_load_container(vm2, "my-rstudio")
 
 ```
+
+## Installing packages within Docker container
+
+
 
