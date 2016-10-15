@@ -21,6 +21,7 @@ Suggests:
     rmarkdown,
     testthat,
     harbor,
+    future,
     devtools
 Remotes: 
   MarkEdmondson1234/harbor,
