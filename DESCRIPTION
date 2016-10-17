@@ -14,13 +14,15 @@ Depends:
     R (>= 3.3.0)
 Imports:
     googleAuthR (>= 0.4.0),
-    jsonlite (>= 1.1)
+    jsonlite (>= 1.1),
+    future (>= 1.1.1)
 Suggests:
     knitr,
     covr,
     rmarkdown,
     testthat,
     harbor,
+    future,
     devtools
 Remotes: 
   MarkEdmondson1234/harbor,

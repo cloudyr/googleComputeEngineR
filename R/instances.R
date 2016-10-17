@@ -72,7 +72,7 @@ Instance <- function(name = NULL,
                  scheduling = scheduling, 
                  serviceAccounts = serviceAccounts, 
                  tags = tags), 
-            class = c("list","gar_Instance"))
+            class = c("gar_Instance", "list"))
 }
 
 

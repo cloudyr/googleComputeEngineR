@@ -65,7 +65,7 @@ gce_make_network <- function(name,
         accessConfigs = ac
       )
     ),
-    class = c("list","gce_networkInterface")
+    class = c("gce_networkInterface", "list")
   )
   
 }
