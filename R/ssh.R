@@ -140,13 +140,11 @@ gce_ssh_setup <- function(user,
 }
 
 ## Get the saved private ssh key
-#' @export
 gce_global_ssh_private <- function(){
   .gce_env$ssh_key
 }
 
 ## Get the saved ssh user
-#' @export
 gce_get_global_ssh_user <- function(){
 
   if(!exists("user", envir = .gce_env)){
@@ -159,7 +157,6 @@ gce_get_global_ssh_user <- function(){
 }
 
 ## Set the global SSH username
-#' @export
 gce_set_global_ssh_user <- function(username = NULL){
   
   if(is.null(username)){
