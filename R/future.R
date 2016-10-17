@@ -10,7 +10,7 @@ makeDockerClusterPSOCK <- function(workers,
   future::makeClusterPSOCK(workers, rscript = rscript, rscript_args = rscript_args, ..., verbose = verbose)
 }
 
-## Creates clusters on the GCE machines
+## Creates future clusters on the GCE machines
 #' @export
 gce_future_makeCluster <- function(instances, 
                                    username = gce_get_global_ssh_user(),
