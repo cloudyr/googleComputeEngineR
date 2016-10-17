@@ -45,7 +45,7 @@
 #' 
 #' 
 #' @export  
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "example"),
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "example", "rstudio-hadleyverse"),
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",
@@ -61,6 +61,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
   
   cloud_init <- switch(template,
                        rstudio  = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
+                       `rstudio-hadleyverse`  = system.file("cloudconfig", "rstudio-hadleyverse.yaml", package = "googleComputeEngineR"),
                        shiny    = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
                        opencpu  = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
                        `r-base` = system.file("cloudconfig", "r-base.yaml",  package = "googleComputeEngineR"),
@@ -70,7 +71,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
   
   ## Add the username and password to the config file
-  if(template == "rstudio"){
+  if(template %in% c("rstudio","rstudio-hadleyverse")){
     if(any(is.null(username), is.null(password))){
       stop("Must supply a username and password for RStudio Server templates")
     }
@@ -268,6 +269,7 @@ gce_install_packages_container <- function(instance,
   
   if(!is.null(cran_packages)){
     ## install in folder on instance and load.packages() from that library /home/gcer/library
+    harbor::docker_run(instance, container, c("R", "1+1"))
   }
   
   
