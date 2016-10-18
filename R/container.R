@@ -249,7 +249,7 @@ gce_load_container <- function(instance,
   TRUE
 }
 
-#' Install packages in a instance's container
+#' Install packages in a instance's running container
 #' 
 #' @param instance The instance running the container
 #' @param container The container name running R to install packages within
@@ -265,11 +265,26 @@ gce_install_packages_container <- function(instance,
                                            github_packages = NULL,
                                            auth_token = devtools::github_pat()){
   
-  instance <- as.gce_instance_name(instance)
+  ## for rbase containers start them up with NULL so it doesn't exit, install, then commit
+  
+  ## set up future cluster
+  clus <- as.cluster.gce_instance(instance, 
+                                  docker_image = container, 
+                                  rscript = c("docker", "exec", "--net=host", container, "Rscript"))
+  future::plan(future::cluster, workers = clus)
   
   if(!is.null(cran_packages)){
     ## install in folder on instance and load.packages() from that library /home/gcer/library
-    harbor::docker_run(instance, container, c("R", "1+1"))
+    # harbor::docker_cmd(instance, container, c("R", "1+1"))
+    cran_f <- function(){install.packages(cran_packages)}
+    cran %<-% cran_f()
+    cran
+  }
+  
+  if(!is.null(github_packages)){
+    devt_f <- function(){devtools::install_github(github_packages)}
+    devt %<-% cran_f()
+    devt
   }
   
   

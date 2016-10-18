@@ -2,7 +2,7 @@
 % Please edit documentation in R/container.R
 \name{gce_install_packages_container}
 \alias{gce_install_packages_container}
-\title{Install packages in a instance's container}
+\title{Install packages in a instance's running container}
 \usage{
 gce_install_packages_container(instance, container, cran_packages = NULL,
   github_packages = NULL, auth_token = devtools::github_pat())
@@ -22,6 +22,6 @@ gce_install_packages_container(instance, container, cran_packages = NULL,
 TRUE if successful
 }
 \description{
-Install packages in a instance's container
+Install packages in a instance's running container
 }
 
