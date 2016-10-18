@@ -44,7 +44,7 @@ gce_list_instances <- function(filter = NULL,
   
   structure(
     out,
-    class = c("list","gce_instanceList")
+    class = c("gce_instanceList", class(out))
   )
   
 }
@@ -83,7 +83,7 @@ gce_get_instance <- function(instance,
   
   structure(
     out,
-    class = c("list","gce_instance")
+    class = c("gce_instance", class(out))
   )
   
 }

@@ -1,6 +1,6 @@
 # sets operation class
 as.zone_operation <- function(x){
-  structure(x, class = c("list", "gce_zone_operation"))
+  structure(x, class = c("gce_zone_operation", class(x)))
 }
 
 #' Deletes the specified zone-specific Operations resource.
