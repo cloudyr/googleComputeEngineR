@@ -2,7 +2,7 @@
 % Please edit documentation in R/future.R
 \name{as.cluster.gce_instance}
 \alias{as.cluster.gce_instance}
-\title{future cluster for GCE objects}
+\title{Create a future cluster for GCE objects}
 \usage{
 \method{as.cluster}{gce_instance}(x, user = gce_get_global_ssh_user(),
   project = gce_get_global_project(), zone = gce_get_global_zone(),
@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{The instance to make a future cluster}
 
-\item{user}{Username used in ssh}
+\item{user}{Username used in SSH}
 
 \item{project}{The GCE project}
 
@@ -19,17 +19,23 @@
 
 \item{rshopts}{Options for the SSH}
 
-\item{...}{other arguments passed to makeDockerClusterPSOCK}
+\item{...}{Other arguments passed to makeDockerClusterPSOCK}
 
-\item{recursive}{recursive}
+\item{recursive}{Not used.}
+}
+\value{
+A \code{cluster} object.
 }
 \description{
-S3 method for as.cluster in the future package
+S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
 }
-\keyword{##}
-\keyword{Imports:}
-\keyword{REMOVE}
-\keyword{future}
-\keyword{iff}
-\keyword{internal}
+\examples{
+\donttest{\dontrun{
+vm <- gce_vm_template("r-base", name = "future", predefined_type = "f1-micro")
+plan(cluster, workers = as.cluster(vm))
+x \%<-\% { Sys.getinfo() }
+print(x)
+}}
+
+}
 

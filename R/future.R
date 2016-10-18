@@ -1,5 +1,4 @@
 # from https://github.com/HenrikBengtsson/future/issues/101#issuecomment-253725603
-## ADD iff Imports: future
 #' @importFrom future makeClusterPSOCK
 makeDockerClusterPSOCK <- function(workers, 
                                    docker_image = "rocker/r-base", 
@@ -13,35 +12,29 @@ makeDockerClusterPSOCK <- function(workers,
 }
 
 
-#' Make a cluster
+#' Create a future cluster for GCE objects
 #' 
-#' Used in future package
-#' 
-#' @param x Object to make a cluster passed to S3 method
-#' @param ... other arguments
-#' 
-#' @keywords internal
-#' @export
-as.cluster <- function(x, ...) UseMethod("as.cluster")
-
-#' future cluster for GCE objects
-#' 
-#' S3 method for as.cluster in the future package
-#' 
-#' @keywords internal
-#' ## REMOVE iff Imports: future
-# ' @method as.cluster gce_instance
-## ## ADD iff Imports: future
-#' @importFrom future as.cluster
+#' S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
 #' 
 #' @param x The instance to make a future cluster
-#' @param user Username used in ssh
+#' @param user Username used in SSH
 #' @param project The GCE project
 #' @param zone The GCE zone
 #' @param rshopts Options for the SSH
-#' @param ... other arguments passed to makeDockerClusterPSOCK
-#' @param recursive recursive
-#' 
+#' @param ... Other arguments passed to makeDockerClusterPSOCK
+#' @param recursive Not used.
+#'
+#' @return A \code{cluster} object.
+#'
+#' @examples
+#' \donttest{\dontrun{
+#' vm <- gce_vm_template("r-base", name = "future", predefined_type = "f1-micro")
+#' plan(cluster, workers = as.cluster(vm))
+#' x %<-% { Sys.getinfo() }
+#' print(x)
+#' }}
+#'
+#' @importFrom future as.cluster
 #' @export
 as.cluster.gce_instance <- function(x, 
                                     user = gce_get_global_ssh_user(), 
@@ -60,15 +53,3 @@ as.cluster.gce_instance <- function(x,
   
   makeDockerClusterPSOCK(ips, user = user, rshopts = rshopts, ...)
 }
-
-
-# ## NOTE: Not really need with above as.cluster()
-# ## Creates clusters on the GCE machines
-# #' @keywords internal
-# #' ## ADD iff Imports: future
-# ## @importFrom future plan cluster
-# #' @export
-# gce_future_makeCluster <- function(instances, ...) {
-#   cl <- future::as.cluster(instances, ...)
-#   future::plan(future::cluster, workers = cl)
-# }
