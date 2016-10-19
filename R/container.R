@@ -233,8 +233,6 @@ gce_load_container <- function(instance,
                                project = gce_get_global_project(),
                                ...){
   
-  instance <- as.gce_instance_name(instance)
-  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
@@ -242,6 +240,7 @@ gce_load_container <- function(instance,
   if(pull_only){
     harbor::docker_pull(instance, build_tag)
   } else {
+    ## this needs to specify ports etc. 
     harbor::docker_run(instance, build_tag, detach = TRUE, ...)
   }
 
@@ -252,25 +251,52 @@ gce_load_container <- function(instance,
 #' Install packages in a instance's running container
 #' 
 #' @param instance The instance running the container
-#' @param container The container name running R to install packages within
+#' @param container A container object from \code{harbor::containers}
 #' @param cran_packages A character vector of CRAN packages to be installed
 #' @param github_packages A character vector of devtools packages to be installed
 #' @param auth_token A Github PAT for private repos if needed
+#' @param running Whether the docker container is running now or not
+#' 
+#' @details 
+#' 
+#'  If the docker is running then will execute via \code{docker exec}, otherwise will start container via \code{docker run} 
+#'  and then commit the container via \code{docker commit -m "installed packages via gceR"}
+#' 
 #' 
 #' @return TRUE if successful
+#' @import harbor
+#' @import future
 #' @export
 gce_install_packages_container <- function(instance,
                                            container,
                                            cran_packages = NULL,
                                            github_packages = NULL,
                                            auth_token = devtools::github_pat()){
+  ## found via harbor::containers
+  stopifnot(inherits(container, "container"))
   
-  ## for rbase containers start them up with NULL so it doesn't exit, install, then commit
+  running <- harbor::container_running(container)
+  
+  ## remove prefixed /
+  container_name <- gsub("/","",container$info$Name)
+  container_image <- container$image
+  
+  ## run this to ensure future can connect?
+  harbor::docker_cmd(instance, "network connect host", container_name)
+  
+  if(running){
+    rscript_cmd <- c("docker", "exec", container_name, "Rscript")
+  } else {
+    ## will start and install future cluster that will keep container running
+    rscript_cmd <- c("docker", "start", 
+                     paste0("--name=",container_name), 
+                     container_image, "Rscript")
+  }
   
   ## set up future cluster
-  clus <- as.cluster.gce_instance(instance, 
-                                  docker_image = container, 
-                                  rscript = c("docker", "exec", "--net=host", container, "Rscript"))
+  clus <- as.cluster(instance, 
+                     docker_image = container, 
+                     rscript = rscript_cmd)
   future::plan(future::cluster, workers = clus)
   
   if(!is.null(cran_packages)){
@@ -287,6 +313,18 @@ gce_install_packages_container <- function(instance,
     devt
   }
   
+  if(!running){
+    ## commit the changes
+    harbor::docker_cmd(instance, 
+                       "commit", 
+                       "-a 'GoogleComputeEngineR'" ,
+                       "-m 'Installed packages'", 
+                       container_name, container_image)
+    ## stop the container
+    harbor::docker_cmd(instance, "stop", container_name)
+  }
+  
+  TRUE
   
 }
 

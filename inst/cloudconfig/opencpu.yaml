@@ -19,6 +19,7 @@ write_files:
     ExecStart=/usr/bin/docker run -p 80:80 \
                                   -p 8004:8004 \
                                   --name=opencpu \
+                                  --net=host \
                                   opencpu/rstudio
     ExecStop=/usr/bin/docker stop opencpu
 

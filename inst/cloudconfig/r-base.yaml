@@ -21,6 +21,7 @@ write_files:
     ExecStart=/usr/bin/docker run --name=r-base \
                                   -e "R_LIBS_USER=/library/" \
                                   -v /home/gcer/library/:/library/ \
+                                  --net=host \
                                   rocker/r-base
     ExecStop=/usr/bin/docker stop r-base
 

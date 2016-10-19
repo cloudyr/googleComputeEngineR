@@ -119,7 +119,7 @@ gce_ssh_setup <- function(user,
   }
 
   
-  new_key <- paste0(user, ":ssh-rsa ", key.pub.content, collapse = "")
+  new_key <- paste0(user, ":", key.pub.content, collapse = "")
   
   if(any(new_key %in% paste0(keys,"\n"))){
     
