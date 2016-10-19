@@ -10,18 +10,24 @@ gce_install_packages_container(instance, container, cran_packages = NULL,
 \arguments{
 \item{instance}{The instance running the container}
 
-\item{container}{The container name running R to install packages within}
+\item{container}{A container object from \code{harbor::containers}}
 
 \item{cran_packages}{A character vector of CRAN packages to be installed}
 
 \item{github_packages}{A character vector of devtools packages to be installed}
 
 \item{auth_token}{A Github PAT for private repos if needed}
+
+\item{running}{Whether the docker container is running now or not}
 }
 \value{
 TRUE if successful
 }
 \description{
 Install packages in a instance's running container
+}
+\details{
+If the docker is running then will execute via \code{docker exec}, otherwise will start container via \code{docker run} 
+ and then commit the container via \code{docker commit -m "installed packages via gceR"}
 }
 

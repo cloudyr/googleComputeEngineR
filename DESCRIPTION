@@ -23,7 +23,6 @@ Suggests:
     covr,
     rmarkdown,
     testthat,
-
     future,
     devtools
 Remotes: 
