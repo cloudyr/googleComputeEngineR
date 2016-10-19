@@ -17,7 +17,8 @@ Imports:
     googleAuthR (>= 0.4.0),
     jsonlite (>= 1.1),
     future (>= 1.1.1),
-    harbor (>= 0.0.1)
+    harbor (>= 0.0.1),
+    devtools
 Suggests:
     knitr,
     covr,
