@@ -288,7 +288,7 @@ gce_install_packages_docker <- function(instance,
   if(!is.null(cran_packages)){
     ## install in folder on instance and load.packages() from that library /home/gcer/library
     # harbor::docker_cmd(instance, container, c("R", "1+1"))
-    cran_f <- function(){install.packages(cran_packages)}
+    cran_f <- function(){utils::install.packages(cran_packages)}
     cran %<-% cran_f()
     cran
   }

@@ -108,12 +108,12 @@ test_that("We can set SSH settings", {
 
 test_that("We can run SSH on an instance", {
   skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "mark", 
+                user = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
@@ -125,11 +125,11 @@ test_that("We can run SSH on an instance", {
 
 test_that("We can upload via SSH", {
   skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "mark", 
+                user = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
@@ -143,11 +143,11 @@ test_that("We can upload via SSH", {
 
 test_that("We can download via SSH", {
   skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "mark", 
+                user = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
