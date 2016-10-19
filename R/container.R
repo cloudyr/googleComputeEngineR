@@ -248,55 +248,41 @@ gce_load_container <- function(instance,
   TRUE
 }
 
-#' Install packages in a instance's running container
+#' Install R packages onto an instance's stopped docker image
 #' 
 #' @param instance The instance running the container
-#' @param container A container object from \code{harbor::containers}
+#' @param image A docker image to install packages within.
 #' @param cran_packages A character vector of CRAN packages to be installed
 #' @param github_packages A character vector of devtools packages to be installed
-#' @param auth_token A Github PAT for private repos if needed
-#' @param running Whether the docker container is running now or not
 #' 
 #' @details 
 #' 
-#'  If the docker is running then will execute via \code{docker exec}, otherwise will start container via \code{docker run} 
-#'  and then commit the container via \code{docker commit -m "installed packages via gceR"}
+#' See the images on the instance via \code{harbor::docker_cmd(instance, "images")}
 #' 
+#' If using devtools github, will look for an auth token via \code{devtools::github_pat()}.  
+#'   This is an environment variable called \code{GITHUB_PAT} 
+#' 
+#'  Will start a container, install packages and then commit 
+#'    the container to an image of the same name via \code{docker commit -m "installed packages via gceR"}
 #' 
 #' @return TRUE if successful
 #' @import harbor
 #' @import future
 #' @export
-gce_install_packages_container <- function(instance,
-                                           container,
-                                           cran_packages = NULL,
-                                           github_packages = NULL,
-                                           auth_token = devtools::github_pat()){
-  ## found via harbor::containers
-  stopifnot(inherits(container, "container"))
+gce_install_packages_docker <- function(instance,
+                                        docker_image,
+                                        cran_packages = NULL,
+                                        github_packages = NULL){
   
-  running <- harbor::container_running(container)
-  
-  ## remove prefixed /
-  container_name <- gsub("/","",container$info$Name)
-  container_image <- container$image
-  
-  ## run this to ensure future can connect?
-  harbor::docker_cmd(instance, "network connect host", container_name)
-  
-  if(running){
-    rscript_cmd <- c("docker", "exec", container_name, "Rscript")
-  } else {
-    ## will start and install future cluster that will keep container running
-    rscript_cmd <- c("docker", "start", 
-                     paste0("--name=",container_name), 
-                     container_image, "Rscript")
-  }
+  gce_ssh_setup(gce_get_global_ssh_user(), 
+                instance = instance)
   
   ## set up future cluster
+  temp_name <- paste0("gceR-install-",idempotency())
   clus <- as.cluster(instance, 
-                     docker_image = container, 
-                     rscript = rscript_cmd)
+                     docker_image = docker_image,
+                     rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
+  
   future::plan(future::cluster, workers = clus)
   
   if(!is.null(cran_packages)){
@@ -308,21 +294,23 @@ gce_install_packages_container <- function(instance,
   }
   
   if(!is.null(github_packages)){
-    devt_f <- function(){devtools::install_github(github_packages)}
-    devt %<-% cran_f()
+    devt_f <- function(){devtools::install_github(github_packages, auth_token = devtools::github_pat())}
+    devt %<-% devt_f()
     devt
   }
   
-  if(!running){
-    ## commit the changes
-    harbor::docker_cmd(instance, 
-                       "commit", 
-                       "-a 'GoogleComputeEngineR'" ,
-                       "-m 'Installed packages'", 
-                       container_name, container_image)
-    ## stop the container
-    harbor::docker_cmd(instance, "stop", container_name)
-  }
+  harbor::docker_cmd(instance, 
+                     cmd = "commit", 
+                     args = c("-a 'googleComputeEngineR'" ,
+                              paste("-m 'Installed packages:", 
+                                    paste(collapse = " ", cran_packages), 
+                                    paste(collapse = " ", github_packages),
+                                    "'"),
+                              temp_name, 
+                              docker_image))
+  
+  ## stop the container
+  harbor::docker_cmd(instance, "stop", temp_name)
   
   TRUE
   

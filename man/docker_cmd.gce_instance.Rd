@@ -4,8 +4,8 @@
 \alias{docker_cmd.gce_instance}
 \title{Docker S3 method for use with harbor package}
 \usage{
-docker_cmd.gce_instance(host, cmd = NULL, args = NULL, docker_opts = NULL,
-  capture_text = FALSE, ...)
+\method{docker_cmd}{gce_instance}(host, cmd = NULL, args = NULL,
+  docker_opts = NULL, capture_text = FALSE, ...)
 }
 \arguments{
 \item{host}{The GCE instance}
