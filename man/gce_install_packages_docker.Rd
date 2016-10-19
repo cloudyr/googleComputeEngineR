@@ -10,11 +10,11 @@ gce_install_packages_docker(instance, docker_image, cran_packages = NULL,
 \arguments{
 \item{instance}{The instance running the container}
 
+\item{docker_image}{A docker image to install packages within.}
+
 \item{cran_packages}{A character vector of CRAN packages to be installed}
 
 \item{github_packages}{A character vector of devtools packages to be installed}
-
-\item{image}{A docker image to install packages within.}
 }
 \value{
 TRUE if successful
