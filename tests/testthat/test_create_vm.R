@@ -141,9 +141,10 @@ test_that("We can upload via SSH", {
   
 })
 
+
 test_that("We can download via SSH", {
   skip_on_cran()
-  # skip_on_travis()
+
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
@@ -158,6 +159,27 @@ test_that("We can download via SSH", {
 
   expect_true(cmd, "SSH download")
   unlink("test_auth_down.R")
+})
+
+context("Futures")
+
+test_that("We can install a package via futures", {
+  skip_on_cran()
+
+  vm <- gce_get_instance("rstudio-test")
+  
+  gce_ssh_setup(vm,
+                user = "travis", 
+                key.pub = "travis-ssh-key.pub", 
+                key.private = "travis-ssh-key")
+  
+  ## stop the container
+  stop <- harbor::docker_cmd(vm, "stop", "rstudio")
+  
+  ## install packages
+  worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "stringi")
+  expect_true(worked)
+  
 })
 
 context("Metadata")
