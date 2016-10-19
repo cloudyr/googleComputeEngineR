@@ -251,7 +251,7 @@ gce_load_container <- function(instance,
 #' Install R packages onto an instance's stopped docker image
 #' 
 #' @param instance The instance running the container
-#' @param image A docker image to install packages within.
+#' @param docker_image A docker image to install packages within.
 #' @param cran_packages A character vector of CRAN packages to be installed
 #' @param github_packages A character vector of devtools packages to be installed
 #' 
@@ -268,6 +268,8 @@ gce_load_container <- function(instance,
 #' @return TRUE if successful
 #' @import harbor
 #' @import future
+#' @importFrom utils install.packages
+#' @importFrom devtools install_github
 #' @export
 gce_install_packages_docker <- function(instance,
                                         docker_image,
@@ -288,6 +290,7 @@ gce_install_packages_docker <- function(instance,
   if(!is.null(cran_packages)){
     ## install in folder on instance and load.packages() from that library /home/gcer/library
     # harbor::docker_cmd(instance, container, c("R", "1+1"))
+    cran <- NULL
     cran_f <- function(){utils::install.packages(cran_packages)}
     cran %<-% cran_f()
     cran
@@ -295,6 +298,7 @@ gce_install_packages_docker <- function(instance,
   
   if(!is.null(github_packages)){
     devt_f <- function(){devtools::install_github(github_packages, auth_token = devtools::github_pat())}
+    devt <- NULL
     devt %<-% devt_f()
     devt
   }
