@@ -98,7 +98,7 @@ test_that("We can set SSH settings", {
   expect_equal(vm$kind, "compute#instance")
   
   worked <- gce_ssh_setup(vm,
-                          user = "travis", 
+                          username = "travis", 
                           key.pub = "travis-ssh-key.pub", 
                           key.private = "travis-ssh-key")
   
@@ -113,7 +113,7 @@ test_that("We can run SSH on an instance", {
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "travis", 
+                username = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
@@ -129,7 +129,7 @@ test_that("We can upload via SSH", {
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "travis", 
+                username = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
@@ -148,7 +148,7 @@ test_that("We can download via SSH", {
   vm <- gce_get_instance("rstudio-test")
   
   gce_ssh_setup(vm,
-                user = "travis", 
+                username = "travis", 
                 key.pub = "travis-ssh-key.pub", 
                 key.private = "travis-ssh-key")
   
@@ -278,7 +278,7 @@ test_that("We can install a package via futures", {
   vm <- gce_get_instance("test-container")
 
   gce_ssh_setup(vm,
-                user = "travis",
+                username = "travis",
                 key.pub = "travis-ssh-key.pub",
                 key.private = "travis-ssh-key",
                 overwrite = TRUE)

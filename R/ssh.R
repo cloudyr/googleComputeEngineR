@@ -250,7 +250,7 @@ check_ssh_set <- function(){
 #' 
 #' \dontrun{
 #' 
-#'   gce_ssh("rbase", "sudo journalctl -u rbase", user = "mark")
+#'   gce_ssh("rbase", "sudo journalctl -u rbase")
 #' 
 #' }
 #' 
@@ -269,7 +269,7 @@ gce_ssh <- function(instance,
   instance <- as.gce_instance(instance)
   
   gce_ssh_setup(instance = instance, 
-                user = username,
+                username = username,
                 project = project, 
                 zone = zone,
                 key.pub = key.pub,
@@ -347,7 +347,7 @@ gce_ssh_upload <- function(instance,
   instance <- as.gce_instance(instance)
   
   gce_ssh_setup(instance = instance, 
-                user = username,
+                username = username,
                 project = project, 
                 zone = zone,
                 key.pub = key.pub,
@@ -381,7 +381,7 @@ gce_ssh_download <- function(instance,
   instance <- as.gce_instance(instance)
   
   gce_ssh_setup(instance = instance, 
-                user = username,
+                username = username,
                 project = project, 
                 zone = zone,
                 key.pub = key.pub,
@@ -430,7 +430,7 @@ gce_ssh_download <- function(instance,
   # local host where it is untarred.
   cmd <- paste0(
     "ssh ", ssh_options(),
-    " ", user, "@", external_ip, " ",
+    " ", username, "@", external_ip, " ",
     sprintf("'cd %s && tar cz %s'", dirname(remote), basename(remote)),
     " | ",
     sprintf("(cd %s && tar xz)", local_tempdir)
