@@ -187,6 +187,7 @@ gce_vm_container <- function(file,
 #' It will start the push but it may take a long time to finish, espeically the first time, 
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return TRUE if commands finish
+#' @importFrom harbor docker_cmd
 #' @export
 gce_save_container <- function(instance,
                                container_name,
@@ -194,15 +195,13 @@ gce_save_container <- function(instance,
                                container_url = "gcr.io",
                                project = gce_get_global_project()){
   
-  instance <- as.gce_instance_name(instance)
-  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
-  docker_cmd.gce_instance(instance, "commit", args = c(template_name, build_tag))
+  harbor::docker_cmd(instance, "commit", args = c(template_name, build_tag))
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  docker_cmd.gce_instance(instance, "push", build_tag, wait = FALSE)
+  harbor::docker_cmd(instance, "push", build_tag, wait = FALSE)
   
   TRUE
   
@@ -225,6 +224,7 @@ gce_save_container <- function(instance,
 #'  }
 #' 
 #' @return TRUE if successful
+#' @import harbor
 #' @export
 gce_load_container <- function(instance,
                                container_name,
@@ -287,18 +287,14 @@ gce_install_packages_docker <- function(instance,
   future::plan(future::cluster, workers = clus)
   
   if(!is.null(cran_packages)){
-    ## install in folder on instance and load.packages() from that library /home/gcer/library
-    # harbor::docker_cmd(instance, container, c("R", "1+1"))
     cran <- NULL
-    cran_f <- function(){utils::install.packages(cran_packages)}
-    cran %<-% cran_f()
+    cran %<-% utils::install.packages(cran_packages)
     cran
   }
   
   if(!is.null(github_packages)){
-    devt_f <- function(){devtools::install_github(github_packages, auth_token = devtools::github_pat())}
     devt <- NULL
-    devt %<-% devt_f()
+    devt %<-% devtools::install_github(github_packages, auth_token = devtools::github_pat())
     devt
   }
   

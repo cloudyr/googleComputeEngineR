@@ -289,6 +289,40 @@ test_that("We can install a package via futures", {
 
 })
 
+context("Google Container Registry")
+
+test_that("Save docker containers", {
+  skip_on_cran()
+  
+  vm <- gce_get_instance("test-container")
+  
+  gce_ssh_setup(vm,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
+  worked <- gce_save_container(vm, 
+                               container_name = "travis-test",
+                               template_name = "rocker/r-base")
+  expect_true(worked)
+})
+
+test_that("Load docker containers", {
+  skip_on_cran()
+  
+  vm <- gce_get_instance("test-container")
+  
+  gce_ssh_setup(vm,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
+  worked <- gce_load_container(vm, "travis-test", pull_only = TRUE)
+  expect_true(worked)
+})
+
 
 context("Clean up test VMs")
 
