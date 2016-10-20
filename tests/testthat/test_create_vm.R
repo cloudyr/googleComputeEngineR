@@ -274,34 +274,18 @@ context("Futures")
 
 test_that("We can install a package via futures", {
   skip_on_cran()
-  
-  vm <- gce_get_instance("rstudio-test")
-  
+
+  vm <- gce_get_instance("test-container")
+
   gce_ssh_setup(vm,
-                user = "travis", 
-                key.pub = "travis-ssh-key.pub", 
+                user = "travis",
+                key.pub = "travis-ssh-key.pub",
                 key.private = "travis-ssh-key")
-  
-  conts <- harbor::containers(vm)
-  ## should have a container called rstudio
-  expect_true(!is.null(conts$rstudio))
-  
-  ## wait for container to be running from previous installation
-  i = 1
-  while(i < 10){
-    i <- i + 1
-    running <- harbor::container_running(conts$rstudio)
-    if(running) break
-    Sys.sleep(10)
-  }
-  
-  ## stop the container
-  stop <- harbor::docker_cmd(vm, "stop", "rstudio")
-  
+
   ## install packages
-  worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "stringi")
+  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "stringi")
   expect_true(worked)
-  
+
 })
 
 
