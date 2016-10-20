@@ -1,8 +1,9 @@
 language: r
 cache: packages
-script: -|
-  R CMD build .
-  travis_wait 20 R CMD check googleComputeEngineR*tar.gz
+script: 
+  - |
+    R CMD build .
+    travis_wait 20 R CMD check googleComputeEngineR*tar.gz
 notifications:
   slack: edmondsons:kgTokxui4ZzTsqdD19tCoozf
   email:
