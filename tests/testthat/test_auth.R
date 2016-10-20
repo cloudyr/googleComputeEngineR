@@ -62,4 +62,23 @@ test_that("We can get auto zone", {
   
 })
 
+context("Networks")
+
+test_that("We can list networks", {
+  skip_on_cran()
+  
+  networks <- gce_list_networks()
+  
+  expect_equal(networks$kind, "compute#networkList")
+  
+})
+
+test_that("We can get a network", {
+  skip_on_cran()
+  
+  networks <- gce_get_network("default")
+  
+  expect_equal(networks$kind, "compute#network")
+  
+})
 
