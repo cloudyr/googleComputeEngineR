@@ -69,7 +69,7 @@ everything inside the directory will also be downloaded.
 
 \dontrun{
 
-  gce_ssh("rbase", "sudo journalctl -u rbase", user = "mark")
+  gce_ssh("rbase", "sudo journalctl -u rbase")
 
 }
 

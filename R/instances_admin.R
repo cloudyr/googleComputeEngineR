@@ -74,7 +74,7 @@ gce_get_instance <- function(instance,
                              zone = gce_get_global_zone()) {
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
-                 project, zone, instance)
+                 project, zone, as.gce_instance_name(instance))
   # compute.instances.get
   f <- gar_api_generator(url, 
                          "GET", 
