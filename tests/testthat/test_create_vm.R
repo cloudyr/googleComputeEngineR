@@ -48,16 +48,16 @@ test_that("We can make a VM with metadata", {
 
 test_that("We can make a container VM",{
   
-  vm <- gce_vm_container(file = system.file("cloudconfig", 
+  job <- gce_vm_container(file = system.file("cloudconfig", 
                                              "example.yaml", 
                                              package = "googleComputeEngineR"),
                          name = "test-container",
                          predefined_type = "f1-micro",
                          auth_email = "TRAVIS_GCE_AUTH_FILE")
   
-  expect_equal(vm$kind, "compute#operation")
+  expect_equal(job$kind, "compute#operation")
   
-  vm <- gce_check_zone_op(vm$name, wait = 10)
+  vm <- gce_wait(job, wait = 10)
   
   expect_equal(vm$status, "DONE")  
   
@@ -280,10 +280,11 @@ test_that("We can install a package via futures", {
   gce_ssh_setup(vm,
                 user = "travis",
                 key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key")
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
 
   ## install packages
-  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "stringi")
+  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "corpcor")
   expect_true(worked)
 
 })

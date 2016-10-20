@@ -276,8 +276,7 @@ gce_install_packages_docker <- function(instance,
                                         cran_packages = NULL,
                                         github_packages = NULL){
   
-  gce_ssh_setup(gce_get_global_ssh_user(), 
-                instance = instance)
+  gce_ssh_setup(instance = instance)
   
   ## set up future cluster
   temp_name <- paste0("gceR-install-",idempotency())
