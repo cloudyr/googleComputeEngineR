@@ -18,7 +18,7 @@ gce_load_container(instance, container_name, container_url = "gcr.io",
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
-\item{...}{Other arguments passed to docker_run
+\item{...}{Other arguments passed to docker_run or docker_pull
 
 After starting a VM, you can load the container again using this command.
 

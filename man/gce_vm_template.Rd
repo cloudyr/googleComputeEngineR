@@ -5,7 +5,7 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example"), username = NULL, password = NULL,
+  "example", "rstudio-hadleyverse"), username = NULL, password = NULL,
   image_family = "gci-stable", name, predefined_type, cpus, memory, ...)
 }
 \arguments{

@@ -10,17 +10,13 @@
 gce_get_external_ip <- function(instance, 
                                 verbose = TRUE,
                                 ...){
-  
-  if(inherits(instance, "character")){
-    inst <- gce_get_instance(instance, ...)    
-  } else if(inherits(instance, "gce_instance")){
-    inst <- instance
-  }
 
-  ip <- inst$networkInterfaces$accessConfigs[[1]]$natIP
+  ins <- as.gce_instance(instance)
+
+  ip <- ins$networkInterfaces$accessConfigs[[1]]$natIP
   
   if(verbose){
-    cat("\n External IP for instance", as.gce_instance_name(instance), " : ", ip, "\n")
+    cat("\n External IP for instance", as.gce_instance_name(ins), " : ", ip, "\n")
   }
 
   invisible(ip)

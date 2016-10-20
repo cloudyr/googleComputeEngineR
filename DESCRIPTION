@@ -6,7 +6,8 @@ Description: Interact with Google Compute Engine API in R.
 Authors@R: c(
       person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
       person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com"),
-      person("Winston", "Chang", role = "ctb", email = "winston@stdout.org")
+      person("Winston", "Chang", role = "ctb", email = "winston@stdout.org"),
+      person("Henrik", "Bengtsson", role="ctb", email = "henrikb@braju.com")
       )
 URL: http://code.markedmondson.me/googleComputeEngineR/
 BugReports: https://github.com/cloudyr/googleComputeEngineR/issues
@@ -15,15 +16,14 @@ Depends:
 Imports:
     googleAuthR (>= 0.4.0),
     jsonlite (>= 1.1),
-    future (>= 1.1.1)
+    future (>= 1.1.1),
+    harbor (>= 0.0.1),
+    devtools (>= 1.12.0)
 Suggests:
     knitr,
     covr,
     rmarkdown,
-    testthat,
-    harbor,
-    future,
-    devtools
+    testthat
 Remotes: 
   MarkEdmondson1234/harbor,
   HenrikBengtsson/future@develop

@@ -1,3 +1,11 @@
+#' Check if is a gce_zone_operation
+#' @param x The object to test if class \code{gce_zone_operation}
+#' @return TRUE or FALSE
+#' @export
+is.gce_zone_operation <- function(x){
+  inherits(x, "gce_zone_operation")
+}
+
 # sets operation class
 as.zone_operation <- function(x){
   structure(x, class = c("gce_zone_operation", class(x)))
@@ -111,9 +119,17 @@ gce_list_zone_op <- function(filter = NULL,
   
 }
 
+#' @rdname gce_check_zone_op
+#' @export
+gce_wait <- function(operation, wait = 3, verbose = TRUE){
+  gce_check_zone_op(operation = operation, 
+                    wait = wait, 
+                    verbose = verbose)
+}
+
 #' Wait for an operation to finish
 #' 
-#' Will periodically check an operation until it is "DONE"
+#' Will periodically check an operation until its status is \code{DONE}
 #' 
 #' @param operation The operation object or name
 #' @param wait Time in seconds between checks, default 3 seconds.
@@ -155,7 +171,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
 
     } else {
       
-      if(verbose) cat("\nChecking operation...\n")
+      if(verbose) cat("\nChecking operation...", check$status, "\n")
       
     }
     

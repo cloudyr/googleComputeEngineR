@@ -1,81 +1,3 @@
-#' Get the instance name(s) if passed instance(s)
-#' @param A list or a single instance 
-#' 
-#' @keywords internal
-as.gce_instance_name <- function(x){
-
-  if(inherits(x, "gce_instance") || inherits(x, "gce_zone_operation") || inherits(x, "character")){
-    return(as.gce_instance_name_one(x))
-  } else {
-    return(vapply(as.list(x), as.gce_instance_name_one, character(1)))
-  }
- 
-}
-
-#' Get the instance name if passed an instance
-#' @param a character name or gce_instance object
-#' 
-#' @keywords internal
-as.gce_instance_name_one <- function(x){
-  if(inherits(x, "gce_instance")){
-    out <- x$name
-  } else if(inherits(x, "gce_zone_operation")){
-    out <- basename(x$targetLink)
-  } else if(inherits(x, "character")) {
-    out <- x
-  } else {
-    stop("Instance supplied was not a character name or gce_instance")
-  }
-  
-  out
-}
-
-
-#' Instance Object
-#' 
-#' @details 
-#' An Instance resource.
-#' 
-#' @param canIpForward Allows this instance to send and receive packets with non-matching destination or source IPs
-#' @param description An optional description of this resource
-#' @param disks The source image used to create this disk
-#' @param machineType Full or partial URL of the machine type resource to use for this instance, in the format: \code{zones/zone/machineTypes/machine-type}
-#' @param metadata A named list of metadata key/value pairs assigned to this instance
-#' @param name The name of the resource, provided by the client when initially creating the resource
-#' @param networkInterfaces An array of configurations for this interface
-#' @param scheduling Scheduling options for this instance
-#' @param serviceAccounts A list of service accounts, with their specified scopes, authorized for this instance
-#' @param tags A list of tags to apply to this instance
-#' 
-#' @return Instance object
-#' 
-#' @family Instance functions
-#' @keywords internal
-Instance <- function(name = NULL,
-                     machineType = NULL, 
-                     canIpForward = NULL, 
-                     description = NULL, 
-                     disks = NULL,
-                     metadata = NULL, 
-                     networkInterfaces = NULL, 
-                     scheduling = NULL, 
-                     serviceAccounts = NULL, 
-                     tags = NULL) {
-  
-  structure(list(canIpForward = canIpForward,
-                 description = description, 
-                 machineType = machineType, 
-                 metadata = Metadata(metadata), 
-                 name = name, 
-                 disks = disks,
-                 networkInterfaces = networkInterfaces, 
-                 scheduling = scheduling, 
-                 serviceAccounts = serviceAccounts, 
-                 tags = tags), 
-            class = c("gar_Instance", "list"))
-}
-
-
 #' Deletes the specified Instance resource.
 #' 
 #' 
@@ -99,9 +21,9 @@ gce_vm_delete <- function(instance,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone() 
                           ) {
-  instance <- as.gce_instance_name(instance)
+
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
-                 project, zone, instance)
+                 project, zone, as.gce_instance_name(instance))
   # compute.instances.delete
   f <- gar_api_generator(url, 
                          "DELETE", 
@@ -307,9 +229,9 @@ gce_vm_create <- function(name,
 gce_vm_reset <- function(instance,
                          project = gce_get_global_project(), 
                          zone = gce_get_global_zone()) {
-  instance <- as.gce_instance_name(instance)
+
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/reset", 
-                 project, zone, instance)
+                 project, zone, as.gce_instance_name(instance))
   # compute.instances.reset
   f <- gar_api_generator(url, 
                          "POST", 
@@ -347,9 +269,9 @@ gce_vm_start <- function(instance,
                          project = gce_get_global_project(), 
                          zone = gce_get_global_zone()
                          ) {
-  instance <- as.gce_instance_name(instance)
+
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/start", 
-                 project, zone, instance)
+                 project, zone, as.gce_instance_name(instance))
   # compute.instances.start
   f <- gar_api_generator(url, 
                          "POST", 
@@ -385,11 +307,11 @@ gce_vm_stop <- function(instance,
                         project = gce_get_global_project(), 
                         zone = gce_get_global_zone() 
                         ) {
-  instance <- as.gce_instance_name(instance)
+
   
   url <- 
     sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/stop",
-            project, zone, instance)
+            project, zone, as.gce_instance_name(instance))
   # compute.instances.stop
   f <- gar_api_generator(url, 
                          "POST",

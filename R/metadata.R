@@ -52,15 +52,17 @@ gce_set_metadata <- function(metadata,
                              instance, 
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
+
+  ## refetch to ensure latest version of metadata fingerprint
+  ins <- gce_get_instance(instance)
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMetadata", 
-                 project, zone, instance)
+                 project, zone, as.gce_instance_name(ins))
   
-  ins <- gce_get_instance(instance, project = project, zone = zone)
-
   meta_now <- ins$metadata$items
   ## turn data.frame back into named list
-  meta_now_nl <- setNames(lapply(meta_now$key, function(x) meta_now[meta_now$key == x, "value"]), meta_now$key)
+  meta_now_nl <- setNames(lapply(meta_now$key, function(x) meta_now[meta_now$key == x, "value"]), 
+                          meta_now$key)
   
   meta <- Metadata(modifyList(meta_now_nl, metadata))
   ## need current fingerprint to allow modification

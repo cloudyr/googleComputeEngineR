@@ -171,13 +171,13 @@ gce_vm_container <- function(file,
   
 }
 
-#' Save the docker container to the private Google Container Registry
+#' Commit and save a running docker container to the private Google Container Registry
 #' 
-#' Saves the docker image to your projects Google Cloud Storage.
+#' Saves a running docker container to your projects Google Cloud Storage.
 #' 
 #' @param instance The VM to run within
 #' @param container_name The name for the saved container
-#' @param template_name The template you used to start the instance.
+#' @param image_name The running docker container you are saving.
 #' @param container_url The URL of where to save container
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' 
@@ -187,22 +187,24 @@ gce_vm_container <- function(file,
 #' It will start the push but it may take a long time to finish, espeically the first time, 
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return TRUE if commands finish
+#' @importFrom harbor docker_cmd
 #' @export
 gce_save_container <- function(instance,
                                container_name,
-                               template_name = "rstudio",
+                               image_name = "rstudio",
                                container_url = "gcr.io",
                                project = gce_get_global_project()){
   
-  instance <- as.gce_instance_name(instance)
-  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
-  docker_cmd.gce_instance(instance, "commit", args = c(template_name, build_tag))
+  ## commits the current version of running docker container image_name and renames it 
+  ## so it can be registered to Google Container Registry
+  harbor::docker_cmd(instance, cmd = "commit", args = c(image_name, build_tag))
   
+  ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  docker_cmd.gce_instance(instance, "push", build_tag, wait = FALSE)
+  harbor::docker_cmd(instance, cmd = "push", args = build_tag, wait = FALSE)
   
   TRUE
   
@@ -215,7 +217,7 @@ gce_save_container <- function(instance,
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param pull_only If TRUE, will not run the container, only pull to the VM
-#' @param ... Other arguments passed to docker_run
+#' @param ... Other arguments passed to docker_run or docker_pull
 #' 
 #' After starting a VM, you can load the container again using this command.
 #' 
@@ -225,6 +227,7 @@ gce_save_container <- function(instance,
 #'  }
 #' 
 #' @return TRUE if successful
+#' @import harbor
 #' @export
 gce_load_container <- function(instance,
                                container_name,
@@ -233,45 +236,85 @@ gce_load_container <- function(instance,
                                project = gce_get_global_project(),
                                ...){
   
-  instance <- as.gce_instance_name(instance)
-  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
   if(pull_only){
-    harbor::docker_pull(instance, build_tag)
+    harbor::docker_pull(instance, image = build_tag, ...)
   } else {
-    harbor::docker_run(instance, build_tag, detach = TRUE, ...)
+    ## this needs to specify ports etc. 
+    harbor::docker_run(instance, image = build_tag, detach = TRUE, ...)
   }
 
   
   TRUE
 }
 
-#' Install packages in a instance's container
+#' Install R packages onto an instance's stopped docker image
 #' 
 #' @param instance The instance running the container
-#' @param container The container name running R to install packages within
+#' @param docker_image A docker image to install packages within.
 #' @param cran_packages A character vector of CRAN packages to be installed
 #' @param github_packages A character vector of devtools packages to be installed
-#' @param auth_token A Github PAT for private repos if needed
+#' 
+#' @details 
+#' 
+#' See the images on the instance via \code{harbor::docker_cmd(instance, "images")}
+#' 
+#' If using devtools github, will look for an auth token via \code{devtools::github_pat()}.  
+#'   This is an environment variable called \code{GITHUB_PAT} 
+#' 
+#'  Will start a container, install packages and then commit 
+#'    the container to an image of the same name via \code{docker commit -m "installed packages via gceR"}
 #' 
 #' @return TRUE if successful
+#' @import harbor
+#' @import future
+#' @importFrom utils install.packages
+#' @importFrom devtools install_github
 #' @export
-gce_install_packages_container <- function(instance,
-                                           container,
-                                           cran_packages = NULL,
-                                           github_packages = NULL,
-                                           auth_token = devtools::github_pat()){
+gce_install_packages_docker <- function(instance,
+                                        docker_image,
+                                        cran_packages = NULL,
+                                        github_packages = NULL){
   
-  instance <- as.gce_instance_name(instance)
+  gce_ssh_setup(instance = instance)
+  
+  ## set up future cluster
+  temp_name <- paste0("gceR-install-",idempotency())
+  clus <- as.cluster(instance, 
+                     docker_image = docker_image,
+                     rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
+  
+  future::plan(future::cluster, workers = clus)
   
   if(!is.null(cran_packages)){
-    ## install in folder on instance and load.packages() from that library /home/gcer/library
-    harbor::docker_run(instance, container, c("R", "1+1"))
+    cran <- NULL
+    cran %<-% utils::install.packages(cran_packages)
+    cran
   }
   
+  if(!is.null(github_packages)){
+    devt <- NULL
+    devt %<-% devtools::install_github(github_packages, auth_token = devtools::github_pat())
+    devt
+  }
+  
+  harbor::docker_cmd(instance, 
+                     cmd = "commit", 
+                     args = c("-a 'googleComputeEngineR'" ,
+                              paste("-m 'Installed packages:", 
+                                    paste(collapse = " ", cran_packages), 
+                                    paste(collapse = " ", github_packages),
+                                    "'"),
+                              temp_name, 
+                              docker_image))
+  
+  ## stop the container
+  harbor::docker_cmd(instance, "stop", temp_name)
+  
+  TRUE
   
 }
 
