@@ -1,7 +1,3 @@
-## store bucket name
-.gce_env <- new.env(parent = emptyenv())
-
-
 #' Returns the specified Project resource.
 #' 
 #' 

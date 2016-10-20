@@ -31,3 +31,7 @@ gce_auth <- function(new_user = FALSE, no_auto = FALSE){
                              environment_var = "GCE_AUTH_FILE",
                              travis_environment_var = "TRAVIS_GCE_AUTH_FILE")
 }
+
+
+## store bucket name
+.gce_env <- new.env(parent = emptyenv())

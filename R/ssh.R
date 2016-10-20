@@ -68,16 +68,7 @@ set_ssh_keys <- function(key.pub, key.private) {
   key.pub.content
 }
 
-check_ssh_set <- function(){
-  
-  if(all(!is.null(.gce_env$ssh_key),
-         file.exists(.gce_env$ssh_key),
-         !is.null(gce_get_global_ssh_user()))){
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
-}
+
 
 #' Setup a SSH connection with GCE from a new SSH key-pair
 #' 
@@ -93,7 +84,7 @@ check_ssh_set <- function(){
 #' 
 #' If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
 #' 
-#' @param user The username you used to generate the key-pair
+#' @param username The username you used to generate the key-pair
 #' @param key.pub The filepath location of the public key, only needed first call per session
 #' @param key.private The filepath location of the private key, only needed first call per session
 #' @param instance Name of the instance of run ssh command upon
@@ -109,7 +100,7 @@ check_ssh_set <- function(){
 #' @export
 #' @family ssh functions
 gce_ssh_setup <- function(instance,
-                          user = gce_get_global_ssh_user(),
+                          username = gce_get_global_ssh_user(),
                           key.pub = NULL,
                           key.private = NULL,
                           overwrite = FALSE,
@@ -131,7 +122,7 @@ gce_ssh_setup <- function(instance,
                                   key.private = key.private)
   
   ## set global ssh username
-  sshuser <- gce_set_global_ssh_user(user)
+  sshuser <- gce_set_global_ssh_user(username)
   
   if(is.null(sshuser)){
     stop("Couldn't set SSH username")
@@ -146,7 +137,7 @@ gce_ssh_setup <- function(instance,
   }
 
   ## make SSH Key metadata for upload to instance
-  new_key <- paste0(user, ":", key.pub.content, collapse = "")
+  new_key <- paste0(username, ":", key.pub.content, collapse = "")
   upload_me <- list(`ssh-keys` = paste(c(new_key, keys), collapse = "\n", sep =""))
   
   if(any(new_key %in% paste0(keys,"\n"))){
@@ -170,6 +161,11 @@ gce_ssh_setup <- function(instance,
 
 ## Get the saved private ssh key
 gce_global_ssh_private <- function(){
+  
+  if(!exists("ssh_key", envir = .gce_env)){
+    myMessage("SSH keys not set globally, run gce_ssh_setup() to set it.")
+    return(NULL)
+  }
   .gce_env$ssh_key
 }
 
@@ -200,6 +196,19 @@ gce_set_global_ssh_user <- function(username = NULL){
   myMessage("Set SSH Username to ", username, level = 3)
   .gce_env$user <- username
   .gce_env$user
+}
+
+check_ssh_set <- function(){
+  
+  if(!is.null(gce_get_global_ssh_user())){
+    return(TRUE)
+  }
+  
+  if(!is.null(gce_global_ssh_private())){
+    return(TRUE)
+  }
+  
+  FALSE
 }
 
 #' Remotely execute ssh code, upload & download files.
@@ -259,14 +268,12 @@ gce_ssh <- function(instance,
   
   instance <- as.gce_instance(instance)
   
-  if(any(is.null(gce_global_ssh_private()),
-         is.null(gce_get_global_ssh_user()))){
-    myMessage("Setting up ssh keys...")
-
-    gce_ssh_setup(username, instance = instance, project = project, zone = zone,
-                  key.pub = key.pub,
-                  key.private = key.private)
-  }
+  gce_ssh_setup(instance = instance, 
+                user = username,
+                project = project, 
+                zone = zone,
+                key.pub = key.pub,
+                key.private = key.private)
   
   if(is.null(gce_get_global_ssh_user())) stop("Must set username")
   
@@ -329,7 +336,7 @@ ssh_options <- function() {
 gce_ssh_upload <- function(instance,
                            local, 
                            remote, 
-                           user = gce_get_global_ssh_user(), 
+                           username = gce_get_global_ssh_user(), 
                            key.pub = NULL,
                            key.private = NULL,
                            verbose = FALSE,
@@ -339,22 +346,19 @@ gce_ssh_upload <- function(instance,
 
   instance <- as.gce_instance(instance)
   
-  if(is.null(gce_global_ssh_private()) | is.null(gce_get_global_ssh_user())){
-    myMessage("Setting up ssh keys...")
-    gce_ssh_setup(user, 
-                  instance = instance, 
-                  project = project, 
-                  zone = zone,
-                  key.pub = key.pub,
-                  key.private = key.private)
-  }
+  gce_ssh_setup(instance = instance, 
+                user = username,
+                project = project, 
+                zone = zone,
+                key.pub = key.pub,
+                key.private = key.private)
   
   if(is.null(gce_get_global_ssh_user())) stop("Must set username")
   
   cmd <- paste0(
     "scp -r ", ssh_options(),
     " ", local,
-    " ", user, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE), ":", remote
+    " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE), ":", remote
   )
 
   do_system(instance, cmd, wait = wait, project = project, zone = zone)
@@ -365,7 +369,7 @@ gce_ssh_upload <- function(instance,
 gce_ssh_download <- function(instance,
                              remote, 
                              local, 
-                             user = gce_get_global_ssh_user(),
+                             username = gce_get_global_ssh_user(),
                              key.pub = NULL,
                              key.private = NULL,
                              verbose = FALSE, 
@@ -376,14 +380,12 @@ gce_ssh_download <- function(instance,
 
   instance <- as.gce_instance(instance)
   
-  if(is.null(gce_global_ssh_private()) | is.null(gce_get_global_ssh_user())){
-    myMessage("Setting up ssh keys...")
-    gce_ssh_setup(user, instance = instance, project = project, zone = zone,
-                  key.pub = key.pub,
-                  key.private = key.private)
-  }
-  
-  if(is.null(gce_get_global_ssh_user())) stop("Must set username")
+  gce_ssh_setup(instance = instance, 
+                user = username,
+                project = project, 
+                zone = zone,
+                key.pub = key.pub,
+                key.private = key.private)
   
   local <- normalizePath(local, mustWork = FALSE)
 

@@ -10,14 +10,14 @@ gce_ssh(instance, ..., username = gce_get_global_ssh_user(), key.pub = NULL,
   key.private = NULL, wait = TRUE, capture_text = FALSE,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_upload(instance, local, remote, user = gce_get_global_ssh_user(),
+gce_ssh_upload(instance, local, remote, username = gce_get_global_ssh_user(),
   key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
-  key.pub = NULL, key.private = NULL, verbose = FALSE,
-  overwrite = FALSE, wait = TRUE, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_ssh_download(instance, remote, local,
+  username = gce_get_global_ssh_user(), key.pub = NULL,
+  key.private = NULL, verbose = FALSE, overwrite = FALSE, wait = TRUE,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -40,8 +40,6 @@ gce_ssh_download(instance, remote, local, user = gce_get_global_ssh_user(),
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 
 \item{local, remote}{Local and remote paths.}
-
-\item{user}{The username you used to generate the key-pair}
 
 \item{verbose}{If TRUE, will print command before executing it.}
 
