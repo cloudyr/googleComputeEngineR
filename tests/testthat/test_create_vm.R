@@ -291,23 +291,6 @@ test_that("We can install a package via futures", {
 
 context("Google Container Registry")
 
-test_that("Save docker containers", {
-  skip_on_cran()
-  
-  vm <- gce_get_instance("test-container")
-  
-  gce_ssh_setup(vm,
-                username = "travis",
-                key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key",
-                overwrite = TRUE)
-  
-  worked <- gce_save_container(vm, 
-                               container_name = "travis-test",
-                               template_name = "rocker/r-base")
-  expect_true(worked)
-})
-
 test_that("Load docker containers", {
   skip_on_cran()
   
@@ -319,7 +302,29 @@ test_that("Load docker containers", {
                 key.private = "travis-ssh-key",
                 overwrite = TRUE)
   
-  worked <- gce_load_container(vm, "travis-test", pull_only = TRUE)
+  ## loads and runs an rstudio template from my projects container registry
+  worked <- gce_load_container(vm, 
+                               container_name = "my-rstudio",
+                               name = "travis-test-container")
+  expect_true(worked)
+})
+
+test_that("Save docker containers", {
+  skip_on_cran()
+  
+  vm <- gce_get_instance("test-container")
+  
+  gce_ssh_setup(vm,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
+  ## saves the running my-rstudio image that is now named travis-test-container
+  ## commits and saves it to container registry 
+  worked <- gce_save_container(vm,  
+                               container_name = "travis-test-container",
+                               image_name = "travis-test-container")
   expect_true(worked)
 })
 

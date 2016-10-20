@@ -2,9 +2,9 @@
 % Please edit documentation in R/container.R
 \name{gce_save_container}
 \alias{gce_save_container}
-\title{Save the docker container to the private Google Container Registry}
+\title{Commit and save a running docker container to the private Google Container Registry}
 \usage{
-gce_save_container(instance, container_name, template_name = "rstudio",
+gce_save_container(instance, container_name, image_name = "rstudio",
   container_url = "gcr.io", project = gce_get_global_project())
 }
 \arguments{
@@ -12,7 +12,7 @@ gce_save_container(instance, container_name, template_name = "rstudio",
 
 \item{container_name}{The name for the saved container}
 
-\item{template_name}{The template you used to start the instance.}
+\item{image_name}{The running docker container you are saving.}
 
 \item{container_url}{The URL of where to save container}
 
@@ -28,6 +28,6 @@ It will start the push but it may take a long time to finish, espeically the fir
 TRUE if commands finish
 }
 \description{
-Saves the docker image to your projects Google Cloud Storage.
+Saves a running docker container to your projects Google Cloud Storage.
 }
 

@@ -171,13 +171,13 @@ gce_vm_container <- function(file,
   
 }
 
-#' Save the docker container to the private Google Container Registry
+#' Commit and save a running docker container to the private Google Container Registry
 #' 
-#' Saves the docker image to your projects Google Cloud Storage.
+#' Saves a running docker container to your projects Google Cloud Storage.
 #' 
 #' @param instance The VM to run within
 #' @param container_name The name for the saved container
-#' @param template_name The template you used to start the instance.
+#' @param image_name The running docker container you are saving.
 #' @param container_url The URL of where to save container
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' 
@@ -191,17 +191,20 @@ gce_vm_container <- function(file,
 #' @export
 gce_save_container <- function(instance,
                                container_name,
-                               template_name = "rstudio",
+                               image_name = "rstudio",
                                container_url = "gcr.io",
                                project = gce_get_global_project()){
   
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
-  harbor::docker_cmd(instance, "commit", args = c(template_name, build_tag))
+  ## commits the current version of running docker container image_name and renames it 
+  ## so it can be registered to Google Container Registry
+  harbor::docker_cmd(instance, cmd = "commit", args = c(image_name, build_tag))
   
+  ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  harbor::docker_cmd(instance, "push", build_tag, wait = FALSE)
+  harbor::docker_cmd(instance, cmd = "push", args = build_tag, wait = FALSE)
   
   TRUE
   
@@ -214,7 +217,7 @@ gce_save_container <- function(instance,
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param pull_only If TRUE, will not run the container, only pull to the VM
-#' @param ... Other arguments passed to docker_run
+#' @param ... Other arguments passed to docker_run or docker_pull
 #' 
 #' After starting a VM, you can load the container again using this command.
 #' 
@@ -238,10 +241,10 @@ gce_load_container <- function(instance,
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
   if(pull_only){
-    harbor::docker_pull(instance, build_tag)
+    harbor::docker_pull(instance, image = build_tag, ...)
   } else {
     ## this needs to specify ports etc. 
-    harbor::docker_run(instance, build_tag, detach = TRUE, ...)
+    harbor::docker_run(instance, image = build_tag, detach = TRUE, ...)
   }
 
   
