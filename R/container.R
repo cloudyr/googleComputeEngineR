@@ -101,8 +101,9 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
                     opencpu = "/ocpu/"         
                     )
   
-  cat("\n## ", paste0(template, " running at ", ip,ip_suffix),"\n")
-  cat("\n You may need to wait a few minutes for the inital docker container to download and install before logging in.\n")
+  myMessage("## ", paste0(template, " running at ", ip,ip_suffix), level = 3)
+  myMessage("You may need to wait a few minutes for the inital docker container to 
+            download and install before logging in.", level = 3)
   
   ins
 

@@ -153,7 +153,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
   DO_IT <- TRUE
   
-  cat("\nStarting operation...\n")
+  myMessage("Starting operation...", level = 2)
   
   while(DO_IT){
     
@@ -167,11 +167,11 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
       
     } else if(check$status == "RUNNING"){
       
-      if(verbose) cat("\nOperation running...\n")
+      if(verbose) myMessage("Operation running...", level = 3)
 
     } else {
       
-      if(verbose) cat("\nChecking operation...", check$status, "\n")
+      if(verbose) myMessage("Checking operation...", check$status, level = 3)
       
     }
     
@@ -180,15 +180,14 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   }
   
   if(verbose) 
-    cat("\nOperation complete in", 
-        format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), 
-        "\n")
+    myMessage("Operation complete in", 
+        format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), level = 3)
   
   if(!is.null(check$error)){
     errors <- check$error$errors
     e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")
-    warning("\n# Error: ", e.m)
-    warning("\n# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
+    warning("# Error: ", e.m)
+    warning("# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
   }
   
   as.zone_operation(check)

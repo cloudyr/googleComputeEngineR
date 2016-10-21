@@ -16,7 +16,7 @@ gce_get_external_ip <- function(instance,
   ip <- ins$networkInterfaces$accessConfigs[[1]]$natIP
   
   if(verbose){
-    cat("\n External IP for instance", as.gce_instance_name(ins), " : ", ip, "\n")
+    myMessage("External IP for instance", as.gce_instance_name(ins), " : ", ip, level = 3)
   }
 
   invisible(ip)
