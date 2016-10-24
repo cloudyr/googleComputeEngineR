@@ -129,8 +129,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 #' 
 #' @return A zone operation
 #' @export
-gce_vm_container <- function(file,
-                             cloud_init, 
+gce_vm_container <- function(file = NULL,
+                             cloud_init = NULL, 
                              image_family = "gci-stable", 
                              metadata = NULL,
                              name,
@@ -139,12 +139,12 @@ gce_vm_container <- function(file,
                              memory,
                              ...){
   
-  if(missing(file)){
-    stopifnot(!missing(cloud_init))
+  if(is.null(file)){
+    stopifnot(!is.null(cloud_init))
   }
   
-  if(missing(cloud_init)){
-    stopifnot(!missing(file))
+  if(is.null(cloud_init)){
+    stopifnot(!is.null(file))
     testthat::expect_type(file, "character")
     testthat::expect_gt(nchar(file), 0)
     cloud_init <-  readChar(file, nchars = 32768)
@@ -159,7 +159,7 @@ gce_vm_container <- function(file,
   
   ## add to any existing metadata
   metadata_new <- c(dots$metadata, 
-                `user-data` = cloud_init)
+                    `user-data` = cloud_init)
   
   gce_vm_create(name = name,
                 predefined_type = predefined_type,

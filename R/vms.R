@@ -30,13 +30,15 @@ gce_vm <- function(name,
   vm <- tryCatch({
     gce_get_instance(name)
   }, error = function(ex) {
-    if(methods::hasArg("template")){
-      gce_vm_template(name = name, ...)
-    } else if(any(methods::hasArg("file"), methods::hasArg("cloud_init"))){
-      job <- gce_vm_container(name = name, ...)
+    browser()
+    dots <- list(...)
+    if(is.null(dots[["template"]])){
+      do.call(gce_vm_template, c(list(...), name = name))
+    } else if(any(is.null(dots[["file"]]), is.null(dots[["cloud_init"]]))){
+      job <- do.call(gce_vm_container, c(list(...), name = name))
       gce_wait(job)
     } else {
-      job <- gce_vm_create(name = name, ...)
+      job <- do.call(gce_vm_create, c(list(...), name = name))
       gce_wait(job)
     }
   })
