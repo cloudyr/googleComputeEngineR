@@ -49,7 +49,7 @@ test_that("We can create a disk from an image", {
   disk <- gce_make_disk("test-disk-image", sourceImage = img$selfLink)
   expect_equal(disk$kind, "compute#operation")
   
-  disk <- gce_check_zone_op(disk$name, wait = 10)
+  disk <- gce_wait(disk$name, wait = 10)
   
   expect_equal(disk$kind, "compute#operation")
   expect_equal(disk$status, "DONE")
@@ -65,8 +65,9 @@ test_that("We can delete a disk", {
   skip_on_cran()
   
   disk <- gce_delete_disk("test-disk")
+  gce_delete_disk("test-disk-image")
   
-  disk <- gce_check_zone_op(disk$name, wait = 10)
+  disk <- gce_wait(disk$name, wait = 10)
   
   expect_equal(disk$kind, "compute#operation")
   expect_equal(disk$status, "DONE")

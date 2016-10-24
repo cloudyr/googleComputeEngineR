@@ -30,9 +30,9 @@ gce_vm <- function(name,
   vm <- tryCatch({
     gce_get_instance(name)
   }, error = function(ex) {
-    if(hasArg("template")){
+    if(methods::hasArg("template")){
       gce_vm_template(name = name, ...)
-    } else if(any(hasArg("file"), hasArg("cloud_init"))){
+    } else if(any(methods::hasArg("file"), methods::hasArg("cloud_init"))){
       job <- gce_vm_container(name = name, ...)
       gce_wait(job)
     } else {

@@ -12,8 +12,6 @@ test_that("We can make a container VM",{
   expect_equal(ins$kind, "compute#instance")
   expect_equal(ins$status, "RUNNING")
   
-  expect_equal(ins$metadata$items$key, "user-data")
-  
   
 })
 
@@ -77,7 +75,7 @@ test_that("Load docker containers", {
   ## loads and runs an rstudio template from my projects container registry
   worked <- gce_load_container(vm, 
                                container_name = "my-rstudio",
-                               name = "travis-test-container")
+                               name = paste(sample(LETTERS, 15),collapse=""))
   expect_true(worked)
 })
 

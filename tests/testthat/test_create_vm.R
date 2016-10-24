@@ -39,7 +39,7 @@ test_that("We can make a template VM", {
   
   expect_equal(vm$kind, "compute#instance")
   
-  expect_equal(vm$metadata$items$key, "user-data")
+  expect_equal(vm$metadata$items$key[[1]], "user-data")
   
   ## check can fetch rstudio login screen?
   
