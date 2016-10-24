@@ -55,7 +55,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
 \item{dry_run}{whether to just create the request JSON}
 }
 \value{
-A zone operation
+A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 }
 \description{
 Creates an instance resource in the specified project using the data included in the request.

@@ -1,3 +1,49 @@
+#' Create or fetch a virtual machine
+#' 
+#' Pass in the instance name to fetch its object, or create the instance.
+#' 
+#' @inheritParams gce_vm_create
+#' @param name The name of the instance
+#' @param ... Other arguments passed to create an instance if it doesn't exist
+#' 
+#' @details 
+#' 
+#' Will get or create the instance as specified.  Will wait for instance to be created if necessary.
+#' 
+#' @section Creation logic:
+#' 
+#' You need these parameters defined to call the right function for creation.  Check the function definitions for more details. 
+#' 
+#' If you specify the argument \code{template} it will call \link{gce_vm_template}
+#' 
+#' If you specify one of \code{file} or \code{cloud_init} it will call \link{gce_vm_container}
+#' 
+#' Otherwise it will call \link{gce_vm_create}
+#' 
+#' @return A \code{gce_instance} object
+#' 
+#' @export
+gce_vm <- function(name, 
+                   ...,                           
+                   project = gce_get_global_project(), 
+                   zone = gce_get_global_zone() ) {
+  vm <- tryCatch({
+    gce_get_instance(name)
+  }, error = function(ex) {
+    if(hasArg("template")){
+      gce_vm_template(name = name, ...)
+    } else if(any(hasArg("file"), hasArg("cloud_init"))){
+      job <- gce_vm_container(name = name, ...)
+      gce_wait(job)
+    } else {
+      job <- gce_vm_create(name = name, ...)
+      gce_wait(job)
+    }
+  })
+  
+  vm
+}
+
 #' Deletes the specified Instance resource.
 #' 
 #' 
@@ -80,7 +126,7 @@ gce_vm_delete <- function(instance,
 #' @param dry_run whether to just create the request JSON
 #' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' 
-#' @return A zone operation
+#' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
@@ -202,9 +248,22 @@ gce_vm_create <- function(name,
                          data_parse_function = function(x) x)
   stopifnot(inherits(the_instance, "gar_Instance"))
   
-  out <- f(the_body = rmNullObs(the_instance))
+  out <- tryCatch({
+    f(the_body = rmNullObs(the_instance))
+  }, message = function(m){
+    ## an instance with this name already exists
+    if(grepl("409", m)){
+      warning("An instance with the name '", name ,"' already exists - returning its object", call. = FALSE)
+      gce_get_instance(name, project = project, zone = zone)
+    }}
+  )
   
-  as.zone_operation(out)
+  if(!is.gce_instance(out)){
+    out <- as.zone_operation(out)
+  }
+  
+  out
+
 }
 
 

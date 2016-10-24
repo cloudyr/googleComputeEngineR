@@ -88,7 +88,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
                           memory = memory,
                           ...)
   
-  gce_check_zone_op(job$name, wait = 10)
+  gce_wait(job$name, wait = 10)
   
   ins <- gce_get_instance(name)
   ip <- gce_get_external_ip(name)
