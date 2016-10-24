@@ -5,10 +5,10 @@ test_that("We can make a VM with metadata", {
   
   today <- as.character(Sys.Date())
   
-  vm <- gce_vm_create(name = "test-vm", 
-                      predefined_type = "f1-micro",
-                      metadata = list(test_date = today),
-                      auth_email = "TRAVIS_GCE_AUTH_FILE")
+  vm <- gce_vm(name = "test-vm", 
+               predefined_type = "f1-micro",
+               metadata = list(test_date = today),
+               auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(vm$kind, "compute#operation")
   
@@ -30,12 +30,12 @@ test_that("We can make a VM with metadata", {
 test_that("We can make a template VM", {
   skip_on_cran()
   
-  vm <- gce_vm_template("rstudio", 
-                        name = "rstudio-test", 
-                        predefined_type = "f1-micro", 
-                        username = "mark", 
-                        password = "mark1234",
-                        auth_email = "TRAVIS_GCE_AUTH_FILE")
+  vm <- gce_vm(name = "rstudio-test",
+               template = "rstudio", 
+               predefined_type = "f1-micro", 
+               username = "mark", 
+               password = "mark1234",
+               auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(vm$kind, "compute#instance")
   

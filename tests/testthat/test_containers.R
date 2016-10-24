@@ -2,20 +2,13 @@ context("Futures and containers")
 
 test_that("We can make a container VM",{
   
-  job <- gce_vm_container(file = system.file("cloudconfig", 
-                                             "example.yaml", 
-                                             package = "googleComputeEngineR"),
-                          name = "test-container",
-                          predefined_type = "f1-micro",
-                          auth_email = "TRAVIS_GCE_AUTH_FILE")
+  ins <- gce_vm("test-container",
+                file = system.file("cloudconfig", 
+                                   "rstudio.yaml", 
+                                   package = "googleComputeEngineR"),
+                predefined_type = "f1-micro",
+                auth_email = "TRAVIS_GCE_AUTH_FILE")
   
-  expect_equal(job$kind, "compute#operation")
-  
-  vm <- gce_wait(job, wait = 10)
-  
-  expect_equal(vm$status, "DONE")  
-  
-  ins <- gce_get_instance("test-container")
   expect_equal(ins$kind, "compute#instance")
   expect_equal(ins$status, "RUNNING")
   
@@ -30,7 +23,7 @@ context("Futures")
 test_that("We can install a package via futures", {
   skip_on_cran()
   
-  vm <- gce_get_instance("test-container")
+  vm <- gce_vm("test-container")
   
   gce_ssh_setup(vm,
                 username = "travis",
@@ -39,17 +32,41 @@ test_that("We can install a package via futures", {
                 overwrite = TRUE)
   
   ## install packages
-  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "corpcor")
+  worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "corpcor")
   expect_true(worked)
   
 })
 
 context("Google Container Registry")
 
+test_that("Save docker containers", {
+  skip_on_cran()
+  
+  vm <- gce_vm("test-container")
+  
+  gce_ssh_setup(vm,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
+  future::plan(future::cluster, workers = as.cluster(vm))
+  x <- NULL
+  x %<-% { Sys.info() }
+  
+  ## saves the running my-rstudio image that is named rstudio
+  ## commits and saves it to container registry as travis-test-container
+  worked <- gce_save_container(vm,  
+                               container_name = "rstudio",
+                               image_name = "travis-test-container")
+  expect_true(worked)
+})
+
+
 test_that("Load docker containers", {
   skip_on_cran()
   
-  vm <- gce_get_instance("test-container")
+  vm <- gce_vm("test-container")
   
   gce_ssh_setup(vm,
                 username = "travis",
@@ -64,22 +81,4 @@ test_that("Load docker containers", {
   expect_true(worked)
 })
 
-test_that("Save docker containers", {
-  skip_on_cran()
-  
-  vm <- gce_get_instance("test-container")
-  
-  gce_ssh_setup(vm,
-                username = "travis",
-                key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key",
-                overwrite = TRUE)
-  
-  ## saves the running my-rstudio image that is now named travis-test-container
-  ## commits and saves it to container registry 
-  worked <- gce_save_container(vm,  
-                               container_name = "travis-test-container",
-                               image_name = "travis-test-container")
-  expect_true(worked)
-})
 
