@@ -7,6 +7,8 @@ test_that("We can make a container VM",{
                                    "rstudio.yaml", 
                                    package = "googleComputeEngineR"),
                 predefined_type = "f1-micro",
+                username = "mark", 
+                password = "mark1234",
                 auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(ins$kind, "compute#instance")

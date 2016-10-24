@@ -30,7 +30,6 @@ gce_vm <- function(name,
   vm <- tryCatch({
     gce_get_instance(name)
   }, error = function(ex) {
-    browser()
     dots <- list(...)
     if(is.null(dots[["template"]])){
       do.call(gce_vm_template, c(list(...), name = name))
