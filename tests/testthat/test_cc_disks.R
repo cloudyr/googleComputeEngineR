@@ -83,7 +83,6 @@ test_that("We can delete a disk", {
   skip_on_cran()
   
   disk <- gce_delete_disk("test-disk")
-  gce_delete_disk("test-disk-image")
   
   disk <- gce_wait(disk$name, wait = 10)
   

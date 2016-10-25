@@ -7,8 +7,6 @@ test_that("We can make a container VM",{
                                    "rstudio.yaml", 
                                    package = "googleComputeEngineR"),
                 predefined_type = "f1-micro",
-                username = "mark", 
-                password = "mark1234",
                 auth_email = "TRAVIS_GCE_AUTH_FILE")
   
   expect_equal(ins$kind, "compute#instance")
@@ -24,12 +22,6 @@ test_that("We can install a package via futures", {
   skip_on_cran()
   
   vm <- gce_vm("test-container")
-  
-  gce_ssh_setup(vm,
-                username = "travis",
-                key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key",
-                overwrite = TRUE)
   
   ## install packages
   worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "corpcor")
@@ -64,12 +56,6 @@ test_that("Load docker containers", {
   skip_on_cran()
   
   vm <- gce_vm("test-container")
-  
-  gce_ssh_setup(vm,
-                username = "travis",
-                key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key",
-                overwrite = TRUE)
   
   ## loads and runs an rstudio template from my projects container registry
   worked <- gce_load_container(vm, 
