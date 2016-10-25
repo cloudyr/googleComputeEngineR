@@ -5,6 +5,12 @@ notifications:
   email:
     on_success: change
     on_failure: change
+script: 
+  - |
+    R CMD build .
+    travis_wait 20 R CMD check googleComputeEngineR.tar.gz
+after_failure:
+  find *Rcheck -name '*.fail' -print -exec cat '{}' \;
 r_packages:
 - knitr
 - covr
