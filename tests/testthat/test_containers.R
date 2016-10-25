@@ -50,14 +50,11 @@ test_that("Save docker containers", {
                 key.private = "travis-ssh-key",
                 overwrite = TRUE)
   
-  future::plan(future::cluster, workers = as.cluster(vm))
-  x <- NULL
-  x %<-% { Sys.info() }
-  
   ## saves the running my-rstudio image that is named rstudio
   ## commits and saves it to container registry as travis-test-container
+  cons <- harbor::containers(vm)
   worked <- gce_save_container(vm,  
-                               container_name = "rstudio",
+                               container_name = cons[[1]]$name,
                                image_name = "travis-test-container")
   expect_true(worked)
 })

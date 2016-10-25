@@ -180,7 +180,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   }
   
   if(verbose) 
-    myMessage("Operation complete in", 
+    myMessage("Operation complete in ", 
         format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), level = 3)
   
   if(!is.null(check$error)){

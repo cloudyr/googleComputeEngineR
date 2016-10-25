@@ -28,7 +28,7 @@ gce_vm <- function(name,
                    project = gce_get_global_project(), 
                    zone = gce_get_global_zone() ) {
   vm <- tryCatch({
-    gce_get_instance(name)
+    suppressWarnings(gce_get_instance(name))
   }, error = function(ex) {
     dots <- list(...)
     if(!is.null(dots[["template"]])){
@@ -39,6 +39,7 @@ gce_vm <- function(name,
     } else {
       job <- do.call(gce_vm_create, c(list(...), name = name))
       gce_wait(job)
+      gce_get_instance(name)
     }
   })
   
