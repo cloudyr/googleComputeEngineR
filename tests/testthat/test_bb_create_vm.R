@@ -5,18 +5,11 @@ test_that("We can make a VM with metadata", {
   
   today <- as.character(Sys.Date())
   
-  vm <- gce_vm(name = "test-vm", 
+  ins <- gce_vm(name = "test-vm", 
                predefined_type = "f1-micro",
                metadata = list(test_date = today),
                auth_email = "TRAVIS_GCE_AUTH_FILE")
-  
-  expect_equal(vm$kind, "compute#operation")
-  
-  vm <- gce_check_zone_op(vm$name, wait = 10)
 
-  expect_equal(vm$status, "DONE")  
-  
-  ins <- gce_get_instance("test-vm")
   expect_equal(ins$kind, "compute#instance")
   expect_equal(ins$status, "RUNNING")
   
