@@ -5,16 +5,16 @@ notifications:
   email:
     on_success: change
     on_failure: change
+r_packages:
+- knitr
+- covr
+- drat
 script: 
   - |
     R CMD build .
     travis_wait 20 R CMD check googleComputeEngineR.tar.gz
 after_failure:
-  find *Rcheck -name '*.fail' -print -exec cat '{}' \;
-r_packages:
-- knitr
-- covr
-- drat
+- find *Rcheck -name '*.fail' -print -exec cat '{}' \;
 after_success:
 - Rscript -e 'library("covr");codecov(line_exclusions = list("R/options.R", "R/utilities.R"))'
 before_install:
