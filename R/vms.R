@@ -33,7 +33,7 @@ gce_vm <- function(name,
     dots <- list(...)
     if(!is.null(dots[["template"]])){
       do.call(gce_vm_template, c(list(...), name = name))
-    } else if(any(!is.null(dots[["file"]]), is.null(!dots[["cloud_init"]]))){
+    } else if(any(!is.null(dots[["file"]]), !is.null(dots[["cloud_init"]]))){
       job <- do.call(gce_vm_container, c(list(...), name = name))
       gce_wait(job)
     } else {

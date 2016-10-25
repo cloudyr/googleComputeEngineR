@@ -61,6 +61,24 @@ test_that("We can create a disk from an image", {
 })
 
 
+test_that("We can attach a disk", {
+  skip_on_cran()
+  
+  disk_image <- gce_get_disk("test-disk-image")
+  
+  job <- gce_attach_disk(instance = "rstudio-test",
+                         autoDelete = TRUE,
+                         source = disk_image$selfLink)
+  gce_check_zone_op(job$name)
+  
+  ins <- gce_get_instance("rstudio-test")
+  
+  expect_true(disk_image$selfLink %in% ins$disks$source)
+  
+})
+
+
+
 test_that("We can delete a disk", {
   skip_on_cran()
   
