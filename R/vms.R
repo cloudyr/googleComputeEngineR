@@ -36,6 +36,7 @@ gce_vm <- function(name,
     } else if(any(!is.null(dots[["file"]]), !is.null(dots[["cloud_init"]]))){
       job <- do.call(gce_vm_container, c(list(...), name = name))
       gce_wait(job)
+      gce_get_instance(name)
     } else {
       job <- do.call(gce_vm_create, c(list(...), name = name))
       gce_wait(job)

@@ -1,5 +1,26 @@
 context("Make a VM")
 
+test_that("We can make a container VM",{
+  
+  ins <- gce_vm("test-container",
+                file = system.file("cloudconfig", 
+                                   "rstudio.yaml", 
+                                   package = "googleComputeEngineR"),
+                predefined_type = "f1-micro",
+                auth_email = "TRAVIS_GCE_AUTH_FILE")
+  
+  expect_equal(ins$kind, "compute#instance")
+  expect_equal(ins$status, "RUNNING")
+  
+  gce_ssh_setup(ins,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
+  
+})
+
 test_that("We can make a VM with metadata", {
   skip_on_cran()
   
@@ -43,7 +64,7 @@ context("SSH tests")
 test_that("We can set SSH settings", {
   skip_on_cran()
   
-  vm <- gce_get_instance("rstudio-test")
+  vm <- gce_get_instance("test-vm")
   
   expect_equal(vm$kind, "compute#instance")
   
@@ -60,7 +81,7 @@ test_that("We can run SSH on an instance", {
   skip_on_cran()
   # skip_on_travis()
   
-  vm <- gce_get_instance("rstudio-test")
+  vm <- gce_get_instance("test-vm")
   
   gce_ssh_setup(vm,
                 username = "travis", 
@@ -76,7 +97,7 @@ test_that("We can run SSH on an instance", {
 test_that("We can upload via SSH", {
   skip_on_cran()
   # skip_on_travis()
-  vm <- gce_get_instance("rstudio-test")
+  vm <- gce_get_instance("test-vm")
   
   gce_ssh_setup(vm,
                 username = "travis", 
@@ -95,7 +116,7 @@ test_that("We can upload via SSH", {
 test_that("We can download via SSH", {
   skip_on_cran()
 
-  vm <- gce_get_instance("rstudio-test")
+  vm <- gce_get_instance("test-vm")
   
   gce_ssh_setup(vm,
                 username = "travis", 
