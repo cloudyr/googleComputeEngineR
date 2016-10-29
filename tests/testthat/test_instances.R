@@ -72,7 +72,7 @@ test_that("We list operation jobs", {
 
 test_that("We can reset a VM", {
   skip_on_cran()
-  Sys.sleep(10)
+
   job <- gce_vm_reset("markdev")
   
   expect_equal(job$kind, "compute#operation")
