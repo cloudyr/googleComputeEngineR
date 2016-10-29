@@ -31,7 +31,7 @@ S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} 
 }
 \examples{
 \donttest{\dontrun{
-vm <- gce_vm_template("r-base", name = "future", predefined_type = "f1-micro")
+vm <- gce_vm("r-base", name = "future", predefined_type = "f1-micro")
 plan(cluster, workers = as.cluster(vm))
 x \%<-\% { Sys.getinfo() }
 print(x)

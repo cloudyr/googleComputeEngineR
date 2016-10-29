@@ -31,7 +31,8 @@ test_that("Save docker containers", {
   cons <- harbor::containers(vm)
   worked <- gce_save_container(vm, 
                                container_name = "travis-test-container",
-                               image_name = cons[[1]]$name
+                               image_name = cons[[1]]$name, 
+                               wait = TRUE
                                )
   expect_true(worked)
 })

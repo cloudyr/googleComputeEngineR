@@ -179,6 +179,7 @@ gce_vm_container <- function(file = NULL,
 #' @param instance The VM to run within
 #' @param container_name The name for the saved container
 #' @param image_name The running docker container you are saving.
+#' @param wait Will wait for operation to finish on the instance if TRUE 
 #' @param container_url The URL of where to save container
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' 
@@ -194,7 +195,8 @@ gce_save_container <- function(instance,
                                container_name,
                                image_name = "rstudio",
                                container_url = "gcr.io",
-                               project = gce_get_global_project()){
+                               project = gce_get_global_project(), 
+                               wait = FALSE){
   
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
@@ -205,7 +207,7 @@ gce_save_container <- function(instance,
   ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  harbor::docker_cmd(instance, cmd = "push", args = build_tag, wait = FALSE)
+  harbor::docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
   
   TRUE
   

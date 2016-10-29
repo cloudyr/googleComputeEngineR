@@ -28,7 +28,7 @@ makeDockerClusterPSOCK <- function(workers,
 #'
 #' @examples
 #' \donttest{\dontrun{
-#' vm <- gce_vm_template("r-base", name = "future", predefined_type = "f1-micro")
+#' vm <- gce_vm("r-base", name = "future", predefined_type = "f1-micro")
 #' plan(cluster, workers = as.cluster(vm))
 #' x %<-% { Sys.getinfo() }
 #' print(x)

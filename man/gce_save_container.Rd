@@ -5,7 +5,8 @@
 \title{Commit and save a running docker container to the private Google Container Registry}
 \usage{
 gce_save_container(instance, container_name, image_name = "rstudio",
-  container_url = "gcr.io", project = gce_get_global_project())
+  container_url = "gcr.io", project = gce_get_global_project(),
+  wait = FALSE)
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -23,6 +24,8 @@ Otherwise you will need to get a container authentication yourself (for now)
 
 It will start the push but it may take a long time to finish, espeically the first time, 
   this function will return whilst waiting but don't turn off the VM until its finished.}
+
+\item{wait}{Will wait for operation to finish on the instance if TRUE}
 }
 \value{
 TRUE if commands finish
