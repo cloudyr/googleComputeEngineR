@@ -34,8 +34,14 @@ test_that("We can make a VM with metadata", {
   expect_equal(ins$kind, "compute#instance")
   expect_equal(ins$status, "RUNNING")
   
-  expect_equal(ins$metadata$items$key, "test_date")
-  expect_equal(ins$metadata$items$value, today)
+  expect_true("test_date" %in% ins$metadata$items$key)
+  expect_true(today %in% ins$metadata$items$value)
+  
+  gce_ssh_setup(ins,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
   
 
 })
@@ -55,6 +61,12 @@ test_that("We can make a template VM", {
   
   expect_equal(vm$metadata$items$key[[1]], "user-data")
   
+  gce_ssh_setup(vm,
+                username = "travis",
+                key.pub = "travis-ssh-key.pub",
+                key.private = "travis-ssh-key",
+                overwrite = TRUE)
+  
   ## check can fetch rstudio login screen?
   
 })
@@ -71,7 +83,8 @@ test_that("We can set SSH settings", {
   worked <- gce_ssh_setup(vm,
                           username = "travis", 
                           key.pub = "travis-ssh-key.pub", 
-                          key.private = "travis-ssh-key")
+                          key.private = "travis-ssh-key",
+                          overwrite = TRUE)
   
   expect_true(worked, "SSH settings set")
   
@@ -83,11 +96,6 @@ test_that("We can run SSH on an instance", {
   
   vm <- gce_get_instance("test-vm")
   
-  gce_ssh_setup(vm,
-                username = "travis", 
-                key.pub = "travis-ssh-key.pub", 
-                key.private = "travis-ssh-key")
-  
   cmd <- gce_ssh(vm, "echo foo")
   
   expect_true(cmd, "SSH connected")
@@ -98,11 +106,6 @@ test_that("We can upload via SSH", {
   skip_on_cran()
   # skip_on_travis()
   vm <- gce_get_instance("test-vm")
-  
-  gce_ssh_setup(vm,
-                username = "travis", 
-                key.pub = "travis-ssh-key.pub", 
-                key.private = "travis-ssh-key")
   
   cmd <- gce_ssh_upload(vm, 
                         local = "test_aa_auth.R",
@@ -117,11 +120,6 @@ test_that("We can download via SSH", {
   skip_on_cran()
 
   vm <- gce_get_instance("test-vm")
-  
-  gce_ssh_setup(vm,
-                username = "travis", 
-                key.pub = "travis-ssh-key.pub", 
-                key.private = "travis-ssh-key")
   
   cmd <- gce_ssh_download(vm, 
                           remote = "test_auth_up.R",
