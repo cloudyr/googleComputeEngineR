@@ -40,23 +40,23 @@ context("Google Container Registry")
 #   expect_true(worked)
 # })
 
-
-test_that("Load docker containers", {
-  skip_on_cran()
-  
-  vm <- gce_vm("test-container")
-  
-  gce_ssh_setup(vm,
-                username = "travis",
-                key.pub = "travis-ssh-key.pub",
-                key.private = "travis-ssh-key",
-                overwrite = TRUE)
-  
-  ## loads and runs an rstudio template from my projects container registry
-  worked <- gce_load_container(vm, 
-                               container_name = "travis-test-container",
-                               name = paste(sample(LETTERS, 15),collapse=""))
-  expect_true(worked)
-})
-
-
+# 
+# test_that("Load docker containers", {
+#   skip_on_cran()
+#   
+#   vm <- gce_vm("test-container")
+#   
+#   gce_ssh_setup(vm,
+#                 username = "travis",
+#                 key.pub = "travis-ssh-key.pub",
+#                 key.private = "travis-ssh-key",
+#                 overwrite = TRUE)
+#   
+#   ## loads and runs an rstudio template from my projects container registry
+#   worked <- gce_load_container(vm, 
+#                                container_name = "travis-test-container",
+#                                name = paste(sample(LETTERS, 15),collapse=""))
+#   expect_true(worked)
+# })
+# 
+# 
