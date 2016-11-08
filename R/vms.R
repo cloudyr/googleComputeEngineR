@@ -27,23 +27,43 @@ gce_vm <- function(name,
                    ...,                           
                    project = gce_get_global_project(), 
                    zone = gce_get_global_zone() ) {
+  
+  stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)
+  
+  if(name %in% stopped$items$name){
+    myMessage("VM previously created but not running, starting VM", level = 3)
+    job <- gce_vm_start(name, project = project, zone = zone)
+    gce_wait(job)
+  }
+  
   vm <- tryCatch({
     suppressMessages(suppressWarnings(gce_get_instance(name)))
   }, error = function(ex) {
     dots <- list(...)
     if(!is.null(dots[["template"]])){
+      
+      myMessage("Creating template VM", level = 3)
       do.call(gce_vm_template, c(list(...), name = name))
+      ## gce_vm_template has its own gce_wait()
+      
     } else if(any(!is.null(dots[["file"]]), !is.null(dots[["cloud_init"]]))){
+      
+      myMessage("Creating container VM", level = 3)
       job <- do.call(gce_vm_container, c(list(...), name = name))
       gce_wait(job)
       gce_get_instance(name)
+      
     } else {
+      
+      myMessage("Creating standard VM", level = 3)
       job <- do.call(gce_vm_create, c(list(...), name = name))
       gce_wait(job)
       gce_get_instance(name)
+      
     }
   })
   
+  myMessage("VM running", level = 3)
   vm
 }
 

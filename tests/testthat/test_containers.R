@@ -12,7 +12,7 @@ test_that("We can install a package via futures", {
   #                                 package = "googleComputeEngineR"),
   #              predefined_type = "f1-micro",
   #              auth_email = "TRAVIS_GCE_AUTH_FILE")
-  vm <- gce_vm_start("test-container-nodelete")
+  vm <- gce_vm("test-container-nodelete")
   
   ## install packages
   worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "corpcor")
