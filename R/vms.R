@@ -28,7 +28,7 @@ gce_vm <- function(name,
                    project = gce_get_global_project(), 
                    zone = gce_get_global_zone() ) {
   vm <- tryCatch({
-    suppressWarnings(gce_get_instance(name))
+    suppressMessages(suppressWarnings(gce_get_instance(name)))
   }, error = function(ex) {
     dots <- list(...)
     if(!is.null(dots[["template"]])){
