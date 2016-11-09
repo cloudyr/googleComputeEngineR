@@ -145,7 +145,8 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   } else if(operation$kind == "compute#operation"){
     job_name <- operation$name
   } else {
-    stop("Operation was not a compute#operation or name")
+    myMessage("Operation was not a compute#operation or name, returning object")
+    return(operation)
   }
   
   testthat::expect_type(job_name, "character")

@@ -18,25 +18,21 @@ test_that("We can list disks in all", {
   
 })
 
-test_that("We can create a disk", {
+test_that("We can create and/or get a disk", {
   skip_on_cran()
   
-  disk <- gce_make_disk("test-disk")
-  expect_equal(disk$kind, "compute#operation")
+  job <- gce_make_disk("test-disk")
   
-  disk <- gce_check_zone_op(disk$name, wait = 10)
+  if(job$kind == "compute#operation"){
+    gce_wait(job, wait = 10)
+  }
   
-  expect_equal(disk$kind, "compute#operation")
-  expect_equal(disk$status, "DONE")
-  
-  
-})
+  disk <- gce_get_disk("test-disk")
 
-test_that("We can get a disk", {
-  skip_on_cran()
   
   disk <- gce_get_disk("test-disk")
   expect_equal(disk$kind, "compute#disk")
+  
   
 })
 
@@ -47,12 +43,8 @@ test_that("We can create a disk from an image", {
   expect_equal(img$kind, "compute#image")
   
   disk <- gce_make_disk("test-disk-image", sourceImage = img$selfLink)
-  expect_equal(disk$kind, "compute#operation")
   
-  disk <- gce_wait(disk$name, wait = 10)
-  
-  expect_equal(disk$kind, "compute#operation")
-  expect_equal(disk$status, "DONE")
+  disk <- gce_wait(disk, wait = 10)
   
   disk_image <- gce_get_disk("test-disk-image")
   expect_equal(disk_image$sourceImage, img$selfLink)

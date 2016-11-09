@@ -216,6 +216,13 @@ gce_make_disk <- function(name,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone()) {
   
+  check <- gce_list_disks(project = project, zone = zone)
+  
+  if(name %in% check$items$name){
+    myMessage("Disk of that name already exists", level = 3)
+    return(gce_get_disk(name, project = project, zone = zone))
+  }
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/disks", 
                  project, zone)
   
