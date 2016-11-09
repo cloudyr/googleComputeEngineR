@@ -18,7 +18,7 @@ test_that("We can install a package via futures", {
   worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "corpcor")
   expect_true(worked)
   
-  gce_vm_stop("test-container-nodelete")
+
   
 })
 
@@ -29,7 +29,7 @@ context("Google Container Registry")
 test_that("Save docker containers", {
   skip_on_cran()
 
-  vm <- gce_vm("test-container")
+  vm <- gce_vm("test-container-nodelete")
 
   ## saves the running my-rstudio image that is named rstudio
   ## commits and saves it to container registry as travis-test-container
@@ -46,11 +46,12 @@ test_that("Save docker containers", {
 test_that("Load docker containers", {
   skip_on_cran()
 
-  vm <- gce_vm("test-container")
+  vm <- gce_vm("test-container-nodelete")
 
   ## loads and runs an rstudio template from my projects container registry
   worked <- gce_load_container(vm,
                                container_name = "travis-test-container",
                                name = paste(sample(LETTERS, 15),collapse=""))
   expect_true(worked)
+  gce_vm_stop("test-container-nodelete")
 })
