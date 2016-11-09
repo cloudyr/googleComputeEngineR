@@ -47,13 +47,8 @@ context("Start up cycle")
 test_that("We can start an instance", {
   skip_on_cran()
   
-  job <- gce_vm_start("markdev")
-  
-  expect_equal(job$kind, "compute#operation")
-  
-  op <- gce_check_zone_op(job$name)
-  print(op)
-  cat("\nmarkdev VM started")
+  job <- gce_vm("markdev")
+
   inst <- gce_get_instance("markdev")
   
   expect_equal(inst$status, "RUNNING")
