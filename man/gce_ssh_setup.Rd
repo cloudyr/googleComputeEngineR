@@ -4,20 +4,20 @@
 \alias{gce_ssh_setup}
 \title{Setup a SSH connection with GCE from a new SSH key-pair}
 \usage{
-gce_ssh_setup(instance, username = gce_get_global_ssh_user(),
-  key.pub = NULL, key.private = NULL, overwrite = FALSE,
+gce_ssh_setup(instance, key.pub = NULL, key.private = NULL,
+  ssh_overwrite = FALSE, username = Sys.info()[["user"]],
   project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
 
-\item{username}{The username you used to generate the key-pair}
-
 \item{key.pub}{The filepath location of the public key, only needed first call per session}
 
 \item{key.private}{The filepath location of the private key, only needed first call per session}
 
-\item{overwrite}{Will check if SSH settings already set and overwrite them if TRUE}
+\item{ssh_overwrite}{Will check if SSH settings already set and overwrite them if TRUE}
+
+\item{username}{The username you used to generate the key-pair}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 

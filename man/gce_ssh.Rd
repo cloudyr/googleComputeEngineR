@@ -6,26 +6,24 @@
 \alias{gce_ssh_upload}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., username = gce_get_global_ssh_user(), key.pub = NULL,
-  key.private = NULL, wait = TRUE, capture_text = FALSE,
+gce_ssh(instance, ..., key.pub = NULL, key.private = NULL, wait = TRUE,
+  capture_text = FALSE, username = Sys.info()[["user"]],
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_upload(instance, local, remote, username = gce_get_global_ssh_user(),
+gce_ssh_upload(instance, local, remote, username = Sys.info()[["user"]],
   key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE,
   project = gce_get_global_project(), zone = gce_get_global_zone())
 
-gce_ssh_download(instance, remote, local,
-  username = gce_get_global_ssh_user(), key.pub = NULL,
-  key.private = NULL, verbose = FALSE, overwrite = FALSE, wait = TRUE,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
+  key.pub = NULL, key.private = NULL, verbose = FALSE,
+  overwrite = FALSE, wait = TRUE, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
 
 \item{...}{Shell commands to run. Multiple commands are combined with
 \code{&&} so that execution will halt after the first failure.}
-
-\item{username}{User name used to generate ssh-keys. Usually your login to your local workstation or Google account alias.}
 
 \item{key.pub}{The filepath location of the public key, only needed first call per session}
 
@@ -34,6 +32,8 @@ gce_ssh_download(instance, remote, local,
 \item{wait}{Whether then SSH output should be waited for or run it asynchronously.}
 
 \item{capture_text}{whether to return the output of the SSH command into an R text}
+
+\item{username}{The username you used to generate the key-pair}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
