@@ -69,7 +69,6 @@ gce_set_metadata <- function(metadata,
   meta$fingerprint <- ins$metadata$fingerprint
   
   stopifnot(inherits(meta, "gar_Metadata"))
-  
   # compute.instances.setMetadata  
   f <- gar_api_generator(url, "POST", data_parse_function = function(x) x)
 

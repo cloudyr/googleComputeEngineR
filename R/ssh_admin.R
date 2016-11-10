@@ -145,13 +145,17 @@ gce_ssh_setup <- function(instance,
   ## get fresh metadata just in case things have changed
   cloud_keys <- gce_check_ssh(instance)
   
-  if(ins$ssh$key.pub %in% paste0(cloud_keys$public.key,"\n")){
-    myMessage("Public SSH key already in metadata of this instance", level = 2)
+  if(ins$ssh$username %in% cloud_keys$username){
+    myMessage("Username SSH key already exists", level = 2)
   } else {
     ## make SSH Key metadata for upload to instance.
     new_key <- paste0(ins$ssh$username, ":", ins$ssh$key.pub, collapse = "")
-    upload_me <- list(`ssh-keys` = paste(c(new_key, cloud_keys), collapse = "\n", sep =""))
-    
+    if(nrow(cloud_keys) > 0){
+      upload_me <- list(`ssh-keys` = paste(c(new_key, cloud_keys), collapse = "\n", sep =""))
+    } else {
+      upload_me <- list(`ssh-keys` = new_key)
+    }
+
     job <- gce_set_metadata(upload_me, 
                             instance = ins, 
                             project = project, 
