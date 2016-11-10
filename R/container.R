@@ -59,14 +59,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
   
   template <- match.arg(template)
   
-  cloud_init <- switch(template,
-                       rstudio  = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
-                       `rstudio-hadleyverse`  = system.file("cloudconfig", "rstudio-hadleyverse.yaml", package = "googleComputeEngineR"),
-                       shiny    = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
-                       opencpu  = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
-                       `r-base` = system.file("cloudconfig", "r-base.yaml",  package = "googleComputeEngineR"),
-                       example  = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
-  )
+  cloud_init <- get_template_file(template)
   
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
   
@@ -109,6 +102,19 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 
 }
 
+get_template_file <- function(template){
+  
+  switch(template,
+         rstudio  = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
+         `rstudio-hadleyverse`  = system.file("cloudconfig", "rstudio-hadleyverse.yaml", package = "googleComputeEngineR"),
+         shiny    = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
+         opencpu  = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
+         `r-base` = system.file("cloudconfig", "r-base.yaml",  package = "googleComputeEngineR"),
+         example  = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
+  )
+  
+}
+
 #' Launch a container-VM image
 #' 
 #' This lets you specify docker images when creating the VM
@@ -132,7 +138,6 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
 gce_vm_container <- function(file = NULL,
                              cloud_init = NULL, 
                              image_family = "gci-stable", 
-                             metadata = NULL,
                              name,
                              predefined_type,
                              cpus,
