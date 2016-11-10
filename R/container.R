@@ -50,12 +50,10 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
                             password=NULL,
                             image_family = "gci-stable",
                             name,
-                            predefined_type,
-                            cpus,
-                            memory,
                             ...){
   
   dots <- list(...)
+  dots$name <- NULL
   
   template <- match.arg(template)
   
@@ -71,17 +69,16 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "
     cloud_init_file <- sprintf(cloud_init_file, username, password)
   }
   
-  job <- gce_vm_container(cloud_init = cloud_init_file,
-                          image_family = image_family,
-                          tags = list(items = list("http-server")),
-                          metadata = list(template = template),
-                          name = name,
-                          predefined_type = predefined_type,
-                          cpus = cpus,
-                          memory = memory,
-                          ...)
+  job <- do.call(gce_vm_container,
+                 c(dots, list(
+                   name = name,
+                   cloud_init = cloud_init_file,
+                   image_family = image_family,
+                   tags = list(items = list("http-server")),
+                   metadata = list(template = template)
+                 )))
   
-  gce_wait(job$name, wait = 10)
+  gce_wait(job, wait = 10)
   
   ins <- gce_get_instance(name)
   ip <- gce_get_external_ip(name)
@@ -138,10 +135,6 @@ get_template_file <- function(template){
 gce_vm_container <- function(file = NULL,
                              cloud_init = NULL, 
                              image_family = "gci-stable", 
-                             name,
-                             predefined_type,
-                             cpus,
-                             memory,
                              ...){
   
   if(is.null(file)){
@@ -166,14 +159,12 @@ gce_vm_container <- function(file = NULL,
   metadata_new <- c(dots$metadata, 
                     `user-data` = cloud_init)
   
-  gce_vm_create(name = name,
-                predefined_type = predefined_type,
-                cpus = cpus,
-                memory = memory,
-                image_family = image_family,
-                image_project = "google-containers",
-                metadata = metadata_new,
-                ...)
+  dots$metadata <- NULL
+  
+  do.call(gce_vm_create, c(list(image_family = image_family,
+                                image_project = "google-containers",
+                                metadata = metadata_new), dots)
+          )
   
 }
 

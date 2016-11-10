@@ -6,7 +6,7 @@
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
   "example", "rstudio-hadleyverse"), username = NULL, password = NULL,
-  image_family = "gci-stable", name, predefined_type, cpus, memory, ...)
+  image_family = "gci-stable", name, ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -18,12 +18,6 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
-
-\item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
-
-\item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
-
-\item{memory}{If not defining \code{predefined_type}, amount of memory}
 
 \item{...}{Other arguments passed to \link{gce_vm_create}}
 }

@@ -5,7 +5,7 @@
 \title{Launch a container-VM image}
 \usage{
 gce_vm_container(file = NULL, cloud_init = NULL,
-  image_family = "gci-stable", name, predefined_type, cpus, memory, ...)
+  image_family = "gci-stable", ...)
 }
 \arguments{
 \item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}
@@ -13,14 +13,6 @@ gce_vm_container(file = NULL, cloud_init = NULL,
 \item{cloud_init}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
-
-\item{name}{The name of the resource, provided by the client when initially creating the resource}
-
-\item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
-
-\item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
-
-\item{memory}{If not defining \code{predefined_type}, amount of memory}
 
 \item{...}{Other arguments passed to \link{gce_vm_create}
 
