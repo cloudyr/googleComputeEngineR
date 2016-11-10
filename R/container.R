@@ -142,6 +142,7 @@ gce_vm_container <- function(file = NULL,
                              predefined_type,
                              cpus,
                              memory,
+                             metadata = NULL,
                              ...){
   
   if(is.null(file)){
