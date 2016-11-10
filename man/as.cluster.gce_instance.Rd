@@ -4,14 +4,12 @@
 \alias{as.cluster.gce_instance}
 \title{Create a future cluster for GCE objects}
 \usage{
-\method{as.cluster}{gce_instance}(x, user = gce_get_global_ssh_user(),
-  project = gce_get_global_project(), zone = gce_get_global_zone(),
-  rshopts = ssh_options(), ..., recursive = FALSE)
+\method{as.cluster}{gce_instance}(x, project = gce_get_global_project(),
+  zone = gce_get_global_zone(), rshopts = ssh_options(), ...,
+  recursive = FALSE)
 }
 \arguments{
 \item{x}{The instance to make a future cluster}
-
-\item{user}{Username used in SSH}
 
 \item{project}{The GCE project}
 

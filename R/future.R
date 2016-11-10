@@ -17,7 +17,6 @@ makeDockerClusterPSOCK <- function(workers,
 #' S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
 #' 
 #' @param x The instance to make a future cluster
-#' @param user Username used in SSH
 #' @param project The GCE project
 #' @param zone The GCE zone
 #' @param rshopts Options for the SSH
@@ -37,13 +36,13 @@ makeDockerClusterPSOCK <- function(workers,
 #' @importFrom future as.cluster
 #' @export
 as.cluster.gce_instance <- function(x, 
-                                    user = gce_get_global_ssh_user(), 
                                     project = gce_get_global_project(), 
                                     zone = gce_get_global_zone(), 
                                     rshopts = ssh_options(), 
                                     ..., 
                                     recursive = FALSE) {
-  stopifnot(!is.null(user))
+  stopifnot(check_ssh_set(x))
+  
   if (is.null(x$kind)) {
     ips <- vapply(x, FUN = gce_get_external_ip, FUN.VALUE = character(1L))
   } else {
@@ -51,5 +50,5 @@ as.cluster.gce_instance <- function(x,
   }
   stopifnot(!is.null(ips))
   
-  makeDockerClusterPSOCK(ips, user = user, rshopts = rshopts, ...)
+  makeDockerClusterPSOCK(ips, user = x$ssh$username, rshopts = rshopts, ...)
 }
