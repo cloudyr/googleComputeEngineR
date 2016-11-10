@@ -18,49 +18,6 @@ ssh_options <- function(instance) {
          private_key)
 }
 
-
-
-# # sets environment of the private ssh key and outputs the public key for use in SSH calls
-# set_ssh_keys <- function(key.pub = NULL, key.private = NULL) {
-#   if(!is.null(key.pub) & !is.null(key.private)){
-#     myMessage("Using ssh-key files given as ", 
-#               key.pub," / ", key.private, 
-#               level = 3)
-#     
-#     stopifnot(file.exists(key.pub))
-#     stopifnot(file.exists(key.private))
-#     
-#     .gce_env$ssh_key <- normalizePath(key.private)
-#     key.pub.content  <- readChar(key.pub, 10000)
-#   } else {
-#     ## Check to see if they have been set already
-#     g_public  <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")
-#     
-#     if(file.exists(g_public)){
-#       ## you already have the key
-#       g_private <- file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine")
-#       
-#       if(!file.exists(g_private)){
-#         stop("Problem reading google_compute_engine key. Recreate ssh-keys and try again.")
-#       }
-#       
-#       myMessage("Using existing public key in ", 
-#                 g_public, 
-#                 level = 3)
-#       
-#       .gce_env$ssh_key <- g_private
-#       key.pub.content <- readChar(g_public, 10000)
-#       
-#     }
-#     
-#   }
-#   
-#   myMessage("Set private SSH key", level = 3)
-#   
-#   .gce_env$ssh_key_public <- key.pub.content
-#   key.pub.content
-# }
-
 #' Add SSH details to a gce_instance
 #' 
 #' @param instance The gce_instance
@@ -241,57 +198,6 @@ gce_check_ssh <- function(instance){
   data.frame(username = keys[1,], public.key = keys[2,], stringsAsFactors = FALSE)
   
 }
-
-# 
-# ## Get the saved private ssh key
-# gce_global_ssh_private <- function(){
-#   
-#   if(!exists("ssh_key", envir = .gce_env)){
-#     myMessage("SSH keys not set globally, run gce_ssh_setup() to set it.", level = 3)
-#     return(NULL)
-#   }
-#   .gce_env$ssh_key
-# }
-# 
-# ## Get the saved ssh user
-# gce_get_global_ssh_user <- function(){
-#   
-#   if(!exists("user", envir = .gce_env)){
-#     myMessage("SSH username not set globally, run gce_ssh_setup() to set it.", level = 3)
-#     return(NULL)
-#   }
-#   
-#   .gce_env$user
-#   
-# }
-# 
-# ## Get public key
-# gce_global_ssh_public <- function(){
-#   
-#   if(!exists("ssh_key_public", envir = .gce_env)){
-#     myMessage("SSH keys not set globally, run gce_ssh_setup() to set it.", level = 3)
-#     return(NULL)
-#   }
-#   
-#   .gce_env$ssh_key_public
-# }
-# 
-# ## Set the global SSH username
-# gce_set_global_ssh_user <- function(username = NULL){
-#   
-#   if(is.null(username)){
-#     user_env <- Sys.getenv("GCE_SSH_USER")
-#     if(user_env == "") {
-#       return(NULL)
-#     } else {
-#       username <- user_env
-#     }
-#   }
-#   
-#   myMessage("Set SSH Username to ", username, level = 3)
-#   .gce_env$user <- username
-#   .gce_env$user
-# }
 
 check_ssh_set <- function(instance){
 

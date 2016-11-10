@@ -70,6 +70,26 @@ test_that("We can run SSH on an instance", {
   
 })
 
+test_that("We can check SSH settings", {
+  skip_on_cran()
+  # skip_on_travis()
+  
+  vm <- gce_get_instance("test-vm")
+  
+  test_user <- "travis"
+  cmd <- gce_ssh(vm, "echo foo",
+                 username = test_user,
+                 key.pub = "travis-ssh-key.pub",
+                 key.private = "travis-ssh-key")
+  
+  expect_true(cmd, "SSH connected")
+  
+  ssh_settings <- gce_check_ssh(vm)
+  
+  expect_equal(test_user, ssh_settings$username)
+  
+})
+
 test_that("We can upload via SSH", {
   skip_on_cran()
   # skip_on_travis()
@@ -110,6 +130,9 @@ test_that("We can set metadata on a VM", {
   skip_on_cran()
   
   job <- gce_set_metadata(list(test = "blah"), instance = "rstudio-test")
+  
+  print(job)
+  
   gce_check_zone_op(job$name)
   
   vm <- gce_get_instance("rstudio-test")
