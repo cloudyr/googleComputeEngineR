@@ -15,6 +15,8 @@ gce_ssh_addkeys(instance, key.pub = NULL, key.private = NULL,
 \item{key.private}{filepath to the private SSK key}
 
 \item{username}{SSH username to login with}
+
+\item{overwrite}{Overwrite existing SSH details if they exist}
 }
 \value{
 The instance with SSH details included in $ssh

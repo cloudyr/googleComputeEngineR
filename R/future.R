@@ -6,8 +6,12 @@ makeDockerClusterPSOCK <- function(workers,
                                    rscript_args = NULL, install_future = TRUE, ..., verbose = FALSE) {
   ## Should 'future' package be installed, if not already done?
   if (install_future) {
-    rscript_args <- c("-e", shQuote(sprintf("if (!requireNamespace('future', quietly = TRUE)) install.packages('future', quiet = %s)", !verbose)), rscript_args)
+    rscript_args <- c("-e", 
+                      shQuote(sprintf("if (!requireNamespace('future', quietly = TRUE)) install.packages('future', quiet = %s)", 
+                                      !verbose)), 
+                      rscript_args)
   }
+  
   future::makeClusterPSOCK(workers, rscript = rscript, rscript_args = rscript_args, ..., verbose = verbose)
 }
 
@@ -38,7 +42,7 @@ makeDockerClusterPSOCK <- function(workers,
 as.cluster.gce_instance <- function(x, 
                                     project = gce_get_global_project(), 
                                     zone = gce_get_global_zone(), 
-                                    rshopts = ssh_options(), 
+                                    rshopts = ssh_options(x), 
                                     ..., 
                                     recursive = FALSE) {
   stopifnot(check_ssh_set(x))

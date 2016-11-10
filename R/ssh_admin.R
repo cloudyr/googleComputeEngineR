@@ -67,6 +67,7 @@ ssh_options <- function(instance) {
 #' @param username SSH username to login with
 #' @param key.pub filepath to public SSH key
 #' @param key.private filepath to the private SSK key
+#' @param overwrite Overwrite existing SSH details if they exist
 #' 
 #' @details 
 #' 
