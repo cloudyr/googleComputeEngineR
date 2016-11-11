@@ -78,7 +78,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   ## Add the username and password to the config file
   if(template %in% c("rstudio","rstudio-hadleyverse")){
     if(any(is.null(username), is.null(password))){
-      stop("Must supply a username and password for RStudio Server templates")
+      stop("Must supply a username and password for RStudio Server templates", call. = FALSE)
     }
     cloud_init_file <- sprintf(cloud_init_file, username, password)
   }
@@ -163,7 +163,7 @@ gce_vm_container <- function(file = NULL,
     
     if(!grepl("^#cloud-config\n",cloud_init)){
       stop("file contents does not start with #cloud-config.  Must be a valid cloud-init file.
-           Got: ", cloud_init)
+           Got: ", cloud_init, call. = FALSE)
     }
   }
   
@@ -293,7 +293,7 @@ gce_install_packages_docker <- function(instance,
                                         github_packages = NULL){
   
   if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().")
+    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
   }
   
 
