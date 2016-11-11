@@ -10,14 +10,22 @@
 #' @export
 gce_rstudio_adduser <- function(instance, user, password){
   
-  ssh_au <- paste0("adduser ",
-                    user, 
-                   " --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password")
+  # ssh_au <- paste0("adduser ",
+  #                   user, 
+  #                  " --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password")
+  # 
+  # ssh_ap <- paste0("echo '",user,":",password,"' | chpasswd")
   
-  ssh_ap <- paste0("echo '",user,":",password,"' | sudo chpasswd")
+  #stop container and relaunch with new user
   
-  harbor::docker_cmd(instance, 
-                     cmd = "exec",
-                     args = c("rstudio", paste0(ssh_au, " & ", ssh_ap)),
-                     docker_opts = "-u 0")
+  # harbor::docker_cmd(instance, 
+  #                    cmd = "exec",
+  #                    args = c("rstudio", paste0(ssh_au, " && ", ssh_ap)),
+  #                    docker_opts = "")
+  
+  gce_set_metadata(list(rstudio_users = c(gce_get_metadata(instance, "rstudio_users")$value), user), 
+                   instance)
+  
+  instance
+  
 }

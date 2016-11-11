@@ -13,6 +13,9 @@ gce_get_metadata <- function(instance, key = NULL){
     out <- instance$metadata$items
     if(!is.null(key)){
       out <- out[out$key == key,]
+      if(!nrow(out) > 0){
+        out <- NULL
+      }
     }
   } else {
     out <- NULL

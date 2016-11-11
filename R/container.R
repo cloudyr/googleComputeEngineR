@@ -75,12 +75,15 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   
   cloud_init_file <- readChar(cloud_init, nchars = 32768)
   
+  upload_meta <- list(template = template)
+  
   ## Add the username and password to the config file
   if(template %in% c("rstudio","rstudio-hadleyverse")){
     if(any(is.null(username), is.null(password))){
       stop("Must supply a username and password for RStudio Server templates", call. = FALSE)
     }
     cloud_init_file <- sprintf(cloud_init_file, username, password)
+    upload_meta$rstudio_users <- username
   }
   
   job <- do.call(gce_vm_container,
@@ -89,7 +92,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                    cloud_init = cloud_init_file,
                    image_family = image_family,
                    tags = list(items = list("http-server")),
-                   metadata = list(template = template)
+                   metadata = upload_meta
                  )))
   
   gce_wait(job, wait = 10)

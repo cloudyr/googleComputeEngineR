@@ -156,7 +156,7 @@ gce_ssh_setup <- function(instance,
   } else {
     ## make SSH Key metadata for upload to instance.
     new_key <- paste0(ins$ssh$username, ":", ins$ssh$key.pub, collapse = "")
-    if(nrow(cloud_keys) > 0){
+    if(!is.null(cloud_keys)){
       upload_me <- list(`ssh-keys` = paste(c(new_key, cloud_keys), collapse = "\n", sep =""))
     } else {
       upload_me <- list(`ssh-keys` = new_key)
@@ -187,15 +187,19 @@ gce_check_ssh <- function(instance){
   
   ssh_keys <- gce_get_metadata(instance, "ssh-keys")$value
   
-  keys <- vapply(strsplit(ssh_keys, ":"), function(x) c(x[[1]], x[[2]]), character(2))
+  if(!is.null(ssh_keys)){
+    keys <- vapply(strsplit(ssh_keys, ":"), function(x) c(x[[1]], x[[2]]), character(2))    
+    out <-   data.frame(username = keys[1,], public.key = keys[2,], stringsAsFactors = FALSE)
+  } else {
+    out <- NULL
+  }
   
   myMessage("Current local settings: ", instance$ssh$username, ", 
             private key: ", instance$ssh$key.private, ",
             public key: ", instance$ssh$key.pub, level = 2)
   myMessage("Returning SSH keys on instance: ", level = 2)
   
-  data.frame(username = keys[1,], public.key = keys[2,], stringsAsFactors = FALSE)
-  
+  out
 }
 
 check_ssh_set <- function(instance){
