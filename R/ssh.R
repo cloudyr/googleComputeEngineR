@@ -66,7 +66,7 @@ gce_ssh_browser <- function(instance,
 #' 
 #' \dontrun{
 #' 
-#'   gce_ssh("rbase", "sudo journalctl -u rbase")
+#'   gce_ssh("rbase", "sudo journalctl -u rstudio")
 #' 
 #' }
 #' 

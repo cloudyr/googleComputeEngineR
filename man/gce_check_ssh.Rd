@@ -2,7 +2,7 @@
 % Please edit documentation in R/ssh_admin.R
 \name{gce_check_ssh}
 \alias{gce_check_ssh}
-\title{Get the current SSH settings for an instance}
+\title{Calls API for the current SSH settings for an instance}
 \usage{
 gce_check_ssh(instance)
 }
@@ -13,6 +13,6 @@ gce_check_ssh(instance)
 A data.frame of SSH users and public keys
 }
 \description{
-Get the current SSH settings for an instance
+Calls API for the current SSH settings for an instance
 }
 

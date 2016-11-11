@@ -27,6 +27,10 @@ A \code{cluster} object.
 \description{
 S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
 }
+\details{
+Only works for r-base containers created via \code{gce_vm_template("r-base")} or for 
+  docker containers created using the \code{--net=host} argument flag
+}
 \examples{
 \donttest{\dontrun{
 vm <- gce_vm("r-base", name = "future", predefined_type = "f1-micro")

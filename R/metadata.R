@@ -1,3 +1,28 @@
+#' Extract metadata from an instance object
+#' 
+#' @param instance instance to get metadata from
+#' @param key optional metadata key to filter metadata result
+#' 
+#' @return data.frame $key and $value of metadata or NULL
+#' @export
+gce_get_metadata <- function(instance, key = NULL){
+  
+  instance <- as.gce_instance(instance)
+  
+  if(!is.null(instance$metadata$items)){
+    out <- instance$metadata$items
+    if(!is.null(key)){
+      out <- out[out$key == key,]
+    }
+  } else {
+    out <- NULL
+  }
+  
+  out
+  
+}
+
+
 #' Metadata Object
 #' 
 #' 

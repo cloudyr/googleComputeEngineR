@@ -20,6 +20,7 @@ ssh_options <- function(instance) {
 
 #' Add SSH details to a gce_instance
 #' 
+#' 
 #' @param instance The gce_instance
 #' @param username SSH username to login with
 #' @param key.pub filepath to public SSH key
@@ -27,6 +28,11 @@ ssh_options <- function(instance) {
 #' @param overwrite Overwrite existing SSH details if they exist
 #' 
 #' @details 
+#' 
+#' You will only need to run this yourself if you save your SSH keys somewhere other 
+#'   than \code{$HOME/.ssh/google_compute_engine.pub} or use a different username than 
+#'   your local username as found in \code{Sys.info[["user"]]}, otherwise it will configure 
+#'   itself automatically the first time you use \link{gce_ssh} in an R session.
 #' 
 #' If key.pub is NULL then will look for default Google credentials at 
 #'   \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
@@ -168,7 +174,7 @@ gce_ssh_setup <- function(instance,
   
 }
 
-#' Get the current SSH settings for an instance
+#' Calls API for the current SSH settings for an instance
 #' 
 #' @param instance An instance to check
 #' 
@@ -179,16 +185,14 @@ gce_check_ssh <- function(instance){
   
   instance <- gce_get_instance(instance)
   
-  metadata <- instance$metadata$items
-  
-  ssh_keys <- metadata[metadata$key == "ssh-keys","value"]
+  ssh_keys <- gce_get_metadata(instance, "ssh-keys")$value
   
   keys <- vapply(strsplit(ssh_keys, ":"), function(x) c(x[[1]], x[[2]]), character(2))
   
   myMessage("Current local settings: ", instance$ssh$username, ", 
             private key: ", instance$ssh$key.private, ",
-            public key: ", instance$ssh$key.pub)
-  myMessage("Returning SSH keys on instance: ")
+            public key: ", instance$ssh$key.pub, level = 2)
+  myMessage("Returning SSH keys on instance: ", level = 2)
   
   data.frame(username = keys[1,], public.key = keys[2,], stringsAsFactors = FALSE)
   

@@ -20,6 +20,11 @@ makeDockerClusterPSOCK <- function(workers,
 #' 
 #' S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
 #' 
+#' @details 
+#' 
+#' Only works for r-base containers created via \code{gce_vm_template("r-base")} or for 
+#'   docker containers created using the \code{--net=host} argument flag
+#' 
 #' @param x The instance to make a future cluster
 #' @param project The GCE project
 #' @param zone The GCE zone

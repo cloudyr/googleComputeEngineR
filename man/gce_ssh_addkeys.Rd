@@ -25,6 +25,11 @@ The instance with SSH details included in $ssh
 Add SSH details to a gce_instance
 }
 \details{
+You will only need to run this yourself if you save your SSH keys somewhere other 
+  than \code{$HOME/.ssh/google_compute_engine.pub} or use a different username than 
+  your local username as found in \code{Sys.info[["user"]]}, otherwise it will configure 
+  itself automatically the first time you use \link{gce_ssh} in an R session.
+
 If key.pub is NULL then will look for default Google credentials at 
   \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
 }

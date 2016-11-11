@@ -1,3 +1,16 @@
+#' Check the docker logs of a container
+#' 
+#' @param instance The instance running docker
+#' @param container A running container to get logs of
+#' 
+#' @return logs
+#' @export
+gce_check_docker <- function(instance, container){
+  
+  gce_ssh(instance, paste0("sudo journalctl -u ", container))
+  
+}
+
 #' Create a template container VM
 #' 
 #' This lets you specify templates for the VM you wnat to launch
@@ -45,7 +58,8 @@
 #' 
 #' 
 #' @export  
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu","r-base", "example", "rstudio-hadleyverse"),
+gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
+                                         "r-base", "example", "rstudio-hadleyverse"),
                             username=NULL,
                             password=NULL,
                             image_family = "gci-stable",

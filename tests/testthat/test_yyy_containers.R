@@ -6,11 +6,8 @@ context("Futures")
 test_that("We can install a package via futures", {
   skip_on_cran()
   
-  # vm <- gce_vm("test-container-nodelete",
-  #              file = system.file("cloudconfig", 
-  #                                 "rstudio.yaml", 
-  #                                 package = "googleComputeEngineR"),
-  #              predefined_type = "f1-micro",
+  # vm <- gce_vm(name = "test-container-nodelete",
+  #              template = "r-base",
   #              auth_email = "TRAVIS_GCE_AUTH_FILE")
   vm <- gce_vm("test-container-nodelete")
   
@@ -19,7 +16,7 @@ test_that("We can install a package via futures", {
                         key.pub = "travis-ssh-key.pub",
                         key.private = "travis-ssh-key")
   ## install packages
-  worked <- gce_install_packages_docker(vm, "rocker/rstudio", cran_packages = "corpcor")
+  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "corpcor")
   expect_true(worked)
   
 
