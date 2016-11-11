@@ -24,7 +24,6 @@ write_files:
                                   -e USER=%s -e PASSWORD=%s \
                                   -v /home/gcer/library/:/library/ \
                                   --name=rstudio \
-                                  --net=host \
                                   rocker/rstudio
     ExecStop=/usr/bin/docker stop rstudio
 

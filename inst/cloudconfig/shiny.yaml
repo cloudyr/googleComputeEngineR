@@ -25,7 +25,6 @@ write_files:
                                   -v /home/gcer/shinyapps/:/srv/shiny-server/ \
                                   -v /home/gcer/srv/shinylog/:/var/log/ \
                                   -v /home/gcer/library/:/library/ \
-                                  --net=host \
                                   rocker/shiny
     ExecStop=/usr/bin/docker stop shiny
 
