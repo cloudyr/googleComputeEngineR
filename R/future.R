@@ -61,3 +61,76 @@ as.cluster.gce_instance <- function(x,
   
   makeDockerClusterPSOCK(ips, user = x$ssh$username, rshopts = rshopts, ...)
 }
+
+
+#' Install R packages onto an instance's stopped docker image
+#' 
+#' @param instance The instance running the container
+#' @param docker_image A docker image to install packages within.
+#' @param cran_packages A character vector of CRAN packages to be installed
+#' @param github_packages A character vector of devtools packages to be installed
+#' 
+#' @details 
+#' 
+#' See the images on the instance via \code{harbor::docker_cmd(instance, "images")}
+#' 
+#' If using devtools github, will look for an auth token via \code{devtools::github_pat()}.  
+#'   This is an environment variable called \code{GITHUB_PAT} 
+#' 
+#'  Will start a container, install packages and then commit 
+#'    the container to an image of the same name via \code{docker commit -m "installed packages via gceR"}
+#' 
+#' @return TRUE if successful
+#' @import harbor
+#' @import future
+#' @importFrom utils install.packages
+#' @importFrom devtools install_github
+#' @export
+gce_future_install_packages <- function(instance,
+                                        docker_image,
+                                        cran_packages = NULL,
+                                        github_packages = NULL){
+  
+  if(!check_ssh_set(instance)){
+    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  }
+  
+  
+  
+  ## set up future cluster
+  temp_name <- paste0("gceR-install-",idempotency())
+  clus <- as.cluster(instance, 
+                     docker_image = docker_image,
+                     rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
+  
+  future::plan(future::cluster, workers = clus)
+  
+  if(!is.null(cran_packages)){
+    cran <- NULL
+    cran %<-% utils::install.packages(cran_packages)
+    cran
+  }
+  
+  if(!is.null(github_packages)){
+    devt <- NULL
+    devt %<-% devtools::install_github(github_packages, auth_token = devtools::github_pat())
+    devt
+  }
+  
+  harbor::docker_cmd(instance, 
+                     cmd = "commit", 
+                     args = c("-a 'googleComputeEngineR'" ,
+                              paste("-m 'Installed packages:", 
+                                    paste(collapse = " ", cran_packages), 
+                                    paste(collapse = " ", github_packages),
+                                    "'"),
+                              temp_name, 
+                              docker_image))
+  
+  ## stop the container
+  harbor::docker_cmd(instance, "stop", temp_name)
+  
+  TRUE
+  
+}
+
