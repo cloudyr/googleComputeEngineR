@@ -15,11 +15,23 @@ reference:
     desc: >
       Working with already created VM instances
     contents:
+      - gce_vm
       - gce_vm_start
       - gce_vm_stop
       - gce_vm_reset
       - gce_vm_delete
       - gce_get_external_ip
+  - title: "Docker images and containers"
+    contents:
+      - matches("container")
+  - title: "Template specific"
+    desc: >
+      Various functions that work with specific VM templates
+    contents:
+      - matches("future")
+      - matches("opencpu")
+      - matches("rstudio")
+      - matches("shiny")
   - title: "Projects"
     contents:
       - matches("project")

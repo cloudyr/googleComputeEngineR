@@ -11,7 +11,7 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 2. Download a service acount key JSON file
 3. Put your default project, zone and JSON file location in your `.Renviron`
 4. Run `library(googleComputeEngineR)` and auto-authenticate
-5. Run `vm <- gce_vm_template("rstudio", name = "rstudio-server", username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
+5. Run `vm <- gce_vm("rstudio", name = "rstudio-server", username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
 6. Wait for it to install, login via the returned URL.
 
 ## Thanks to:
@@ -119,7 +119,14 @@ $name
 
 ## Launch a Virtual Machine
 
-To launch an existing VM, use `gce_vm_start()`. It returns a job operation object with a name, which you can check with `gce_get_zone_op(job$name)`, or use `gce_check_zone_op(job$name)` for it to retry and return when it has finished.
+To launch a VM, use `gce_vm()`. This will:
+
+* Return the instance metadata if it is already running
+* Start the instance and return its metadata if its currently stopped.
+* Create a VM if you include configurations detailed below.
+
+
+### Start an existing VM
 
 ```r
 library(googleComputeEngineR)
@@ -130,18 +137,11 @@ library(googleComputeEngineR)
 the_list <- gce_list_instances()
 
 ## start an existing instance
-job <- gce_vm_start("markdev")
-  
-## check the job status until its finished
-gce_check_zone_op(job$name)
-  
-## get the instance metadata
-inst <- gce_get_instance("markdev")
-inst$status
-[1] "RUNNING"
+job <- gce_vm("markdev")
+
 ``` 
 
-You can also reset and start instances/VMs:
+### Reset and Stop VM
 
 ```r  
 ## reset instance
@@ -172,7 +172,7 @@ You can view the external IP for an instance via `gce_get_external_ip()`
 
 ## Creating an instance
 
-To create an instance you need to specify:
+To create an instance from scratch you need to specify:
 
 * Name
 * Project [if not default]
@@ -187,36 +187,100 @@ The default settings let you create a VM like so:
 
 ```r
 ## create a VM
-> vm <- gce_vm_create(name = "test-vm")
+> vm <- gce_vm(name = "test-vm")
 
-## pause until operation is done
-> gce_check_zone_op(vml$name, wait = 20)
+## VM metadata
+> vm
+==Google Compute Engine Instance==
 
-## see VM created
-> gce_get_instance("test-vm")
-$kind
-[1] "compute#instance"
-
-$id
-[1] "7425434871478204241"
-
-$creationTimestamp
-[1] "2016-09-28T11:19:42.826-07:00"
-
-$name
-[1] "test-vm"
-
-..etc..
+Name:                test-vm
+Created:             2016-11-11 12:27:32
+Machine Type:        f1-micro
+Status:              RUNNING
+Zone:                europe-west1-b
+External IP:         104.199.72.152
+Disks: 
+             deviceName       type       mode boot autoDelete
+1 test-vm-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
 ```
 
-The defaults are:
+The defaults for a new VM are:
 
 * `predefined_type = "f1-micro"`
 * `image_project = "debian-cloud"`
 * `image_family = "debian-8"`
 * `network = "default"`
 
-### Custom settings
+## Templated Container based VMs
+
+There is support for RStudio, Shiny and OpenCPU docker images using the above to launch configurations.  The configurations are located in the [`/inst/cloudconfig`](https://github.com/MarkEdmondson1234/googleComputeEngineR/tree/master/inst/cloudconfig) package folder.
+
+To launch those, use the `gce_vm()` function and specify the argument `template`
+
+```r
+## for rstudio, you also need to specify a username and password to login
+> vm <- gce_vm(template = "rstudio",
+               name = "rstudio-server",
+               username = "mark", password = "mark1234")
+
+Checking job....
+Job running:  0 /100
+Job running:  0 /100
+Operation complete in 22 secs
+ External IP for instance rstudio  :  130.211.62.2 
+
+##  rstudio running at 130.211.62.2:8787 
+
+ You may need to wait a few minutes for the inital docker container to download and install before logging in.
+
+```
+
+You can then use `gce_vm_stop`, `gce_vm_start` etc. for your server.  You are only charged for when the VM is running, so you can stop it until you need it.
+
+### Container based VMs
+
+There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file.
+
+Here is the example from the [Google documentation](https://cloud.google.com/compute/docs/containers/vm-image/) - save this file locally:
+
+```yaml
+#cloud-config
+
+users:
+- name: cloudservice
+  uid: 2000
+
+write_files:
+- path: /etc/systemd/system/cloudservice.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=Start a simple docker container
+
+    [Service]
+    Environment="HOME=/home/cloudservice"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
+    ExecStop=/usr/bin/docker stop mycloudservice
+    ExecStopPost=/usr/bin/docker rm mycloudservice
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start cloudservice.service
+```
+
+If the above is saved as `example.yaml` you can then launch a VM using its configuration via the `gce_vm_container()` function:
+
+```r
+ vm <- gce_vm(cloud_init = "example.yml",
+              name = "test-container",
+              predefined_type = "f1-micro")
+
+```
+
+
+### Custom settings for VMs
 
 You can examine different options via the various list commands:
 
@@ -260,73 +324,6 @@ vm <- gce_vm_create(name = "test-vm2",
 
 This includes useful utilities such as `startup-script` and `shutdown-script` that you can use to run shell scripts.  In those cases the named list should include the script as its value.
 
-### Container based VMs
-
-There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file.
-
-Here is the example from the [Google documentation](https://cloud.google.com/compute/docs/containers/vm-image/) - save this file locally:
-
-```yaml
-#cloud-config
-
-users:
-- name: cloudservice
-  uid: 2000
-
-write_files:
-- path: /etc/systemd/system/cloudservice.service
-  permissions: 0644
-  owner: root
-  content: |
-    [Unit]
-    Description=Start a simple docker container
-
-    [Service]
-    Environment="HOME=/home/cloudservice"
-    ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
-    ExecStop=/usr/bin/docker stop mycloudservice
-    ExecStopPost=/usr/bin/docker rm mycloudservice
-
-runcmd:
-- systemctl daemon-reload
-- systemctl start cloudservice.service
-```
-
-If the above is saved as `example.yaml` you can then launch a VM using its configuration via the `gce_vm_container()` function:
-
-```r
- vm <- gce_vm_container(cloud_init = "example.yml",
-                        name = "test-container",
-                        predefined_type = "f1-micro")
-
-```
-
-### Templated Container based VMs
-
-There is support for RStudio, Shiny and OpenCPU docker images using the above to launch configurations.  The configurations are located in the [`/inst/cloudconfig`](https://github.com/MarkEdmondson1234/googleComputeEngineR/tree/master/inst/cloudconfig) package folder.
-
-To launch those, use the `gce_vm_template()` function:
-
-```r
-> vm <- gce_vm_template("rstudio",
-                        name = "rstudio-server",
-                        predefined_type = "f1-micro",
-                        username = "mark", password = "mark1234")
-
-Checking job....
-Job running:  0 /100
-Job running:  0 /100
-Operation complete in 22 secs
- External IP for instance rstudio  :  130.211.62.2 
-
-##  rstudio running at 130.211.62.2:8787 
-
- You may need to wait a few minutes for the inital docker container to download and install before logging in.
-
-```
-
-You can then use `gce_vm_stop`, `gce_vm_start` etc. for your server.  You are only charged for when the VM is running, so you can stop it until you need it.
 
 ## Logging in to your instance
 
@@ -350,15 +347,20 @@ Once you have generated for your username, the public and private key, you can c
 ```r
 library(googleComputeEngineR)
 
-gce_ssh_setup(username = "mark", 
-              instance = "your-instance", 
-              key.pub = "filepath.to.public.key",
-              key.private = "filepath.to.private.key")
-              
-gce_ssh("your-instance", "cd", user = "mark")
+vm <- gce_vm("my-instance")
+
+## add SSH info to the VM object
+vm <- gce_ssh_addkeys(username = "mark", 
+                      instance = "your-instance", 
+                      key.pub = "filepath.to.public.key",
+                      key.private = "filepath.to.private.key")
+  
+## run command on instance            
+gce_ssh(vm, "echo foo")
+# foo
 ```
 
-You can also call `gce_ssh` directly which will call `gce_ssh_setup` if it has not been run already.  It will look for a username via `Sys.getenv("GCE_SSH_USER")` or you will need to specify it in the first call you make.
+You can also call `gce_ssh` directly which will call `gce_ssh_addkeys` if it has not been run already.  It will look for a username via `Sys.info()[["user"]]` or you will need to specify it in the first call you make.
 
 ## Docker commands
 
@@ -377,16 +379,11 @@ library(googleComputeEngineR)
 library(harbor)
 
 # Create a virtual machine on Google Compute Engine
-job <-   gce_vm_create("demo", 
-                       image_project = "google-containers",
-                       image_family = "gci-stable",
-                       predefined_type = "f1-micro")
+ghost <-   gce_vm("demo", 
+                  image_project = "google-containers",
+                  image_family = "gci-stable",
+                  predefined_type = "f1-micro")
 
-## wait for the operation to complete
-gce_check_zone_op(job)
-
-## get the instance
-ghost <- gce_get_instance("demo")
 ghost
 #> ==Google Compute Engine Instance==
 #> 
@@ -447,7 +444,13 @@ library(googleComputeEngineR)
 library(harbor)
 
 ## make instance using R-base
-vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")
+vm <- gce_vm(template = "r-base", name = "rbase")
+
+## add SSH info to the VM object
+vm <- gce_ssh_addkeys(username = "mark", 
+                      instance = "your-instance", 
+                      key.pub = "filepath.to.public.key",
+                      key.private = "filepath.to.private.key")
 
 ## run an R function on the instance within the R-base docker image
 docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"), user = "mark")
@@ -514,21 +517,22 @@ Google Cloud comes with a [private container registry](https://cloud.google.com/
 
 You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.
 
-For this you need SSH access set up via `gce_ssh_setup` and the `harbor` package to manipulate the docker images:
+For this you need SSH access set up via `gce_ssh_addkeys` and the `harbor` package to manipulate the docker images:
 
 ```r
 library(googleComputeEngineR)
 library(harbor)
 
-vm <- gce_vm_template("rstudio", 
-                      name = "rstudio-dev", 
-                      username = "mark",  password = "mark1234", 
-                      predefined_type = "f1-micro")
+vm <- gce_vm(template = "rstudio", 
+             name = "rstudio-dev", 
+             username = "mark",  password = "mark1234")
 
 ># External IP:         104.199.19.222
 ```
 
-Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  This can take some time (5mins +) if its a new container. You should be able to see the image in the web UI when it is done at `https://console.cloud.google.com/kubernetes/images/list`.
+Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  
+
+This can take some time (5mins +) if its a new container. You should be able to see the image in the web UI when it is done at `https://console.cloud.google.com/kubernetes/images/list`.
  
 ```r
 gce_save_container(vm, "my-rstudio")
@@ -575,4 +579,6 @@ print(si)
 lapply(vms, FUN = gce_vm_stop)
 ```
 
-The package includes the function `gce_future_install_packages` which will load libraries onto your cluster and commit the r-base docker container they are running on.  You can then save these containers to the Google Container registry as detailed via `gce_save_container`, for loading and use later for your asynchronous projects.
+The package includes the function `gce_future_install_packages` which will load libraries onto your cluster and commit the r-base docker container they are running on.  
+
+You can then save these containers to the Google Container registry as detailed via `gce_save_container`, for loading and use later for your asynchronous projects.

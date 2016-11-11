@@ -5,7 +5,7 @@
 #' 
 #' @return logs
 #' @export
-gce_check_docker <- function(instance, container){
+gce_check_container <- function(instance, container){
   
   gce_ssh(instance, paste0("sudo journalctl -u ", container))
   
