@@ -16,7 +16,7 @@ test_that("We can install a package via futures", {
                         key.pub = "travis-ssh-key.pub",
                         key.private = "travis-ssh-key")
   ## install packages
-  worked <- gce_install_packages_docker(vm, "rocker/r-base", cran_packages = "corpcor")
+  worked <- gce_future_install_packages(vm, "rocker/r-base", cran_packages = "corpcor")
   expect_true(worked)
   
 
