@@ -4,7 +4,7 @@ test_that("We can make a container VM",{
   
   ins <- gce_vm("test-container",
                 file = system.file("cloudconfig", 
-                                   "rstudio.yaml", 
+                                   "shiny.yaml", 
                                    package = "googleComputeEngineR"),
                 predefined_type = "f1-micro",
                 auth_email = "TRAVIS_GCE_AUTH_FILE")

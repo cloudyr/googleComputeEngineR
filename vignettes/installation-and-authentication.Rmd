@@ -1,0 +1,100 @@
+---
+title: "Installation and Authentication of googleComputeEngineR"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Installation and Authentication of googleComputeEngineR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
+
+## Setup
+
+Google Compute Engine lets you create and run virtual machines on Google infrastructure.  See the [documentation here](https://cloud.google.com/compute/docs/).
+
+Before you begin, you will need to set up a Cloud Platform project, and enable billing by adding a credit card.  
+
+A quickstart guide is [available here](https://cloud.google.com/compute/docs/quickstart-linux) for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.
+
+Pricing is [available here](https://cloud.google.com/compute/pricing).
+
+For `googleComputeEngineR` you will need:
+
+* Your project ID e.g. `my-project-name`
+* Your preferred geographical zone to launch VMs e.g. `europe-west1-a`
+* [Optional] A `Service account key` json file, downloaded from the API Manager > Credentials > Create credentials > Service account key > Key type = JSON
+* [Optional] If not using service account key, you will need the `client-id` and `client-secret` for your project.
+
+> The recommended method to authenticate is using the JSON service account key via auto-authentication.
+
+## Authentication
+
+### OAuth2
+
+Authentication can be carried out via OAuth2 each session via `gce_auth()`.  The first time you run this you will be sent to a Google login prompt in your browser to allow the `googleAuthR` project access (or preferably the Google project you configure via client ID). 
+
+Once authenticated a file named `.httr-oauth` is saved to your working directory.  On subsequent authentication this file will hold your authentication details, and you won't need to go via the browser.  Deleting this file, or setting `new_user=TRUE` will start the authentication flow again.
+
+```r
+## set your project ID and secret if not using service account JSON
+options(googleAuthR.client_id = YOUR_CLIENT_ID)
+options(googleAuthR.client_secret = YOUR_CLIENT_SECRET)
+
+library(googleComputeEngineR)
+## first time this will send you to the browser to authenticate
+gce_auth()
+
+## to authenticate with a fresh user, delete .httr-oauth or run with new_user=TRUE
+gce_auth(new_user = TRUE)
+
+...call functions...etc...
+
+```
+
+Each new R session will need to run `gce_auth()` to authenticate future API calls.
+
+### Auto-authentication
+
+Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created `.httr-oauth` token in a system environment:
+
+        Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")
+
+You can set default projects, zone and authentication via an `.Renviron` file or `Sys.setenv()`.
+
+Example entries:
+
+```
+GCE_AUTH_FILE="/Users/mark/xxxxx/auth.json"
+GCE_DEFAULT_PROJECT="mark-xxxxxxx"
+GCE_DEFAULT_ZONE="europe-west1-a"
+GCE_SSH_USER="mark"
+```
+
+This file will then used for authentication via `gce_auth()` when you load the library:
+
+```r
+## GCE_AUTH_FILE set so auto-authentication
+> library(googleComputeEngineR)
+Successfully authenticated via /Users/mark/auth.json
+Set default project name to 'mark-xxxxx'
+Set default zone to 'europe-west1-a'
+
+## no need for gce_auth()
+> gce_get_project()
+$kind
+[1] "compute#project"
+
+$id
+[1] "43534234234324324"
+
+$creationTimestamp
+[1] "2015-05-08T15:22:38.416-07:00"
+
+$name
+[1] "mark-xxxxx"
+
+...etc.... 
+```

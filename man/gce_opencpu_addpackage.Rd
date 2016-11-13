@@ -4,7 +4,8 @@
 \alias{gce_opencpu_addpackage}
 \title{Add a package to a running OpenCPU instance}
 \usage{
-gce_opencpu_addpackage(instance, cran_packages, github_packages)
+gce_opencpu_addpackage(instance, cran_packages = NULL,
+  github_packages = NULL, auth_token = NULL)
 }
 \arguments{
 \item{instance}{The instance running Shiny}
@@ -12,6 +13,8 @@ gce_opencpu_addpackage(instance, cran_packages, github_packages)
 \item{cran_packages}{A character vector of CRAN packages to be installed}
 
 \item{github_packages}{A character vector of devtools packages to be installed}
+
+\item{auth_token}{A github PAT token, if needed for private Github packages}
 }
 \value{
 The instance

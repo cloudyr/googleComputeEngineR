@@ -1,0 +1,220 @@
+---
+title: "Creating Virtual Machines (VM) in googleComputeEngineR"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating Virtual Machines (VM) in googleComputeEngineR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
+
+## Launch a Virtual Machine
+
+To launch a VM, use `gce_vm()`. This will:
+
+* Return the instance metadata if it is already running
+* Start the instance and return its metadata if its currently stopped.
+* Create a VM if you include configurations detailed below.
+
+
+### Start an existing VM
+
+```r
+library(googleComputeEngineR)
+
+## auto auth, project and zone pre-set
+
+## list your VMs in the project/zone
+the_list <- gce_list_instances()
+
+## start an existing instance
+job <- gce_vm("markdev")
+
+``` 
+
+### Reset and Stop VM
+
+```
+## reset instance
+job <- gce_vm_reset("markdev")
+  
+## check job until its finished
+gce_check_zone_op(job$name, wait = 20)
+  
+## stop VM
+job <- gce_vm_stop("markdev")
+  
+## check job until finished
+gce_check_zone_op(job$name, wait = 20)
+  
+inst <- gce_get_instance("markdev")
+inst$status
+# "TERMINATED"  
+```
+
+### External IP
+
+You can view the external IP for an instance via `gce_get_external_ip()`
+
+```r
+> ip <- gce_get_external_ip("xxxxx")
+ External IP for instance xxxxxx  :  146.1xx.24.xx 
+```
+
+## Creating an instance
+
+To create an instance from scratch you need to specify:
+
+* Name
+* Project [if not default]
+* Zone [if not default]
+* Machine type - either a predefined type or custom CPU and memory
+* Network - usually default, specifies open ports etc.
+* Image - a source disk image containing the operating system, that may come from another image project or a snapshot
+
+### Default settings
+
+The default settings let you create a VM like so:
+
+```r
+## create a VM
+> vm <- gce_vm(name = "test-vm")
+
+## VM metadata
+> vm
+==Google Compute Engine Instance==
+
+Name:                test-vm
+Created:             2016-11-11 12:27:32
+Machine Type:        f1-micro
+Status:              RUNNING
+Zone:                europe-west1-b
+External IP:         104.199.72.152
+Disks: 
+             deviceName       type       mode boot autoDelete
+1 test-vm-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+```
+
+The defaults for a new VM are:
+
+* `predefined_type = "f1-micro"`
+* `image_project = "debian-cloud"`
+* `image_family = "debian-8"`
+* `network = "default"`
+
+## Templated Container based VMs
+
+There is support for RStudio, Shiny and OpenCPU docker images using the above to launch configurations.  The configurations are located in the [`/inst/cloudconfig`](https://github.com/MarkEdmondson1234/googleComputeEngineR/tree/master/inst/cloudconfig) package folder.
+
+To launch those, use the `gce_vm()` function and specify the argument `template`
+
+```r
+## for rstudio, you also need to specify a username and password to login
+> vm <- gce_vm(template = "rstudio",
+               name = "rstudio-server",
+               username = "mark", password = "mark1234")
+
+Checking job....
+Job running:  0 /100
+Job running:  0 /100
+Operation complete in 22 secs
+ External IP for instance rstudio  :  130.211.62.2 
+
+##  rstudio running at 130.211.62.2:8787 
+
+ You may need to wait a few minutes for the inital docker container to download and install before logging in.
+
+```
+
+You can then use `gce_vm_stop`, `gce_vm_start` etc. for your server.  You are only charged for when the VM is running, so you can stop it until you need it.
+
+### Container based VMs
+
+There is also support for launching VMs from a docker container, as configured via a [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/format.html) configuration file.
+
+Here is the example from the [Google documentation](https://cloud.google.com/compute/docs/containers/vm-image/) - save this file locally:
+
+```
+#cloud-config
+
+users:
+- name: cloudservice
+  uid: 2000
+
+write_files:
+- path: /etc/systemd/system/cloudservice.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=Start a simple docker container
+
+    [Service]
+    Environment="HOME=/home/cloudservice"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run --rm -u 2000 --name=mycloudservice gcr.io/google-containers/busybox:latest /bin/sleep 3600
+    ExecStop=/usr/bin/docker stop mycloudservice
+    ExecStopPost=/usr/bin/docker rm mycloudservice
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start cloudservice.service
+```
+
+If the above is saved as `example.yaml` you can then launch a VM using its configuration via the `gce_vm_container()` function:
+
+```r
+ vm <- gce_vm(cloud_init = "example.yml",
+              name = "test-container",
+              predefined_type = "f1-micro")
+
+```
+
+
+### Custom settings for VMs
+
+You can examine different options via the various list commands:
+
+#### Machine type
+
+A list of the predefined machine types:
+```r
+gce_list_machinetype()
+```
+
+#### Images
+
+A list of the image projects and families available is here: `https://cloud.google.com/compute/docs/images`
+```r
+gce_list_images(image_project = "debian-cloud")
+```
+
+#### Network
+
+Most of the time you will want to leave network to the default, at present you can only configure this in the UI.
+
+#### Disks
+
+You can also create another disk to attach to the VM via:
+
+```r
+gce_make_disk("my-disk")
+```
+
+By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the `disk_source` argument set to the disk resource URL.
+
+#### Metadata
+
+You can add custom metadata by passing a named list to the instance.  More details from Google documentation is here `https://cloud.google.com/compute/docs/storing-retrieving-metadata`
+
+```r
+vm <- gce_vm_create(name = "test-vm2", 
+                      predefined_type = "f1-micro",
+                      metadata = list(start_date = as.character(Sys.Date())))
+```
+
+This includes useful utilities such as `startup-script` and `shutdown-script` that you can use to run shell scripts.  In those cases the named list should include the script as its value.
+

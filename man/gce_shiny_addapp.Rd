@@ -4,7 +4,7 @@
 \alias{gce_shiny_addapp}
 \title{Add Shiny app to a Shiny template instance}
 \usage{
-gce_shiny_addapp(instance, shinyapp, ...)
+gce_shiny_addapp(instance, shinyapp = ".", ...)
 }
 \arguments{
 \item{instance}{The instance running Shiny}

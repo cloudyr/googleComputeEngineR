@@ -39,7 +39,7 @@ test_that("Save docker containers", {
   
   ## saves the running my-rstudio image that is named rstudio
   ## commits and saves it to container registry as travis-test-container
-  cons <- harbor::containers(vm)
+  cons <- containers(vm)
   worked <- gce_save_container(vm,
                                container_name = "travis-test-container",
                                image_name = cons[[1]]$name,

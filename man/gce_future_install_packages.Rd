@@ -23,7 +23,7 @@ TRUE if successful
 Install R packages onto an instance's stopped docker image
 }
 \details{
-See the images on the instance via \code{harbor::docker_cmd(instance, "images")}
+See the images on the instance via \code{docker_cmd(instance, "images")}
 
 If using devtools github, will look for an auth token via \code{devtools::github_pat()}.  
   This is an environment variable called \code{GITHUB_PAT} 

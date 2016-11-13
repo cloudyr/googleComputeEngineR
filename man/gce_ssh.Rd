@@ -74,9 +74,6 @@ everything inside the directory will also be downloaded.
 }
 
 }
-\author{
-Scott Chamberlin \email{myrmecocystus@gmail.com}
-}
 \seealso{
 \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
 

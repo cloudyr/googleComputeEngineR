@@ -1,0 +1,249 @@
+---
+title: "SSH, Docker, Container Registry and Futures in GoogleComputeEngineR"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SSH, Docker, Container Registry and Futures in GoogleComputeEngineR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
+
+## Logging in to your instance
+
+Google Cloud comes with a browser based SSH application, which you can launch via `gce_ssh_browser` to set it up further to your liking.
+
+```r
+library(googleComputeEngineR)
+gce_ssh_browser("my-server")
+```
+
+![](http://g.recordit.co/TpM4IfRLgf.gif)
+
+## SSH commands
+
+You can also send ssh commands to your running instance from R via the `gce_ssh()` commands.
+
+For this you will need to either connect first via the `gcloud compute ssh` command that generates SSH-keys, or generate them yourself following this [Google guide](https://cloud.google.com/compute/docs/instances/connecting-to-instance).
+
+Once you have generated for your username, the public and private key, you can connect via:
+
+```r
+library(googleComputeEngineR)
+
+vm <- gce_vm("my-instance")
+
+## add SSH info to the VM object
+vm <- gce_ssh_addkeys(username = "mark", 
+                      instance = "your-instance", 
+                      key.pub = "filepath.to.public.key",
+                      key.private = "filepath.to.private.key")
+  
+## run command on instance            
+gce_ssh(vm, "echo foo")
+# foo
+```
+
+You can also call `gce_ssh` directly which will call `gce_ssh_addkeys` if it has not been run already.  It will look for a username via `Sys.info()[["user"]]` or you will need to specify it in the first call you make.
+
+## Docker commands
+
+For docker containers, the `docker_cmd` functions run the shell commands within a docker container.  These commands are derived from [`harbor`](https://github.com/wch/harbor), which you may want to use for its other features.  With harbor, you can also develop your docker container locally first using BootToDocker or similar before pushing it up.
+
+A demo using speaking to a docker container is below:
+
+```R
+library(googleComputeEngineR)
+
+# Create a virtual machine on Google Compute Engine
+ghost <-   gce_vm("demo", 
+                  image_project = "google-containers",
+                  image_family = "gci-stable",
+                  predefined_type = "f1-micro")
+
+ghost
+#> ==Google Compute Engine Instance==
+#> 
+#> Name:                demo
+#> Created:             2016-10-06 04:41:56
+#> Machine Type:        f1-micro
+#> Status:              RUNNING
+#> Zone:                europe-west1-b
+#> External IP:         104.155.0.147
+#> Disks: 
+#>       deviceName       type       mode boot autoDelete
+#> 1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+
+
+# Create and run a container in the virtual machine.
+# 'user' is the one you used to create the SSH keys
+
+# This might take a while.
+con <- docker_run(ghost, "debian", "echo foo", user = "mark")
+#> Warning: Permanently added '104.155.0.147' (RSA) to the list of known hosts.
+#> Unable to find image 'debian:latest' locally
+#> latest: Pulling from library/debian
+#> 6a5a5368e0c2: Pulling fs layer
+#> 6a5a5368e0c2: Verifying Checksum
+#> 6a5a5368e0c2: Download complete
+#> 6a5a5368e0c2: Pull complete
+#> Digest: sha256:677f184a5969847c0ad91d30cf1f0b925cd321e6c66e3ed5fbf9858f58425d1a
+#> Status: Downloaded newer image for debian:latest
+#> foo
+
+con
+#> <container>
+#>   ID:       92f96d32d081 
+#>   Name:     harbor_6rdevp 
+#>   Image:    debian 
+#>   Command:  echo foo 
+#>   Host:     ==Google Compute Engine Instance==
+#>   
+#>   Name:                demo
+#>   Created:             2016-10-06 04:41:56
+#>   Machine Type:        f1-micro
+#>   Status:              RUNNING
+#>   Zone:                europe-west1-b
+#>  External IP:         104.155.0.147
+#>   Disks: 
+#>         deviceName       type       mode boot autoDelete
+#>   1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+  
+  
+# Destroy the virtual machine from Google Compute Engine
+gce_vm_delete(ghost)
+```
+
+To run R commands within a docker image in the cloud:
+
+```r
+library(googleComputeEngineR)
+
+## make instance using R-base
+vm <- gce_vm(template = "r-base", name = "rbase")
+
+## add SSH info to the VM object
+vm <- gce_ssh_addkeys(username = "mark", 
+                      instance = "your-instance", 
+                      key.pub = "filepath.to.public.key",
+                      key.private = "filepath.to.private.key")
+
+## run an R function on the instance within the R-base docker image
+docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"))
+#> [1] 2
+
+gce_vm_delete(vm)
+#> ==Operation delete :  PENDING
+#> Started:  2016-10-07 02:37:14
+
+gce_check_zone_op(.Last.value)
+#> Operation complete in 33 secs 
+#> ==Operation delete :  DONE
+#> Started:  2016-10-07 02:37:14
+#> Ended: 2016-10-07 02:37:47 
+#> Operation complete in 33 secs 
+```
+
+Using `harbor` you can see other metadata about your container from your local R:
+
+```r
+library(googleComputeEngineR)
+library(harbor)
+
+vm <- gce_vm(template = "rstudio", 
+             username = "mark", 
+             password = "mark1234", 
+             predefined_type = "f1-micro")
+                                         
+## get running rstudio container
+cont <- containers(vm)
+names(cont)
+"rstudio"
+
+## see if its running
+container_running(con$rstudio)
+[1] TRUE
+
+## get logs from container
+container_logs(con$rstudio)
+
+## get metadata
+container_update_info(con$rstudio)
+<container>
+  ID:       05c5437ac968 
+  Name:     rstudio 
+  Image:    rocker/rstudio 
+  Command:  /init 
+  Host:     ==Google Compute Engine Instance==
+  
+  Name:                rstudio-dev
+  Created:             2016-10-07 03:30:24
+  Machine Type:        f1-micro
+  Status:              RUNNING
+  Zone:                europe-west1-b
+  External IP:         104.199.19.222
+  Disks: 
+               deviceName       type       mode boot autoDelete
+  1 rstudio-dev-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+```
+
+## Using private Google Containers
+
+Google Cloud comes with a [private container registry](https://cloud.google.com/container-registry/) that is available to all VMs created in the that project, where you can store docker containers.
+
+You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.
+
+Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save  it to the local registry under the name you specify.  
+
+This can take some time (5mins +) if its a new container. You should be able to see the image in the web UI when it is done at `https://console.cloud.google.com/kubernetes/images/list`.
+ 
+```r
+gce_save_container(vm, "my-rstudio")
+```
+
+The container `my-rstudio` with your changes is now saved, and can be used to launch new containers.
+
+To load onto another VM, use a Google container optimised instance with `image_project = "google-containers"`:
+
+```r
+vm2 <-  gce_vm(name = "new_instance",
+               predefined_type = "f1-micro",
+               image_family = "gci-stable",
+               image_project = "google-containers")
+
+## load and run the container from previous setup
+gce_load_container(vm2, "my-rstudio")
+
+```
+
+## Futures
+
+You can run R functions asynchronously over a cluster of Google VMs using the R package [`future`](https://cran.r-project.org/web/packages/future/index.html).
+
+Consult the [future readme](https://github.com/HenrikBengtsson/future) for further details, but a quick demo is shown below:
+
+```r
+library(future)
+library(googleComputeEngineR)
+
+vm1 <- gce_vm("cluster1", template = "r-base")
+vm2 <- gce_vm("cluster2", template = "r-base")
+vm3 <- gce_vm("cluster2", template = "r-base")
+
+vms <- list(vm1, vm2, vm3)
+cl <- lapply(vms, FUN = as.cluster)
+plan(cluster, workers = cl)
+
+## use futures %<-% to send a function to the cluster
+si %<-% Sys.info()
+print(si)
+
+## tidy up
+lapply(vms, FUN = gce_vm_stop)
+```
+
+The package includes the function `gce_future_install_packages` which will load libraries onto your cluster and commit the r-base docker container they are running on.  
+
+You can then save these containers to the Google Container registry as detailed via `gce_save_container`, for loading and use later for your asynchronous projects.

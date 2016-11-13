@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -49,15 +49,35 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/installation-and-authentication.html">Setup</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../articles/creating-vms.html">Creating VMs</a>
+</li>
+<li>
+  <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Help
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../reference/index.html">Reference</a>
+    </li>
+    <li>
+      <a href="../news/index.html">News</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://cloud.google.com/compute/">Google Compute Engine</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -77,7 +97,7 @@
     
 
     <pre><span class='co'># S3 method for gce_instance</span>
-<span class='fu'>docker_cmd</span>(<span class='no'>host</span>, <span class='kw'>cmd</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'><a href='docker_cmd.html'>docker_cmd</a></span>(<span class='no'>host</span>, <span class='kw'>cmd</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>docker_opts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>

@@ -5,20 +5,19 @@
 #' @param instance The instance running Shiny
 #' @param cran_packages A character vector of CRAN packages to be installed
 #' @param github_packages A character vector of devtools packages to be installed
+#' @param auth_token A github PAT token, if needed for private Github packages
 #' 
 #' @return The instance
 #' @export
-gce_opencpu_addpackage <- function(instance, cran_packages, github_packages){
+gce_opencpu_addpackage <- function(instance, 
+                                   cran_packages = NULL, 
+                                   github_packages = NULL, 
+                                   auth_token = NULL){
   
-  ## stop docker container?
-  
-  gce_install_packages_docker(instance,
-                              docker_image = "opencpu",
-                              cran_packages = cran_packages,
-                              github_packages = github_packages)
-  
-  ## add individual functions to a custom package?
-  
-  ## just use github?
+  gce_container_addpackage(instance = instance, 
+                           container = "opencpu",
+                           cran_packages = cran_packages,
+                           github_packages = github_packages,
+                           auth_token = auth_token)
   
 }

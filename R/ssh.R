@@ -57,7 +57,6 @@ gce_ssh_browser <- function(instance,
 #' @param wait Whether then SSH output should be waited for or run it asynchronously.
 #' @param capture_text whether to return the output of the SSH command into an R text
 #' 
-#' @author Scott Chamberlin \email{myrmecocystus@@gmail.com}
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
 #' @return If capture_text is TRUE, the text of the SSH command result.
 #' 

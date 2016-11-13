@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -49,15 +49,35 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/installation-and-authentication.html">Setup</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../articles/creating-vms.html">Creating VMs</a>
+</li>
+<li>
+  <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Help
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../reference/index.html">Reference</a>
+    </li>
+    <li>
+      <a href="../news/index.html">News</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://cloud.google.com/compute/">Google Compute Engine</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -76,7 +96,8 @@
     <p>Add a package to an OpenCPU VM installed via <a href='gce_vm_template.html'>gce_vm_template</a></p>
     
 
-    <pre><span class='fu'>gce_opencpu_addpackage</span>(<span class='no'>instance</span>, <span class='no'>cran_packages</span>, <span class='no'>github_packages</span>)</pre>
+    <pre><span class='fu'>gce_opencpu_addpackage</span>(<span class='no'>instance</span>, <span class='kw'>cran_packages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>github_packages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auth_token</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -86,6 +107,8 @@
       <dd>A character vector of CRAN packages to be installed</dd>
       <dt>github_packages</dt>
       <dd>A character vector of devtools packages to be installed</dd>
+      <dt>auth_token</dt>
+      <dd>A github PAT token, if needed for private Github packages</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

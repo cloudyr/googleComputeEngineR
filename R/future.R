@@ -1,5 +1,6 @@
 # from https://github.com/HenrikBengtsson/future/issues/101#issuecomment-253725603
 #' @importFrom future makeClusterPSOCK
+#' @author Henrik Bengtsson \email{henrikb@@braju.com}
 makeDockerClusterPSOCK <- function(workers, 
                                    docker_image = "rocker/r-base", 
                                    rscript = c("docker", "run", "--net=host", docker_image, "Rscript"), 
@@ -72,7 +73,7 @@ as.cluster.gce_instance <- function(x,
 #' 
 #' @details 
 #' 
-#' See the images on the instance via \code{harbor::docker_cmd(instance, "images")}
+#' See the images on the instance via \code{docker_cmd(instance, "images")}
 #' 
 #' If using devtools github, will look for an auth token via \code{devtools::github_pat()}.  
 #'   This is an environment variable called \code{GITHUB_PAT} 
@@ -117,7 +118,7 @@ gce_future_install_packages <- function(instance,
     devt
   }
   
-  harbor::docker_cmd(instance, 
+  docker_cmd(instance, 
                      cmd = "commit", 
                      args = c("-a 'googleComputeEngineR'" ,
                               paste("-m 'Installed packages:", 
@@ -128,7 +129,7 @@ gce_future_install_packages <- function(instance,
                               docker_image))
   
   ## stop the container
-  harbor::docker_cmd(instance, "stop", temp_name)
+  docker_cmd(instance, "stop", temp_name)
   
   TRUE
   

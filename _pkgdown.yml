@@ -1,4 +1,31 @@
 title: googleComputeEngineR
+navbar:
+  title: "googleComputeEngineR"
+  type: inverse
+  left:
+    - text: "Setup"
+      href: articles/installation-and-authentication.html
+    - text: "Creating VMs"
+      href: articles/creating-vms.html
+    - text: "SSH & Docker"
+      href: articles/docker-ssh-futures.html
+    - text: "Help"
+      menu:
+      - text: "Reference"
+        href: reference/index.html
+      - text: "News"
+        href: news/index.html
+  right:
+    - text: "Google Compute Engine"
+      href: https://cloud.google.com/compute/
+articles:
+  - title: "How-To Guides"
+    desc: >
+      Articles on how to work with googleComputeEngine features are below.
+    contents: 
+      - installation-and-authentication
+      - creating-vms
+      - docker-ssh-futures
 reference:
   - title: "Authentication"
     contents:
@@ -7,6 +34,7 @@ reference:
     desc: >
       Functions for creating a new instance from various presets and options
     contents:
+      - gce_vm
       - gce_vm_create
       - gce_vm_container
       - gce_vm_template
@@ -14,7 +42,6 @@ reference:
     desc: >
       Working with already created VM instances
     contents:
-      - gce_vm
       - gce_vm_start
       - gce_vm_stop
       - gce_vm_reset

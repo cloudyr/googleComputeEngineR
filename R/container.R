@@ -1,3 +1,59 @@
+#' Install debain dependency libraries via apt-get in a container
+#' 
+#' @param instance The instance to install dependencies within
+#' @param container The container to run \code{apt-get} within
+#' @param call The dependency to install
+#' 
+#' @return The instance
+#' @export
+gce_container_aptget <- function(instance, container, call){
+  
+  docker_cmd(instance, "exec", c(container, "sudo apt-get update"))
+  
+  docker_cmd(instance, "exec", c(container, sprintf("sudo apt-get install %s --assume-yes", call)))
+  
+  instance
+}
+
+
+
+#' Install a package to a running docker container on an instance
+#' 
+#' Add a package to an OpenCPU VM installed via \link{gce_vm_template}
+#' 
+#' @param instance The instance running the container
+#' @param container The name of the running container
+#' @param cran_packages A character vector of CRAN packages to be installed
+#' @param github_packages A character vector of devtools packages to be installed
+#' @param auth_token A github PAT token, if needed for private Github packages
+#' 
+#' @return The instance
+#' @export
+gce_container_addpackage <- function(instance, 
+                                     container,
+                                     cran_packages = NULL, 
+                                     github_packages = NULL, 
+                                     auth_token = NULL){
+  
+  if(all(!is.null(cran_packages), !is.null(github_packages))){
+    stop("Install CRAN and github packages in seperate calls", call. = FALSE)
+  }
+  
+  if(!is.null(cran_packages)){
+    install_script <- sprintf("R -e \"install.packages('%s', repos='http://cran.rstudio.com/')\"", 
+                              cran_packages)
+  }
+  
+  if(!is.null(github_packages)){
+    install_script <- sprintf("R -e \"devtools::install_github('%s', %s)\"", github_packages, auth_token)
+  }
+  
+  docker_cmd(instance, "exec", c(container, install_script))
+  
+  instance
+  
+}
+
 #' Check the docker logs of a container
 #' 
 #' @param instance The instance running docker
@@ -6,6 +62,9 @@
 #' @return logs
 #' @export
 gce_check_container <- function(instance, container){
+  if(!check_ssh_set(instance)){
+    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  }
   
   gce_ssh(instance, paste0("sudo journalctl -u ", container))
   
@@ -211,16 +270,20 @@ gce_save_container <- function(instance,
                                project = gce_get_global_project(), 
                                wait = FALSE){
   
+  if(!check_ssh_set(instance)){
+    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  }
+  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
   ## commits the current version of running docker container image_name and renames it 
   ## so it can be registered to Google Container Registry
-  harbor::docker_cmd(instance, cmd = "commit", args = c(image_name, build_tag))
+  docker_cmd(instance, cmd = "commit", args = c(image_name, build_tag))
   
   ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
-  harbor::docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
+  docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
   
   TRUE
   
@@ -252,15 +315,19 @@ gce_load_container <- function(instance,
                                project = gce_get_global_project(),
                                ...){
   
+  if(!check_ssh_set(instance)){
+    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  }
+  
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
   if(pull_only){
-    harbor::docker_pull(instance, image = build_tag, ...)
+    docker_pull(instance, image = build_tag, ...)
   } else {
     ## this needs to specify ports etc. 
-    harbor::docker_run(instance, image = build_tag, detach = TRUE, ...)
+    docker_run(instance, image = build_tag, detach = TRUE, ...)
   }
 
   

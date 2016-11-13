@@ -36,7 +36,7 @@
   <body>
     <div class="container template-reference-index">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -49,15 +49,35 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/installation-and-authentication.html">Setup</a>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../articles/creating-vms.html">Creating VMs</a>
+</li>
+<li>
+  <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Help
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../reference/index.html">Reference</a>
+    </li>
+    <li>
+      <a href="../news/index.html">News</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://cloud.google.com/compute/">Google Compute Engine</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -100,6 +120,11 @@
       <ul>
         <li><code><a href="gce_vm_template.html">gce_vm_template</a></code></li>
       </ul>
+      
+      <p><a href="gce_vm.html">Create or fetch a virtual machine</a></p>
+      <ul>
+        <li><code><a href="gce_vm.html">gce_vm</a></code></li>
+      </ul>
           <h2 id="section-working-with-vm-instances" class="hasAnchor"><a href="#section-working-with-vm-instances" class="anchor"></a>Working with VM instances</h2>
       <p class="section-desc"><p>Working with already created VM instances</p></p>
 
@@ -128,18 +153,53 @@
       <ul>
         <li><code><a href="gce_vm_stop.html">gce_vm_stop</a></code></li>
       </ul>
-      
-      <p><a href="gce_vm.html">Create or fetch a virtual machine</a></p>
-      <ul>
-        <li><code><a href="gce_vm.html">gce_vm</a></code></li>
-      </ul>
           <h2 id="section-docker-images-and-containers" class="hasAnchor"><a href="#section-docker-images-and-containers" class="anchor"></a>Docker images and containers</h2>
       <p class="section-desc"></p>
 
       
+      <p><a href="as.container.html">Coerce an object into a container object.</a></p>
+      <ul>
+        <li><code><a href="as.container.html">as.container</a></code></li>
+      </ul>
+      
+      <p><a href="container_logs.html">Retrieve logs for a container.</a></p>
+      <ul>
+        <li><code><a href="container_logs.html">container_logs</a></code></li>
+      </ul>
+      
+      <p><a href="container_rm.html">Delete a container.</a></p>
+      <ul>
+        <li><code><a href="container_rm.html">container_rm</a></code></li>
+      </ul>
+      
+      <p><a href="container_running.html">Report whether a container is currently running.</a></p>
+      <ul>
+        <li><code><a href="container_running.html">container_running</a></code></li>
+      </ul>
+      
+      <p><a href="container_update_info.html">Update the information about a container.</a></p>
+      <ul>
+        <li><code><a href="container_update_info.html">container_update_info</a></code></li>
+      </ul>
+      
+      <p><a href="containers.html">Get list of all containers on a host.</a></p>
+      <ul>
+        <li><code><a href="containers.html">containers</a></code></li>
+      </ul>
+      
       <p><a href="gce_check_container.html">Check the docker logs of a container</a></p>
       <ul>
         <li><code><a href="gce_check_container.html">gce_check_container</a></code></li>
+      </ul>
+      
+      <p><a href="gce_container_addpackage.html">Install a package to a running docker container on an instance</a></p>
+      <ul>
+        <li><code><a href="gce_container_addpackage.html">gce_container_addpackage</a></code></li>
+      </ul>
+      
+      <p><a href="gce_container_aptget.html">Install debain dependency libraries via apt-get in a container</a></p>
+      <ul>
+        <li><code><a href="gce_container_aptget.html">gce_container_aptget</a></code></li>
       </ul>
       
       <p><a href="gce_load_container.html">Load a previously saved private Google Container</a></p>
@@ -183,6 +243,21 @@
       <p><a href="gce_shiny_addapp.html">Add Shiny app to a Shiny template instance</a></p>
       <ul>
         <li><code><a href="gce_shiny_addapp.html">gce_shiny_addapp</a></code></li>
+      </ul>
+      
+      <p><a href="gce_shiny_addpackage.html">Add a package to a running Shiny instance</a></p>
+      <ul>
+        <li><code><a href="gce_shiny_addpackage.html">gce_shiny_addpackage</a></code></li>
+      </ul>
+      
+      <p><a href="gce_shiny_listapps.html">List shiny apps on the instance</a></p>
+      <ul>
+        <li><code><a href="gce_shiny_listapps.html">gce_shiny_listapps</a></code></li>
+      </ul>
+      
+      <p><a href="gce_shiny_logs.html">Get the latest shiny logs for a shinyapp</a></p>
+      <ul>
+        <li><code><a href="gce_shiny_logs.html">gce_shiny_logs</a></code></li>
       </ul>
           <h2 id="section-projects" class="hasAnchor"><a href="#section-projects" class="anchor"></a>Projects</h2>
       <p class="section-desc"></p>

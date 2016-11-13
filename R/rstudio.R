@@ -18,12 +18,12 @@ gce_rstudio_adduser <- function(instance, user, password,
                     user,
                    " --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password")
   
-  harbor::docker_cmd(instance,
+  docker_cmd(instance,
                      cmd = "exec",
                      args = c(container, ssh_au),
                      docker_opts = "")
   
-  harbor::docker_cmd(instance,
+  docker_cmd(instance,
                      "exec",
                      args = c(container, "ls /home/"))
   
@@ -61,7 +61,7 @@ gce_rstudio_password <- function(instance, user, password,
   
   ssh_ap <- paste0("sh -c 'echo ",user,":",password," | sudo chpasswd'")
   
-  harbor::docker_cmd(instance,
+  docker_cmd(instance,
                      cmd = "exec",
                      args = c(container, ssh_ap),
                      docker_opts = "")

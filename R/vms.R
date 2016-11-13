@@ -28,6 +28,11 @@ gce_vm <- function(name,
                    project = gce_get_global_project(), 
                    zone = gce_get_global_zone() ) {
   
+  if(inherits(name, "gce_instance")){
+    myMessage("Refreshing instance data", level = 3)
+    name <- name$name
+  }
+  
   stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)
   
   if(name %in% stopped$items$name){
