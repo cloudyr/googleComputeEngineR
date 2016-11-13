@@ -82,10 +82,8 @@ as.cluster.gce_instance <- function(x,
 #'    the container to an image of the same name via \code{docker commit -m "installed packages via gceR"}
 #' 
 #' @return TRUE if successful
-#' @import harbor
 #' @import future
 #' @importFrom utils install.packages
-#' @importFrom devtools install_github
 #' @export
 gce_future_install_packages <- function(instance,
                                         docker_image,
@@ -100,9 +98,9 @@ gce_future_install_packages <- function(instance,
   
   ## set up future cluster
   temp_name <- paste0("gceR-install-",idempotency())
-  clus <- as.cluster(instance, 
-                     docker_image = docker_image,
-                     rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
+  clus <- future::as.cluster(instance, 
+                             docker_image = docker_image,
+                             rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
   
   future::plan(future::cluster, workers = clus)
   

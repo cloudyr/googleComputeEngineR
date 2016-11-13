@@ -44,7 +44,6 @@ Templates available are:
 \dontrun{
 
  library(googleComputeEngineR)
- library(harbor)
  
  ## make instance using R-base
  vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")

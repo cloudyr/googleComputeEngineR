@@ -11,7 +11,6 @@
 #' 
 #' Instances launched in the \code{google-containers} image family automatically add your user to the docker group, 
 #'   but for others you will need to run \code{sudo usermod -a -G docker ${USER}} and log out and back in. 
-#' @importFrom harbor docker_cmd
 #' @export
 docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
                                     docker_opts = NULL, capture_text = FALSE, ...) {

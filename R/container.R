@@ -103,7 +103,6 @@ gce_check_container <- function(instance, container){
 #' \dontrun{
 #' 
 #'  library(googleComputeEngineR)
-#'  library(harbor)
 #'  
 #'  ## make instance using R-base
 #'  vm <- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")
@@ -261,7 +260,6 @@ gce_vm_container <- function(file = NULL,
 #' It will start the push but it may take a long time to finish, espeically the first time, 
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return TRUE if commands finish
-#' @importFrom harbor docker_cmd
 #' @export
 gce_save_container <- function(instance,
                                container_name,
@@ -306,7 +304,6 @@ gce_save_container <- function(instance,
 #'  }
 #' 
 #' @return TRUE if successful
-#' @import harbor
 #' @export
 gce_load_container <- function(instance,
                                container_name,
