@@ -8,7 +8,7 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 
 > See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
 
-## TL;DR
+## TL;DR - Creating an RStudio server VM
 
 1. Configure a Google Cloud Project with billing
 2. Download a service acount key JSON file

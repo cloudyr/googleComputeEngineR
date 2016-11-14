@@ -23,9 +23,9 @@
     options(googleAuthR.webapp.client_id = Sys.getenv("GCE_WEB_CLIENT_SECRET"))
   }
   
-  if(Sys.getenv("GCE_DEFAULT_PROJECT") != ""){
-    .gce_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT")
-    packageStartupMessage("Set default project name to '", Sys.getenv("GCE_DEFAULT_PROJECT"),"'")
+  if(Sys.getenv("GCE_DEFAULT_PROJECT_ID") != ""){
+    .gce_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT_ID")
+    packageStartupMessage("Set default project ID to '", Sys.getenv("GCE_DEFAULT_PROJECT"),"'")
   }
   
   if(Sys.getenv("GCE_DEFAULT_ZONE") != ""){

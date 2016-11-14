@@ -16,15 +16,13 @@ Depends:
 Imports:
     googleAuthR (>= 0.4.0),
     jsonlite (>= 1.1),
-    future (>= 1.1.1)
+    future (>= 1.2.0)
 Suggests:
     devtools (>= 1.12.0),
     knitr,
     covr,
     rmarkdown,
     testthat
-Remotes: 
-  HenrikBengtsson/future@develop
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

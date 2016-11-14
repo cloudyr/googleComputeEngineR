@@ -6,20 +6,19 @@
 #' 
 #' @seealso \url{https://cloud.google.com/compute/docs/ssh-in-browser}
 #' 
-#' @param instance Name of the instance resource
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' @param instance the instance resource
 #' 
 #' @return Opens a browser window to the SSH session, returns the SSH URL.
 #' @importFrom utils browseURL
 #' @export
 #' @family ssh functions
-gce_ssh_browser <- function(instance,
-                            project = gce_get_global_project(), 
-                            zone = gce_get_global_zone()){
+gce_ssh_browser <- function(instance){
+  
+  instance <- as.gce_instance(instance)
+  pz <- gce_extract_projectzone(instance)
   
   ssh_url <- sprintf("https://ssh.cloud.google.com/projects/%s/zones/%s/instances/%s?projectNumber=%s",
-                     project, zone, as.gce_instance_name(instance), project)
+                     pz$project, pz$zone, as.gce_instance_name(instance), pz$project)
   
   if(!is.null(getOption("browser"))){
     utils::browseURL(ssh_url)
@@ -77,11 +76,12 @@ gce_ssh <- function(instance,
                     key.private = NULL,
                     wait = TRUE,
                     capture_text = FALSE,
-                    username = Sys.info()[["user"]], 
-                    project = gce_get_global_project(),
-                    zone = gce_get_global_zone()) {
+                    username = Sys.info()[["user"]]) {
   
   stopifnot(is.gce_instance(instance))
+  pz <- gce_extract_projectzone(instance)
+  project <- pz$project
+  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
@@ -137,11 +137,12 @@ gce_ssh_upload <- function(instance,
                            key.pub = NULL,
                            key.private = NULL,
                            verbose = FALSE,
-                           wait = TRUE,
-                           project = gce_get_global_project(), 
-                           zone = gce_get_global_zone()) {
+                           wait = TRUE) {
 
   stopifnot(is.gce_instance(instance))
+  pz <- gce_extract_projectzone(instance)
+  project <- pz$project
+  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
@@ -171,11 +172,12 @@ gce_ssh_download <- function(instance,
                              key.private = NULL,
                              verbose = FALSE, 
                              overwrite = FALSE,
-                             wait = TRUE,
-                             project = gce_get_global_project(), 
-                             zone = gce_get_global_zone()) {
+                             wait = TRUE) {
 
   stopifnot(is.gce_instance(instance))
+  pz <- gce_extract_projectzone(instance)
+  project <- pz$project
+  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,

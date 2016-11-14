@@ -1,3 +1,18 @@
+#' Extract zone and project from an instance object
+#' 
+#' @param instance The instance
+#' @return A list of $project and $zone
+#' @export
+gce_extract_projectzone <- function(instance){
+  
+  instance <- as.gce_instance(instance)
+  
+  list(project = gsub(paste0("https://www.googleapis.com/compute/v1/projects/(.+)/zones/",
+                             basename(instance$zone)),"\\1", 
+                      instance$zone),
+       zone = basename(instance$zone))
+}
+
 #' Retrieves the list of instances contained within the specified zone.
 #' 
 #' 

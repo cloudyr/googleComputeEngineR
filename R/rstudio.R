@@ -10,9 +10,7 @@
 #' @return The instance
 #' @export
 gce_rstudio_adduser <- function(instance, user, password, 
-                                container = "rstudio",
-                                project = gce_get_global_project(),
-                                zone = gce_get_global_zone()){
+                                container = "rstudio"){
   
   ssh_au <- paste0("adduser ",
                     user,
@@ -27,14 +25,14 @@ gce_rstudio_adduser <- function(instance, user, password,
                      "exec",
                      args = c(container, "ls /home/"))
   
-  ## add user folder to host VM
+  pz <- gce_extract_projectzone(instance)
 
   gce_rstudio_password(instance, 
                        user = user, 
                        password = password, 
                        container = container, 
-                       project = project, 
-                       zone = zone)
+                       project = pz$project, 
+                       zone = pz$zone)
   
   gce_set_metadata(list(rstudio_users = c(gce_get_metadata(instance, "rstudio_users")$value), user), 
                    instance)
@@ -55,9 +53,7 @@ gce_rstudio_adduser <- function(instance, user, password,
 #' @return The instance
 #' @export
 gce_rstudio_password <- function(instance, user, password, 
-                                 container = "rstudio",
-                                 project = gce_get_global_project(),
-                                 zone = gce_get_global_zone()){
+                                 container = "rstudio"){
   
   ssh_ap <- paste0("sh -c 'echo ",user,":",password," | sudo chpasswd'")
   

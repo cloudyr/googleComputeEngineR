@@ -122,8 +122,6 @@ gce_ssh_addkeys <- function(instance,
 #' @param key.private The filepath location of the private key, only needed first call per session
 #' @param instance Name of the instance of run ssh command upon
 #' @param ssh_overwrite Will check if SSH settings already set and overwrite them if TRUE
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys}
 #' 
@@ -136,11 +134,12 @@ gce_ssh_setup <- function(instance,
                           key.pub = NULL,
                           key.private = NULL,
                           ssh_overwrite = FALSE,
-                          username = Sys.info()[["user"]],
-                          project = gce_get_global_project(),
-                          zone = gce_get_global_zone()){
+                          username = Sys.info()[["user"]]){
   
   stopifnot(is.gce_instance(instance))
+  pz <- gce_extract_projectzone(instance)
+  project <- pz$project
+  zone <- pz$zone
   
   ins <- gce_ssh_addkeys(instance,
                          key.pub = key.pub,
