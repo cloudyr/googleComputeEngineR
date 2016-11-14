@@ -25,7 +25,7 @@
   
   if(Sys.getenv("GCE_DEFAULT_PROJECT_ID") != ""){
     .gce_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT_ID")
-    packageStartupMessage("Set default project ID to '", Sys.getenv("GCE_DEFAULT_PROJECT_ID"),"'")
+    packageStartupMessage("Set default project ID to '", .gce_env$project,"'")
   }
   
   if(Sys.getenv("GCE_DEFAULT_ZONE") != ""){
