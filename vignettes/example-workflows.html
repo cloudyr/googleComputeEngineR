@@ -14,7 +14,7 @@
 
 <meta name="date" content="2016-11-15" />
 
-<title>Installation and Authentication</title>
+<title>Example Workflows</title>
 
 
 
@@ -68,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Installation and Authentication</h1>
+<h1 class="title toc-ignore">Example Workflows</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
 <h4 class="date"><em>2016-11-15</em></h4>
 
@@ -77,76 +77,64 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
 </blockquote>
-<div id="setup" class="section level2">
-<h2>Setup</h2>
-<p>Google Compute Engine lets you create and run virtual machines on Google infrastructure. See the <a href="https://cloud.google.com/compute/docs/">documentation here</a>.</p>
-<p>Before you begin, you will need to set up a Cloud Platform project, and enable billing by adding a credit card.</p>
-<p>A quickstart guide is <a href="https://cloud.google.com/compute/docs/quickstart-linux">available here</a> for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.</p>
-<p>Pricing is <a href="https://cloud.google.com/compute/pricing">available here</a>.</p>
-<p>For <code>googleComputeEngineR</code> you will need:</p>
-<ul>
-<li>Your project ID e.g. <code>my-project-name</code></li>
-<li>Your preferred geographical zone to launch VMs e.g. <code>europe-west1-a</code></li>
-<li>[Optional] A <code>Service account key</code> json file, downloaded from the API Manager &gt; Credentials &gt; Create credentials &gt; Service account key &gt; Key type = JSON</li>
-<li>[Optional] If not using service account key, you will need the <code>client-id</code> and <code>client-secret</code> for your project.</li>
-</ul>
-<blockquote>
-<p>The recommended method to authenticate is using the JSON service account key via auto-authentication.</p>
-</blockquote>
+<p>Follows are some R scripts for common workflows. They assume you have previously signed up and setup a Google project and authentication.</p>
+<div id="an-rstudio-server-for-your-team" class="section level2">
+<h2>An RStudio Server for your team</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+## setting up a 13GB RAM instance 
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">template =</span> <span class="st">&quot;rstudio-hadleyverse&quot;</span>,
+             <span class="dt">name =</span> <span class="st">&quot;rstudio-team&quot;</span>,
+             <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, <span class="dt">password =</span> <span class="st">&quot;mark1234&quot;</span>,
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>)
+
+## wait a bit, login at the IP it gives you
+
+## add users
+<span class="kw">gce_rstudio_adduser</span>(vm, <span class="dt">username =</span> <span class="st">&quot;bill&quot;</span>, <span class="dt">password =</span> <span class="st">&quot;flowerpot&quot;</span>)
+
+## install packages by logging into RStudio and installing via UI
+## use the Terminal in RStudio if required to install dependencies
+## or use docker_cmd
+
+## example install crontab on instance
+<span class="kw">docker_cmd</span>(vm, <span class="st">&quot;exec&quot;</span>, <span class="dt">args =</span> <span class="kw">c</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="st">&quot;sudo apt-get crontab&quot;</span>))
+
+## once setup, save the RStudio container for quick start in another instance
+<span class="kw">gce_save_container</span>(vm, 
+                   <span class="dt">container_name =</span> <span class="st">&quot;my_rstudio&quot;</span>,
+                   <span class="dt">image_name =</span> <span class="st">&quot;rstudio&quot;</span>)
+
+## stop the VM when not in use to save bills
+<span class="kw">gce_vm_stop</span>(vm)
+
+## start up another VM with different configuration from your saved docker container
+
+## start a 50GB RAM instance
+vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;rstudio-big&quot;</span>,
+              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-8&quot;</span>,
+              <span class="dt">image_project =</span> <span class="st">&quot;google-containers&quot;</span>,
+              <span class="dt">image_family =</span> <span class="st">&quot;gci-stable&quot;</span>)
+
+## wait for it to launch
+
+## load and run the container, mapping RStudio port of 8787 to 80
+<span class="kw">gce_load_container</span>(vm2, <span class="st">&quot;my_rstudio&quot;</span>, <span class="st">&quot;-p 80:8787&quot;</span>)
+
+## make sure to stop this one, it will be more expensive
+<span class="kw">gce_vm_stop</span>(vm2)</code></pre></div>
 </div>
-<div id="authentication" class="section level2">
-<h2>Authentication</h2>
-<div id="oauth2" class="section level3">
-<h3>OAuth2</h3>
-<p>Authentication can be carried out via OAuth2 each session via <code>gce_auth()</code>. The first time you run this you will be sent to a Google login prompt in your browser to allow the <code>googleAuthR</code> project access (or preferably the Google project you configure via client ID).</p>
-<p>Once authenticated a file named <code>.httr-oauth</code> is saved to your working directory. On subsequent authentication this file will hold your authentication details, and you won’t need to go via the browser. Deleting this file, or setting <code>new_user=TRUE</code> will start the authentication flow again.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set your project ID and secret if not using service account JSON
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_id =</span> YOUR_CLIENT_ID)
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_secret =</span> YOUR_CLIENT_SECRET)
-
-<span class="kw">library</span>(googleComputeEngineR)
-## first time this will send you to the browser to authenticate
-<span class="kw">gce_auth</span>()
-
-## to authenticate with a fresh user, delete .httr-oauth or run with new_user=TRUE
-<span class="kw">gce_auth</span>(<span class="dt">new_user =</span> <span class="ot">TRUE</span>)
-
-...call functions...etc...</code></pre></div>
-<p>Each new R session will need to run <code>gce_auth()</code> to authenticate future API calls.</p>
+<div id="a-remote-r-cluster-to-run-big-r-programs" class="section level2">
+<h2>A remote R cluster to run big R programs</h2>
 </div>
-<div id="auto-authentication" class="section level3">
-<h3>Auto-authentication</h3>
-<p>Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created <code>.httr-oauth</code> token in a system environment:</p>
-<pre><code>    Sys.setenv(&quot;GCE_AUTH_FILE&quot; = &quot;/fullpath/to/auth.json&quot;)</code></pre>
-<p>You can set default projects, zone and authentication via an <code>.Renviron</code> file or <code>Sys.setenv()</code>.</p>
-<p>Example entries:</p>
-<pre><code>GCE_AUTH_FILE=&quot;/Users/mark/xxxxx/auth.json&quot;
-GCE_DEFAULT_PROJECT_ID=&quot;mark-xxxxxxx&quot;
-GCE_DEFAULT_ZONE=&quot;europe-west1-a&quot;
-GCE_SSH_USER=&quot;mark&quot;</code></pre>
-<p>This file will then used for authentication via <code>gce_auth()</code> when you load the library:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
-&gt;<span class="st"> </span><span class="kw">library</span>(googleComputeEngineR)
-Successfully authenticated via /Users/mark/auth.json
-Set default project name to <span class="st">'mark-xxxxx'</span>
-Set default zone to <span class="st">'europe-west1-a'</span>
-
-## no need for gce_auth()
-&gt;<span class="st"> </span><span class="kw">gce_get_project</span>()
-$kind
-[<span class="dv">1</span>] <span class="st">&quot;compute#project&quot;</span>
-
-$id
-[<span class="dv">1</span>] <span class="st">&quot;43534234234324324&quot;</span>
-
-$creationTimestamp
-[<span class="dv">1</span>] <span class="st">&quot;2015-05-08T15:22:38.416-07:00&quot;</span>
-
-$name
-[<span class="dv">1</span>] <span class="st">&quot;mark-xxxxx&quot;</span>
-
-...etc.... </code></pre></div>
+<div id="an-r-server-to-run-scheduled-scripts-upon" class="section level2">
+<h2>An R server to run scheduled scripts upon</h2>
 </div>
+<div id="deploying-a-shiny-app" class="section level2">
+<h2>Deploying a Shiny app</h2>
+</div>
+<div id="setting-up-an-opencpu-server-with-your-custom-packages" class="section level2">
+<h2>Setting up an OpenCPU server with your custom packages</h2>
 </div>
 
 

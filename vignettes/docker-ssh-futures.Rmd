@@ -1,10 +1,10 @@
 ---
-title: "SSH, Docker, Container Registry and Futures in GoogleComputeEngineR"
+title: "SSH, Docker, Container Registry and Futures"
 author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SSH, Docker, Container Registry and Futures in GoogleComputeEngineR}
+  %\VignetteIndexEntry{SSH, Docker, Container Registry and Futures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

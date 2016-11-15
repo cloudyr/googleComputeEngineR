@@ -1,3 +1,7 @@
+#' An object representing the current computer that R is running on.
+#' @export
+localhost <- structure(list(), class = c("localhost", "host"))
+
 #' Coerce an object into a container object.
 #'
 #' @param x An object to coerce

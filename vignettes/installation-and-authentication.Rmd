@@ -1,10 +1,10 @@
 ---
-title: "Installation and Authentication of googleComputeEngineR"
+title: "Installation and Authentication"
 author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Installation and Authentication of googleComputeEngineR}
+  %\VignetteIndexEntry{Installation and Authentication}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -68,7 +68,7 @@ Example entries:
 
 ```
 GCE_AUTH_FILE="/Users/mark/xxxxx/auth.json"
-GCE_DEFAULT_PROJECT="mark-xxxxxxx"
+GCE_DEFAULT_PROJECT_ID="mark-xxxxxxx"
 GCE_DEFAULT_ZONE="europe-west1-a"
 GCE_SSH_USER="mark"
 ```

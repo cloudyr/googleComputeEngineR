@@ -9,6 +9,8 @@ navbar:
       href: articles/creating-vms.html
     - text: "SSH & Docker"
       href: articles/docker-ssh-futures.html
+    - text: "Examples"
+      href: articles/example-workflows.html
     - text: "Help"
       menu:
       - text: "Reference"

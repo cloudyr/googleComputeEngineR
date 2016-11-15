@@ -9,11 +9,11 @@
 #' 
 #' @return The instance
 #' @export
-gce_rstudio_adduser <- function(instance, user, password, 
+gce_rstudio_adduser <- function(instance, username, password, 
                                 container = "rstudio"){
   
   ssh_au <- paste0("adduser ",
-                    user,
+                    username,
                    " --gecos 'First Last,RoomNumber,WorkPhone,HomePhone' --disabled-password")
   
   docker_cmd(instance,
@@ -24,17 +24,13 @@ gce_rstudio_adduser <- function(instance, user, password,
   docker_cmd(instance,
                      "exec",
                      args = c(container, "ls /home/"))
-  
-  pz <- gce_extract_projectzone(instance)
 
   gce_rstudio_password(instance, 
-                       user = user, 
+                       user = username, 
                        password = password, 
-                       container = container, 
-                       project = pz$project, 
-                       zone = pz$zone)
+                       container = container)
   
-  gce_set_metadata(list(rstudio_users = c(gce_get_metadata(instance, "rstudio_users")$value), user), 
+  gce_set_metadata(list(rstudio_users = c(gce_get_metadata(instance, "rstudio_users")$value), username), 
                    instance)
   
   instance

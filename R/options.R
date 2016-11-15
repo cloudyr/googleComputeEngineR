@@ -30,7 +30,7 @@
   
   if(Sys.getenv("GCE_DEFAULT_ZONE") != ""){
     .gce_env$zone <- Sys.getenv("GCE_DEFAULT_ZONE")
-    packageStartupMessage("Set default zone to '", Sys.getenv("GCE_DEFAULT_ZONE"),"'")
+    packageStartupMessage("Set default zone to '", .gce_env$zone,"'")
   }
   
   invisible()

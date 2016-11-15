@@ -4,15 +4,10 @@
 \alias{gce_ssh_browser}
 \title{Open a cloud SSH browser for an instance}
 \usage{
-gce_ssh_browser(instance, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_ssh_browser(instance)
 }
 \arguments{
-\item{instance}{Name of the instance resource}
-
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
-
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
+\item{instance}{the instance resource}
 }
 \value{
 Opens a browser window to the SSH session, returns the SSH URL.

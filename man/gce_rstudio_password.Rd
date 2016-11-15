@@ -4,8 +4,7 @@
 \alias{gce_rstudio_password}
 \title{Changes password for a user on RStudio container}
 \usage{
-gce_rstudio_password(instance, user, password, container = "rstudio",
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_rstudio_password(instance, user, password, container = "rstudio")
 }
 \arguments{
 \item{instance}{An instance with RStudio installed via \link{gce_vm_template}}

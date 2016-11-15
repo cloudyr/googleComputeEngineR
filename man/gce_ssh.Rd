@@ -7,17 +7,14 @@
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
 gce_ssh(instance, ..., key.pub = NULL, key.private = NULL, wait = TRUE,
-  capture_text = FALSE, username = Sys.info()[["user"]],
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+  capture_text = FALSE, username = Sys.info()[["user"]])
 
 gce_ssh_upload(instance, local, remote, username = Sys.info()[["user"]],
-  key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+  key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE)
 
 gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
   key.pub = NULL, key.private = NULL, verbose = FALSE,
-  overwrite = FALSE, wait = TRUE, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  overwrite = FALSE, wait = TRUE)
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -35,15 +32,15 @@ gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
 
 \item{username}{The username you used to generate the key-pair}
 
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
-
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
-
 \item{local, remote}{Local and remote paths.}
 
 \item{verbose}{If TRUE, will print command before executing it.}
 
 \item{overwrite}{If TRUE, will overwrite the local file if exists.}
+
+\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
+
+\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \value{
 If capture_text is TRUE, the text of the SSH command result.

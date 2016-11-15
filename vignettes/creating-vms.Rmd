@@ -1,10 +1,10 @@
 ---
-title: "Creating Virtual Machines (VM) in googleComputeEngineR"
+title: "Creating Virtual Machines (VM)"
 author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating Virtual Machines (VM) in googleComputeEngineR}
+  %\VignetteIndexEntry{Creating Virtual Machines (VM)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
