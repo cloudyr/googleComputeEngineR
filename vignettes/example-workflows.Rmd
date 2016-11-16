@@ -151,7 +151,16 @@ lapply(vms, gce_vm_stop)
 
 ## An R server to run scheduled scripts upon
 
+```r
+library(googleComputeEngineR)
 
+## default f1-micro instance
+vm <- gce_vm(name = "scheduleR", template = "r-base")
+
+
+
+
+```
 
 ## Deploying a Shiny app 
 

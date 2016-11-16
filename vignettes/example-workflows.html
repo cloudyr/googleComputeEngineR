@@ -209,6 +209,13 @@ result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data)
 </div>
 <div id="an-r-server-to-run-scheduled-scripts-upon" class="section level2">
 <h2>An R server to run scheduled scripts upon</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+## default f1-micro instance
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;scheduleR&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>)
+
+
+</code></pre></div>
 </div>
 <div id="deploying-a-shiny-app" class="section level2">
 <h2>Deploying a Shiny app</h2>

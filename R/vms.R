@@ -276,15 +276,11 @@ gce_vm_create <- function(name,
                          data_parse_function = function(x) x)
   stopifnot(inherits(the_instance, "gar_Instance"))
   
-  out <- tryCatch({
-    f(the_body = rmNullObs(the_instance))
-  }, message = function(m){
-    ## an instance with this name already exists
-    if(grepl("409", m)){
-      warning("An instance with the name '", name ,"' already exists - returning its object", call. = FALSE)
-      gce_get_instance(name, project = project, zone = zone)
-    }}
-  )
+  out <- f(the_body = rmNullObs(the_instance))
+  
+  if(is.null(out)){
+    stop("Error fetching VM, returned NULL")
+  }
   
   if(!is.gce_instance(out)){
     out <- as.zone_operation(out)
