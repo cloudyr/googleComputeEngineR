@@ -79,9 +79,6 @@ gce_ssh <- function(instance,
                     username = Sys.info()[["user"]]) {
   
   stopifnot(is.gce_instance(instance))
-  pz <- gce_extract_projectzone(instance)
-  project <- pz$project
-  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
@@ -101,12 +98,12 @@ gce_ssh <- function(instance,
     
     cmd <- paste0(
       "ssh ", ssh_options(instance),
-      " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
+      " ", username, "@", gce_get_external_ip(instance, verbose = FALSE),
       " ", shQuote(paste(lines, ">", temp_remote))
     )
     
-    do_system(instance, cmd, wait = wait, project = project, zone = zone)
-    gce_ssh_download(instance, temp_remote, temp_local, project = project, zone = zone)
+    do_system(instance, cmd, wait = wait)
+    gce_ssh_download(instance, temp_remote, temp_local)
 
     text <- readLines(temp_local, warn = FALSE)
     out <- text
@@ -115,11 +112,11 @@ gce_ssh <- function(instance,
     
     cmd <- paste0(
       "ssh ", ssh_options(instance),
-      " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE),
+      " ", username, "@", gce_get_external_ip(instance, verbose = FALSE),
       " ", shQuote(lines)
     )
     
-    out <- do_system(instance, cmd, wait = wait, project = project, zone = zone)
+    out <- do_system(instance, cmd, wait = wait)
     
   }
   
@@ -138,14 +135,9 @@ gce_ssh_upload <- function(instance,
                            wait = TRUE) {
 
   stopifnot(is.gce_instance(instance))
-  pz <- gce_extract_projectzone(instance)
-  project <- pz$project
-  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
-                            project = project, 
-                            zone = zone,
                             key.pub = key.pub,
                             key.private = key.private)
   
@@ -154,10 +146,10 @@ gce_ssh_upload <- function(instance,
   cmd <- paste0(
     "scp -r ", ssh_options(instance),
     " ", local,
-    " ", username, "@", gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE), ":", remote
+    " ", username, "@", gce_get_external_ip(instance, verbose = FALSE), ":", remote
   )
 
-  do_system(instance, cmd, wait = wait, project = project, zone = zone)
+  do_system(instance, cmd, wait = wait)
 }
 
 #' @export
@@ -173,14 +165,9 @@ gce_ssh_download <- function(instance,
                              wait = TRUE) {
 
   stopifnot(is.gce_instance(instance))
-  pz <- gce_extract_projectzone(instance)
-  project <- pz$project
-  zone <- pz$zone
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
-                            project = project, 
-                            zone = zone,
                             key.pub = key.pub,
                             key.private = key.private)
   
@@ -224,7 +211,7 @@ gce_ssh_download <- function(instance,
     unlink(local_tempdir, recursive = TRUE)
   })
 
-  external_ip <- gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE)
+  external_ip <- gce_get_external_ip(instance, verbose = FALSE)
   # This ssh's to the remote machine, tars the file(s), and sends it to the
   # local host where it is untarred.
   cmd <- paste0(
@@ -235,21 +222,19 @@ gce_ssh_download <- function(instance,
     sprintf("(cd %s && tar xz)", local_tempdir)
   )
 
-  do_system(instance, cmd, wait = wait, project = project, zone = zone)
+  do_system(instance, cmd, wait = wait)
 }
 
 
 do_system <- function(instance, 
                       cmd, 
-                      wait = TRUE,
-                      project = gce_get_global_project(), 
-                      zone = gce_get_global_zone()
+                      wait = TRUE
                       ) {
   
   stopifnot(is.gce_instance(instance))
   
   cli_tools()
-  external_ip <- gce_get_external_ip(instance, project = project, zone = zone, verbose = FALSE)
+  external_ip <- gce_get_external_ip(instance, verbose = FALSE)
   # check to make sure port 22 open, otherwise ssh commands will fail
   if (!is_port_open(external_ip, 22)) {
     stop("port 22 is not open for ", external_ip, call. = FALSE)
