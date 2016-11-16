@@ -40,6 +40,20 @@ docker_pull <- function(host = localhost, image, ...) {
   docker_cmd(host, "pull", image, ...)
 }
 
+#' Execute a command within a docker container
+#'
+#' @inheritParams docker_cmd
+#' @param container The running container to execute within
+#' @examples
+#' \dontrun{
+#' docker_exec(localhost, "container-id" ,"echo foo")
+#' }
+#' @return The \code{host} object.
+#' @export
+docker_exec <- function(host = localhost, container = NULL, ...) {
+  if (is.null(container)) stop("Must specify a container.")
+  docker_cmd(host, "exec", container, ...)
+}
 
 #' Run a command in a new container on a host.
 #'

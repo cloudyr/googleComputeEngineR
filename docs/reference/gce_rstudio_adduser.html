@@ -57,6 +57,9 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
+<li>
+  <a href="../articles/example-workflows.html">Examples</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Help
@@ -96,19 +99,18 @@
     <p>RStudio has users based on unix user accounts</p>
     
 
-    <pre><span class='fu'>gce_rstudio_adduser</span>(<span class='no'>instance</span>, <span class='no'>user</span>, <span class='no'>password</span>, <span class='kw'>container</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>,
-  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
+    <pre><span class='fu'>gce_rstudio_adduser</span>(<span class='no'>instance</span>, <span class='no'>username</span>, <span class='no'>password</span>, <span class='kw'>container</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>instance</dt>
       <dd>An instance with RStudio installed via <a href='gce_vm_template.html'>gce_vm_template</a></dd>
-      <dt>user</dt>
-      <dd>The user to create</dd>
       <dt>password</dt>
       <dd>The user password</dd>
       <dt>container</dt>
       <dd>The rstudio container to add the user to</dd>
+      <dt>user</dt>
+      <dd>The user to create</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

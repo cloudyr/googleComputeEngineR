@@ -57,6 +57,9 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
+<li>
+  <a href="../articles/example-workflows.html">Examples</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Help
@@ -97,17 +100,14 @@
     
 
     <pre><span class='fu'>gce_ssh</span>(<span class='no'>instance</span>, <span class='no'>...</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]],
-  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())
+  <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]])
 
 <span class='fu'>gce_ssh_upload</span>(<span class='no'>instance</span>, <span class='no'>local</span>, <span class='no'>remote</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]],
-  <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())
+  <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='fu'>gce_ssh_download</span>(<span class='no'>instance</span>, <span class='no'>remote</span>, <span class='no'>local</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]],
   <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
-  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -126,16 +126,16 @@
       <dd>whether to return the output of the SSH command into an R text</dd>
       <dt>username</dt>
       <dd>The username you used to generate the key-pair</dd>
-      <dt>project</dt>
-      <dd>Project ID for this request, default as set by <a href='gce_get_global_project.html'>gce_get_global_project</a></dd>
-      <dt>zone</dt>
-      <dd>The name of the zone for this request, default as set by <a href='gce_get_global_zone.html'>gce_get_global_zone</a></dd>
       <dt>local, remote</dt>
       <dd>Local and remote paths.</dd>
       <dt>verbose</dt>
       <dd>If TRUE, will print command before executing it.</dd>
       <dt>overwrite</dt>
       <dd>If TRUE, will overwrite the local file if exists.</dd>
+      <dt>project</dt>
+      <dd>Project ID for this request, default as set by <a href='gce_get_global_project.html'>gce_get_global_project</a></dd>
+      <dt>zone</dt>
+      <dd>The name of the zone for this request, default as set by <a href='gce_get_global_zone.html'>gce_get_global_zone</a></dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

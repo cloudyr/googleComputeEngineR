@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Instance Object — Instance • googleComputeEngineR</title>
+<title>Extract zone and project from an instance object — gce_extract_projectzone • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,49 +92,24 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Instance Object</h1>
+    <h1>Extract zone and project from an instance object</h1>
     </div>
 
     
-    <p>Instance Object</p>
+    <p>Extract zone and project from an instance object</p>
     
 
-    <pre><span class='fu'>Instance</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>machineType</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>canIpForward</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>disks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>metadata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>networkInterfaces</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scheduling</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serviceAccounts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre><span class='fu'>gce_extract_projectzone</span>(<span class='no'>instance</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>The name of the resource, provided by the client when initially creating the resource</dd>
-      <dt>machineType</dt>
-      <dd>Full or partial URL of the machine type resource to use for this instance, in the format: <code>zones/zone/machineTypes/machine-type</code></dd>
-      <dt>canIpForward</dt>
-      <dd>Allows this instance to send and receive packets with non-matching destination or source IPs</dd>
-      <dt>description</dt>
-      <dd>An optional description of this resource</dd>
-      <dt>disks</dt>
-      <dd>The source image used to create this disk</dd>
-      <dt>metadata</dt>
-      <dd>A named list of metadata key/value pairs assigned to this instance</dd>
-      <dt>networkInterfaces</dt>
-      <dd>An array of configurations for this interface</dd>
-      <dt>scheduling</dt>
-      <dd>Scheduling options for this instance</dd>
-      <dt>serviceAccounts</dt>
-      <dd>A list of service accounts, with their specified scopes, authorized for this instance</dd>
-      <dt>tags</dt>
-      <dd>A list of tags to apply to this instance</dd>
+      <dt>instance</dt>
+      <dd>The instance</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Instance object</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>An Instance resource.</p>
+    <p>A list of $project and $zone</p>
     
 
   </div>
@@ -144,8 +119,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

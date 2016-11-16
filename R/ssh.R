@@ -85,8 +85,6 @@ gce_ssh <- function(instance,
   
   instance <- gce_ssh_setup(instance = instance, 
                             username = username,
-                            project = project, 
-                            zone = zone,
                             key.pub = key.pub,
                             key.private = key.private)
   
