@@ -61,13 +61,15 @@ docker_exec <- function(host = localhost, container = NULL, ...) {
 #' }
 #' @return The \code{host} object.
 #' @export
-docker_build <- function(host = localhost, dockerfile, folder, new_image, ...) {
+docker_build <- function(host = localhost, dockerfile, new_image, folder = "buildimage",  ...) {
   
   stopifnot(file.exists(dockerfile))
   
-  gce_ssh(host, paste0("mkdir -p -m 0755 ", folder))
-  gce_ssh_upload(host, dockerfile, folder)
+  gce_ssh(host, paste0("mkdir -p -m 0755 ", folder), ...)
+  gce_ssh_upload(host, dockerfile, folder, ...)
   
   docker_cmd(host, "build", args = c(new_image, folder), docker_opts = "-t", ...)
   
+  ## list images
+  docker_cmd(host, "images", ...)
 }

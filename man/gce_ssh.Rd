@@ -37,10 +37,6 @@ gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
 \item{verbose}{If TRUE, will print command before executing it.}
 
 \item{overwrite}{If TRUE, will overwrite the local file if exists.}
-
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
-
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \value{
 If capture_text is TRUE, the text of the SSH command result.

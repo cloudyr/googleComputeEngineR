@@ -5,23 +5,21 @@ users:
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/opencpu.service
+- path: /etc/systemd/system/docker.service
   permissions: 0644
   owner: root
   content: |
     [Unit]
-    Description=Start OpenCPU with RStudio
+    Description=Start Dynamic Docker image
 
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run -p 80:80 \
-                                  -p 8004:8004 \
-                                  --name=opencpu \
+    ExecStart=/usr/bin/docker run --name=%s \
                                   %s
-    ExecStop=/usr/bin/docker stop opencpu
+    ExecStop=/usr/bin/docker stop %s
 
 runcmd:
 - systemctl daemon-reload
-- systemctl start opencpu.service
+- systemctl start docker.service

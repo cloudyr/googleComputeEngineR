@@ -5,8 +5,9 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example", "rstudio-hadleyverse"), username = NULL, password = NULL,
-  image_family = "gci-stable", name, ...)
+  "example", "rstudio-hadleyverse", "dynamic"), username = NULL,
+  password = NULL, dynamic_image = NULL, image_family = "gci-stable",
+  name, ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -14,6 +15,8 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 \item{username}{username if needed (RStudio)}
 
 \item{password}{password if needed (RStudio)}
+
+\item{dynamic_image}{Supply an alternative to the default Docker image here to download}
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
@@ -33,11 +36,18 @@ Templates available are:
 
 \itemize{
   \item rstudio An RStudio server docker image
+  \item rstudio-hadleyverse RStudio with the tidyverse installed
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
   \item r_base Latest version of R stable
   \item example A non-R test container running busybox
+  \item dynamic Supply your own docker image to download such as \code{rocker/verse}
  }
+ 
+ For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 
+   other settings etc. via \link{docker_run}.
+
+Use \code{dynamic_image} to override the default rocker images e.g. \code{rocker/shiny} for shiny, etc.
 }
 \examples{
 

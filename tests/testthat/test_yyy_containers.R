@@ -40,10 +40,10 @@ test_that("Save docker containers", {
   ## saves the running my-rstudio image that is named rstudio
   ## commits and saves it to container registry as travis-test-container
   cons <- containers(vm)
-  worked <- gce_save_container(vm,
-                               container_name = "travis-test-container",
-                               image_name = cons[[1]]$name,
-                               wait = TRUE
+  worked <- gce_push_registry(vm,
+                               save_name = "travis-test-container",
+                               container_name = cons[[1]]$name,
+                               wait = TRUE 
                                )
   expect_true(worked)
 })
@@ -60,9 +60,9 @@ test_that("Load docker containers", {
                         key.private = "travis-ssh-key")
 
   ## loads and runs an rstudio template from my projects container registry
-  worked <- gce_load_container(vm,
-                               container_name = "travis-test-container",
-                               name = paste(sample(LETTERS, 15),collapse=""))
+  worked <- gce_pull_registry(vm,
+                              container_name = "travis-test-container",
+                              name = paste(sample(LETTERS, 15),collapse=""))
   expect_true(worked)
   gce_vm_stop("test-container-nodelete")
 })

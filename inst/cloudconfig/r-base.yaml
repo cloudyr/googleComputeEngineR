@@ -22,7 +22,7 @@ write_files:
                                   -e "R_LIBS_USER=/library/" \
                                   -v /home/gcer/library/:/library/ \
                                   --net=host \
-                                  rocker/r-base
+                                  %s
     ExecStop=/usr/bin/docker stop r-base
 
 runcmd:

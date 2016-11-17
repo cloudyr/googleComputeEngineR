@@ -1,59 +1,3 @@
-#' Install debain dependency libraries via apt-get in a container
-#' 
-#' @param instance The instance to install dependencies within
-#' @param container The container to run \code{apt-get} within
-#' @param call The dependency to install
-#' 
-#' @return The instance
-#' @export
-gce_container_aptget <- function(instance, container, call){
-  
-  docker_cmd(instance, "exec", c(container, "sudo apt-get update"))
-  
-  docker_cmd(instance, "exec", c(container, sprintf("sudo apt-get install %s --assume-yes", call)))
-  
-  instance
-}
-
-
-
-#' Install a package to a running docker container on an instance
-#' 
-#' Add a package to an OpenCPU VM installed via \link{gce_vm_template}
-#' 
-#' @param instance The instance running the container
-#' @param container The name of the running container
-#' @param cran_packages A character vector of CRAN packages to be installed
-#' @param github_packages A character vector of devtools packages to be installed
-#' @param auth_token A github PAT token, if needed for private Github packages
-#' 
-#' @return The instance
-#' @export
-gce_container_addpackage <- function(instance, 
-                                     container,
-                                     cran_packages = NULL, 
-                                     github_packages = NULL, 
-                                     auth_token = NULL){
-  
-  if(all(!is.null(cran_packages), !is.null(github_packages))){
-    stop("Install CRAN and github packages in seperate calls", call. = FALSE)
-  }
-  
-  if(!is.null(cran_packages)){
-    install_script <- sprintf("R -e \"install.packages('%s', repos='http://cran.rstudio.com/')\"", 
-                              cran_packages)
-  }
-  
-  if(!is.null(github_packages)){
-    install_script <- sprintf("R -e \"devtools::install_github('%s', %s)\"", github_packages, auth_token)
-  }
-  
-  docker_cmd(instance, "exec", c(container, install_script))
-  
-  instance
-  
-}
-
 #' Check the docker logs of a container
 #' 
 #' @param instance The instance running docker
@@ -78,6 +22,7 @@ gce_check_container <- function(instance, container){
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
+#' @param dynamic_image Supply an alternative to the default Docker image here to download
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
 #' @details 
@@ -86,11 +31,18 @@ gce_check_container <- function(instance, container){
 #' 
 #' \itemize{
 #'   \item rstudio An RStudio server docker image
+#'   \item rstudio-hadleyverse RStudio with the tidyverse installed
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
 #'   \item example A non-R test container running busybox
+#'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
 #'  }
+#'  
+#'  For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 
+#'    other settings etc. via \link{docker_run}.
+#' 
+#' Use \code{dynamic_image} to override the default rocker images e.g. \code{rocker/shiny} for shiny, etc. 
 #'  
 #' @return The VM object
 #' @importFrom utils browseURL
@@ -114,9 +66,11 @@ gce_check_container <- function(instance, container){
 #' 
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
-                                         "r-base", "example", "rstudio-hadleyverse"),
+                                         "r-base", "example", "rstudio-hadleyverse",
+                                         "dynamic"),
                             username=NULL,
                             password=NULL,
+                            dynamic_image=NULL,
                             image_family = "gci-stable",
                             name,
                             ...){
@@ -132,13 +86,41 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   
   upload_meta <- list(template = template)
   
-  ## Add the username and password to the config file
+
   if(template %in% c("rstudio","rstudio-hadleyverse")){
+    
     if(any(is.null(username), is.null(password))){
       stop("Must supply a username and password for RStudio Server templates", call. = FALSE)
     }
-    cloud_init_file <- sprintf(cloud_init_file, username, password)
+    
+    image <- get_image("rocker/rstudio", dynamic_image = dynamic_image)
+    
+    ## Add the username and password to the config file
+    cloud_init_file <- sprintf(cloud_init_file, username, password, image)
     upload_meta$rstudio_users <- username
+    
+  } else if(template == "dynamic"){
+    if(is.null(dynamic_image)){
+      stop("Must supply a docker image to download for template = 'dynamic'")
+      cloud_init_file <- sprintf(cloud_init_file, name, dynamic_image, dynamic_image)
+    }
+  } else if(template == "shiny"){
+    
+    image <- get_image("rocker/shiny", dynamic_image = dynamic_image)
+    
+    cloud_init_file <- sprintf(cloud_init_file, image)
+  } else if(template == "opencpu"){
+    
+    image <- get_image("opencpu/rstudio", dynamic_image = dynamic_image)
+    cloud_init_file <- sprintf(cloud_init_file, image)
+    
+  } else if(template == "r-base"){
+    
+    image <- get_image("rocker/r-base", dynamic_image = dynamic_image)
+    cloud_init_file <- sprintf(cloud_init_file, image)
+    
+  } else {
+    warning("No template settings found for ", template)
   }
   
   job <- do.call(gce_vm_container,
@@ -171,16 +153,55 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
 
 }
 
+get_image <- function(default_image, dynamic_image = NULL){
+  ## override default rocker image
+  if(!is.null(dynamic_image)){
+    image <- default_image
+  } else {
+    image <- dynamic_image
+  }
+  image
+}
+
+#' Show the cloud-config template files
+#' 
+#' @param template
+#' 
+#' This returns the file location of template files for use in \link{gce_vm_template}
+#' 
+#' @details 
+#' 
+#' Templates available are:
+#' 
+#' \itemize{
+#'   \item rstudio An RStudio server docker image
+#'   \item rstudio-hadleyverse RStudio with the tidyverse installed
+#'   \item shiny A Shiny docker image
+#'   \item opencpu An OpenCPU docker image
+#'   \item r_base Latest version of R stable
+#'   \item example A non-R test container running busybox
+#'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
+#'  }
+#' 
+#' @return file location
+#' @export
 get_template_file <- function(template){
   
-  switch(template,
-         rstudio  = system.file("cloudconfig", "rstudio.yaml", package = "googleComputeEngineR"),
-         `rstudio-hadleyverse`  = system.file("cloudconfig", "rstudio-hadleyverse.yaml", package = "googleComputeEngineR"),
-         shiny    = system.file("cloudconfig", "shiny.yaml",   package = "googleComputeEngineR"),
-         opencpu  = system.file("cloudconfig", "opencpu.yaml", package = "googleComputeEngineR"),
-         `r-base` = system.file("cloudconfig", "r-base.yaml",  package = "googleComputeEngineR"),
-         example  = system.file("cloudconfig", "example.yaml", package = "googleComputeEngineR")
-  )
+  system.file("cloudconfig", paste0(template,".yaml"), package = "googleComputeEngineR")
+  
+}
+
+#' Get Dockerfile templates
+#' 
+#' This gets the file location of available Dockerfile examples
+#' 
+#' @param dockerfile_folder
+#' 
+#' @return file location
+#' @export
+get_dockerfile <- function(dockerfile_folder){
+  
+  system.file("dockerfiles", dockerfile_folder, "Dockerfile", package = "googleComputeEngineR")
   
 }
 
@@ -240,13 +261,14 @@ gce_vm_container <- function(file = NULL,
   
 }
 
-#' Commit and save a running docker container to the private Google Container Registry
+#' Push to Google Container Registry
 #' 
-#' Saves a running docker container to your projects Google Cloud Storage.
+#' Commit and save a running container or docker image to the Google Container Registry
 #' 
 #' @param instance The VM to run within
-#' @param container_name The name for the saved container
-#' @param image_name The running docker container you are saving.
+#' @param save_name The new name for the saved image
+#' @param container_name A running docker container. Can't be set if \code{image_name} is too.
+#' @param image_name A docker image on the instance. Can't be set if \code{container_name} is too.
 #' @param wait Will wait for operation to finish on the instance if TRUE 
 #' @param container_url The URL of where to save container
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
@@ -258,23 +280,35 @@ gce_vm_container <- function(file = NULL,
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return TRUE if commands finish
 #' @export
-gce_save_container <- function(instance,
-                               container_name,
-                               image_name = "rstudio",
+gce_push_registry <- function(instance,
+                               save_name,
+                               container_name = NULL,
+                               image_name = NULL,
                                container_url = "gcr.io",
                                project = gce_get_global_project(), 
                                wait = FALSE){
   
-  if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  if(all(!is.null(container_name), !is.null(image_name))){
+    stop("Can't set container_name and image_name at same time", call. = FALSE)
   }
   
-  build_tag <- paste0(container_url, "/", project, "/", container_name)
+  build_tag <- paste0(container_url, "/", project, "/", save_name)
   
-  ## commits the current version of running docker container image_name and renames it 
-  ## so it can be registered to Google Container Registry
-  docker_cmd(instance, cmd = "commit", args = c(image_name, build_tag))
-  
+  if(!is.null(container_name)){
+    ## commits the current version of running docker container image_name and renames it 
+    ## so it can be registered to Google Container Registry
+    cmd <- "commit"
+    obj <- container_name
+  } else if(!is.null(image_name)){
+    ## or tags an image for upload
+    cmd <- "tag"
+    obj <- image_name
+  } else {
+    stop("Set one of container_name or image_name", call. = FALSE)
+  }
+
+  ## tagging
+  docker_cmd(instance, cmd = cmd, args = c(obj, build_tag))
   ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
@@ -291,27 +325,23 @@ gce_save_container <- function(instance,
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param pull_only If TRUE, will not run the container, only pull to the VM
-#' @param ... Other arguments passed to docker_run or docker_pull
+#' @param ... Other arguments passed to \link{docker_run} or \link{docker_pull}
 #' 
 #' After starting a VM, you can load the container again using this command.
 #' 
 #' \itemize{
-#'   \item For Shiny based containers, pass "-p 80:3838" to run it at the URL
-#'   \item For RStudio based containers, pass "-p 80:8787" to run it at the URL
+#'   \item For Shiny based containers, pass \code{"-p 80:3838"} to run it at the IP URL
+#'   \item For RStudio based containers, pass \code{"-p 80:8787"} to run it at the IP URL
 #'  }
 #' 
 #' @return TRUE if successful
 #' @export
-gce_load_container <- function(instance,
+gce_pull_registry <- function(instance,
                                container_name,
                                container_url = "gcr.io",
                                pull_only = FALSE,
                                project = gce_get_global_project(),
                                ...){
-  
-  if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
-  }
   
   build_tag <- paste0(container_url, "/", project, "/", container_name)
   
@@ -327,4 +357,7 @@ gce_load_container <- function(instance,
   
   TRUE
 }
+
+
+
 

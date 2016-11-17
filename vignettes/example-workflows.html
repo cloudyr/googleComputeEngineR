@@ -98,15 +98,12 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 ## use the Terminal in RStudio if required to install dependencies
 ## or use docker_cmd
 
-## example install crontab on instance
-<span class="kw">docker_cmd</span>(vm, <span class="st">&quot;exec&quot;</span>, <span class="dt">args =</span> <span class="kw">c</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="st">&quot;sudo apt-get crontab&quot;</span>))
-
 ## see the containers running on the instance
 cons &lt;-<span class="st"> </span><span class="kw">containers</span>(vm)
 cons
-## the template RStudio container is called &quot;rstudio&quot;
+## the default template RStudio container is called &quot;rstudio&quot;
 
-## once setup, save the RStudio container for quick start in another instance
+## once setup, save the RStudio container to a new image for quick start in another instance
 <span class="kw">gce_save_container</span>(vm, 
                    <span class="dt">container_name =</span> <span class="st">&quot;my_rstudio&quot;</span>,
                    <span class="dt">image_name =</span> <span class="st">&quot;rstudio&quot;</span>)
@@ -159,7 +156,7 @@ jobs
 <span class="co"># Started:  2016-11-16 06:53:09</span>
 
 ## check status of jobs
-<span class="kw">lapply</span>(vms, function(x) <span class="kw">gce_get_zone_op</span>(x$name))
+<span class="kw">lapply</span>(jobs, function(x) <span class="kw">gce_get_zone_op</span>(x))
 <span class="co"># [[1]]</span>
 <span class="co"># ==Operation insert :  DONE</span>
 <span class="co"># Started:  2016-11-16 06:52:58</span>
@@ -207,39 +204,78 @@ result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data)
 ## shutdown instances when finished
 <span class="kw">lapply</span>(vms, gce_vm_stop)</code></pre></div>
 </div>
-<div id="an-r-server-to-run-scheduled-scripts-upon" class="section level2">
-<h2>An R server to run scheduled scripts upon</h2>
+<div id="an-rstudio-server-to-run-scheduled-scripts-upon" class="section level2">
+<h2>An RStudio server to run scheduled scripts upon</h2>
+<p>This takes advatage of Dockerfiles to customise the templates.</p>
+<p>Build your own Dockerfiles to customise your instances with installed packages etc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 ## default f1-micro instance
-vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;schedule-r&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>)
+## installs rocker/hadleyverse docker image
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;schedule-r&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;rstudio-hadleyverse&quot;</span>)
+
+## This Dockerfile adds cron, nano, googleAuthR and bnosac/cronR from github
+<span class="kw">readLines</span>(<span class="kw">get_dockerfile</span>(<span class="st">&quot;hadleyverse-crontab&quot;</span>))
+<span class="co"># [1] &quot;FROM rocker/hadleyverse&quot;                                             </span>
+<span class="co"># [2] &quot;MAINTAINER Mark Edmondson (r@sunholo.com)&quot;                           </span>
+<span class="co"># [3] &quot;&quot;                                                                    </span>
+<span class="co"># [4] &quot;# install cron and R package dependencies&quot;                           </span>
+<span class="co"># [5] &quot;RUN apt-get update &amp;&amp; apt-get install -y \\&quot;                         </span>
+<span class="co"># [6] &quot;    cron \\&quot;                                                         </span>
+<span class="co"># [7] &quot;    nano \\&quot;                                                         </span>
+<span class="co"># [8] &quot;    ## clean up&quot;                                                     </span>
+<span class="co"># [9] &quot;    &amp;&amp; apt-get clean \\ &quot;                                            </span>
+<span class="co"># [10] &quot;    &amp;&amp; rm -rf /var/lib/apt/lists/ \\ &quot;                               </span>
+<span class="co"># [11] &quot;    &amp;&amp; rm -rf /tmp/downloaded_packages/ /tmp/*.rds&quot;                  </span>
+<span class="co"># [12] &quot;    &quot;                                                                </span>
+<span class="co"># [13] &quot;## Install packages from CRAN&quot;                                       </span>
+<span class="co"># [14] &quot;RUN install2.r --error \\ &quot;                                          </span>
+<span class="co"># [15] &quot;    -r 'http://cran.rstudio.com' \\&quot;                                 </span>
+<span class="co"># [16] &quot;    googleAuthR \\&quot;                                                  </span>
+<span class="co"># [17] &quot;    ## install Github packages&quot;                                      </span>
+<span class="co"># [18] &quot;    &amp;&amp; Rscript -e \&quot;devtools::install_github(c('bnosac/cronR'))\&quot; \\&quot;</span>
+<span class="co"># [19] &quot;    ## clean up&quot;                                                     </span>
+<span class="co"># [20] &quot;    &amp;&amp; rm -rf /tmp/downloaded_packages/ /tmp/*.rds \\&quot; </span>
+
+## build a new image based on rocker/hadleyverse with this Dockerfile
+<span class="kw">docker_build</span>(vm, <span class="dt">dockerfile =</span> <span class="kw">get_dockerfile</span>(<span class="st">&quot;hadleyverse-crontab&quot;</span>), <span class="dt">new_image =</span> <span class="st">&quot;my-cron-verse&quot;</span>)
+
+## wait for it to build (5mins +)
+<span class="co">#...</span>
+<span class="co">#[0m ---&gt; 059fe3ed926a</span>
+<span class="co">#Removing intermediate container 7695f3dc071f</span>
+<span class="co">#Successfully built 059fe3ed926a</span>
+<span class="co">#Using existing public key in /Users/mark/.ssh/google_compute_engine.pub</span>
+<span class="co">#REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span>
+<span class="co">#my-cron-verse        latest              059fe3ed926a        2 seconds ago       1.933 GB</span>
+<span class="co">#rocker/hadleyverse   latest              05e3b636e90b        24 hours ago        1.921 GB</span>
 
 
+## run the Rstudio instance with appropriate docker settings
+<span class="kw">docker_run</span>(vm, 
+          <span class="st">&quot;my-cron-verse&quot;</span>, 
+          <span class="dt">docker_opts =</span> <span class="st">&quot;-p 80:8787 -e 'ROOT=TRUE' -e USER=mark -e PASSWORD=mark1234 --name=myrstudio&quot;</span>,
+          <span class="dt">detach =</span> <span class="ot">TRUE</span>)
 
-## the r-base container won't run when a process isn't running
+## log to the instance IP as given:
+<span class="kw">gce_get_external_ip</span>(vm)
+<span class="co"># External IP for instance build-test : 104.199.96.192</span>
 
-## add SSH details to the instance
-vm &lt;-<span class="st"> </span><span class="kw">gce_ssh_addkeys</span>(vm)
+## setup scripts and cron jobs using library(cronR)
+<span class="kw">library</span>(cronR)
+<span class="kw">cron_add</span>(<span class="st">&quot;Rscript -e 'my-script.R'&quot;</span>, <span class="st">&quot;daily&quot;</span>, <span class="dt">at =</span> <span class="st">&quot;7AM&quot;</span>)
 
-## install R packages in the container, and commit it to the same image
-<span class="kw">gce_future_install_packages</span>(vm, <span class="st">&quot;rocker/r-base&quot;</span>, <span class="dt">cran_packages =</span> <span class="st">&quot;corpcor&quot;</span>)
+## logout of RStudio
 
-## see the installed package on the rocker/r-base image
-<span class="kw">docker_run</span>(vm, <span class="st">&quot;rocker/r-base&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Rscript&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;'installed.packages()'&quot;</span>))
-<span class="co">#            Package      LibPath                         Version   Priority     </span>
-<span class="co"># corpcor    &quot;corpcor&quot;    &quot;/usr/local/lib/R/site-library&quot; &quot;1.6.8&quot;   NA           </span>
-<span class="co"># digest     &quot;digest&quot;     &quot;/usr/local/lib/R/site-library&quot; &quot;0.6.10&quot;  NA </span>
-<span class="co"># ....</span>
+## locally - save the custom image to the Google repository for use in other VMs
+<span class="kw">gce_push_registry</span>(vm, <span class="st">&quot;my-cron-verse&quot;</span>, <span class="dt">container_name =</span> <span class="st">&quot;myrstudio&quot;</span>)
 
-## install crontab
-## use gce_ssh_browser(vm) to launch SSH browser terminal
-<span class="kw">gce_ssh_browser</span>(vm)
-<span class="co">#&gt; docker run -it rocker/r-base bash</span>
-<span class="co">#&gt;/# apt-get update</span>
-<span class="co">#&gt;/# apt-get install cron</span></code></pre></div>
+<span class="kw">gce_vm_stop</span>(vm)</code></pre></div>
 </div>
 <div id="deploying-a-shiny-app" class="section level2">
 <h2>Deploying a Shiny app</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+</code></pre></div>
 </div>
 <div id="setting-up-an-opencpu-server-with-your-custom-packages" class="section level2">
 <h2>Setting up an OpenCPU server with your custom packages</h2>

@@ -51,8 +51,6 @@ gce_ssh_browser <- function(instance){
 #' @param local,remote Local and remote paths.
 #' @param overwrite If TRUE, will overwrite the local file if exists.
 #' @param verbose If TRUE, will print command before executing it.
-#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
-#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @param wait Whether then SSH output should be waited for or run it asynchronously.
 #' @param capture_text whether to return the output of the SSH command into an R text
 #' 

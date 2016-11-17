@@ -4,16 +4,17 @@
 \alias{docker_build}
 \title{Build image on an instance from a local Dockerfile}
 \usage{
-docker_build(host = localhost, dockerfile, folder, new_image, ...)
+docker_build(host = localhost, dockerfile, new_image, folder = "buildimage",
+  ...)
 }
 \arguments{
 \item{host}{A host object.}
 
 \item{dockerfile}{Location of local dockerfile}
 
-\item{folder}{Where on host to build dockerfile}
-
 \item{new_image}{Name of the new image}
+
+\item{folder}{Where on host to build dockerfile}
 
 \item{...}{Other arguments passed to the SSH command for the host}
 }

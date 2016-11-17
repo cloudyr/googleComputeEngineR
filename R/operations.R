@@ -68,6 +68,10 @@ gce_get_zone_op <- function(operation,
                             project = gce_get_global_project(), 
                             zone = gce_get_global_zone()) {
   
+  if(is.gce_zone_operation(operation)){
+    operation <- operation$name
+  }
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/operations/%s", 
                  project, zone, operation)
   # compute.zoneOperations.get
