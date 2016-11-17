@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Execute a command within a docker container — docker_exec • googleComputeEngineR</title>
+<title>Load a previously saved private Google Container — gce_pull_registry • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,34 +92,47 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Execute a command within a docker container</h1>
+    <h1>Load a previously saved private Google Container</h1>
     </div>
 
     
-    <p>Execute a command within a docker container</p>
+    <p>Load a previously saved private Google Container</p>
     
 
-    <pre><span class='fu'>docker_exec</span>(<span class='kw'>host</span> <span class='kw'>=</span> <span class='no'>localhost</span>, <span class='kw'>container</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>gce_pull_registry</span>(<span class='no'>instance</span>, <span class='no'>container_name</span>, <span class='kw'>container_url</span> <span class='kw'>=</span> <span class='st'>"gcr.io"</span>,
+  <span class='kw'>pull_only</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>host</dt>
-      <dd>A host object.</dd>
-      <dt>container</dt>
-      <dd>The running container to execute within</dd>
+      <dt>instance</dt>
+      <dd>The VM to run within</dd>
+      <dt>container_name</dt>
+      <dd>The name of the saved container</dd>
+      <dt>container_url</dt>
+      <dd>The URL of where the container was saved</dd>
+      <dt>pull_only</dt>
+      <dd>If TRUE, will not run the container, only pull to the VM</dd>
+      <dt>project</dt>
+      <dd>Project ID for this request, default as set by <a href='gce_get_global_project.html'>gce_get_global_project</a></dd>
       <dt>...</dt>
-      <dd>Other arguments passed to the SSH command for the host</dd>
+      <dd>Other arguments passed to <a href='docker_run.html'>docker_run</a> or <a href='docker_pull.html'>docker_pull</a>
+
+After starting a VM, you can load the container again using this command.
+
+<ul>
+<li> For Shiny based containers, pass <code>&quot;-p 80:3838&quot;</code> to run it at the IP URL
+  </li>
+<li> For RStudio based containers, pass <code>&quot;-p 80:8787&quot;</code> to run it at the IP URL
+ </li>
+</ul>
+</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <code>host</code> object.</p>
+    <p>TRUE if successful</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Not run: ------------------------------------</span>
-<span class='co'># docker_exec(localhost, "container-id" ,"echo foo")</span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -127,9 +140,7 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

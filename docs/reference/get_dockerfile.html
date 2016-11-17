@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Execute a command within a docker container — docker_exec • googleComputeEngineR</title>
+<title>Get Dockerfile templates — get_dockerfile • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,34 +92,26 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Execute a command within a docker container</h1>
+    <h1>Get Dockerfile templates</h1>
     </div>
 
     
-    <p>Execute a command within a docker container</p>
+    <p>This gets the file location of available Dockerfile examples</p>
     
 
-    <pre><span class='fu'>docker_exec</span>(<span class='kw'>host</span> <span class='kw'>=</span> <span class='no'>localhost</span>, <span class='kw'>container</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>get_dockerfile</span>(<span class='no'>dockerfile_folder</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>host</dt>
-      <dd>A host object.</dd>
-      <dt>container</dt>
-      <dd>The running container to execute within</dd>
-      <dt>...</dt>
-      <dd>Other arguments passed to the SSH command for the host</dd>
+      <dt>dockerfile_folder</dt>
+      <dd></dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <code>host</code> object.</p>
+    <p>file location</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Not run: ------------------------------------</span>
-<span class='co'># docker_exec(localhost, "container-id" ,"echo foo")</span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -127,9 +119,7 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>
