@@ -81,7 +81,7 @@ gce_ssh_addkeys <- function(instance,
       
       myMessage("Using existing public key in ", 
                 g_public, 
-                level = 3)
+                level = 2)
       
       key.private <- g_private
       key.pub.content <- readChar(g_public, 10000)

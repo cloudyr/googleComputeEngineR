@@ -21,21 +21,6 @@ docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
   
 }
 
-#' Execute a command within a docker container
-#'
-#' @inheritParams docker_cmd
-#' @param container The running container to execute within
-#' @examples
-#' \dontrun{
-#' docker_exec(localhost, "container-id" ,"echo foo")
-#' }
-#' @return The \code{host} object.
-#' @export
-docker_exec <- function(host = localhost, container = NULL, ...) {
-  if (is.null(container)) stop("Must specify a container.")
-  docker_cmd(host, "exec", container, ...)
-}
-
 #' Build image on an instance from a local Dockerfile
 #' 
 #' Helps create a dockerfile for your own images running R
@@ -44,6 +29,7 @@ docker_exec <- function(host = localhost, container = NULL, ...) {
 #' @param dockerfile Location of local dockerfile
 #' @param new_image Name of the new image
 #' @param folder Where on host to build dockerfile
+#' @param wait Whether to block R console until finished build
 #' 
 #' @details 
 #' 
@@ -61,14 +47,14 @@ docker_exec <- function(host = localhost, container = NULL, ...) {
 #' }
 #' @return The \code{host} object.
 #' @export
-docker_build <- function(host = localhost, dockerfile, new_image, folder = "buildimage",  ...) {
+docker_build <- function(host = localhost, dockerfile, new_image, folder = "buildimage",  wait = FALSE, ...) {
   
   stopifnot(file.exists(dockerfile))
   
   gce_ssh(host, paste0("mkdir -p -m 0755 ", folder), ...)
   gce_ssh_upload(host, dockerfile, folder, ...)
   
-  docker_cmd(host, "build", args = c(new_image, folder), docker_opts = "-t", ...)
+  docker_cmd(host, "build", args = c(new_image, folder), docker_opts = "-t", wait = wait, ...)
   
   ## list images
   docker_cmd(host, "images", ...)

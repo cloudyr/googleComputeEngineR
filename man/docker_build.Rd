@@ -5,7 +5,7 @@
 \title{Build image on an instance from a local Dockerfile}
 \usage{
 docker_build(host = localhost, dockerfile, new_image, folder = "buildimage",
-  ...)
+  wait = FALSE, ...)
 }
 \arguments{
 \item{host}{A host object.}
@@ -15,6 +15,8 @@ docker_build(host = localhost, dockerfile, new_image, folder = "buildimage",
 \item{new_image}{Name of the new image}
 
 \item{folder}{Where on host to build dockerfile}
+
+\item{wait}{Whether to block R console until finished build}
 
 \item{...}{Other arguments passed to the SSH command for the host}
 }

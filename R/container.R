@@ -155,7 +155,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
 
 get_image <- function(default_image, dynamic_image = NULL){
   ## override default rocker image
-  if(!is.null(dynamic_image)){
+  if(is.null(dynamic_image)){
     image <- default_image
   } else {
     image <- dynamic_image
@@ -278,7 +278,7 @@ gce_vm_container <- function(file = NULL,
 #' 
 #' It will start the push but it may take a long time to finish, espeically the first time, 
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
-#' @return TRUE if commands finish
+#' @return The tag the image was tagged with on GCE
 #' @export
 gce_push_registry <- function(instance,
                                save_name,
@@ -292,7 +292,10 @@ gce_push_registry <- function(instance,
     stop("Can't set container_name and image_name at same time", call. = FALSE)
   }
   
-  build_tag <- paste0(container_url, "/", project, "/", save_name)
+  build_tag <- gce_tag_container(container_url = container_url,
+                                 project = project,
+                                 container_name = save_name
+                                 )
   
   if(!is.null(container_name)){
     ## commits the current version of running docker container image_name and renames it 
@@ -312,9 +315,27 @@ gce_push_registry <- function(instance,
   ## authenticatation
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
+  myMessage("Uploading to Google Container Registry: ", 
+            paste0("https://console.cloud.google.com/kubernetes/images/list?project=",project), level = 3)
+  
   docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
   
-  TRUE
+  build_tag
+  
+}
+
+#' Return a container tag for Google Container Registry
+#' 
+#' 
+#' @inheritParams gce_push_registry
+#' @return A tag for use in Google Container Registry
+#' @export
+gce_tag_container <- function(container_name,
+                              project = gce_get_global_project(),
+                              container_url = "gcr.io"
+                              ){
+  
+  paste0(container_url, "/", project, "/", container_name)
   
 }
 
@@ -334,7 +355,7 @@ gce_push_registry <- function(instance,
 #'   \item For RStudio based containers, pass \code{"-p 80:8787"} to run it at the IP URL
 #'  }
 #' 
-#' @return TRUE if successful
+#' @return The instance
 #' @export
 gce_pull_registry <- function(instance,
                                container_name,
@@ -343,7 +364,9 @@ gce_pull_registry <- function(instance,
                                project = gce_get_global_project(),
                                ...){
   
-  build_tag <- paste0(container_url, "/", project, "/", container_name)
+  build_tag <- gce_tag_container(container_name = container_name,
+                                 project = project,
+                                 container_url = container_url)
   
   gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
   
@@ -355,7 +378,7 @@ gce_pull_registry <- function(instance,
   }
 
   
-  TRUE
+  instance
 }
 
 

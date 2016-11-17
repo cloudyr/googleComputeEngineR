@@ -28,7 +28,7 @@ After starting a VM, you can load the container again using this command.
  }}
 }
 \value{
-TRUE if successful
+The instance
 }
 \description{
 Load a previously saved private Google Container

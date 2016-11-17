@@ -30,7 +30,7 @@ It will start the push but it may take a long time to finish, espeically the fir
 \item{wait}{Will wait for operation to finish on the instance if TRUE}
 }
 \value{
-TRUE if commands finish
+The tag the image was tagged with on GCE
 }
 \description{
 Commit and save a running container or docker image to the Google Container Registry

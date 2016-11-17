@@ -18,6 +18,7 @@ test_that("We can install a package via futures", {
   ## install packages
   worked <- gce_future_install_packages(vm, "rocker/r-base", cran_packages = "corpcor")
   expect_true(worked)
+
   
 
   
@@ -45,7 +46,8 @@ test_that("Save docker containers", {
                                container_name = cons[[1]]$name,
                                wait = TRUE 
                                )
-  expect_true(worked)
+
+  expect_equal(worked, "gcr.io/mark-edmondson-gde/travis-test-container")
 })
 # 
 # 
@@ -63,6 +65,7 @@ test_that("Load docker containers", {
   worked <- gce_pull_registry(vm,
                               container_name = "travis-test-container",
                               name = paste(sample(LETTERS, 15),collapse=""))
-  expect_true(worked)
+  expect_s3_class(worked, "gce_instance")
+  
   gce_vm_stop("test-container-nodelete")
 })
