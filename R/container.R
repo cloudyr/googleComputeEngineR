@@ -62,9 +62,6 @@ gce_container_addpackage <- function(instance,
 #' @return logs
 #' @export
 gce_check_container <- function(instance, container){
-  if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
-  }
   
   gce_ssh(instance, paste0("sudo journalctl -u ", container))
   

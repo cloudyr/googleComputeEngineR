@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-16" />
+<meta name="date" content="2016-11-17" />
 
 <title>Example Workflows</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Example Workflows</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-16</em></h4>
+<h4 class="date"><em>2016-11-17</em></h4>
 
 
 
@@ -212,10 +212,31 @@ result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 ## default f1-micro instance
-vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;scheduleR&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>)
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;schedule-r&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>)
 
 
-</code></pre></div>
+
+## the r-base container won't run when a process isn't running
+
+## add SSH details to the instance
+vm &lt;-<span class="st"> </span><span class="kw">gce_ssh_addkeys</span>(vm)
+
+## install R packages in the container, and commit it to the same image
+<span class="kw">gce_future_install_packages</span>(vm, <span class="st">&quot;rocker/r-base&quot;</span>, <span class="dt">cran_packages =</span> <span class="st">&quot;corpcor&quot;</span>)
+
+## see the installed package on the rocker/r-base image
+<span class="kw">docker_run</span>(vm, <span class="st">&quot;rocker/r-base&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Rscript&quot;</span>, <span class="st">&quot;-e&quot;</span>, <span class="st">&quot;'installed.packages()'&quot;</span>))
+<span class="co">#            Package      LibPath                         Version   Priority     </span>
+<span class="co"># corpcor    &quot;corpcor&quot;    &quot;/usr/local/lib/R/site-library&quot; &quot;1.6.8&quot;   NA           </span>
+<span class="co"># digest     &quot;digest&quot;     &quot;/usr/local/lib/R/site-library&quot; &quot;0.6.10&quot;  NA </span>
+<span class="co"># ....</span>
+
+## install crontab
+## use gce_ssh_browser(vm) to launch SSH browser terminal
+<span class="kw">gce_ssh_browser</span>(vm)
+<span class="co">#&gt; docker run -it rocker/r-base bash</span>
+<span class="co">#&gt;/# apt-get update</span>
+<span class="co">#&gt;/# apt-get install cron</span></code></pre></div>
 </div>
 <div id="deploying-a-shiny-app" class="section level2">
 <h2>Deploying a Shiny app</h2>

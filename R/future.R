@@ -90,12 +90,6 @@ gce_future_install_packages <- function(instance,
                                         cran_packages = NULL,
                                         github_packages = NULL){
   
-  if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
-  }
-  
-  
-  
   ## set up future cluster
   temp_name <- paste0("gceR-install-",idempotency())
   clus <- future::as.cluster(instance, 

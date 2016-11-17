@@ -9,11 +9,11 @@ gce_rstudio_adduser(instance, username, password, container = "rstudio")
 \arguments{
 \item{instance}{An instance with RStudio installed via \link{gce_vm_template}}
 
+\item{username}{The user to create}
+
 \item{password}{The user password}
 
 \item{container}{The rstudio container to add the user to}
-
-\item{user}{The user to create}
 }
 \value{
 The instance

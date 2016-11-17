@@ -4,12 +4,12 @@
 \alias{gce_rstudio_password}
 \title{Changes password for a user on RStudio container}
 \usage{
-gce_rstudio_password(instance, user, password, container = "rstudio")
+gce_rstudio_password(instance, username, password, container = "rstudio")
 }
 \arguments{
 \item{instance}{An instance with RStudio installed via \link{gce_vm_template}}
 
-\item{user}{The user to chnage the password for}
+\item{username}{The user to chnage the password for}
 
 \item{password}{The user password}
 

@@ -34,15 +34,12 @@ gce_rstudio_adduser(vm, username = "bill", password = "flowerpot")
 ## use the Terminal in RStudio if required to install dependencies
 ## or use docker_cmd
 
-## example install crontab on instance
-docker_cmd(vm, "exec", args = c("rstudio", "sudo apt-get crontab"))
-
 ## see the containers running on the instance
 cons <- containers(vm)
 cons
-## the template RStudio container is called "rstudio"
+## the default template RStudio container is called "rstudio"
 
-## once setup, save the RStudio container for quick start in another instance
+## once setup, save the RStudio container to a new image for quick start in another instance
 gce_save_container(vm, 
                    container_name = "my_rstudio",
                    image_name = "rstudio")
@@ -155,8 +152,19 @@ lapply(vms, gce_vm_stop)
 library(googleComputeEngineR)
 
 ## default f1-micro instance
-vm <- gce_vm(name = "scheduleR", template = "r-base")
+vm <- gce_vm(name = "schedule-r", template = "r-base")
 
+## the r-base container won't run when a process isn't running
+
+## install R packages in the container, and commit it to the same image
+gce_future_install_packages(vm, "rocker/r-base", cran_packages = "corpcor")
+
+## see the installed package on the rocker/r-base image
+docker_run(vm, "rocker/r-base", c("Rscript", "-e", "'installed.packages()'"))
+#            Package      LibPath                         Version   Priority     
+# corpcor    "corpcor"    "/usr/local/lib/R/site-library" "1.6.8"   NA           
+# digest     "digest"     "/usr/local/lib/R/site-library" "0.6.10"  NA 
+# ....
 
 
 

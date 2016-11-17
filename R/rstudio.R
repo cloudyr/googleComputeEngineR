@@ -3,7 +3,7 @@
 #' RStudio has users based on unix user accounts
 #' 
 #' @param instance An instance with RStudio installed via \link{gce_vm_template}
-#' @param user The user to create
+#' @param username The user to create
 #' @param password The user password
 #' @param container The rstudio container to add the user to
 #' 
@@ -42,16 +42,16 @@ gce_rstudio_adduser <- function(instance, username, password,
 #' RStudio has users based on unix user accounts
 #' 
 #' @param instance An instance with RStudio installed via \link{gce_vm_template}
-#' @param user The user to chnage the password for
+#' @param username The user to chnage the password for
 #' @param password The user password
 #' @param container The rstudio container to add the user to
 #' 
 #' @return The instance
 #' @export
-gce_rstudio_password <- function(instance, user, password, 
+gce_rstudio_password <- function(instance, username, password, 
                                  container = "rstudio"){
   
-  ssh_ap <- paste0("sh -c 'echo ",user,":",password," | sudo chpasswd'")
+  ssh_ap <- paste0("sh -c 'echo ",username,":",password," | sudo chpasswd'")
   
   docker_cmd(instance,
                      cmd = "exec",
@@ -61,3 +61,4 @@ gce_rstudio_password <- function(instance, user, password,
   instance
   
 }
+
