@@ -63,9 +63,9 @@
 <blockquote>
 <p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
 </blockquote>
-<p>The following are some R scripts for common workflows. They assume you have previously signed up and setup a Google project and authentication.</p>
-<div id="an-rstudio-server-for-your-team" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#an-rstudio-server-for-your-team" class="anchor"> </a></body></html>An RStudio Server for your team</h2>
+<p>The following are some R scripts for common workflows. They assume you have previously signed up and setup a Google project, authentication and SSH.</p>
+<div id="custom-team-rstudio-server" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#custom-team-rstudio-server" class="anchor"> </a></body></html>Custom Team RStudio Server</h1>
 <p>This gives you a private RStudio Server with your custom packages and users.</p>
 <p>In summary it:</p>
 <ol style="list-style-type: decimal"><li>Launches an RStudio template with Hadley&rsquo;s tidyverse</li>
@@ -75,7 +75,7 @@
 <li>Lets you start other instances of RStudio server with your custom settings</li>
 </ol><div id="launch-the-rstudio-server-template" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#launch-the-rstudio-server-template" class="anchor"> </a></body></html>Launch the RStudio server template</h3>
-<p>Here we are setting up a 13GB RAM instance, as found via <code>gce_list_machinetypes()</code></p>
+<p>Here we are setting up a 13GB RAM instance, as found via <code><a href="../reference/gce_list_machinetype.html">gce_list_machinetype()</a></code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 ## setting up a 13GB RAM instance 
@@ -127,15 +127,18 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 <span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</code></pre></div>
 </div>
 </div>
-<div id="a-remote-r-cluster-to-run-big-r-programs" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#a-remote-r-cluster-to-run-big-r-programs" class="anchor"> </a></body></html>A remote R cluster to run big R programs</h2>
-<p>This workflow takes advatage of the <code>future</code> integration to run your local R-functions within a cluster of GCE machines.<br>
+<div id="remote-r-cluster" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#remote-r-cluster" class="anchor"> </a></body></html>Remote R cluster</h1>
+<p>This workflow takes advatage of the <a href="https://cran.r-project.org/web/packages/future/index.html"><code>future</code></a> integration to run your local R-functions within a cluster of GCE machines.<br>
 You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.</p>
-<p>In summary, this workflow: 1. Creates a GCE cluster 2. Lets you perform computations 3. Stops the VMs</p>
-<div id="create-the-cluster" class="section level3">
+<p>In summary, this workflow:</p>
+<ol style="list-style-type: decimal"><li>Creates a GCE cluster</li>
+<li>Lets you perform computations</li>
+<li>Stops the VMs</li>
+</ol><div id="create-the-cluster" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#create-the-cluster" class="anchor"> </a></body></html>Create the cluster</h3>
 <p>The example below uses a default <code>r-base</code> template, but you can use the steps above to create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
-<p>Instead of the more generic <code><a href="../reference/gce_vm.html">gce_vm()</a></code> that is used for more interactive use, we create the instances directly using <code>gce_vm_container</code> so it doesn&rsquo;t wait for the job to complete before starting the next. You can then use <code>gce_get_zone_op</code> to get the job status.</p>
+<p>Instead of the more generic <code><a href="../reference/gce_vm.html">gce_vm()</a></code> that is used for more interactive use, we create the instances directly using <code><a href="../reference/gce_vm_container.html">gce_vm_container()</a></code> so it doesn&rsquo;t wait for the job to complete before starting the next (not useful if you have a lot of VMs). You can then use <code><a href="../reference/gce_get_zone_op.html">gce_get_zone_op()</a></code> to get the job status.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(googleComputeEngineR)
 
@@ -182,16 +185,16 @@ jobs
 
 ## get the VM objects
 vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm)</code></pre></div>
-<p>It is safest to setup the SSH keys seperately for multiple instances:</p>
+<p>It is safest to setup the SSH keys seperately for multiple instances, using <code><a href="../reference/gce_ssh_setup.html">gce_ssh_setup()</a></code> - this is normally called for you when you first connect to a VM.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set up SSH for the VMs
 vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)</code></pre></div>
 <p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future object
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
 <span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms))</code></pre></div>
 </div>
 <div id="using-the-cluster" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#using-the-cluster" class="anchor"> </a></body></html>Using the cluster</h3>
-<p>The cluster is now ready to recieve jobs. You can send them up my simply using the <code>%&lt;-%</code> operator instead of <code>&lt;-</code></p>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## use %&lt;-% to send functions to work on cluster
 ## See future README for details: https://github.com/HenrikBengtsson/future
 a %&lt;-%<span class="st"> </span><span class="kw">Sys.getpid</span>()
@@ -212,13 +215,13 @@ resolved(result)
 </div>
 <div id="cleanup" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#cleanup" class="anchor"> </a></body></html>Cleanup</h3>
-<p>Remember to shut down your cluster. You are charged per minute of uptime.</p>
+<p>Remember to shut down your cluster. You are charged per minute, per instance of uptime.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## shutdown instances when finished
 <span class="kw">lapply</span>(vms, gce_vm_stop)</code></pre></div>
 </div>
 </div>
-<div id="an-rstudio-server-to-run-scheduled-scripts-upon" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#an-rstudio-server-to-run-scheduled-scripts-upon" class="anchor"> </a></body></html>An RStudio server to run scheduled scripts upon</h2>
+<div id="rstudio-server-scheduler" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#rstudio-server-scheduler" class="anchor"> </a></body></html>RStudio server + scheduler</h1>
 <p>This workflow demonstrates how you can take advatage of <a href="https://docs.docker.com/engine/reference/builder/">Dockerfiles</a> to customise the VM templates.</p>
 <p>Using <code>Dockerfiles</code> is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.</p>
 <p>In summary:</p>
@@ -227,19 +230,31 @@ resolved(result)
 <li>Use <code>docker_build</code> to upload and build your custom Docker image on the VM</li>
 <li>Save your custom image to the Container Registry</li>
 <li>Launch another VM to run your custom image</li>
+<li>Schedule a script to download from Google Analytics, send an email and upload to BigQuery</li>
 </ol><div id="launch-a-template-vm" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#launch-a-template-vm" class="anchor"> </a></body></html>Launch a template VM</h3>
 <p>Build VMs should be more powerful than the default machine type (<code>f1-micro</code>) else there is a danger of it hanging for big expensive builds.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 ## installs rocker/hadleyverse docker image
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"build-schedule-r"</span>, <span class="dt">template =</span> <span class="st">"rstudio-hadleyverse"</span>, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)</code></pre></div>
+vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"build-schedule-r"</span>, 
+             <span class="dt">template =</span> <span class="st">"rstudio-hadleyverse"</span>, 
+             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)</code></pre></div>
 </div>
 <div id="construct-a-dockerfile" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#construct-a-dockerfile" class="anchor"> </a></body></html>Construct a <code>Dockerfile</code></h3>
 <p>The <code>Dockerfile</code> here is available via <code>get_dockerfile("hadleyverse-crontab")</code>.</p>
-<p>It is shown below, which you could base your own upon. This one installs <code>cron</code> for scheduling, and <code>nano</code> a simple text editor. It then also installs <code>googleAuthR</code> and <code>shinyFiles</code> from CRAN, as these are needed for my scripts, and from Github <code>bnosac/cronR</code> to help with creating cron jobs within RStudio.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/hadleyverse
+<p>It is shown below, which you could base your own upon. This one installs <code>cron</code> for scheduling, and <code>nano</code> a simple text editor. It then also installs some libraries needed for my scheduled scripts:</p>
+<p>From CRAN:</p>
+<ul><li><code>googleAuthR</code> - google authentication</li>
+<li><code>shinyFiles</code> - for cron jobs</li>
+<li><code>googleCloudStorageR</code> - for uploading to Google Cloud Storage</li>
+<li><code>bigQueryR</code> - for uploading to BigQuery</li>
+<li><code>gmailR</code> - an email R package</li>
+<li><code>googleAnalyticsR</code> - for downloading Google Analytics data</li>
+</ul><p>From Github</p>
+<ul><li><code>bnosac/cronR</code> - to help with creating cron jobs within RStudio.</li>
+</ul><div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/hadleyverse
 <span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
 
 <span class="co"># install cron and R package dependencies</span>
@@ -254,7 +269,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <span class="co">## Install packages from CRAN</span>
 <span class="kw">RUN</span> install2.r --error <span class="dt">\ </span>
     <span class="kw">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    googleAuthR shinyFiles \
+    googleAuthR shinyFiles googleCloudStorage bigQueryR gmailR googleAnalyticsR \
     <span class="co">## install Github packages</span>
     <span class="kw">&amp;&amp;</span> <span class="kw">Rscript</span> -e <span class="st">"devtools::install_github(c('bnosac/cronR'))"</span> \
     <span class="co">## clean up</span>
@@ -265,7 +280,9 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <p>We now upload to the instance the Dockerfile, and build a new docker image called <code>my-cron-verse</code>.</p>
 <p>This can take some time the first time, so its time for another cup of tea.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## build a new image based on rocker/hadleyverse with this Dockerfile
-<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, <span class="dt">dockerfile =</span> <span class="kw">get_dockerfile</span>(<span class="st">"hadleyverse-crontab"</span>), <span class="dt">new_image =</span> <span class="st">"my-cron-verse"</span>)
+<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
+             <span class="dt">dockerfile =</span> <span class="kw">get_dockerfile</span>(<span class="st">"hadleyverse-crontab"</span>), 
+             <span class="dt">new_image =</span> <span class="st">"my-cron-verse"</span>)
 
 ## wait for it to build (5mins +)
 <span class="co"># ...</span>
@@ -286,10 +303,10 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="launch-another-vm-to-run-your-custom-image" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#launch-another-vm-to-run-your-custom-image" class="anchor"> </a></body></html>Launch another VM to run your custom image</h3>
-<p>You can now launch instances using your constructed image. You can even use your custom image to create further <code>Dockerfiles</code> that use it as a dependency, using <code>gce_tag_container</code> to get its correct name.</p>
+<p>You can now launch instances using your constructed image.</p>
+<p>You can also use your custom image to create further <code>Dockerfiles</code> that use it as a dependency, using <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> to get its correct name.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## now start an instance using our rstudio image in cloud-config
-## this takes care of rstudio friendly settgings, restart behaviour etc.
-## get instance tags via gce_tag_container() 
+## this takes care of rstudio friendly settings, restart behaviour etc.
 tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"my-rstudio"</span>)
 
 ## rstudio template, but with your private rstudio build
@@ -298,7 +315,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
               <span class="dt">dynamic_image =</span> tag, 
               <span class="dt">username =</span> <span class="st">"mark"</span>, 
               <span class="dt">password =</span> <span class="st">"mark1234"</span>)</code></pre></div>
-<p>You can check when the images are downloaded by using <code>gce_check_container</code></p>
+<p>You can check when the images are downloaded by using <code><a href="../reference/gce_check_container.html">gce_check_container()</a></code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## check on progress on the container pull
 <span class="kw"><a href="../reference/gce_check_container.html">gce_check_container</a></span>(vm2, <span class="st">"rstudio"</span>)
 <span class="co"># -- Logs begin at Thu 2016-11-17 14:54:38 UTC, end at Thu 2016-11-17 14:57:38 UTC. --</span>
@@ -325,23 +342,95 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 <span class="co"># Disks: </span>
 <span class="co">#             deviceName       type       mode boot autoDelete</span>
 <span class="co"># 1 myrstudio2-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span></code></pre></div>
-<p>You can delete your instances, knowing that the custom image is safe in the Container Registry, or just stop them using <code>gce_vm_stop</code> and start again with <code>gce_vm_start</code></p>
+<p>You can delete your instances, knowing that the custom image is safe in the Container Registry, or just stop them using <code><a href="../reference/gce_vm_stop.html">gce_vm_stop()</a></code> and start again with <code><a href="../reference/gce_vm_start.html">gce_vm_start()</a></code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## delete the instance (the container is safe)
 <span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm2)</code></pre></div>
 </div>
+<div id="a-demo-script" class="section level3">
+<h3 class="hasAnchor"><html><body><a href="#a-demo-script" class="anchor"> </a></body></html>A demo script</h3>
+<p>A demo script for scheduling is below.</p>
+<p>It is not recommended to rely on loading data into a Docker contianer, so we do not include data in the Docker container. Instead, call outside dedicated data stores such as BigQuery or Cloud Storage, which if you are using Google Compute Engine you have access to under the same project.</p>
+<p>In summary the script below:</p>
+<ol style="list-style-type: decimal"><li>Downloads data from Google Analytics</li>
+<li>Uploads the data to BigQuery</li>
+<li>Uploads the data to Google Cloud Storage</li>
+<li>Sends an email giving the daily total</li>
+</ol><p>Log into your RStudio Server instance and create the following script:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleCloudStorageR)
+<span class="kw">library</span>(bigQueryR)
+<span class="kw">library</span>(gmailr)
+<span class="kw">library</span>(googleAnalyticsR)
+
+## set options for authentication
+<span class="kw">options</span>(<span class="dt">googleAuthR.client_id =</span> XXXXX)
+<span class="kw">options</span>(<span class="dt">googleAuthR.client_secret =</span> XXXX)
+<span class="kw">options</span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw">c</span>(<span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>,
+                                        <span class="st">"https://www.googleapis.com/auth/analytics.readonly"</span>))
+
+## authenticate
+## using service account, ensure service account email added to GA account, BigQuery user permissions set, etc.
+googleAuthR::<span class="kw">gar_auth_service</span>(<span class="st">"auth.json"</span>)
+
+## get Google Analytics data
+gadata &lt;-<span class="st"> </span><span class="kw">google_analytics_4</span>(<span class="dv">123456</span>, 
+                             <span class="dt">date_range =</span> <span class="kw">c</span>(<span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">2</span>, <span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">1</span>),
+                             <span class="dt">metrics =</span> <span class="st">"sessions"</span>,
+                             <span class="dt">dimensions =</span> <span class="st">"medium"</span>,
+                             <span class="dt">anti_sample =</span> <span class="ot">TRUE</span>)
+
+## upload to Google BigQuery
+<span class="kw">bqr_upload_data</span>(<span class="dt">projectId =</span> <span class="st">"myprojectId"</span>, 
+                <span class="dt">datasetId =</span> <span class="st">"mydataset"</span>,
+                <span class="dt">tableId =</span> <span class="kw">paste0</span>(<span class="st">"gadata_"</span>,<span class="kw">format</span>(<span class="kw">Sys.Date</span>(),<span class="st">"%Y%m%d"</span>)),
+                <span class="dt">upload_data =</span> gadata,
+                <span class="dt">create =</span> <span class="ot">TRUE</span>)
+
+## upload to Google Cloud Storage
+<span class="kw">gcs_upload</span>(gadata, <span class="dt">name =</span> <span class="kw">paste0</span>(<span class="st">"gadata_"</span>,<span class="kw">Sys.Date</span>(),<span class="st">".csv"</span>))
+
+
+## get top medium referrer
+top_ref &lt;-<span class="st"> </span><span class="kw">paste</span>(gadata[<span class="kw">order</span>(gadata$sessions, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>),][<span class="dv">1</span>, ], <span class="dt">collapse =</span> <span class="st">","</span>)
+<span class="co"># 3456, organic</span>
+
+## send email with todays figures
+daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
+  <span class="dt">To =</span> <span class="st">"bob@myclient.com"</span>,
+  <span class="dt">From =</span> <span class="st">"bill@cool-agency.com"</span>,
+  <span class="dt">Subject =</span> <span class="st">"Todays winner is...."</span>,
+  <span class="dt">body =</span> <span class="kw">paste0</span>(<span class="st">"Top referrer was: "</span>),top_ref)
+<span class="kw">send_message</span>(daily_email)</code></pre></div>
+<p>Save the script within RStudio as <code>daily-report.R</code></p>
+<p>You can then use <a href="https://github.com/bnosac/cronR"><code>cronR</code></a> to schedule the script for a daily extract.</p>
+<p>Use its RStudio addin, or in the console issue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cronR)
+<span class="kw">cron_add</span>(<span class="kw">paste0</span>(<span class="st">"Rscript "</span>, <span class="kw">normalizePath</span>(<span class="st">"daily-report"</span>)), <span class="dt">frequency =</span> <span class="st">"daily"</span>)
+<span class="co"># Adding cronjob:</span>
+<span class="co"># ---------------</span>
+<span class="co">#</span>
+<span class="co"># ## cronR job</span>
+<span class="co"># ## id:   fe9168c7543cc83c1c2489de82216c0f</span>
+<span class="co"># ## tags: </span>
+<span class="co"># ## desc: </span>
+<span class="co"># 0 0 * * * Rscript /home/mark/demo-schedule.R</span></code></pre></div>
+<p>The script will then run every day.</p>
+<p>Make sure to run the script locally and in a test CRON job first. Once satisfied, you can run locally the <code><a href="../reference/gce_push_registry.html">gce_push_registry()</a></code> again to save the RStudio image with your scehduled script embedded within.</p>
+<p>If you want to call the data from a Shiny app, then you can use <code>bqr_query</code> from bigQueryR or <code>gcs_get_object</code> from googleCloudStorageR within your Shiny script to pull in the data into your app.</p>
 </div>
-<div id="deploying-a-self-contained-shiny-app-in-docker" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#deploying-a-self-contained-shiny-app-in-docker" class="anchor"> </a></body></html>Deploying a self-contained Shiny app in Docker</h2>
-<p>This like the above example uses a local Dockerfile to install the libraries you need for your Shiny app, but then also uploads a Shiny app into the custom image so its all self-contained.</p>
-<p>The Shiny app can then be deployed on new instances via the <code>gce_template</code> function.</p>
+</div>
+<div id="self-contained-shiny-app" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#self-contained-shiny-app" class="anchor"> </a></body></html>Self-contained Shiny app</h1>
+<p>This is useful to have a dedicated Docker container that has all the libraries, files and scripts necessary to run your app, on any machine that can run Docker, without worrying about versions etc.</p>
+<p>This example uses a local <code>Dockerfile</code> to install the libraries you need for your Shiny app, but also copies your Shiny app into itself so its all self-contained.</p>
+<p>The Shiny app can then be deployed on new instances via the <code>gce_template()</code> function.</p>
 <p>In summary:</p>
 <ol style="list-style-type: decimal"><li>Create a build VM</li>
 <li>Build your custom image with your Shiny app directory included</li>
 <li>Push to the Container registry</li>
-<li>Deploy</li>
+<li>Deploy to a production VM</li>
 </ol><div id="create-a-build-vm" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#create-a-build-vm" class="anchor"> </a></body></html>Create a build VM</h3>
-<p>We start with a Shiny template</p>
+<p>We start with a Shiny template:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 ## make sure the instance is big enough to install, 
@@ -350,8 +439,8 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="build-your-custom-image" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#build-your-custom-image" class="anchor"> </a></body></html>Build your custom image</h3>
-<p>This is as before, but the Dockerfile also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
-<p>The Docker file is using a <code>googleAuthR</code> demo app, and is found via: <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("shiny-googleAuthRdemo")</a></code></p>
+<p>This is as before, but the <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
+<p>The Shiny app used is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("shiny-googleAuthRdemo")</a></code></p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/shiny
 <span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
 
@@ -374,12 +463,11 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <span class="kw">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
 <p>Note the <code>COPY</code> command at the end - this copies from a folder in the same location as the <code>Dockerfile</code>. and then places it in the <code>/srv/shiny-server/</code> folder which is the default location for Shiny apps - this location means that the Shiny app will be avialable at <code>your.ip.addr.ess/myapp/</code></p>
 <p>We also install <code>googleAuthR</code> from CRAN, and a Debian dependency for <code>googleAuthR</code> that is needed, <code>libssl-dev</code> via <code>apt-get</code>.</p>
-<pre><code>## upload local Dockerfile that will build the upload app 
-list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
+<p>The file structure for the build is then:</p>
+<pre><code>list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
 # "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</code></pre>
-<p>We now build the custom image.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## install
-<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
+<p>We now build the custom image:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
              <span class="dt">dockerfolder =</span> <span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>),
              <span class="dt">new_image =</span> <span class="st">"shiny_gar"</span>)</code></pre></div>
 </div>
@@ -398,7 +486,7 @@ list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
 </div>
 <div id="deploy" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#deploy" class="anchor"> </a></body></html>Deploy</h3>
-<p>You can now deploy your Shiny app on any instance by calling it from the Container Registry</p>
+<p>You can now deploy your Shiny app on any instance by calling it from your Container Registry:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM with your self-contained Shiny app
 vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"deployedapp"</span>, 
               <span class="dt">template =</span> <span class="st">"shiny"</span>, 
@@ -413,7 +501,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 <span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] starting services</span>
 <span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] done.</span></code></pre></div>
 <p>Your app should now be running on your IP + folder in Dockerfile, such as <code>http://123.456.XXX.XXX/myapp/</code></p>
-<p>Clean up the VMs to avoid unecessary costs:</p>
+<p>Clean up the VMs to avoid unnecessary costs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># delete build VM</span>
 <span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)
 
@@ -421,15 +509,14 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 <span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm2)</code></pre></div>
 </div>
 </div>
-<div id="setting-up-an-opencpu-server-with-your-custom-packages" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#setting-up-an-opencpu-server-with-your-custom-packages" class="anchor"> </a></body></html>Setting up an OpenCPU server with your custom packages</h2>
-<p>You have a few options with OpenCPU for deploying, including just calling directly from a github repo.</p>
-<p>But the below installs your Github repo into the Docker container using a small Dockerfile as detailed above.</p>
+<div id="setting-up-a-custom-opencpu-server" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#setting-up-a-custom-opencpu-server" class="anchor"> </a></body></html>Setting up a custom OpenCPU server</h1>
+<p>The below installs your Github repo into the Docker container using a small <code>Dockerfile</code>.</p>
 <p>In summary:</p>
 <ol style="list-style-type: decimal"><li>Launch an OpenCPU instance</li>
 <li>Build a new OpenCPU image with your Github custom package</li>
 <li>Push the image to the Container Registry for safe-keeping</li>
-<li>Stop the default OpenCPU docker and launch your own</li>
+<li>Stop the default OpenCPU docker container and launch your own</li>
 </ol><div id="launch-an-opencpu-instance" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#launch-an-opencpu-instance" class="anchor"> </a></body></html>Launch an OpenCPU Instance</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
@@ -491,11 +578,11 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
       <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked"><li><a href="#an-rstudio-server-for-your-team">An RStudio Server for your team</a></li>
-      <li><a href="#a-remote-r-cluster-to-run-big-r-programs">A remote R cluster to run big R programs</a></li>
-      <li><a href="#an-rstudio-server-to-run-scheduled-scripts-upon">An RStudio server to run scheduled scripts upon</a></li>
-      <li><a href="#deploying-a-self-contained-shiny-app-in-docker">Deploying a self-contained Shiny app in Docker</a></li>
-      <li><a href="#setting-up-an-opencpu-server-with-your-custom-packages">Setting up an OpenCPU server with your custom packages</a></li>
+      <ul class="nav nav-pills nav-stacked"><li><a href="#custom-team-rstudio-server">Custom Team RStudio Server</a></li>
+      <li><a href="#remote-r-cluster">Remote R cluster</a></li>
+      <li><a href="#rstudio-server-scheduler">RStudio server + scheduler</a></li>
+      <li><a href="#self-contained-shiny-app">Self-contained Shiny app</a></li>
+      <li><a href="#setting-up-a-custom-opencpu-server">Setting up a custom OpenCPU server</a></li>
       </ul></div>
       </div>
 

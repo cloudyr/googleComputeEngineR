@@ -239,9 +239,6 @@ do_system <- function(instance,
   }
   myMessage(cmd, level = 2)
   
-  ## if on travis, wait=FALSE fails tests.
-  if(Sys.getenv("TRAVIS") == "true") wait = TRUE
-  
   status <- system(cmd, wait = wait)
   if (status != 0) {
     stop("ssh failed\n", cmd, call. = FALSE)

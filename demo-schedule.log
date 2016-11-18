@@ -1,0 +1,15 @@
+
+# Welcome Mark! Today is Fri Nov 18 21:10:54 2016
+
+
+# Loading .Rprofile from /Users/mark
+# Options:
+options(shiny.port = 1221)
+Setting scopes to https://www.googleapis.com/auth/devstorage.full_control
+If you need additional scopes set do so via options(googleAuthR.scopes.selected = c('scope1', 'scope2')) before loading library and include one required scope.
+Error : .onAttach failed in attachNamespace() for 'googleCloudStorageR', details:
+  call: googleAuthR::gar_auto_auth(required_scopes = required_scopes, 
+  error: GCS_AUTH_FILE specified in environment variables but file not found - 
+           looked for /Users/mark/dev/auth/Mark Edmondson GDE-36044a43d713.json and called from /Users/mark/dev/R/googleComputeEngineR
+Error: package or namespace load failed for ‘googleCloudStorageR’
+Execution halted
