@@ -1,15 +1,15 @@
 Package: googleComputeEngineR
 Type: Package
-Version: 0.0.9000
+Version: 0.1
 Title: R Interface with Google Compute Engine
-Description: Interact with Google Compute Engine API in R.
+Description: Interact with the Google Compute Engine API in R.
 Authors@R: c(
       person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
       person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com"),
       person("Winston", "Chang", role = "ctb", email = "winston@stdout.org"),
       person("Henrik", "Bengtsson", role="ctb", email = "henrikb@braju.com")
       )
-URL: http://code.markedmondson.me/googleComputeEngineR/
+URL: https://cloudyr.github.io/googleComputeEngineR/
 BugReports: https://github.com/cloudyr/googleComputeEngineR/issues
 Depends:
     R (>= 3.3.0)

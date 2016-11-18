@@ -109,7 +109,7 @@ gce_vm_stop(vm)
 
 # Remote R cluster
 
-This workflow takes advatage of the [`future`](https://cran.r-project.org/web/packages/future/index.html) integration to run your local R-functions within a cluster of GCE machines.  
+This workflow takes advatage of the [`future`](https://CRAN.R-project.org/package=future) integration to run your local R-functions within a cluster of GCE machines.  
 You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.
 
 In summary, this workflow:

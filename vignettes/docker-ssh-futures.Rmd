@@ -220,7 +220,7 @@ gce_load_container(vm2, "my-rstudio")
 
 ## Futures
 
-You can run R functions asynchronously over a cluster of Google VMs using the R package [`future`](https://cran.r-project.org/web/packages/future/index.html).
+You can run R functions asynchronously over a cluster of Google VMs using the R package [`future`](https://CRAN.R-project.org/package=future).
 
 Consult the [future readme](https://github.com/HenrikBengtsson/future) for further details, but a quick demo is shown below:
 

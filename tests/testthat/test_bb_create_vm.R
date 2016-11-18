@@ -1,7 +1,7 @@
 context("Make a VM")
 
 test_that("We can make a container VM",{
-  
+  skip_on_cran()
   ins <- gce_vm("test-container",
                 file = system.file("cloudconfig", 
                                    "shiny.yaml", 
