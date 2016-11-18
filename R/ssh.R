@@ -238,6 +238,10 @@ do_system <- function(instance,
     stop("port 22 is not open for ", external_ip, call. = FALSE)
   }
   myMessage(cmd, level = 2)
+  
+  ## if on travis, wait=FALSE fails tests.
+  if(Sys.getenv("TRAVIS") == "true") wait = TRUE
+  
   status <- system(cmd, wait = wait)
   if (status != 0) {
     stop("ssh failed\n", cmd, call. = FALSE)
