@@ -24,6 +24,9 @@ Pass in the instance name to fetch its object, or create the instance.
 }
 \details{
 Will get or create the instance as specified.  Will wait for instance to be created if necessary.
+
+Make sure the instance is big enough to handle what you need, for instance the default "f1-micro" will hang the instance 
+when trying to install certain R libraries.
 }
 \section{Creation logic}{
 

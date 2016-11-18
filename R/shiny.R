@@ -64,27 +64,3 @@ gce_shiny_logs <- function(instance, shinyapp = NULL){
   gce_ssh(instance, logs, capture_text = TRUE)
   
 }
-
-#' Add a package to a running Shiny instance
-#' 
-#' Add a package to a Shiny VM installed via \link{gce_vm_template}
-#' 
-#' @param instance The instance running Shiny
-#' @param cran_packages A character vector of CRAN packages to be installed
-#' @param github_packages A character vector of devtools packages to be installed
-#' @param auth_token A github PAT token, if needed for private Github packages
-#' 
-#' @return The instance
-#' @export
-gce_shiny_addpackage <- function(instance, 
-                                 cran_packages = NULL, 
-                                 github_packages = NULL, 
-                                 auth_token = NULL){
-  
-  gce_container_addpackage(instance = instance, 
-                           container = "shinyserver",
-                           cran_packages = cran_packages,
-                           github_packages = github_packages,
-                           auth_token = auth_token)
-  
-}

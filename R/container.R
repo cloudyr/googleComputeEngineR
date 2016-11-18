@@ -191,17 +191,17 @@ get_template_file <- function(template){
   
 }
 
-#' Get Dockerfile templates
+#' Get Dockerfolder of templates
 #' 
-#' This gets the file location of available Dockerfile examples
+#' This gets the folder location of available Dockerfile examples
 #' 
-#' @param dockerfile_folder
+#' @param dockerfile_folder The folder containing \code{Dockerfile}
 #' 
 #' @return file location
 #' @export
-get_dockerfile <- function(dockerfile_folder){
+get_dockerfolder <- function(dockerfile_folder){
   
-  system.file("dockerfiles", dockerfile_folder, "Dockerfile", package = "googleComputeEngineR")
+  system.file("dockerfiles", dockerfile_folder, package = "googleComputeEngineR")
   
 }
 

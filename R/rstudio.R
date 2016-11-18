@@ -26,7 +26,7 @@ gce_rstudio_adduser <- function(instance, username, password,
                      args = c(container, "ls /home/"))
 
   gce_rstudio_password(instance, 
-                       user = username, 
+                       username = username, 
                        password = password, 
                        container = container)
   

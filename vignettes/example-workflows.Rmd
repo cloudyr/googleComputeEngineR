@@ -273,30 +273,20 @@ Alternatively you can use the `gce_shiny_addapp` function, but that will need to
 ```r
 library(googleComputeEngineR)
 
-vm <- gce_vm(name = "build-app", template = "shiny")
-
-
-## make a build directory
-gce_ssh(vm, paste0("mkdir -p -m 0755 ", "build"))
-
-
-## upload the app so it can be built into the Dockerfile
-my_app_folder <- system.file("shiny", package = "googleAuthR")
-gce_ssh_upload(vm, my_app_folder, "build/shiny")
-gce_ssh(vm, "ls build/shiny")
-# DESCRIPTION
-# readme.md
-# server.R
-# ui.R
+## make sure the instance is big enough to install, 
+## the default "f1-micro" does not compile packages easily
+vm <- gce_vm(name = "build-app", template = "shiny", predefined_type = "n1-standard-2")
 
 ## upload local Dockerfile that will build the upload app 
+list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
+# "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"
 
+## install
 docker_build(vm, 
-             dockerfile = get_dockerfile("shiny-googleAuthRdemo"),
-             new_image = "shiny_gar",
-             folder = "build")
+             dockerfolder = get_dockerfolder("shiny-googleAuthRdemo"),
+             new_image = "shiny_gar")
 
-## this can take a while (20mins+)
+## push up to your private Google Container registry
 gce_push_registry(vm, 
                   save_name = "shiny_gar", 
                   image_name = "shiny_gar")
@@ -306,10 +296,11 @@ gce_push_registry(vm,
 # 4809649dffb9: Pushed
 # latest: digest: sha256:cb233f547d84dd94e7616fa7615522e15213d65cc2abb423dd4f3305d19309ce size: 19731
 
-## make new Shiny template VM with your self-container Shiny app
+## make new Shiny template VM with your self-contained Shiny app
 vm2 <- gce_vm(name = "deployedapp", 
               template = "shiny", 
-              dynamic_image = gce_tag_container("shiny_gar"))
+              dynamic_image = gce_tag_container("shiny_gar"),
+              predefined_type = "n1-standard-2")
               
 ## check for when image has finished downloading              
 gce_check_container(vm2, "shinyserver")
@@ -318,7 +309,10 @@ gce_check_container(vm2, "shinyserver")
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [cont-init.d] done.
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] starting services
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] done.
-              
+     
+## your app should now be running on your IP + folder in Dockerfile http://123.456.XXX.XXX/shiny/
+
+
 # delete build VM
 gce_vm_delete(vm)
 

@@ -15,7 +15,7 @@ RUN install2.r --error \
     googleAuthR \
     ## install Github packages
     ## clean up
-    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
-## assume Shinyapp is in build folder /shiny
+## assume shiny app is in build folder /shiny
 COPY ./shiny/ /srv/shiny-server/shiny/

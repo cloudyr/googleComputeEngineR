@@ -96,33 +96,36 @@
     </div>
 
     
-    <p>Helps create a dockerfile for your own images running R</p>
+    <p>Uploads a folder with a <code>Dockerfile</code> and supporting files to an instance and builds it</p>
     
 
-    <pre><span class='fu'>docker_build</span>(<span class='kw'>host</span> <span class='kw'>=</span> <span class='no'>localhost</span>, <span class='no'>dockerfile</span>, <span class='no'>new_image</span>, <span class='kw'>folder</span> <span class='kw'>=</span> <span class='st'>"buildimage"</span>,
-  <span class='no'>...</span>)</pre>
+    <pre><span class='fu'>docker_build</span>(<span class='kw'>host</span> <span class='kw'>=</span> <span class='no'>localhost</span>, <span class='no'>dockerfolder</span>, <span class='no'>new_image</span>,
+  <span class='kw'>folder</span> <span class='kw'>=</span> <span class='st'>"buildimage"</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>host</dt>
       <dd>A host object.</dd>
-      <dt>dockerfile</dt>
-      <dd>Location of local dockerfile</dd>
+      <dt>dockerfolder</dt>
+      <dd>Local location of build directory including valid <code>Dockerfile</code></dd>
       <dt>new_image</dt>
       <dd>Name of the new image</dd>
       <dt>folder</dt>
       <dd>Where on host to build dockerfile</dd>
+      <dt>wait</dt>
+      <dd>Whether to block R console until finished build</dd>
       <dt>...</dt>
       <dd>Other arguments passed to the SSH command for the host</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <code>host</code> object.</p>
+    <p>A table of active images on the instance</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Dockerfiles are best practice when creating your own images.</p>
+    <p>Dockerfiles are best practice when creating your own docker images, 
+rather than logging into a Docker container, making changes and committing.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -133,7 +136,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Not run: ------------------------------------</span>
-<span class='co'># docker_build(localhost, "/home/stuff/dockerfile" ,"new_image")</span>
+<span class='co'># docker_build(localhost, "/home/stuff/dockerfolder" ,"new_image", wait = TRUE)</span>
+<span class='co'># docker_run(localhost, "new_image")</span>
 <span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

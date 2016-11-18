@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Push to Google Container Registry — gce_push_registry • googleComputeEngineR</title>
+<title>Get Dockerfolder of templates — get_dockerfolder • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,44 +92,24 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Push to Google Container Registry</h1>
+    <h1>Get Dockerfolder of templates</h1>
     </div>
 
     
-    <p>Commit and save a running container or docker image to the Google Container Registry</p>
+    <p>This gets the folder location of available Dockerfile examples</p>
     
 
-    <pre><span class='fu'>gce_push_registry</span>(<span class='no'>instance</span>, <span class='no'>save_name</span>, <span class='kw'>container_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>container_url</span> <span class='kw'>=</span> <span class='st'>"gcr.io"</span>,
-  <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre><span class='fu'>get_dockerfolder</span>(<span class='no'>dockerfile_folder</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>instance</dt>
-      <dd>The VM to run within</dd>
-      <dt>save_name</dt>
-      <dd>The new name for the saved image</dd>
-      <dt>container_name</dt>
-      <dd>A running docker container. Can&#39;t be set if <code>image_name</code> is too.</dd>
-      <dt>image_name</dt>
-      <dd>A docker image on the instance. Can&#39;t be set if <code>container_name</code> is too.</dd>
-      <dt>container_url</dt>
-      <dd>The URL of where to save container</dd>
-      <dt>project</dt>
-      <dd>Project ID for this request, default as set by <a href='gce_get_global_project.html'>gce_get_global_project</a>
-
-This will only work on the Google Container optimised containers of image_family google_containers.
-Otherwise you will need to get a container authentication yourself (for now)
-
-It will start the push but it may take a long time to finish, espeically the first time, 
-  this function will return whilst waiting but don&#39;t turn off the VM until its finished.</dd>
-      <dt>wait</dt>
-      <dd>Will wait for operation to finish on the instance if TRUE</dd>
+      <dt>dockerfile_folder</dt>
+      <dd>The folder containing <code>Dockerfile</code></dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The tag the image was tagged with on GCE</p>
+    <p>file location</p>
     
 
   </div>

@@ -54,7 +54,7 @@
       <h1>Example Workflows</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2016-11-17</h4>
+            <h4 class="date">2016-11-18</h4>
           </div>
 
     
@@ -126,7 +126,7 @@ vm_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 ## you may want to make your own cloud-config file
 ## creates jobs that are creating VMs in background
 jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, function(x) {
-    <span class="kw"><a href="../reference/gce_vm_container.html">gce_vm_container</a></span>(<span class="dt">file =</span> <span class="kw">system.file</span>(<span class="st">"cloudconfig"</span>, <span class="st">"r-base.yaml"</span>,  <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>),
+    <span class="kw"><a href="../reference/gce_vm_container.html">gce_vm_container</a></span>(<span class="dt">file =</span> <span class="kw"><a href="../reference/get_template_file.html">get_template_file</a></span>(<span class="st">"r-base"</span>),
                      <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>,
                      <span class="dt">name =</span> x)
                      })
@@ -186,6 +186,7 @@ result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data)
 
 ## check if resolved
 <span class="kw">resolved</span>(result)
+[<span class="dv">1</span>] <span class="ot">TRUE</span>
 
 ## shutdown instances when finished
 <span class="kw">lapply</span>(vms, gce_vm_stop)</code></pre></div>
@@ -201,7 +202,7 @@ result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data)
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"schedule-r"</span>, <span class="dt">template =</span> <span class="st">"rstudio-hadleyverse"</span>)
 
 ## This Dockerfile adds cron, nano, googleAuthR and bnosac/cronR from github
-<span class="kw">readLines</span>(<span class="kw"><a href="../reference/get_dockerfile.html">get_dockerfile</a></span>(<span class="st">"hadleyverse-crontab"</span>))
+<span class="kw">readLines</span>(<span class="kw">get_dockerfile</span>(<span class="st">"hadleyverse-crontab"</span>))
 <span class="co"># [1] "FROM rocker/hadleyverse"                                             </span>
 <span class="co"># [2] "MAINTAINER Mark Edmondson (r@sunholo.com)"                           </span>
 <span class="co"># [3] ""                                                                    </span>
@@ -224,17 +225,17 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <span class="co"># [20] "    &amp;&amp; rm -rf /tmp/downloaded_packages/ /tmp/*.rds \\" </span>
 
 ## build a new image based on rocker/hadleyverse with this Dockerfile
-<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, <span class="dt">dockerfile =</span> <span class="kw"><a href="../reference/get_dockerfile.html">get_dockerfile</a></span>(<span class="st">"hadleyverse-crontab"</span>), <span class="dt">new_image =</span> <span class="st">"my-cron-verse"</span>)
+<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, <span class="dt">dockerfile =</span> <span class="kw">get_dockerfile</span>(<span class="st">"hadleyverse-crontab"</span>), <span class="dt">new_image =</span> <span class="st">"my-cron-verse"</span>)
 
 ## wait for it to build (5mins +)
-<span class="co">#...</span>
-<span class="co">#[0m ---&gt; 059fe3ed926a</span>
-<span class="co">#Removing intermediate container 7695f3dc071f</span>
-<span class="co">#Successfully built 059fe3ed926a</span>
-<span class="co">#Using existing public key in /Users/mark/.ssh/google_compute_engine.pub</span>
-<span class="co">#REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span>
-<span class="co">#my-cron-verse        latest              059fe3ed926a        2 seconds ago       1.933 GB</span>
-<span class="co">#rocker/hadleyverse   latest              05e3b636e90b        24 hours ago        1.921 GB</span>
+<span class="co"># ...</span>
+<span class="co"># [0m ---&gt; 059fe3ed926a</span>
+<span class="co"># Removing intermediate container 7695f3dc071f</span>
+<span class="co"># Successfully built 059fe3ed926a</span>
+<span class="co"># Using existing public key in /Users/mark/.ssh/google_compute_engine.pub</span>
+<span class="co"># REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span>
+<span class="co"># my-cron-verse        latest              059fe3ed926a        2 seconds ago       1.933 GB</span>
+<span class="co"># rocker/hadleyverse   latest              05e3b636e90b        24 hours ago        1.921 GB</span>
 
 
 ## run the Rstudio instance with appropriate docker settings
@@ -256,12 +257,102 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 ## locally - save the custom image to the Google repository for use in other VMs
 <span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, <span class="st">"my-cron-verse"</span>, <span class="dt">container_name =</span> <span class="st">"myrstudio"</span>)
 
-<span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</code></pre></div>
+<span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)
+
+## now start an instance using our rstudio image in cloud-config
+## this takes care of rstudio friendly settgings, restart behaviour etc.
+## get instance tags via gce_tag_container() 
+tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"my-rstudio"</span>)
+
+## rstudio template, but with your private rstudio build
+vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"myrstudio2"</span>, 
+              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
+              <span class="dt">dynamic_image =</span> tag, 
+              <span class="dt">username =</span> <span class="st">"mark"</span>, 
+              <span class="dt">password =</span> <span class="st">"mark1234"</span>)
+              
+## check on progress on the container pull
+<span class="kw"><a href="../reference/gce_check_container.html">gce_check_container</a></span>(vm2, <span class="st">"rstudio"</span>)
+<span class="co"># -- Logs begin at Thu 2016-11-17 14:54:38 UTC, end at Thu 2016-11-17 14:57:38 UTC. --</span>
+<span class="co"># Nov 17 14:54:43 myrstudio2 docker[1045]: Unable to find image 'gcr.io/mark-edmondson-gde/my-rstudio:latest' locally</span>
+<span class="co"># Nov 17 14:54:47 myrstudio2 docker[1045]: latest: Pulling from mark-edmondson-gde/my-rstudio</span>
+<span class="co"># Nov 17 14:54:47 myrstudio2 docker[1045]: a84f66826a7f: Pulling fs layer</span>
+<span class="co"># ...</span>
+<span class="co"># ...</span>
+<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [cont-init.d] conf: exited 0.</span>
+<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [cont-init.d] done.</span>
+<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [services.d] starting services</span>
+<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [services.d] done.</span>
+
+## your custom rstudio instance is now ready
+&gt;<span class="st"> </span>vm2
+<span class="co"># ==Google Compute Engine Instance==</span>
+<span class="co">#</span>
+<span class="co"># Name:                myrstudio2</span>
+<span class="co"># Created:             2016-11-17 06:54:18</span>
+<span class="co"># Machine Type:        f1-micro</span>
+<span class="co"># Status:              RUNNING</span>
+<span class="co"># Zone:                europe-west1-b</span>
+<span class="co"># External IP:         104.199.67.250</span>
+<span class="co"># Disks: </span>
+<span class="co">#             deviceName       type       mode boot autoDelete</span>
+<span class="co"># 1 myrstudio2-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span>
+
+## delete the instance (the container is safe)
+<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm2)</code></pre></div>
 </div>
-<div id="deploying-a-shiny-app" class="section level2">
-<h2 class="hasAnchor"><html><body><a href="#deploying-a-shiny-app" class="anchor"> </a></body></html>Deploying a Shiny app</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-</code></pre></div>
+<div id="deploying-a-self-container-shiny-app-in-docker" class="section level2">
+<h2 class="hasAnchor"><html><body><a href="#deploying-a-self-container-shiny-app-in-docker" class="anchor"> </a></body></html>Deploying a self-container Shiny app in Docker</h2>
+<p>This uses a local Dockerfile to install the libraries you need for your shiny app, uploads the app to an instance then builds a custom Docker container with your app integrated within.</p>
+<p>The Shiny app can then be deployed on new instances via the <code>gce_template</code> function.</p>
+<p>Alternatively you can use the <code>gce_shiny_addapp</code> function, but that will need to be repeated for every new instance.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+## make sure the instance is big enough to install, 
+## the default "f1-micro" does not compile packages easily
+vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"build-app"</span>, <span class="dt">template =</span> <span class="st">"shiny"</span>, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)
+
+## upload local Dockerfile that will build the upload app 
+<span class="kw">list.files</span>(<span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+<span class="co"># "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</span>
+
+## install
+<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
+             <span class="dt">dockerfolder =</span> <span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>),
+             <span class="dt">new_image =</span> <span class="st">"shiny_gar"</span>)
+
+## push up to your private Google Container registry
+<span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, 
+                  <span class="dt">save_name =</span> <span class="st">"shiny_gar"</span>, 
+                  <span class="dt">image_name =</span> <span class="st">"shiny_gar"</span>)
+<span class="co"># ...</span>
+<span class="co"># ...</span>
+<span class="co"># b363013633c9: Pushed</span>
+<span class="co"># 4809649dffb9: Pushed</span>
+<span class="co"># latest: digest: sha256:cb233f547d84dd94e7616fa7615522e15213d65cc2abb423dd4f3305d19309ce size: 19731</span>
+
+## make new Shiny template VM with your self-contained Shiny app
+vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"deployedapp"</span>, 
+              <span class="dt">template =</span> <span class="st">"shiny"</span>, 
+              <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny_gar"</span>),
+              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)
+              
+## check for when image has finished downloading              
+<span class="kw"><a href="../reference/gce_check_container.html">gce_check_container</a></span>(vm2, <span class="st">"shinyserver"</span>)
+<span class="co"># ...</span>
+<span class="co"># ...</span>
+<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [cont-init.d] done.</span>
+<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] starting services</span>
+<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] done.</span>
+     
+## your app should now be running on your IP + folder in Dockerfile http://123.456.XXX.XXX/shiny/
+
+
+<span class="co"># delete build VM</span>
+<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)
+
+<span class="co"># stop and start production shiny app as needed</span>
+<span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm2)</code></pre></div>
 </div>
 <div id="setting-up-an-opencpu-server-with-your-custom-packages" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#setting-up-an-opencpu-server-with-your-custom-packages" class="anchor"> </a></body></html>Setting up an OpenCPU server with your custom packages</h2>
@@ -275,7 +366,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
       <ul class="nav nav-pills nav-stacked"><li><a href="#an-rstudio-server-for-your-team">An RStudio Server for your team</a></li>
       <li><a href="#a-remote-r-cluster-to-run-big-r-programs">A remote R cluster to run big R programs</a></li>
       <li><a href="#an-rstudio-server-to-run-scheduled-scripts-upon">An RStudio server to run scheduled scripts upon</a></li>
-      <li><a href="#deploying-a-shiny-app">Deploying a Shiny app</a></li>
+      <li><a href="#deploying-a-self-container-shiny-app-in-docker">Deploying a self-container Shiny app in Docker</a></li>
       <li><a href="#setting-up-an-opencpu-server-with-your-custom-packages">Setting up an OpenCPU server with your custom packages</a></li>
       </ul></div>
       </div>

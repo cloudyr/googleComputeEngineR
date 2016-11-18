@@ -10,6 +10,9 @@
 #' 
 #' Will get or create the instance as specified.  Will wait for instance to be created if necessary.
 #' 
+#' Make sure the instance is big enough to handle what you need, for instance the default "f1-micro" will hang the instance 
+#' when trying to install certain R libraries.
+#' 
 #' @section Creation logic:
 #' 
 #' You need these parameters defined to call the right function for creation.  Check the function definitions for more details. 

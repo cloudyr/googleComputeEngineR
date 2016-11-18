@@ -23,17 +23,18 @@ docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
 
 #' Build image on an instance from a local Dockerfile
 #' 
-#' Helps create a dockerfile for your own images running R
+#' Uploads a folder with a \code{Dockerfile} and supporting files to an instance and builds it
 #'
 #' @inheritParams docker_cmd
-#' @param dockerfile Location of local dockerfile
+#' @param dockerfolder Local location of build directory including valid \code{Dockerfile}
 #' @param new_image Name of the new image
 #' @param folder Where on host to build dockerfile
 #' @param wait Whether to block R console until finished build
 #' 
 #' @details 
 #' 
-#' Dockerfiles are best practice when creating your own images.  
+#' Dockerfiles are best practice when creating your own docker images, 
+#' rather than logging into a Docker container, making changes and committing.  
 #' 
 #' @seealso \href{https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/}{Best practices for writing Dockerfiles}
 #' 
@@ -43,19 +44,25 @@ docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
 #' 
 #' @examples
 #' \dontrun{
-#' docker_build(localhost, "/home/stuff/dockerfile" ,"new_image")
+#' docker_build(localhost, "/home/stuff/dockerfolder" ,"new_image", wait = TRUE)
+#' docker_run(localhost, "new_image")
 #' }
-#' @return The \code{host} object.
+#' @return A table of active images on the instance
 #' @export
-docker_build <- function(host = localhost, dockerfile, new_image, folder = "buildimage",  wait = FALSE, ...) {
+docker_build <- function(host = localhost, dockerfolder, new_image, folder = "buildimage",  wait = FALSE, ...) {
   
-  stopifnot(file.exists(dockerfile))
+  stopifnot(file.exists(dockerfolder))
   
   gce_ssh(host, paste0("mkdir -p -m 0755 ", folder), ...)
-  gce_ssh_upload(host, dockerfile, folder, ...)
+  gce_ssh_upload(host, dockerfolder, folder, ...)
   
-  docker_cmd(host, "build", args = c(new_image, folder), docker_opts = "-t", wait = wait, ...)
+  docker_cmd(host, 
+             "build", 
+             args = c(new_image, paste0(folder,"/",basename(dockerfolder))), 
+             docker_opts = "-t", 
+             wait = wait, 
+             ...)
   
   ## list images
-  docker_cmd(host, "images", ...)
+  docker_cmd(host, "images", ..., capture_text = TRUE)
 }

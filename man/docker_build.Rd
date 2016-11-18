@@ -4,13 +4,13 @@
 \alias{docker_build}
 \title{Build image on an instance from a local Dockerfile}
 \usage{
-docker_build(host = localhost, dockerfile, new_image, folder = "buildimage",
-  wait = FALSE, ...)
+docker_build(host = localhost, dockerfolder, new_image,
+  folder = "buildimage", wait = FALSE, ...)
 }
 \arguments{
 \item{host}{A host object.}
 
-\item{dockerfile}{Location of local dockerfile}
+\item{dockerfolder}{Local location of build directory including valid \code{Dockerfile}}
 
 \item{new_image}{Name of the new image}
 
@@ -21,17 +21,19 @@ docker_build(host = localhost, dockerfile, new_image, folder = "buildimage",
 \item{...}{Other arguments passed to the SSH command for the host}
 }
 \value{
-The \code{host} object.
+A table of active images on the instance
 }
 \description{
-Helps create a dockerfile for your own images running R
+Uploads a folder with a \code{Dockerfile} and supporting files to an instance and builds it
 }
 \details{
-Dockerfiles are best practice when creating your own images.
+Dockerfiles are best practice when creating your own docker images, 
+rather than logging into a Docker container, making changes and committing.
 }
 \examples{
 \dontrun{
-docker_build(localhost, "/home/stuff/dockerfile" ,"new_image")
+docker_build(localhost, "/home/stuff/dockerfolder" ,"new_image", wait = TRUE)
+docker_run(localhost, "new_image")
 }
 }
 \seealso{
