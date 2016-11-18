@@ -11,9 +11,24 @@ vignette: >
 
 > See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
 
-Follows are some R scripts for common workflows.  They assume you have previously signed up and setup a Google project and authentication.
+The following are some R scripts for common workflows.  They assume you have previously signed up and setup a Google project and authentication.
 
 ## An RStudio Server for your team
+
+This gives you a private RStudio Server with your custom packages and users.  
+
+In summary it:
+
+1. Launches an RStudio template with Hadley's tidyverse
+2. Lets you add users and passwords
+3. Log into RStudio and install packages as you would in normal RStudio desktop
+4. Once satisfied, save the state of the RStudio into a private Docker repo on Google Container Engine
+5. Lets you start other instances of RStudio server with your custom settings
+
+
+### Launch the RStudio server template
+
+Here we are setting up a 13GB RAM instance, as found via `gce_list_machinetypes()`
 
 ```r
 library(googleComputeEngineR)
@@ -27,46 +42,84 @@ vm <- gce_vm(template = "rstudio-hadleyverse",
 
 ## wait a bit, login at the IP it gives you
 
-## add users
+```
+
+### Add users and setting up packages
+
+You can add users via:
+
+```r
 gce_rstudio_adduser(vm, username = "bill", password = "flowerpot")
+```
 
-## install packages by logging into RStudio and installing via UI
-## use the Terminal in RStudio if required to install dependencies
-## or use docker_cmd
+You can then login at the IP address given via `vm` or `gce_get_external_ip(vm)`,
+and install packages as you would on RStudio Desktop. 
 
-## see the containers running on the instance
-cons <- containers(vm)
-cons
-## the default template RStudio container is called "rstudio"
 
-## once setup, save the RStudio container to a new image for quick start in another instance
-gce_save_container(vm, 
-                   container_name = "my_rstudio",
-                   image_name = "rstudio")
+### Saving the Docker container to Google Container REgistry
 
-## stop the VM when not in use to save bills
-gce_vm_stop(vm)
+Every Google project has its own private Docekr repo called the Container Registry.  
 
-## start up another VM with different configuration from your saved docker container
+This command takes the running container that has your changes and saves it to there.
+
+By default, the RStudio container runs with name "rstudio" which you can see via `containers(vm)`
+
+```r
+gce_push_registry(vm, 
+                  save_name = "my_rstudio",
+                  container_name = "rstudio")
+```
+
+This can take a while the first time so go make a cup of tea. If successful you should be able to see your container saved
+at this URL `https://console.cloud.google.com/kubernetes/images/list`
+
+
+### Start up another VM your configuration
+
+Now say you want a larger more powerful instance, or to launch another with your settings.  You can now pull from the Container Registry and start up a VM with your settings enabled.
+
+We use `template=rstudio` to make sure the right ports and so forth are configured for your Rstudio, and `dynamic_image="my_rstudio"` to instruct the template to pull from your own image instead of using the default. You need to make sure the dynamic image is based on an RStudio one for this to work correctly.
+
+The function `gce_tag_container` constructs the name of the custom image on your Container Registry for you. 
+
+```r
+## construct the correct tag name for your custom image
+tag <- gce_tag_container("my_rstudio")
+# gcr.io/mark-edmondson-gde/my_rstudio
 
 ## start a 50GB RAM instance
-## containers need to be launched in "google-containers" image_family pre-loaded with docker
 vm2 <- gce_vm(name = "rstudio-big",
               predefined_type = "n1-highmem-8",
-              image_project = "google-containers",
-              image_family = "gci-stable")
+              template = "rstudio",
+              dynamic_image = tag)
 
 ## wait for it to launch
+```
 
-## load and run the container, mapping RStudio port of 8787 to 80
-gce_load_container(vm2, "my_rstudio", "-p 80:8787")
+### Clean up
 
-## make sure to stop this one, it will be more expensive
+You don't get charged for stopped containers, and the next time you start them they will start within 20 seconds.
+
+```r
 gce_vm_stop(vm2)
-
+gce_vm_stop(vm)
 ```
 
 ## A remote R cluster to run big R programs
+
+This workflow takes advatage of the `future` integration to run your local R-functions within a cluster of GCE machines.  
+You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.
+
+In summary, this workflow:
+1. Creates a GCE cluster
+2. Lets you perform computations
+3. Stops the VMs
+
+### Create the cluster
+
+The example below uses a default `r-base` template, but you can use the steps above to create a `dynamic_template` pulled from the Container Registry if required.
+
+Instead of the more generic `gce_vm()` that is used for more interactive use, we create the instances directly using `gce_vm_container` so it doesn't wait for the job to complete before starting the next. You can then use `gce_get_zone_op` to get the job status. 
 
 ```r
 library(future)
@@ -75,8 +128,7 @@ library(googleComputeEngineR)
 ## names for your cluster
 vm_names <- c("vm1","vm2","vm3")
 
-## create the cluster using the package's default cloud-config template for r-base
-## you may want to make your own cloud-config file
+## create the cluster using default template for r-base
 ## creates jobs that are creating VMs in background
 jobs <- lapply(vm_names, function(x) {
     gce_vm_container(file = get_template_file("r-base"),
@@ -116,13 +168,26 @@ lapply(jobs, function(x) gce_get_zone_op(x))
 
 ## get the VM objects
 vms <- lapply(vm_names, gce_vm)
+```
 
+It is safest to setup the SSH keys seperately for multiple instances:
+
+```r
 ## set up SSH for the VMs
 vms <- lapply(vms, gce_ssh_setup)
+```
 
+We now make the VM cluster as per details given in the [future README](https://github.com/HenrikBengtsson/future)
+```r
 ## make a future object
 plan(cluster, workers = as.cluster(vms))
+```
 
+### Using the cluster
+
+The cluster is now ready to recieve jobs.  You can send them up my simply using the `%<-%` operator instead of `<-`
+
+```r
 ## use %<-% to send functions to work on cluster
 ## See future README for details: https://github.com/HenrikBengtsson/future
 a %<-% Sys.getpid()
@@ -136,11 +201,21 @@ f <- function(my_data, args){
 
 ## send to cluster
 result %<-% f(my_data) 
+```
 
+For long running jobs you can use `future::resolved` to check on its progress.
+
+```
 ## check if resolved
 resolved(result)
 [1] TRUE
+```
 
+### Cleanup 
+
+Remember to shut down your cluster.  You are charged per minute of uptime. 
+
+```r
 ## shutdown instances when finished
 lapply(vms, gce_vm_stop)
 
@@ -149,40 +224,67 @@ lapply(vms, gce_vm_stop)
 
 ## An RStudio server to run scheduled scripts upon
 
-This takes advatage of Dockerfiles to customise the templates.  
+This workflow demonstrates how you can take advatage of [Dockerfiles](https://docs.docker.com/engine/reference/builder/) to customise the VM templates.  
 
-Build your own Dockerfiles to customise your instances with installed packages etc. 
+Using `Dockerfiles` is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.
+
+In summary:
+
+1. Launch a template VM with the container you want to base yours upon
+2. Construct a `Dockerfile` in a folder with any other files or dependencies, such as cron
+3. Use `docker_build` to upload and build your custom Docker image on the VM
+4. Save your custom image to the Container Registry
+5. Launch another VM to run your custom image
+
+### Launch a template VM
+
+Build VMs should be more powerful than the default machine type (`f1-micro`) else there is a danger of it hanging for big expensive builds. 
 
 ```r
 library(googleComputeEngineR)
 
-## default f1-micro instance
 ## installs rocker/hadleyverse docker image
-vm <- gce_vm(name = "schedule-r", template = "rstudio-hadleyverse")
+vm <- gce_vm(name = "build-schedule-r", template = "rstudio-hadleyverse", predefined_type = "n1-standard-2")
+```
 
-## This Dockerfile adds cron, nano, googleAuthR and bnosac/cronR from github
-readLines(get_dockerfile("hadleyverse-crontab"))
-# [1] "FROM rocker/hadleyverse"                                             
-# [2] "MAINTAINER Mark Edmondson (r@sunholo.com)"                           
-# [3] ""                                                                    
-# [4] "# install cron and R package dependencies"                           
-# [5] "RUN apt-get update && apt-get install -y \\"                         
-# [6] "    cron \\"                                                         
-# [7] "    nano \\"                                                         
-# [8] "    ## clean up"                                                     
-# [9] "    && apt-get clean \\ "                                            
-# [10] "    && rm -rf /var/lib/apt/lists/ \\ "                               
-# [11] "    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds"                  
-# [12] "    "                                                                
-# [13] "## Install packages from CRAN"                                       
-# [14] "RUN install2.r --error \\ "                                          
-# [15] "    -r 'http://cran.rstudio.com' \\"                                 
-# [16] "    googleAuthR \\"                                                  
-# [17] "    ## install Github packages"                                      
-# [18] "    && Rscript -e \"devtools::install_github(c('bnosac/cronR'))\" \\"
-# [19] "    ## clean up"                                                     
-# [20] "    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \\" 
+### Construct a `Dockerfile`
 
+The `Dockerfile` here is available via `get_dockerfile("hadleyverse-crontab")`.  
+
+It is shown below, which you could base your own upon.  This one installs `cron` for scheduling, and `nano` a simple text editor. It then also installs `googleAuthR` and `shinyFiles` from CRAN, as these are needed for my scripts, and from Github `bnosac/cronR` to help with creating cron jobs within RStudio. 
+
+
+```sh
+FROM rocker/hadleyverse
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install cron and R package dependencies
+RUN apt-get update && apt-get install -y \
+    cron \
+    nano \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install packages from CRAN
+RUN install2.r --error \ 
+    -r 'http://cran.rstudio.com' \
+    googleAuthR shinyFiles \
+    ## install Github packages
+    && Rscript -e "devtools::install_github(c('bnosac/cronR'))" \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+
+```
+
+### Using `docker_build`
+
+We now upload to the instance the Dockerfile, and build a new docker image called `my-cron-verse`.
+
+This can take some time the first time, so its time for another cup of tea. 
+
+```r
 ## build a new image based on rocker/hadleyverse with this Dockerfile
 docker_build(vm, dockerfile = get_dockerfile("hadleyverse-crontab"), new_image = "my-cron-verse")
 
@@ -195,29 +297,27 @@ docker_build(vm, dockerfile = get_dockerfile("hadleyverse-crontab"), new_image =
 # REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
 # my-cron-verse        latest              059fe3ed926a        2 seconds ago       1.933 GB
 # rocker/hadleyverse   latest              05e3b636e90b        24 hours ago        1.921 GB
+```
 
+### Save your custom image to the Container Registry
 
-## run the Rstudio instance with appropriate docker settings
-docker_run(vm, 
-          "my-cron-verse", 
-          docker_opts = "-p 80:8787 -e 'ROOT=TRUE' -e USER=mark -e PASSWORD=mark1234 --name=myrstudio",
-          detach = TRUE)
+This image is now saved to the Container Registry
 
-## log to the instance IP as given:
-gce_get_external_ip(vm)
-# External IP for instance build-test : 104.199.96.192
-
-## setup scripts and cron jobs using library(cronR)
-library(cronR)
-cron_add("Rscript -e 'my-script.R'", "daily", at = "7AM")
-
-## logout of RStudio
-
-## locally - save the custom image to the Google repository for use in other VMs
+```r
 gce_push_registry(vm, "my-cron-verse", container_name = "myrstudio")
+```
 
-gce_vm_stop(vm)
+Once that is done, we don't need this instance anymore. 
 
+```r
+gce_vm_delete(vm)
+```
+
+### Launch another VM to run your custom image
+
+You can now launch instances using your constructed image.  You can even use your custom image to create further `Dockerfiles` that use it as a dependency, using `gce_tag_container` to get its correct name. 
+
+```r
 ## now start an instance using our rstudio image in cloud-config
 ## this takes care of rstudio friendly settgings, restart behaviour etc.
 ## get instance tags via gce_tag_container() 
@@ -229,7 +329,11 @@ vm2 <- gce_vm(name = "myrstudio2",
               dynamic_image = tag, 
               username = "mark", 
               password = "mark1234")
-              
+``` 
+
+You can check when the images are downloaded by using `gce_check_container`
+
+```r
 ## check on progress on the container pull
 gce_check_container(vm2, "rstudio")
 # -- Logs begin at Thu 2016-11-17 14:54:38 UTC, end at Thu 2016-11-17 14:57:38 UTC. --
@@ -256,19 +360,32 @@ gce_check_container(vm2, "rstudio")
 # Disks: 
 #             deviceName       type       mode boot autoDelete
 # 1 myrstudio2-boot-disk PERSISTENT READ_WRITE TRUE       TRUE
+```
 
+You can delete your instances, knowing that the custom image is safe in the Container Registry, or just stop them using `gce_vm_stop` and start again with `gce_vm_start`
+
+```r
 ## delete the instance (the container is safe)
 gce_vm_delete(vm2)
 ```
 
-## Deploying a self-container Shiny app in Docker
+## Deploying a self-contained Shiny app in Docker
 
-This uses a local Dockerfile to install the libraries you need for your shiny app, 
-uploads the app to an instance then builds a custom Docker container with your app integrated within.
+This like the above example uses a local Dockerfile to install the libraries you need for your Shiny app, 
+but then also uploads a Shiny app into the custom image so its all self-contained. 
 
 The Shiny app can then be deployed on new instances via the `gce_template` function.
 
-Alternatively you can use the `gce_shiny_addapp` function, but that will need to be repeated for every new instance. 
+In summary:
+
+1. Create a build VM
+2. Build your custom image with your Shiny app directory included
+3. Push to the Container registry
+4. Deploy
+
+### Create a build VM
+
+We start with a Shiny template
 
 ```r
 library(googleComputeEngineR)
@@ -276,16 +393,62 @@ library(googleComputeEngineR)
 ## make sure the instance is big enough to install, 
 ## the default "f1-micro" does not compile packages easily
 vm <- gce_vm(name = "build-app", template = "shiny", predefined_type = "n1-standard-2")
+```
 
+### Build your custom image
+
+This is as before, but the Dockerfile also includes a `COPY` command to copy necessary Shiny `ui.R` and `server.R` files into the Docker image. 
+
+The Docker file is using a `googleAuthR` demo app, and is found via: `get_dockerfolder("shiny-googleAuthRdemo")`
+
+```sh
+FROM rocker/shiny
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install packages from CRAN
+RUN install2.r --error \ 
+    -r 'http://cran.rstudio.com' \
+    googleAuthR \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## assume shiny app is in build folder /shiny
+COPY ./shiny/ /srv/shiny-server/myapp/
+
+```
+
+Note the `COPY` command at the end - this copies from a folder in the same location as the `Dockerfile`. and then places it in the `/srv/shiny-server/` folder which is the default location for Shiny apps - this location means that the Shiny app will be avialable at `your.ip.addr.ess/myapp/`
+
+We also install `googleAuthR` from CRAN, and a Debian dependency for `googleAuthR` that is needed, `libssl-dev` via `apt-get`.
+
+```
 ## upload local Dockerfile that will build the upload app 
 list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
 # "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"
+```
 
+We now build the custom image. 
+
+```r
 ## install
 docker_build(vm, 
              dockerfolder = get_dockerfolder("shiny-googleAuthRdemo"),
              new_image = "shiny_gar")
+```
 
+### Push to the Container registry
+
+On a successful build, you can now upload to the Container Registry.
+
+```r
 ## push up to your private Google Container registry
 gce_push_registry(vm, 
                   save_name = "shiny_gar", 
@@ -295,7 +458,13 @@ gce_push_registry(vm,
 # b363013633c9: Pushed
 # 4809649dffb9: Pushed
 # latest: digest: sha256:cb233f547d84dd94e7616fa7615522e15213d65cc2abb423dd4f3305d19309ce size: 19731
+```
 
+### Deploy
+
+You can now deploy your Shiny app on any instance by calling it from the Container Registry
+
+```r
 ## make new Shiny template VM with your self-contained Shiny app
 vm2 <- gce_vm(name = "deployedapp", 
               template = "shiny", 
@@ -309,10 +478,13 @@ gce_check_container(vm2, "shinyserver")
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [cont-init.d] done.
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] starting services
 # Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] done.
-     
-## your app should now be running on your IP + folder in Dockerfile http://123.456.XXX.XXX/shiny/
+``` 
 
+Your app should now be running on your IP + folder in Dockerfile, such as `http://123.456.XXX.XXX/myapp/`
 
+Clean up the VMs to avoid unecessary costs:
+
+```r
 # delete build VM
 gce_vm_delete(vm)
 
@@ -323,3 +495,86 @@ gce_vm_stop(vm2)
 
 ## Setting up an OpenCPU server with your custom packages
 
+You have a few options with OpenCPU for deploying, including just calling directly from a github repo.
+
+But the below installs your Github repo into the Docker container using a small Dockerfile as detailed above.
+
+In summary:
+
+1. Launch an OpenCPU instance
+2. Build a new OpenCPU image with your Github custom package 
+3. Push the image to the Container Registry for safe-keeping
+4. Stop the default OpenCPU docker and launch your own
+
+### Launch an OpenCPU Instance
+
+```r
+library(googleComputeEngineR)
+
+## start an opencpu template
+vm <- gce_vm(name = "opencpu", template = "opencpu", predefined_type = "n1-standard-2")
+
+## wait for opencpu image to load
+gce_check_container(vm, "opencpu")
+```
+
+### Build a new OpenCPU image
+
+This Dockerfile is available via `get_dockerfolder("opencpu-installgithub")` and below.  It installs an OpenCPU package from my [prediction of user URLs for prefetching](code.markedmondson.me/predictClickOpenCPU/supercharge.html#1) application.
+
+```sh
+FROM opencpu/base
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install any package dependencies
+RUN apt-get update && apt-get install -y \
+    nano \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install your custom package from Github
+RUN Rscript -e "devtools::install_github(c('MarkEdmondson1234/predictClickOpenCPU'))"
+
+```
+
+The Dockerfile is used to build the custom image below:
+
+```r
+## build a docker image with your package installed
+docker_build(vm, 
+             dockerfolder = get_dockerfolder("opencpu-installgithub"),
+             new_image = "opencpu-predictclick")
+```
+
+### Push the image to the Container Registry
+
+```r
+## push up to your private Google Container registry
+gce_push_registry(vm, 
+                  save_name = "opencpu-predictclick", 
+                  image_name = "opencpu-predictclick")
+```
+
+### Deploy 
+
+In this case we don't start a new instance, just stop the running OpenCPU container and start our own.  We need to stop the default container to free up the ports `80` and `8004` that are needed for OpenCPU to work.
+
+```r
+## stop default opencpu container
+docker_cmd(vm, "stop opencpu-server")
+
+## run custom opencpu server
+docker_run(vm, 
+           image = "opencpu-predictclick", 
+           name = "predictclick", 
+           detach = TRUE, 
+           docker_opts = "-p 80:80 -p 8004:8004")
+``` 
+
+Clean up when you are done to avoid charges. 
+
+```r
+gce_vm_stop(vm)
+```

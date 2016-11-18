@@ -1,4 +1,7 @@
 title: googleComputeEngineR
+template:
+  params:
+    bootswatch: cerulean
 navbar:
   title: "googleComputeEngineR"
   type: inverse
@@ -49,9 +52,12 @@ reference:
       - gce_vm_reset
       - gce_vm_delete
       - gce_get_external_ip
-  - title: "Docker images and containers"
+  - title: "VM Templates, Docker images and containers"
     contents:
       - matches("container")
+      - matches("docker")
+      - matches("template")
+      - matches("registry")
   - title: "Template specific"
     desc: >
       Various functions that work with specific VM templates

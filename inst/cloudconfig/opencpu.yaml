@@ -18,7 +18,7 @@ write_files:
     ExecStartPre=/usr/share/google/dockercfg_update.sh
     ExecStart=/usr/bin/docker run -p 80:80 \
                                   -p 8004:8004 \
-                                  --name=opencpu \
+                                  --name=opencpu-server \
                                   %s
     ExecStop=/usr/bin/docker stop opencpu
 

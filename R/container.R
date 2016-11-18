@@ -111,7 +111,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
     cloud_init_file <- sprintf(cloud_init_file, image)
   } else if(template == "opencpu"){
     
-    image <- get_image("opencpu/rstudio", dynamic_image = dynamic_image)
+    image <- get_image("opencpu/base", dynamic_image = dynamic_image)
     cloud_init_file <- sprintf(cloud_init_file, image)
     
   } else if(template == "r-base"){
