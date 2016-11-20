@@ -78,8 +78,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
 </blockquote>
 <p>The following are some R scripts for common workflows. They assume you have previously signed up and setup a Google project, authentication and SSH.</p>
-<div id="terminalogy" class="section level1">
-<h1>Terminalogy</h1>
+<div id="terminology" class="section level1">
+<h1>Terminology</h1>
 <p>The below refers to these objects:</p>
 <ul>
 <li>Instance - Sometimes called Virtual Machine (VM), this is the computer you start in the Google Cloud. It can be configured just like your desktop computer at home. <code>googleComputeEngineR</code> uses instances with the Debain Linux operating system installed. You are charged per minute they are up.</li>
@@ -385,7 +385,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt
 <div id="a-demo-script" class="section level3">
 <h3>A demo script</h3>
 <p>A demo script for scheduling is below.</p>
-<p>It is not recommended to rely on loading data into a Docker contianer, so we do not include data in the Docker container. Instead, call outside dedicated data stores such as BigQuery or Cloud Storage, which if you are using Google Compute Engine you have access to under the same project.</p>
+<p>It is not recommended to rely on loading data into a Docker contianer. Instead, call outside dedicated data stores such as BigQuery or Cloud Storage, which if you are using Google Compute Engine you have access to under the same project.</p>
 <p>In summary the script below:</p>
 <ol style="list-style-type: decimal">
 <li>Downloads data from Google Analytics</li>
@@ -453,7 +453,7 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
 <span class="co"># 0 0 * * * Rscript /home/mark/demo-schedule.R</span></code></pre></div>
 <p>The script will then run every day.</p>
 <p>Make sure to run the script locally and in a test CRON job first. Once satisfied, you can run locally the <code>gce_push_registry()</code> again to save the RStudio image with your scehduled script embedded within.</p>
-<p>If you want to call the data from a Shiny app, then you can use <code>bqr_query</code> from bigQueryR or <code>gcs_get_object</code> from googleCloudStorageR within your Shiny script to pull in the data into your app.</p>
+<p>If you want to call the data from a Shiny app, then you can use <code>bqr_query</code> from bigQueryR or <code>gcs_get_object</code> from googleCloudStorageR within your app’s <code>server.R</code> to pull in the data into your app.</p>
 </div>
 </div>
 <div id="self-contained-shiny-app" class="section level1">
