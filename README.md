@@ -26,10 +26,16 @@ An R interface to the Google Cloud Compute Engine API, for launching virtual mac
 
 ## Install
 
-Its not on CRAN yet:
+CRAN version:
 
 ```r
-devtools::install_github("MarkEdmondson1234/googleComputeEngineR")
+install.packages("googleComputeEngineR")
+```
+
+Development version:
+
+```r
+devtools::install_github("cloudyr/googleComputeEngineR")
 ```
 
 

@@ -54,7 +54,7 @@
       <h1>Example Workflows</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2016-11-18</h4>
+            <h4 class="date">2016-11-20</h4>
           </div>
 
     
@@ -64,6 +64,16 @@
 <p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
 </blockquote>
 <p>The following are some R scripts for common workflows. They assume you have previously signed up and setup a Google project, authentication and SSH.</p>
+<div id="terminalogy" class="section level1">
+<h1 class="hasAnchor"><html><body><a href="#terminalogy" class="anchor"> </a></body></html>Terminalogy</h1>
+<p>The below refers to these objects:</p>
+<ul><li>Instance - Sometimes called Virtual Machine (VM), this is the computer you start in the Google Cloud. It can be configured just like your desktop computer at home. <code>googleComputeEngineR</code> uses instances with the Debain Linux operating system installed. You are charged per minute they are up.</li>
+<li>Docker - A program that allows you to run a further type of virtual machine on any computer. The idea is that if any computer installs Docker, they can run the images created.</li>
+<li>Docker Image - These are templates of the applicaations you run - they contain all the information and files needed to run it within Docker. They can contain different operating systems to what Docker is installed upon (e.g.&nbsp;you can run a Linux Docker image on OSX)</li>
+<li>Docker container - These are the running programs or apps a Docker Image creates when you run them.</li>
+</ul><p>Read me about <a href="https://www.docker.com/">Docker here</a>.</p>
+<p>An instance/VM can have multiple docker images, which are running multiple docker containers.</p>
+</div>
 <div id="custom-team-rstudio-server" class="section level1">
 <h1 class="hasAnchor"><html><body><a href="#custom-team-rstudio-server" class="anchor"> </a></body></html>Custom Team RStudio Server</h1>
 <p>This gives you a private RStudio Server with your custom packages and users.</p>
@@ -578,7 +588,8 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
       <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked"><li><a href="#custom-team-rstudio-server">Custom Team RStudio Server</a></li>
+      <ul class="nav nav-pills nav-stacked"><li><a href="#terminalogy">Terminalogy</a></li>
+      <li><a href="#custom-team-rstudio-server">Custom Team RStudio Server</a></li>
       <li><a href="#remote-r-cluster">Remote R cluster</a></li>
       <li><a href="#rstudio-server-scheduler">RStudio server + scheduler</a></li>
       <li><a href="#self-contained-shiny-app">Self-contained Shiny app</a></li>
