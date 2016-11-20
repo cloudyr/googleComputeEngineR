@@ -17,6 +17,8 @@ after_failure:
 - find *Rcheck -name '*.fail' -print -exec cat '{}' \;
 after_success:
 - travis_wait 40 Rscript -e 'library("covr");codecov(line_exclusions = list("R/options.R", "R/utilities.R"))'
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash
+  drat.sh
 before_install:
 - openssl aes-256-cbc -K $encrypted_440eac6d6480_key -iv $encrypted_440eac6d6480_iv
   -in secrets.tar.enc -out secrets.tar -d
