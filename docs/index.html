@@ -65,7 +65,7 @@
 <li>Put your default project, zone and JSON file location in your <code>.Renviron</code>
 </li>
 <li>Run <code>library(googleComputeEngineR)</code> and auto-authenticate</li>
-<li>Run <code>vm &lt;- gce_vm("rstudio", name = "rstudio-server", username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
+<li>Run <code>vm &lt;- gce_vm(template = "rstudio", name = "rstudio-server", username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
 <li>Wait for it to install, login via the returned URL.</li>
 </ol></div>
 <div id="thanks-to" class="section level2">
