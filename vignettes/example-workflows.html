@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-20" />
+<meta name="date" content="2016-11-21" />
 
 <title>Example Workflows</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Example Workflows</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-20</em></h4>
+<h4 class="date"><em>2016-11-21</em></h4>
 
 
 
@@ -84,8 +84,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Instance - Sometimes called Virtual Machine (VM), this is the computer you start in the Google Cloud. It can be configured just like your desktop computer at home. <code>googleComputeEngineR</code> uses instances with the Debain Linux operating system installed. You are charged per minute they are up.</li>
 <li>Docker - A program that allows you to run a further type of virtual machine on any computer. The idea is that if any computer installs Docker, they can run the images created.</li>
-<li>Docker Image - These are templates of the applicaations you run - they contain all the information and files needed to run it within Docker. They can contain different operating systems to what Docker is installed upon (e.g. you can run a Linux Docker image on OSX)</li>
-<li>Docker container - These are the running programs or apps a Docker Image creates when you run them.</li>
+<li>Docker Image - Templates of the applications you run. Contain all the information and files needed to run it within Docker. They can contain different operating systems to what Docker is installed upon (e.g. you can run a Linux Docker image on OSX)</li>
+<li>Docker container - The running process made from a Docker Image when you run them.</li>
 </ul>
 <p>Read me about <a href="https://www.docker.com/">Docker here</a>.</p>
 <p>An instance/VM can have multiple docker images, which are running multiple docker containers.</p>
@@ -194,7 +194,7 @@ jobs
 <span class="co"># Started:  2016-11-16 06:53:09</span>
 
 ## check status of jobs
-<span class="kw">lapply</span>(jobs, function(x) <span class="kw">gce_get_zone_op</span>(x))
+<span class="kw">lapply</span>(jobs, gce_get_zone_op)
 <span class="co"># [[1]]</span>
 <span class="co"># ==Operation insert :  DONE</span>
 <span class="co"># Started:  2016-11-16 06:52:58</span>
@@ -385,7 +385,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt
 <div id="a-demo-script" class="section level3">
 <h3>A demo script</h3>
 <p>A demo script for scheduling is below.</p>
-<p>It is not recommended to rely on loading data into a Docker contianer. Instead, call outside dedicated data stores such as BigQuery or Cloud Storage, which if you are using Google Compute Engine you have access to under the same project.</p>
+<p>It is not recommended to put critical data within a Docker contianer, as it can be destroyed if the container crashes. Instead, call dedicated data stores such as BigQuery or Cloud Storage, which as you are using Google Compute Engine you already have access to under the same project.</p>
 <p>In summary the script below:</p>
 <ol style="list-style-type: decimal">
 <li>Downloads data from Google Analytics</li>
@@ -440,7 +440,7 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
 <span class="kw">send_message</span>(daily_email)</code></pre></div>
 <p>Save the script within RStudio as <code>daily-report.R</code></p>
 <p>You can then use <a href="https://github.com/bnosac/cronR"><code>cronR</code></a> to schedule the script for a daily extract.</p>
-<p>Use its RStudio addin, or in the console issue:</p>
+<p>Use <code>cronR</code>’s RStudio addin, or in the console issue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cronR)
 <span class="kw">cron_add</span>(<span class="kw">paste0</span>(<span class="st">&quot;Rscript &quot;</span>, <span class="kw">normalizePath</span>(<span class="st">&quot;daily-report&quot;</span>)), <span class="dt">frequency =</span> <span class="st">&quot;daily&quot;</span>)
 <span class="co"># Adding cronjob:</span>
@@ -452,15 +452,14 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
 <span class="co"># ## desc: </span>
 <span class="co"># 0 0 * * * Rscript /home/mark/demo-schedule.R</span></code></pre></div>
 <p>The script will then run every day.</p>
-<p>Make sure to run the script locally and in a test CRON job first. Once satisfied, you can run locally the <code>gce_push_registry()</code> again to save the RStudio image with your scehduled script embedded within.</p>
-<p>If you want to call the data from a Shiny app, then you can use <code>bqr_query</code> from bigQueryR or <code>gcs_get_object</code> from googleCloudStorageR within your app’s <code>server.R</code> to pull in the data into your app.</p>
+<p>Test the script locally and with a test schedule before using in production. Once satisfied, you can run locally the <code>gce_push_registry()</code> again to save the RStudio image with your scehduled script embedded within.</p>
+<p>If you want to call the scheduled data from a Shiny app, you can now fetch the data again via <code>bqr_query</code> from <code>bigQueryR</code> or <code>gcs_get_object</code> from <code>googleCloudStorageR</code> within your <code>server.R</code> to pull in the data into your app at runtime.</p>
 </div>
 </div>
 <div id="self-contained-shiny-app" class="section level1">
 <h1>Self-contained Shiny app</h1>
-<p>This is useful to have a dedicated Docker container that has all the libraries, files and scripts necessary to run your app, on any machine that can run Docker, without worrying about versions etc.</p>
-<p>This example uses a local <code>Dockerfile</code> to install the libraries you need for your Shiny app, but also copies your Shiny app into itself so its all self-contained.</p>
-<p>The Shiny app can then be deployed on new instances via the <code>gce_template()</code> function.</p>
+<p>This creates a dedicated Docker container that has all the libraries, files and scripts necessary to run your Shiny app. This example uses a local <code>Dockerfile</code> to install the libraries you need, but in addition also copies your Shiny app scripts so its all self-contained and portable.</p>
+<p>The Shiny app can then be deployed on new instances.</p>
 <p>In summary:</p>
 <ol style="list-style-type: decimal">
 <li>Create a build VM</li>

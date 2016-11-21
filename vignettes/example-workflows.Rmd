@@ -19,8 +19,8 @@ The below refers to these objects:
 
 * Instance - Sometimes called Virtual Machine (VM), this is the computer you start in the Google Cloud.  It can be configured just like your desktop computer at home.  `googleComputeEngineR` uses instances with the Debain Linux operating system installed. You are charged per minute they are up. 
 * Docker - A program that allows you to run a further type of virtual machine on any computer.  The idea is that if any computer installs Docker, they can run the images created. 
-* Docker Image - These are templates of the applicaations you run - they contain all the information and files needed to run it within Docker.  They can contain different operating systems to what Docker is installed upon (e.g. you can run a Linux Docker image on OSX)
-* Docker container - These are the running programs or apps a Docker Image creates when you run them.  
+* Docker Image - Templates of the applications you run. Contain all the information and files needed to run it within Docker.  They can contain different operating systems to what Docker is installed upon (e.g. you can run a Linux Docker image on OSX)
+* Docker container - The running process made from a Docker Image when you run them.   
 
 Read me about [Docker here](https://www.docker.com/).
 
@@ -161,7 +161,7 @@ jobs
 # Started:  2016-11-16 06:53:09
 
 ## check status of jobs
-lapply(jobs, function(x) gce_get_zone_op(x))
+lapply(jobs, gce_get_zone_op)
 # [[1]]
 # ==Operation insert :  DONE
 # Started:  2016-11-16 06:52:58
@@ -300,7 +300,7 @@ RUN apt-get update && apt-get install -y \
 ## Install packages from CRAN
 RUN install2.r --error \ 
     -r 'http://cran.rstudio.com' \
-    googleAuthR shinyFiles googleCloudStorage bigQueryR gmailR googleAnalyticsR \
+    googleAuthR shinyFiles googleCloudStorageR bigQueryR gmailr googleAnalyticsR \
     ## install Github packages
     && Rscript -e "devtools::install_github(c('bnosac/cronR'))" \
     ## clean up
@@ -406,7 +406,7 @@ gce_vm_delete(vm2)
 
 A demo script for scheduling is below.  
 
-It is not recommended to rely on loading data into a Docker contianer.  Instead, call outside dedicated data stores such as BigQuery or Cloud Storage, which if you are using Google Compute Engine you have access to under the same project. 
+It is not recommended to put critical data within a Docker contianer, as it can be destroyed if the container crashes.  Instead, call dedicated data stores such as BigQuery or Cloud Storage, which as you are using Google Compute Engine you already have access to under the same project. 
 
  In summary the script below:
  
@@ -414,7 +414,6 @@ It is not recommended to rely on loading data into a Docker contianer.  Instead,
  2. Uploads the data to BigQuery
  3. Uploads the data to Google Cloud Storage
  3. Sends an email giving the daily total
- 
  
 Log into your RStudio Server instance and create the following script:
 
@@ -469,7 +468,7 @@ Save the script within RStudio as `daily-report.R`
 
 You can then use [`cronR`](https://github.com/bnosac/cronR) to schedule the script for a daily extract.  
 
-Use its RStudio addin, or in the console issue:
+Use `cronR`'s RStudio addin, or in the console issue:
 
 ```r
 library(cronR)
@@ -486,19 +485,17 @@ cron_add(paste0("Rscript ", normalizePath("daily-report")), frequency = "daily")
 
 The script will then run every day.  
 
-Make sure to run the script locally and in a test CRON job first. Once satisfied, you can run locally the `gce_push_registry()` again to save the RStudio image with your scehduled script embedded within. 
+Test the script locally and with a test schedule before using in production.  Once satisfied, you can run locally the `gce_push_registry()` again to save the RStudio image with your scehduled script embedded within. 
 
-If you want to call the data from a Shiny app, then you can use `bqr_query` from bigQueryR or `gcs_get_object` from googleCloudStorageR within your app's `server.R` to pull in the data into your app. 
-
+If you want to call the scheduled data from a Shiny app, you can now fetch the data again via `bqr_query` from `bigQueryR` or `gcs_get_object` from `googleCloudStorageR` within your `server.R` to pull in the data into your app at runtime. 
 
 # Self-contained Shiny app
 
-This is useful to have a dedicated Docker container that has all the libraries, files and scripts necessary to run your app, on any machine that can run Docker, without worrying about versions etc. 
+This creates a dedicated Docker container that has all the libraries, files and scripts necessary to run your Shiny app. 
+This example uses a local `Dockerfile` to install the libraries you need, 
+but in addition also copies your Shiny app scripts so its all self-contained and portable. 
 
-This example uses a local `Dockerfile` to install the libraries you need for your Shiny app, 
-but also copies your Shiny app into itself so its all self-contained. 
-
-The Shiny app can then be deployed on new instances via the `gce_template()` function.
+The Shiny app can then be deployed on new instances.
 
 In summary:
 
