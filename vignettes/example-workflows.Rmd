@@ -336,7 +336,7 @@ docker_build(vm,
 This image is now saved to the Container Registry
 
 ```r
-gce_push_registry(vm, "my-cron-verse", container_name = "myrstudio")
+gce_push_registry(vm, save_name = "my-cron-verse", image_name = "myrstudio")
 ```
 
 Once that is done, we don't need this instance anymore. 

@@ -307,7 +307,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <div id="save-your-custom-image-to-the-container-registry" class="section level3">
 <h3 class="hasAnchor"><html><body><a href="#save-your-custom-image-to-the-container-registry" class="anchor"> </a></body></html>Save your custom image to the Container Registry</h3>
 <p>This image is now saved to the Container Registry</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, <span class="st">"my-cron-verse"</span>, <span class="dt">container_name =</span> <span class="st">"myrstudio"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, <span class="dt">save_name =</span> <span class="st">"my-cron-verse"</span>, <span class="dt">image_name =</span> <span class="st">"myrstudio"</span>)</code></pre></div>
 <p>Once that is done, we don&rsquo;t need this instance anymore.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)</code></pre></div>
 </div>
