@@ -3,6 +3,7 @@
 ## Changes
 
 - Update website
+- Add R-Datalab Dockerfile example
 
 # googleComputeEngineR 0.1.0
 
