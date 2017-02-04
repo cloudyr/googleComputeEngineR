@@ -219,7 +219,7 @@ gce_vm_create <- function(name,
     
   } else {
     source_image_url <- NULL
-    if(!is.null(disk_source)){
+    if(is.null(disk_source)){
       stop("Need to specify either an image_project or a disk_source")
     }
   }
