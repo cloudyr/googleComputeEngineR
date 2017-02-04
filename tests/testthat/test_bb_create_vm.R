@@ -53,6 +53,24 @@ test_that("We can make a template VM", {
   
 })
 
+test_that("We can make a VM with custom disk size", {
+  skip_on_cran()
+  ins <- gce_vm("test-disk-size",
+                file = system.file("cloudconfig", 
+                                   "shiny.yaml", 
+                                   package = "googleComputeEngineR"),
+                predefined_type = "f1-micro",
+                auth_email = "TRAVIS_GCE_AUTH_FILE",
+                disk_size_gb = 12
+                )
+  
+  expect_equal(ins$kind, "compute#instance")
+  expect_equal(ins$status, "RUNNING")
+  boot_disk <- gce_get_disk('test-disk-size')
+  expect_equal(boot_disk$sizeGb, '12')
+})
+
+
 context("SSH tests")
 
 test_that("We can run SSH on an instance", {
