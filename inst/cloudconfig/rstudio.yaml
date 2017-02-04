@@ -26,6 +26,7 @@ write_files:
                                   --name=rstudio \
                                   %s
     ExecStop=/usr/bin/docker stop rstudio
+    ExecStopPost=/usr/bin/docker rm rstudio
 
 runcmd:
 - systemctl daemon-reload
