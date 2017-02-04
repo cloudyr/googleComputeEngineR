@@ -193,6 +193,10 @@ gce_vm_create <- function(name,
     }
   }
 
+  ## treat null image_project same as image_project = ''
+  if (is.null(image_project))
+    image_project <- ''
+  
   ## if an image project is defined, create a source_image_url
   if(nchar(image_project) > 0){
     if(!is.null(disk_source)){
