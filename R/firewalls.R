@@ -70,3 +70,48 @@ gce_delete_firewall_rule <- function(name, project = gce_get_global_project()){
   suppressWarnings(f())
   
 }
+
+#' Get a firewall rule
+#' 
+#' Get a firewall rule of name specified
+#' 
+#' @inheritParams gce_make_firewall_rule
+#' 
+#' @export
+gce_get_firewall_rule <- function(name, project = gce_get_global_project()){
+  
+  url <-
+    sprintf("https://www.googleapis.com/compute/v1/projects/%s/global/firewalls/%s",
+            project, name)
+  
+  f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
+  f()
+  
+}
+
+#' List firewall rules
+#' 
+#' Get a firewall rule of name specified
+#' 
+#' @inheritParams gce_make_firewall_rule
+#' @inheritParams gce_list_networks
+#' 
+#' @export
+gce_list_firewall_rules <- function(filter = NULL, 
+                                    maxResults = NULL, 
+                                    pageToken = NULL, 
+                                    project = gce_get_global_project()){
+  
+  url <-
+    sprintf("https://www.googleapis.com/compute/v1/projects/%s/global/firewalls",
+            project)
+
+  pars <- list(filter = filter, 
+               maxResults = maxResults, 
+               pageToken = pageToken)
+  pars <- rmNullObs(pars)
+  
+  f <- gar_api_generator(url, "GET", pars_args = pars, data_parse_function = function(x) x)
+  f()
+  
+}

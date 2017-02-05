@@ -54,7 +54,7 @@
       <h1>Creating Virtual Machines (VM)</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2016-11-21</h4>
+            <h4 class="date">2017-02-05</h4>
           </div>
 
     
@@ -215,6 +215,8 @@ runcmd:
 <p>You can also create another disk to attach to the VM via:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_make_disk.html">gce_make_disk</a></span>(<span class="st">"my-disk"</span>)</code></pre></div>
 <p>By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the <code>disk_source</code> argument set to the disk resource URL.</p>
+<p>From version <code>0.1.0.9000</code> onwards you can also specify the size of the disk when creating a VM (Thanks to <span class="citation">@jburos</span>)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_create.html">gce_vm_create</a></span>(<span class="st">'my-build-image3'</span>, <span class="dt">disk_size_gb =</span> <span class="dv">20</span>)</code></pre></div>
 </div>
 <div id="metadata" class="section level4">
 <h4 class="hasAnchor"><html><body><a href="#metadata" class="anchor"> </a></body></html>Metadata</h4>

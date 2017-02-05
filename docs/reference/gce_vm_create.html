@@ -106,7 +106,7 @@
   <span class='kw'>metadata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scheduling</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serviceAccounts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>auth_email</span> <span class='kw'>=</span> <span class='st'>"GCE_AUTH_FILE"</span>,
   <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>(),
-  <span class='kw'>dry_run</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>dry_run</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>disk_size_gb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -150,6 +150,8 @@
       <dd>The name of the zone for this request</dd>
       <dt>dry_run</dt>
       <dd>whether to just create the request JSON</dd>
+      <dt>disk_size_gb</dt>
+      <dd>If not NULL, override default size of the boot disk (size in GB)</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

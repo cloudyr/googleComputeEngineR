@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a user on an RStudio templated instance — gce_rstudio_adduser • googleComputeEngineR</title>
+<title>List firewall rules — gce_list_firewall_rules • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,33 +92,27 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a user on an RStudio templated instance</h1>
+    <h1>List firewall rules</h1>
     </div>
 
     
-    <p>RStudio has users based on unix user accounts</p>
+    <p>Get a firewall rule of name specified</p>
     
 
-    <pre><span class='fu'>gce_rstudio_adduser</span>(<span class='no'>instance</span>, <span class='no'>username</span>, <span class='no'>password</span>, <span class='kw'>admin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>container</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>)</pre>
+    <pre><span class='fu'>gce_list_firewall_rules</span>(<span class='kw'>filter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maxResults</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pageToken</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>instance</dt>
-      <dd>An instance with RStudio installed via <a href='gce_vm_template.html'>gce_vm_template</a></dd>
-      <dt>username</dt>
-      <dd>The user to create</dd>
-      <dt>password</dt>
-      <dd>The user password</dd>
-      <dt>admin</dt>
-      <dd>Default TRUE - Will the user be able to install packages and other sudo tasks?</dd>
-      <dt>container</dt>
-      <dd>The rstudio container to add the user to</dd>
+      <dt>filter</dt>
+      <dd>Sets a filter expression for filtering listed resources, in the form filter=expression</dd>
+      <dt>maxResults</dt>
+      <dd>The maximum number of results per page that should be returned</dd>
+      <dt>pageToken</dt>
+      <dd>Specifies a page token to use</dd>
+      <dt>project</dt>
+      <dd>The Google Cloud project</dd>
     </dl>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The instance</p>
     
 
   </div>
@@ -126,9 +120,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
