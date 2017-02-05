@@ -156,6 +156,7 @@ gce_vm_delete <- function(instance,
 #' @param zone The name of the zone for this request
 #' @param dry_run whether to just create the request JSON
 #' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
+#' @param disk_size_gb If not NULL, override default size of the boot disk (size in GB) 
 #' 
 #' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 #' 
@@ -180,7 +181,8 @@ gce_vm_create <- function(name,
                           auth_email = "GCE_AUTH_FILE",
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone(),
-                          dry_run = FALSE) {
+                          dry_run = FALSE,
+                          disk_size_gb = NULL) {
   
   stopifnot(inherits(name, "character"))
   
@@ -193,6 +195,10 @@ gce_vm_create <- function(name,
     }
   }
 
+  ## treat null image_project same as image_project = ''
+  if (is.null(image_project))
+    image_project <- ''
+  
   ## if an image project is defined, create a source_image_url
   if(nchar(image_project) > 0){
     if(!is.null(disk_source)){
@@ -215,17 +221,21 @@ gce_vm_create <- function(name,
     
   } else {
     source_image_url <- NULL
-    if(!is.null(disk_source)){
+    if(is.null(disk_source)){
       stop("Need to specify either an image_project or a disk_source")
     }
   }
   
   ## make image initialisation
+  initializeParams <- list(
+      sourceImage = source_image_url
+    )
+  if (!is.null(disk_size_gb)) {
+    initializeParams <- as.list(unlist(c(initializeParams, diskSizeGb = disk_size_gb)))
+  }
   init_disk <- list(
     list(
-      initializeParams = list(
-        sourceImage = source_image_url
-      ),
+      initializeParams = initializeParams,
       source = disk_source,
       ## not in docs apart from https://cloud.google.com/compute/docs/instances/create-start-instance
       autoDelete = jsonlite::unbox(TRUE),
