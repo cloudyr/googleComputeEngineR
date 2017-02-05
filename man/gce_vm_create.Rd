@@ -11,7 +11,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
   metadata = NULL, scheduling = NULL, serviceAccounts = NULL,
   tags = NULL, auth_email = "GCE_AUTH_FILE",
   project = gce_get_global_project(), zone = gce_get_global_zone(),
-  dry_run = FALSE)
+  dry_run = FALSE, disk_size_gb = NULL)
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
@@ -53,6 +53,8 @@ gce_vm_create(name, predefined_type = "f1-micro",
 \item{zone}{The name of the zone for this request}
 
 \item{dry_run}{whether to just create the request JSON}
+
+\item{disk_size_gb}{If not NULL, override default size of the boot disk (size in GB)}
 }
 \value{
 A zone operation, or if the name already exists the VM object from \link{gce_get_instance}

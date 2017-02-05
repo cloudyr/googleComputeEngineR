@@ -4,7 +4,8 @@
 
 - Update website
 - Add R-Datalab Dockerfile example
-- Let Rstudio users be added with staff rights so they can install packages etc. 
+- Let Rstudio users be added with staff rights so they can install packages etc.
+- Add ability to specify disk size when creating a VM (#38) - thanks @jburos
 
 # googleComputeEngineR 0.1.0
 

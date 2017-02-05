@@ -9,7 +9,8 @@ Authors@R: c(
       person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
       person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com"),
       person("Winston", "Chang", role = "ctb", email = "winston@stdout.org"),
-      person("Henrik", "Bengtsson", role="ctb", email = "henrikb@braju.com")
+      person("Henrik", "Bengtsson", role="ctb", email = "henrikb@braju.com"),
+      person("Jacki","Novik", role="ctb", email = "jackinovik@gmail.com")
       )
 URL: https://cloudyr.github.io/googleComputeEngineR/
 BugReports: https://github.com/cloudyr/googleComputeEngineR/issues

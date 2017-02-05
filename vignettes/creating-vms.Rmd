@@ -206,6 +206,13 @@ gce_make_disk("my-disk")
 
 By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the `disk_source` argument set to the disk resource URL.
 
+From version `0.1.0.9000` onwards you can also specify the size of the disk when creating a VM (Thanks to @jburos)
+
+```r
+build_vm <- gce_vm_create('my-build-image3', disk_size_gb = 20)
+
+```
+
 #### Metadata
 
 You can add custom metadata by passing a named list to the instance.  More details from Google documentation is here `https://cloud.google.com/compute/docs/storing-retrieving-metadata`

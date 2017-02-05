@@ -8,6 +8,8 @@ test_that("We can delete the test VMs",{
   del <- gce_vm_delete("test-vm")
   del2 <- gce_vm_delete("test-container")
   del3 <- gce_vm_delete("rstudio-test")
+  del4 <- gce_vm_delete("test-disk-size")
+  
   expect_equal(del$kind, "compute#operation")
   
   vm <- gce_check_zone_op(del$name, wait = 10)

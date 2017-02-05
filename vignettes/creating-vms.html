@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-15" />
+<meta name="date" content="2017-02-05" />
 
 <title>Creating Virtual Machines (VM)</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Creating Virtual Machines (VM)</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-15</em></h4>
+<h4 class="date"><em>2017-02-05</em></h4>
 
 
 
@@ -235,6 +235,8 @@ runcmd:
 <p>You can also create another disk to attach to the VM via:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_make_disk</span>(<span class="st">&quot;my-disk&quot;</span>)</code></pre></div>
 <p>By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the <code>disk_source</code> argument set to the disk resource URL.</p>
+<p>From version <code>0.1.0.9000</code> onwards you can also specify the size of the disk when creating a VM (Thanks to <span class="citation">@jburos</span>)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_vm &lt;-<span class="st"> </span><span class="kw">gce_vm_create</span>(<span class="st">'my-build-image3'</span>, <span class="dt">disk_size_gb =</span> <span class="dv">20</span>)</code></pre></div>
 </div>
 <div id="metadata" class="section level4">
 <h4>Metadata</h4>
