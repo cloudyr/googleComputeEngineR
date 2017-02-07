@@ -20,7 +20,6 @@ test_that("We can create a firewall rule", {
   expect_equal(the_rule$kind, "compute#operation")
   
   ## TODO: wait for global operation, test operaation finished
-  Sys.sleep(5)
   
 })
 

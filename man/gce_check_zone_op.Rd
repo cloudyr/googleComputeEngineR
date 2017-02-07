@@ -10,7 +10,7 @@ gce_wait(operation, wait = 3, verbose = TRUE)
 gce_check_zone_op(operation, wait = 3, verbose = TRUE)
 }
 \arguments{
-\item{operation}{The operation object or name}
+\item{operation}{The operation object}
 
 \item{wait}{Time in seconds between checks, default 3 seconds.}
 

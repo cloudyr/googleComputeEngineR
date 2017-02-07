@@ -11,6 +11,19 @@ as.zone_operation <- function(x){
   structure(x, class = c("gce_zone_operation", class(x)))
 }
 
+#' Check if is a gce_global_operation
+#' @param x The object to test if class \code{gce_global_operation}
+#' @return TRUE or FALSE
+#' @export
+is.gce_global_operation <- function(x){
+  inherits(x, "gce_global_operation")
+}
+
+# sets operation class
+as.global_operation <- function(x){
+  structure(x, class = c("gce_global_operation", class(x)))
+}
+
 #' Deletes the specified zone-specific Operations resource.
 #' 
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
@@ -81,6 +94,87 @@ gce_get_zone_op <- function(operation,
   as.zone_operation(out)
 }
 
+#' Retrieves the specified Operations resource.
+#' 
+#' s3 method dispatcher
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' \item https://www.googleapis.com/auth/compute.readonly
+#' }
+#' 
+#' 
+#' @param operation Name of the Operations resource to return
+#' @param project Project ID for this request
+#' @param zone Name of the zone for this request
+#' 
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_get_op <- function(x, ...){
+  
+  UseMethod("gce_get_op", x, ...)
+  
+}
+
+#' Retrieves the specified zone-specific Operations resource.
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' 
+#' @param operation Name of the Operations resource to return
+#' @param project Project ID for this request
+#' @param zone Name of the zone for this request
+#' 
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_get_op.gce_zone_operation <- function(operation,
+                                          project = gce_get_global_project(), 
+                                          zone = gce_get_global_zone()) {
+  
+  if(is.gce_zone_operation(operation)){
+    operation <- operation$name
+  }
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/operations/%s", 
+                 project, zone, operation)
+  # compute.zoneOperations.get
+  f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
+  out <- f()
+  
+  as.zone_operation(out)
+}
+
+#' Retrieves the specified global Operations resource.
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' 
+#' @param operation Name of the Operations resource to return
+#' @param project Project ID for this request
+#' 
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_get_op.gce_global_operation <- function(operation,
+                                            project = gce_get_global_project()) {
+  
+  if(is.gce_global_operation(operation)){
+    operation <- operation$name
+  }
+  
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/global/operations/operations/%s", 
+                 project, operation)
+  # compute.zoneOperations.get
+  f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
+  out <- f()
+  
+  as.global_operation(out)
+}
+
 #' Retrieves a list of Operation resources contained within the specified zone.
 #' 
 #' 
@@ -135,7 +229,7 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
 #' 
 #' Will periodically check an operation until its status is \code{DONE}
 #' 
-#' @param operation The operation object or name
+#' @param operation The operation object
 #' @param wait Time in seconds between checks, default 3 seconds.
 #' @param verbose Whether to give user feedback
 #' 
@@ -145,16 +239,10 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
 gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
   if(inherits(operation, "character")){
-    job_name <- operation
-  } else if(operation$kind == "compute#operation"){
-    job_name <- operation$name
-  } else {
-    myMessage("Operation was not a compute#operation or name, returning object")
-    return(operation)
+    stop("Use the job object instead of job$name")
   }
   
-  testthat::expect_type(job_name, "character")
-  testthat::expect_true(grepl("^operation-",job_name))
+  testthat::expect_equal(operation$kind, "compute#operation")
   
   DO_IT <- TRUE
   
@@ -162,9 +250,8 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
   while(DO_IT){
     
-    check <- gce_get_zone_op(job_name)
+    check <- gce_get_op(operation)
     testthat::expect_equal(check$kind, "compute#operation")
-    check
     
     if(check$status == "DONE"){
       
@@ -195,5 +282,5 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
     warning("# HTTP Error: ", check$httpErrorStatusCode, check$httpErrorMessage)
   }
   
-  as.zone_operation(check)
+  check
 }

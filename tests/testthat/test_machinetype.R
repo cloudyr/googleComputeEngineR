@@ -52,7 +52,7 @@ test_that("We can change a machine type", {
   
   expect_equal(mt$kind, "compute#operation")
   
-  job <- gce_check_zone_op(mt$name)
+  job <- gce_check_zone_op(mt)
   
   expect_equal(job$status, "DONE")
   
@@ -62,7 +62,7 @@ test_that("We can change a machine type", {
   
   expect_equal(mt$kind, "compute#operation")
   
-  job <- gce_check_zone_op(mt$name)
+  job <- gce_check_zone_op(mt)
   
   expect_equal(job$status, "DONE")
   

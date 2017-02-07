@@ -12,7 +12,7 @@ test_that("We can delete the test VMs",{
   
   expect_equal(del$kind, "compute#operation")
   
-  vm <- gce_check_zone_op(del$name, wait = 10)
+  vm <- gce_check_zone_op(del, wait = 10)
   
   expect_equal(vm$kind, "compute#operation")
   expect_equal(vm$status, "DONE")

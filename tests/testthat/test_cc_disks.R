@@ -61,7 +61,7 @@ test_that("We can attach a disk", {
   job <- gce_attach_disk(instance = "rstudio-test",
                          autoDelete = TRUE,
                          source = disk_image$selfLink)
-  gce_check_zone_op(job$name)
+  gce_check_zone_op(job)
   
   ins <- gce_get_instance("rstudio-test")
   
@@ -76,7 +76,7 @@ test_that("We can delete a disk", {
   
   disk <- gce_delete_disk("test-disk")
   
-  disk <- gce_wait(disk$name, wait = 10)
+  disk <- gce_wait(disk, wait = 10)
   
   expect_equal(disk$kind, "compute#operation")
   expect_equal(disk$status, "DONE")
