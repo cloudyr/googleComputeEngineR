@@ -4,25 +4,16 @@
 \alias{gce_get_op}
 \title{Retrieves the specified Operations resource.}
 \usage{
-gce_get_op(x, ...)
+gce_get_op(operation)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to return}
-
-\item{project}{Project ID for this request}
-
-\item{zone}{Name of the zone for this request}
 }
 \description{
 s3 method dispatcher
 }
 \details{
-Authentication scopes used by this function are:
-\itemize{
-  \item https://www.googleapis.com/auth/cloud-platform
-\item https://www.googleapis.com/auth/compute
-\item https://www.googleapis.com/auth/compute.readonly
-}
+
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}

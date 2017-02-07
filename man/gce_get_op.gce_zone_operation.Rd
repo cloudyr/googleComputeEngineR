@@ -4,15 +4,10 @@
 \alias{gce_get_op.gce_zone_operation}
 \title{Retrieves the specified zone-specific Operations resource.}
 \usage{
-\method{gce_get_op}{gce_zone_operation}(operation,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+\method{gce_get_op}{gce_zone_operation}(operation)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to return}
-
-\item{project}{Project ID for this request}
-
-\item{zone}{Name of the zone for this request}
 }
 \description{
 Retrieves the specified zone-specific Operations resource.

@@ -101,23 +101,15 @@ gce_get_zone_op <- function(operation,
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 #' 
 #' @details 
-#' Authentication scopes used by this function are:
-#' \itemize{
-#'   \item https://www.googleapis.com/auth/cloud-platform
-#' \item https://www.googleapis.com/auth/compute
-#' \item https://www.googleapis.com/auth/compute.readonly
-#' }
 #' 
 #' 
 #' @param operation Name of the Operations resource to return
-#' @param project Project ID for this request
-#' @param zone Name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_op <- function(x, ...){
+gce_get_op <- function(operation){
   
-  UseMethod("gce_get_op", x, ...)
+  UseMethod("gce_get_op", operation)
   
 }
 
@@ -125,23 +117,18 @@ gce_get_op <- function(x, ...){
 #' 
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 #' 
-#' 
 #' @param operation Name of the Operations resource to return
-#' @param project Project ID for this request
-#' @param zone Name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_op.gce_zone_operation <- function(operation,
-                                          project = gce_get_global_project(), 
-                                          zone = gce_get_global_zone()) {
+gce_get_op.gce_zone_operation <- function(operation) {
   
   if(is.gce_zone_operation(operation)){
-    operation <- operation$name
+    url <- operation$selfLink
+  } else {
+    stop("Not a gce_zone_operation")
   }
   
-  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/operations/%s", 
-                 project, zone, operation)
   # compute.zoneOperations.get
   f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
   out <- f()
@@ -153,21 +140,18 @@ gce_get_op.gce_zone_operation <- function(operation,
 #' 
 #' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 #' 
-#' 
 #' @param operation Name of the Operations resource to return
-#' @param project Project ID for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_op.gce_global_operation <- function(operation,
-                                            project = gce_get_global_project()) {
+gce_get_op.gce_global_operation <- function(operation) {
   
   if(is.gce_global_operation(operation)){
-    operation <- operation$name
+    url <- operation$selfLink
+  } else {
+    stop("Not class gce_global_operation")
   }
   
-  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/global/operations/operations/%s", 
-                 project, operation)
   # compute.zoneOperations.get
   f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
   out <- f()

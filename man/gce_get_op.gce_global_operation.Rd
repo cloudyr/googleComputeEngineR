@@ -4,13 +4,10 @@
 \alias{gce_get_op.gce_global_operation}
 \title{Retrieves the specified global Operations resource.}
 \usage{
-\method{gce_get_op}{gce_global_operation}(operation,
-  project = gce_get_global_project())
+\method{gce_get_op}{gce_global_operation}(operation)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to return}
-
-\item{project}{Project ID for this request}
 }
 \description{
 Retrieves the specified global Operations resource.

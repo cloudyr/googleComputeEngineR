@@ -49,8 +49,9 @@ gce_make_firewall_rule <- function(name,
   
   f <- gar_api_generator(url, "POST", data_parse_function = function(x) x)
   
-  f(the_body = the_rule)
+  out <- f(the_body = the_rule)
   
+  as.global_operation(out)
 }
 
 #' Delete a firewall rule
@@ -67,8 +68,9 @@ gce_delete_firewall_rule <- function(name, project = gce_get_global_project()){
             project, name)
   
   f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) x)
-  suppressWarnings(f())
+  out <- suppressWarnings(f())
   
+  as.global_operation(out)
 }
 
 #' Get a firewall rule
