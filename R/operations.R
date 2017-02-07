@@ -116,8 +116,13 @@ gce_get_zone_op <- function(operation,
 #' @export
 gce_get_op <- function(operation){
   
-  UseMethod("gce_get_op", operation)
-  
+  if(inherits(operation, c("gce_global_operation", "gce_zone_operation","gce_region_operation"))){
+    UseMethod("gce_get_op", operation)
+  } else {
+    myMessage("No operation class found. Got: ", class(operation), level = 1)
+    return(operation)
+  }
+
 }
 
 #' Retrieves the specified zone-specific Operations resource.
