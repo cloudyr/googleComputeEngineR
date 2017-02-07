@@ -42,9 +42,10 @@ test_that("We can create a disk from an image", {
   img <- gce_get_image_family("debian-cloud","debian-8")
   expect_equal(img$kind, "compute#image")
   
-  disk <- gce_make_disk("test-disk-image", sourceImage = img$selfLink)
+  job <- gce_make_disk("test-disk-image", sourceImage = img$selfLink)
   
-  disk <- gce_wait(disk, wait = 10)
+  str(job)
+  disk <- gce_wait(job, wait = 10)
   
   disk_image <- gce_get_disk("test-disk-image")
   expect_equal(disk_image$sourceImage, img$selfLink)
@@ -61,7 +62,7 @@ test_that("We can attach a disk", {
   job <- gce_attach_disk(instance = "rstudio-test",
                          autoDelete = TRUE,
                          source = disk_image$selfLink)
-  gce_check_zone_op(job)
+  gce_wait(job)
   
   ins <- gce_get_instance("rstudio-test")
   
@@ -74,9 +75,9 @@ test_that("We can attach a disk", {
 test_that("We can delete a disk", {
   skip_on_cran()
   
-  disk <- gce_delete_disk("test-disk")
+  job <- gce_delete_disk("test-disk")
   
-  disk <- gce_wait(disk, wait = 10)
+  disk <- gce_wait(job, wait = 10)
   
   expect_equal(disk$kind, "compute#operation")
   expect_equal(disk$status, "DONE")

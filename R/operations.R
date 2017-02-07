@@ -6,7 +6,6 @@ is.gce_zone_operation <- function(x){
   inherits(x, "gce_zone_operation")
 }
 
-# sets operation class
 as.zone_operation <- function(x){
   structure(x, class = c("gce_zone_operation", class(x)))
 }
@@ -19,7 +18,18 @@ is.gce_global_operation <- function(x){
   inherits(x, "gce_global_operation")
 }
 
-# sets operation class
+as.region_operation <- function(x){
+  structure(x, class = c("gce_region_operation", class(x)))
+}
+
+#' Check if is a gce_region_operation
+#' @param x The object to test if class \code{gce_region_operation}
+#' @return TRUE or FALSE
+#' @export
+is.gce_region_operation <- function(x){
+  inherits(x, "gce_region_operation")
+}
+
 as.global_operation <- function(x){
   structure(x, class = c("gce_global_operation", class(x)))
 }
@@ -93,6 +103,12 @@ gce_get_zone_op <- function(operation,
 #' 
 #' @details 
 #' 
+#' S3 Methods for classes
+#' \itemize{
+#'   \item gce_get_op.gce_zone_operation
+#'   \item gce_get_op.gce_global_operation
+#'   \item gce_get_op.gce_region_operation
+#'  } 
 #' 
 #' @param operation Name of the Operations resource to return
 #' 
@@ -210,7 +226,7 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
     stop("Use the job object instead of job$name")
   }
   
-  testthat::expect_equal(operation$kind, "compute#operation")
+  # stopifnot(operation$kind == "compute#operation")
   
   DO_IT <- TRUE
   
@@ -219,7 +235,7 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
   while(DO_IT){
     
     check <- gce_get_op(operation)
-    testthat::expect_equal(check$kind, "compute#operation")
+    # stopifnot(check$kind == "compute#operation")
     
     if(check$status == "DONE"){
       

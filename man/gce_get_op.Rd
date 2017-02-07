@@ -13,7 +13,12 @@ gce_get_op(operation)
 s3 method dispatcher
 }
 \details{
-
+S3 Methods for classes
+\itemize{
+  \item gce_get_op.gce_zone_operation
+  \item gce_get_op.gce_global_operation
+  \item gce_get_op.gce_region_operation
+ }
 }
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
