@@ -81,17 +81,8 @@ gce_get_zone_op <- function(operation,
                             project = gce_get_global_project(), 
                             zone = gce_get_global_zone()) {
   
-  if(is.gce_zone_operation(operation)){
-    operation <- operation$name
-  }
-  
-  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/operations/%s", 
-                 project, zone, operation)
-  # compute.zoneOperations.get
-  f <- gar_api_generator(url, "GET", data_parse_function = function(x) x)
-  out <- f()
-  
-  as.zone_operation(out)
+  .Deprecated("gce_get_op", package = "googleComputeEngineR")
+  gce_get_op(operation)
 }
 
 #' Retrieves the specified Operations resource.
@@ -201,13 +192,7 @@ gce_list_zone_op <- function(filter = NULL,
   
 }
 
-#' @rdname gce_check_zone_op
-#' @export
-gce_wait <- function(operation, wait = 3, verbose = TRUE){
-  gce_check_zone_op(operation = operation, 
-                    wait = wait, 
-                    verbose = verbose)
-}
+
 
 #' Wait for an operation to finish
 #' 
@@ -220,8 +205,7 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
 #' @return The completed job object, invisibly
 #' 
 #' @export
-gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
-  
+gce_wait <- function(operation, wait = 3, verbose = TRUE){
   if(inherits(operation, "character")){
     stop("Use the job object instead of job$name")
   }
@@ -244,7 +228,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
     } else if(check$status == "RUNNING"){
       
       if(verbose) myMessage("Operation running...", level = 3)
-
+      
     } else {
       
       if(verbose) myMessage("Checking operation...", check$status, level = 3)
@@ -257,7 +241,7 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   
   if(verbose) 
     myMessage("Operation complete in ", 
-        format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), level = 3)
+              format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), level = 3)
   
   if(!is.null(check$error)){
     errors <- check$error$errors
@@ -267,4 +251,16 @@ gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
   }
   
   check
+}
+
+#' @rdname gce_wait
+#' @export
+gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
+  
+  .Deprecated("gce_wait", package = "googleComputeEngineR")
+  gce_wait(operation = operation, 
+                    wait = wait, 
+                    verbose = verbose)
+  
+
 }
