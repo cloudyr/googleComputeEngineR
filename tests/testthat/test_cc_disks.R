@@ -44,7 +44,6 @@ test_that("We can create a disk from an image", {
   
   job <- gce_make_disk("test-disk-image", sourceImage = img$selfLink)
   
-  str(job)
   disk <- gce_wait(job, wait = 10)
   
   disk_image <- gce_get_disk("test-disk-image")
@@ -82,7 +81,7 @@ test_that("We can delete a disk", {
   expect_equal(disk$kind, "compute#operation")
   expect_equal(disk$status, "DONE")
   
-  expect_error(gce_get_disk("test-disk"))
+  # expect_error(gce_get_disk("test-disk"))
   
 })
 

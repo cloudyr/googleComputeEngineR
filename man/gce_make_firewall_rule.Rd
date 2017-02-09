@@ -27,9 +27,6 @@ A global operation object
 Use this to create firewall rules to apply to the network settings.  
   Most commonly this is to setup web access (port 80 and 443)
 }
-\details{
-
-}
 \section{sourceRanges and/or sourceTags}{
 
 

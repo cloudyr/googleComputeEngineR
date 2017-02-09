@@ -101,7 +101,7 @@ idempotency <- function(){
 }
 
 
-#' Customer message log level
+#' Custom message log level
 #' 
 #' @param ... The message(s)
 #' @param level The severity
@@ -113,7 +113,7 @@ myMessage <- function(..., level = 2){
   compare_level <- getOption("googleAuthR.verbose")
   
   if(level >= compare_level){
-    message(...)
+    message(Sys.time() ,"> ", ...)
   }
   
 }

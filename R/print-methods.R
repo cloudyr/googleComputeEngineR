@@ -36,7 +36,7 @@ print.gce_instance <- function(x, ...){
 #' @export
 print.gce_zone_operation <- function(x, ...){
   
-  cat("==Operation", x$operationType, ": ", x$status)
+  cat("==Zone Operation", x$operationType, ": ", x$status)
   cat("\nStarted: ", as.character(timestamp_to_r(x$insertTime)))
   
   if(!is.null(x$endTime)){
@@ -46,6 +46,48 @@ print.gce_zone_operation <- function(x, ...){
         "\n")
   }
 
+  if(!is.null(x$error)){
+    errors <- x$error$errors
+    e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")
+    cat("\n# Error: ", e.m)
+    cat("\n# HTTP Error: ", x$httpErrorStatusCode, x$httpErrorMessage)
+  }
+}
+
+#' @export
+print.gce_global_operation <- function(x, ...){
+  
+  cat("==Global Operation", x$operationType, ": ", x$status)
+  cat("\nStarted: ", as.character(timestamp_to_r(x$insertTime)))
+  
+  if(!is.null(x$endTime)){
+    cat0("\nEnded:", as.character(timestamp_to_r(x$endTime)))
+    cat("Operation complete in", 
+        format(timestamp_to_r(x$endTime) - timestamp_to_r(x$insertTime)), 
+        "\n")
+  }
+  
+  if(!is.null(x$error)){
+    errors <- x$error$errors
+    e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")
+    cat("\n# Error: ", e.m)
+    cat("\n# HTTP Error: ", x$httpErrorStatusCode, x$httpErrorMessage)
+  }
+}
+
+#' @export
+print.gce_region_operation <- function(x, ...){
+  
+  cat("==Region Operation", x$operationType, ": ", x$status)
+  cat("\nStarted: ", as.character(timestamp_to_r(x$insertTime)))
+  
+  if(!is.null(x$endTime)){
+    cat0("\nEnded:", as.character(timestamp_to_r(x$endTime)))
+    cat("Operation complete in", 
+        format(timestamp_to_r(x$endTime) - timestamp_to_r(x$insertTime)), 
+        "\n")
+  }
+  
   if(!is.null(x$error)){
     errors <- x$error$errors
     e.m <- paste(vapply(errors, print, character(1)), collapse = " : ", sep = " \n")

@@ -226,14 +226,20 @@ gce_list_zone_op <- function(filter = NULL,
 #' @return The completed job object, invisibly
 #' 
 #' @export
-gce_wait <- function(operation, wait = 3, verbose = TRUE){
+gce_wait <- function(operation, wait = 3, verbose = TRUE, timeout_tries = 50){
   if(inherits(operation, "character")){
     stop("Use the job object instead of job$name")
+  }
+  
+  if(operation$kind != "compute#operation"){
+    myMessage("Not an operation, returning object")
+    return(operation)
   }
   
   # stopifnot(operation$kind == "compute#operation")
   
   DO_IT <- TRUE
+  tries <- 0
   
   myMessage("Starting operation...", level = 2)
   
@@ -257,6 +263,12 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE){
     }
     
     Sys.sleep(wait)
+    tries <- tries + 1
+    if(tries > timeout_tries){
+      myMessage("Timeout reached in operation")
+      check$error$errors <- "Timeout reached in operation"
+      DO_IT <- FALSE
+    }
     
   }
   

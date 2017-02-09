@@ -14,7 +14,6 @@
 #' 
 #' @seealso API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/insert}
 #' 
-#' @details 
 #' 
 #' @section sourceRanges and/or sourceTags:
 #' 
