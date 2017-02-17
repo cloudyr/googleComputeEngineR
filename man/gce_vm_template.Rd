@@ -5,9 +5,9 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example", "rstudio-hadleyverse", "dynamic"), username = NULL,
-  password = NULL, dynamic_image = NULL, image_family = "gci-stable",
-  name, ...)
+  "example", "rstudio-hadleyverse", "dynamic", "builder"), username = NULL,
+  password = NULL, dynamic_image = NULL, dockerfile = NULL,
+  build_name = NULL, image_family = "gci-stable", name, ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -17,6 +17,10 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 \item{password}{password if needed (RStudio)}
 
 \item{dynamic_image}{Supply an alternative to the default Docker image here to download}
+
+\item{dockerfile}{If template is \code{builder} the Dockerfile to run on startup}
+
+\item{build_name}{If template is \code{builder} the name to save the image under on Container Enginer}
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 

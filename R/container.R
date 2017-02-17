@@ -23,6 +23,8 @@ gce_check_container <- function(instance, container){
 #' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
 #' @param dynamic_image Supply an alternative to the default Docker image here to download
+#' @param dockerfile If template is \code{builder} the Dockerfile to run on startup
+#' @param build_name If template is \code{builder} the name to save the image under on Container Enginer
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
 #' @details 
@@ -67,10 +69,12 @@ gce_check_container <- function(instance, container){
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          "r-base", "example", "rstudio-hadleyverse",
-                                         "dynamic"),
+                                         "dynamic", "builder"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
+                            dockerfile = NULL,
+                            build_name = NULL,
                             image_family = "gci-stable",
                             name,
                             ...){
@@ -118,6 +122,20 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
     
     image <- get_image("rocker/r-base", dynamic_image = dynamic_image)
     cloud_init_file <- sprintf(cloud_init_file, image)
+    
+  } else if(template == "builder") {
+    
+    if(is.null(build_name)){
+      stop("Need to specify what to call the Docker image")
+    }
+    build_tag <- gce_tag_container(build_name)
+    myMessage("Creating build VM to create and upload ", build_tag, level = 3)
+    
+    if(is.null(dockerfile)){
+      stop("Need to supply Dockerfile file location to build from")
+    }
+
+    cloud_init_file <- sprintf(cloud_init_file, dockerfile, build_tag, build_tag)
     
   } else {
     warning("No template settings found for ", template)

@@ -5,11 +5,14 @@ users:
   uid: 2000
 
 write_files:
-- path: ~/buildfolder/Dockerfile
+- path: /home/gcer/buildfolder/Dockerfile
   permissions: 0644
   owner: root
   content: |
   %s
     
 runcmd:
-- docker build -t %s ~/buildfolder/Dockerfile
+- docker build -t build_me /home/gcer/buildfolder/Dockerfile
+- docker tag build_me %s
+- /usr/share/google/dockercfg_update.sh
+- docker push %s
