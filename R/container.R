@@ -276,7 +276,7 @@ gce_vm_container <- function(file = NULL,
 #' This will only work on the Google Container optimised containers of image_family google_containers.
 #' Otherwise you will need to get a container authentication yourself (for now)
 #' 
-#' It will start the push but it may take a long time to finish, espeically the first time, 
+#' It will start the push but it may take a long time to finish, especially the first time, 
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return The tag the image was tagged with on GCE
 #' @export

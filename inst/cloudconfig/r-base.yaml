@@ -24,6 +24,7 @@ write_files:
                                   --net=host \
                                   %s
     ExecStop=/usr/bin/docker stop r-base
+    ExecStopPost=/usr/bin/docker rm r-base
 
 runcmd:
 - systemctl daemon-reload

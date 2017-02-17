@@ -21,6 +21,7 @@ write_files:
                                   --name=opencpu-server \
                                   %s
     ExecStop=/usr/bin/docker stop opencpu
+    ExecStopPost=/usr/bin/docker rm opencpu
 
 runcmd:
 - systemctl daemon-reload

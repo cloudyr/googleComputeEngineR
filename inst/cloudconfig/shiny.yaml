@@ -27,6 +27,7 @@ write_files:
                                   -v /home/gcer/library/:/library/ \
                                   %s
     ExecStop=/usr/bin/docker stop shiny
+    ExecStopPost=/usr/bin/docker rm shiny
 
 runcmd:
 - systemctl daemon-reload
