@@ -227,7 +227,7 @@ get_dockerfolder <- function(dockerfile_folder){
 #' @export
 gce_vm_container <- function(file = NULL,
                              cloud_init = NULL, 
-                             image_family = "gci-stable", 
+                             image_family = "cos-stable", 
                              ...){
   
   if(is.null(file)){
@@ -255,7 +255,7 @@ gce_vm_container <- function(file = NULL,
   dots$metadata <- NULL
   
   do.call(gce_vm_create, c(list(image_family = image_family,
-                                image_project = "google-containers",
+                                image_project = "cos-cloud",
                                 metadata = metadata_new), dots)
           )
   
