@@ -7,7 +7,7 @@
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
   "example", "rstudio-hadleyverse", "dynamic", "builder"), username = NULL,
   password = NULL, dynamic_image = NULL, dockerfile = NULL,
-  build_name = NULL, image_family = "gci-stable", name, ...)
+  build_name = NULL, image_family = "cos-stable", name, ...)
 }
 \arguments{
 \item{template}{The template available}

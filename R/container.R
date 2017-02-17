@@ -75,7 +75,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                             dynamic_image=NULL,
                             dockerfile = NULL,
                             build_name = NULL,
-                            image_family = "gci-stable",
+                            image_family = "cos-stable",
                             name,
                             ...){
   
@@ -134,8 +134,14 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
     if(is.null(dockerfile)){
       stop("Need to supply Dockerfile file location to build from")
     }
+    
+    the_file <- paste("  ", 
+                      readLines(dockerfile, file.info(dockerfile)$size), 
+                      collapse = "\n")
 
-    cloud_init_file <- sprintf(cloud_init_file, dockerfile, build_tag, build_tag)
+    cloud_init_file <- sprintf(cloud_init_file, 
+                               the_file, 
+                               build_tag, build_tag)
     
   } else {
     warning("No template settings found for ", template)
