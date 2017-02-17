@@ -1,0 +1,15 @@
+#cloud-config
+
+users:
+- name: gcer
+  uid: 2000
+
+write_files:
+- path: ~/buildfolder/Dockerfile
+  permissions: 0644
+  owner: root
+  content: |
+  %s
+    
+runcmd:
+- docker build -t %s ~/buildfolder/Dockerfile

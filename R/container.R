@@ -221,7 +221,9 @@ get_dockerfolder <- function(dockerfile_folder){
 #' 
 #' A configuration file must be less than 32768 characters.
 #' 
-#' \code{image_project} will be ignored if set, overriden to \code{google-containers}
+#' \code{image_project} will be ignored if set, overriden to \code{cos-cloud}
+#' 
+#' @seealso \url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
 #' 
 #' @return A zone operation
 #' @export

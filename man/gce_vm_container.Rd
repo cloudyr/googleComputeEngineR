@@ -5,7 +5,7 @@
 \title{Launch a container-VM image}
 \usage{
 gce_vm_container(file = NULL, cloud_init = NULL,
-  image_family = "gci-stable", ...)
+  image_family = "cos-stable", ...)
 }
 \arguments{
 \item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}
@@ -21,12 +21,15 @@ gce_vm_container(file = NULL, cloud_init = NULL,
 
 A configuration file must be less than 32768 characters.
 
-\code{image_project} will be ignored if set, overriden to \code{google-containers}}
+\code{image_project} will be ignored if set, overriden to \code{cos-cloud}}
 }
 \value{
 A zone operation
 }
 \description{
 This lets you specify docker images when creating the VM
+}
+\seealso{
+\url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
 }
 
