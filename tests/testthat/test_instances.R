@@ -72,7 +72,7 @@ test_that("We can reset a VM", {
   
   expect_equal(job$kind, "compute#operation")
   
-  gce_check_zone_op(job, wait = 10)
+  gce_wait(job, wait = 10)
   
   cat("\nmarkdev VM reset")
   inst <- gce_get_instance("markdev")
@@ -97,7 +97,7 @@ test_that("We can stop a VM", {
   
   expect_equal(job$kind, "compute#operation")
   
-  gce_check_zone_op(job, wait = 10)
+  gce_wait(job, wait = 10)
   
   cat("\nmarkdev VM stopped")
   inst <- gce_get_instance("markdev")

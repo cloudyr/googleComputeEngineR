@@ -151,7 +151,7 @@ test_that("We can set metadata on a VM", {
   
   print(job)
   
-  gce_check_zone_op(job)
+  gce_wait(job)
   
   vm <- gce_get_instance("rstudio-test")
   

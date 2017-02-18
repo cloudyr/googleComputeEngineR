@@ -165,7 +165,7 @@ gce_ssh_setup <- function(instance,
                             instance = ins, 
                             project = project, 
                             zone = zone)
-    gce_check_zone_op(job, verbose = FALSE) 
+    gce_wait(job, verbose = FALSE) 
     myMessage("Public SSH key uploaded to instance", level = 3)
   }
   

@@ -140,8 +140,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                       collapse = "\n")
 
     cloud_init_file <- sprintf(cloud_init_file, 
-                               the_file, 
-                               build_tag, build_tag)
+                               build_tag, build_tag, the_file)
     
   } else {
     warning("No template settings found for ", template)
