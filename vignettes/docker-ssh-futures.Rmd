@@ -24,6 +24,8 @@ gce_ssh_browser("my-server")
 
 ## SSH commands
 
+> There is currently an issue on Windows for all SSH based commands since Windows does not come with a native SSH client.  This is being looked at and a fix is pending, track progress at this [Github issue #35](https://github.com/cloudyr/googleComputeEngineR/issues/35).  Without SSH, all the `docker_x` commands will fail.  It is recommended to either use the `gce_ssh_browser()` directly or for building docker images use the `gce_docker_build` VM template. 
+
 You can also send ssh commands to your running instance from R via the `gce_ssh()` commands.
 
 For this you will need to either connect first via the `gcloud compute ssh` command that generates SSH-keys, or generate them yourself following this [Google guide](https://cloud.google.com/compute/docs/instances/connecting-to-instance).

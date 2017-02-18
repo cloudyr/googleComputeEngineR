@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-21" />
+<meta name="date" content="2017-02-18" />
 
 <title>Example Workflows</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Example Workflows</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-21</em></h4>
+<h4 class="date"><em>2017-02-18</em></h4>
 
 
 
@@ -123,7 +123,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 </div>
 <div id="saving-the-docker-container-to-google-container-registry" class="section level3">
 <h3>Saving the Docker container to Google Container REgistry</h3>
-<p>Every Google project has its own private Docekr repo called the Container Registry.</p>
+<p>Every Google project has its own private Docker repo called the Container Registry.</p>
 <p>This command takes the running container that has your changes and saves it to there.</p>
 <p>By default, the RStudio container runs with name “rstudio” which you can see via <code>containers(vm)</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_push_registry</span>(vm, 
@@ -305,7 +305,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 <span class="co">## Install packages from CRAN</span>
 <span class="kw">RUN</span> install2.r --error <span class="dt">\ </span>
     <span class="kw">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    googleAuthR shinyFiles googleCloudStorage bigQueryR gmailR googleAnalyticsR \
+    googleAuthR shinyFiles googleCloudStorageR bigQueryR gmailr googleAnalyticsR \
     <span class="co">## install Github packages</span>
     <span class="kw">&amp;&amp;</span> <span class="kw">Rscript</span> -e <span class="st">&quot;devtools::install_github(c('bnosac/cronR'))&quot;</span> \
     <span class="co">## clean up</span>
@@ -333,7 +333,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 <div id="save-your-custom-image-to-the-container-registry" class="section level3">
 <h3>Save your custom image to the Container Registry</h3>
 <p>This image is now saved to the Container Registry</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_push_registry</span>(vm, <span class="st">&quot;my-cron-verse&quot;</span>, <span class="dt">container_name =</span> <span class="st">&quot;myrstudio&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_push_registry</span>(vm, <span class="dt">save_name =</span> <span class="st">&quot;my-cron-verse&quot;</span>, <span class="dt">image_name =</span> <span class="st">&quot;myrstudio&quot;</span>)</code></pre></div>
 <p>Once that is done, we don’t need this instance anymore.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_vm_delete</span>(vm)</code></pre></div>
 </div>

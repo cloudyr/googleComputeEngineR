@@ -71,7 +71,7 @@ and install packages as you would on RStudio Desktop.
 
 ### Saving the Docker container to Google Container REgistry
 
-Every Google project has its own private Docekr repo called the Container Registry.  
+Every Google project has its own private Docker repo called the Container Registry.  
 
 This command takes the running container that has your changes and saves it to there.
 

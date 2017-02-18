@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-18" />
+<meta name="date" content="2017-02-18" />
 
 <title>SSH, Docker, Container Registry and Futures</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">SSH, Docker, Container Registry and Futures</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-18</em></h4>
+<h4 class="date"><em>2017-02-18</em></h4>
 
 
 
@@ -89,6 +89,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="ssh-commands" class="section level2">
 <h2>SSH commands</h2>
+<blockquote>
+<p>There is currently an issue on Windows for all SSH based commands since Windows does not come with a native SSH client. This is being looked at and a fix is pending, track progress at this <a href="https://github.com/cloudyr/googleComputeEngineR/issues/35">Github issue #35</a>. Without SSH, all the <code>docker_x</code> commands will fail. It is recommended to either use the <code>gce_ssh_browser()</code> directly or for building docker images use the <code>gce_docker_build</code> VM template.</p>
+</blockquote>
 <p>You can also send ssh commands to your running instance from R via the <code>gce_ssh()</code> commands.</p>
 <p>For this you will need to either connect first via the <code>gcloud compute ssh</code> command that generates SSH-keys, or generate them yourself following this <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Google guide</a>.</p>
 <p>Once you have generated for your username, the public and private key, you can connect via:</p>
