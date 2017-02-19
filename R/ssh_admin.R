@@ -38,6 +38,42 @@ ssh_options <- function(instance) {
 #'   \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
 #'   
 #' @return The instance with SSH details included in $ssh
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#'   
+#'   library(googleComputeEngineR)
+#'   
+#'   vm <- gce_vm("my-instance")
+#'   
+#'   ## if you have already logged in via gcloud, the default keys will be used
+#'   ## no need to run gce_ssh_addkeys
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   
+#'   
+#'   ## if running on Windows, use the RStudio default SSH client
+#'   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
+#'   ## then run: 
+#'   vm2 <- gce_vm("my-instance2")
+#' 
+#'   ## add SSH info to the VM object
+#'   ## custom info
+#'   vm <- gce_ssh_setup(vm,
+#'                       username = "mark", 
+#'                       key.pub = "C://.ssh/id_rsa.pub",
+#'                       key.private = "C://.ssh/id_rsa")
+#'                       
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   #> foo
+#' 
+#'   ## example to check logs of rstudio docker container
+#'   gce_ssh(vm, "sudo journalctl -u rstudio")
+#' 
+#' }
+#' @family ssh functions
 #' @export
 gce_ssh_addkeys <- function(instance,
                             key.pub = NULL,
@@ -115,7 +151,9 @@ gce_ssh_addkeys <- function(instance,
 #' 
 #' Instructions for this can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.  Once you have generated run this function once to initiate setup.
 #' 
-#' If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
+#' If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  
+#' 
+#' These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
 #' 
 #' @param username The username you used to generate the key-pair
 #' @param key.pub The filepath location of the public key, only needed first call per session
@@ -126,8 +164,40 @@ gce_ssh_addkeys <- function(instance,
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys}
 #' 
 #' @return TRUE if successful
+#' @examples 
 #' 
+#' \dontrun{
+#'   
+#'   library(googleComputeEngineR)
+#'   
+#'   vm <- gce_vm("my-instance")
+#'   
+#'   ## if you have already logged in via gcloud, the default keys will be used
+#'   ## no need to run gce_ssh_addkeys
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   
+#'   
+#'   ## if running on Windows, use the RStudio default SSH client
+#'   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
+#'   ## then run: 
+#'   vm2 <- gce_vm("my-instance2")
 #' 
+#'   ## add SSH info to the VM object
+#'   ## custom info
+#'   vm <- gce_ssh_setup(vm,
+#'                       username = "mark", 
+#'                       key.pub = "C://.ssh/id_rsa.pub",
+#'                       key.private = "C://.ssh/id_rsa")
+#'                       
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   #> foo
+#' 
+#'   ## example to check logs of rstudio docker container
+#'   gce_ssh(vm, "sudo journalctl -u rstudio")
+#' 
+#' }
 #' @export
 #' @family ssh functions
 gce_ssh_setup <- function(instance,
@@ -245,10 +315,15 @@ is_port_open <- function(host, port=22, timeout=1) {
 #' See if ssh or scp is installed
 #' From https://github.com/sckott/analogsea/blob/master/R/zzz.R
 #' @keywords internal
-cli_tools <- function(ip){
+cli_tools <- function(){
   tmp <- Sys.which(c("ssh","scp"))
   if (any(tmp == "")) {
     nf <- paste0(names(tmp)[tmp == ""], collapse = ", ")
-    stop(sprintf("\n%s not found on your computer\nInstall the missing tool(s) and try again", nf))
+    if(.Platform$OS.type == "windows"){
+      stop(sprintf("\n%s not found on your computer\nInstall the missing tool(s) and try again. See ?gce_ssh for workarounds, including using the RStudio native SSH client.", nf))
+    } else {
+      stop(sprintf("\n%s not found on your computer\nInstall the missing tool(s) and try again", nf))
+    }
+
   }
 }

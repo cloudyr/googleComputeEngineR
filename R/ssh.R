@@ -29,18 +29,21 @@ gce_ssh_browser <- function(instance){
 }
 
 #' Remotely execute ssh code, upload & download files.
-#'
-#' Assumes that you have ssh & scp installed.  
+#' 
+#' @description 
+#' Assumes that you have ssh & scp installed.  If on Windows see website for workarounds. 
+#' 
+#' @details 
 #' 
 #' Only works connecting to linux based instances.
 #' 
 #' On Windows you will need to install an ssh command line client.
 #' 
-#' You will need to generate a new SSH key-pair if you have not connected to the instance before.
+#' You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.
 #' 
-#' Otherwise, instructions for this can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.  
+#' To customise SSH connection see \link{gce_ssh_addkeys}
 #' 
-#' When you have generated it run \link{gce_ssh_setup} once to initiate setup.
+#' Otherwise, instructions for generating SSH keys can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.
 #'
 #' Uploads and downloads are recursive, so if you specify a directory,
 #' everything inside the directory will also be downloaded.
@@ -61,8 +64,35 @@ gce_ssh_browser <- function(instance){
 #' @examples 
 #' 
 #' \dontrun{
+#'   
+#'   library(googleComputeEngineR)
+#'   
+#'   vm <- gce_vm("my-instance")
+#'   
+#'   ## if you have already logged in via gcloud, the default keys will be used
+#'   ## no need to run gce_ssh_addkeys
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   
+#'   
+#'   ## if running on Windows, use the RStudio default SSH client
+#'   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
+#'   ## then run: 
+#'   vm2 <- gce_vm("my-instance2")
 #' 
-#'   gce_ssh("rbase", "sudo journalctl -u rstudio")
+#'   ## add SSH info to the VM object
+#'   ## custom info
+#'   vm <- gce_ssh_setup(vm,
+#'                       username = "mark", 
+#'                       key.pub = "C://.ssh/id_rsa.pub",
+#'                       key.private = "C://.ssh/id_rsa")
+#'                       
+#'   ## run command on instance            
+#'   gce_ssh(vm, "echo foo")
+#'   #> foo
+#' 
+#'   ## example to check logs of rstudio docker container
+#'   gce_ssh(vm, "sudo journalctl -u rstudio")
 #' 
 #' }
 #' 
@@ -225,7 +255,7 @@ gce_ssh_download <- function(instance,
 
 
 do_system <- function(instance, 
-                      cmd, 
+                      cmd,  
                       wait = TRUE
                       ) {
   

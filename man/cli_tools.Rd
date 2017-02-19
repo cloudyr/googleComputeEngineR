@@ -5,7 +5,7 @@
 \title{See if ssh or scp is installed
 From https://github.com/sckott/analogsea/blob/master/R/zzz.R}
 \usage{
-cli_tools(ip)
+cli_tools()
 }
 \description{
 See if ssh or scp is installed

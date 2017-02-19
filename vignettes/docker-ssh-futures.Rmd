@@ -24,13 +24,35 @@ gce_ssh_browser("my-server")
 
 ## SSH commands
 
-> There is currently an issue on Windows for all SSH based commands since Windows does not come with a native SSH client.  This is being looked at and a fix is pending, track progress at this [Github issue #35](https://github.com/cloudyr/googleComputeEngineR/issues/35).  Without SSH, all the `docker_x` commands will fail.  It is recommended to either use the `gce_ssh_browser()` directly or for building docker images use the `gce_docker_build` VM template. 
+SSH is useful for many applications, but is also currently used by the `docker_x` commands to manipulate docker images on the VM - this may change in future versions, but currently, without SSH authentication, you won't be able to use Docker commands from your local session. 
+
+### Mac/Unix
 
 You can also send ssh commands to your running instance from R via the `gce_ssh()` commands.
 
-For this you will need to either connect first via the `gcloud compute ssh` command that generates SSH-keys, or generate them yourself following this [Google guide](https://cloud.google.com/compute/docs/instances/connecting-to-instance).
+#### gcloud default keys
 
-Once you have generated for your username, the public and private key, you can connect via:
+For this you will need to connect once via the Google Cloud SDK `gcloud compute ssh` , or copy the default keys.
+
+After that step, you will then in future be able to connect via:
+
+```r
+library(googleComputeEngineR)
+
+vm <- gce_vm("my-instance")
+  
+## run command on instance            
+gce_ssh(vm, "echo foo")
+# foo
+```
+
+Calling `gce_ssh` directly will call `gce_ssh_setup` with defaults set if it has not been run already.  It will look for a username via `Sys.info()[["user"]]`.
+
+#### Custom SSH keys
+
+If you want more customisation over the SSH connection, then you will need to generate SSH crudentials yourself following this [Google guide](https://cloud.google.com/compute/docs/instances/connecting-to-instance).
+
+Once you have generated details for your username, the public and private key, you can connect via:
 
 ```r
 library(googleComputeEngineR)
@@ -38,17 +60,43 @@ library(googleComputeEngineR)
 vm <- gce_vm("my-instance")
 
 ## add SSH info to the VM object
-vm <- gce_ssh_addkeys(username = "mark", 
-                      instance = "your-instance", 
-                      key.pub = "filepath.to.public.key",
-                      key.private = "filepath.to.private.key")
-  
+vm <- gce_ssh_setup(vm,
+                    username = "mark", 
+                    key.pub = "filepath.to.public.key",
+                    key.private = "filepath.to.private.key")
 ## run command on instance            
 gce_ssh(vm, "echo foo")
 # foo
-```
+```                      
 
-You can also call `gce_ssh` directly which will call `gce_ssh_addkeys` if it has not been run already.  It will look for a username via `Sys.info()[["user"]]` or you will need to specify it in the first call you make.
+You may also need to specify the username if its not `SSH` safe - for instance uppercase or with symbols. The VM will generate a user account the same name as the one you log in with. 
+
+### Windows
+
+Windows does not come with an SSH client installed, so it is recommended that you use the SSH client bundled with RStudio instead.  
+
+> We assume you already use RStudio, if you don't want to use it or can't then you will need to download an alterantive SSH client that will respond on the command line to `ssh`.  RStudio uses [MSYS](http://www.mingw.org/wiki/msys) you may want to try. 
+
+Add the RStudio SSH client to your PATH variable, e.g. `C:\Program Files\RStudio\bin\msys-ssh-1000-18`
+
+If you look in RStudio you can view the location of its stored SSH keys (`Options > git/SVN`).  These are the keys that we will add to the SSH information for the instance.  By default they are `C://.ssh/id_rsa.pub` and `C://.ssh/id_rsa` 
+
+Create your VM as normal, and add the custom SHH information:
+
+```r
+library(googleComputeEngineR)
+
+## create a default RStudio VM
+vm <- gce_vm("my-instance")
+
+## add custom SSH keys to the VM object with assumed RStudio defaults
+vm <- gce_ssh_setup(vm 
+                    key.pub = "C://.ssh/id_rsa.pub",
+                    key.private = "C://.ssh/id_rsa")
+                      
+## test ssh
+gce_ssh(vm, "echo foo")
+```
 
 ## Docker commands
 

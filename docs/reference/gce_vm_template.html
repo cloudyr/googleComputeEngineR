@@ -101,9 +101,9 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     
 
     <pre><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
-  <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"gci-stable"</span>,
-  <span class='no'>name</span>, <span class='no'>...</span>)</pre>
+  <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>, <span class='st'>"builder"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>build_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -115,12 +115,14 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
       <dd>password if needed (RStudio)</dd>
       <dt>dynamic_image</dt>
       <dd>Supply an alternative to the default Docker image here to download</dd>
+      <dt>dockerfile</dt>
+      <dd>If template is <code>builder</code> the Dockerfile to run on startup</dd>
       <dt>image_family</dt>
       <dd>An image-family.  It must come from the <code>google-containers</code> family.</dd>
-      <dt>name</dt>
-      <dd>The name of the resource, provided by the client when initially creating the resource</dd>
       <dt>...</dt>
       <dd>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></dd>
+      <dt>image_name</dt>
+      <dd>If template is <code>builder</code> or <code>dynamic</code>, the name of Docker image</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -144,6 +146,8 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
 <li> example A non-R test container running busybox
   </li>
 <li> dynamic Supply your own docker image to download such as <code>rocker/verse</code>
+  </li>
+<li> builder A VM to build a Dockerfile upon and uplaod to Google container engine
  </li>
 </ul></p>
     <p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 

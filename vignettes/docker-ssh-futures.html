@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-02-18" />
+<meta name="date" content="2017-02-19" />
 
 <title>SSH, Docker, Container Registry and Futures</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">SSH, Docker, Container Registry and Futures</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-02-18</em></h4>
+<h4 class="date"><em>2017-02-19</em></h4>
 
 
 
@@ -89,26 +89,64 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="ssh-commands" class="section level2">
 <h2>SSH commands</h2>
-<blockquote>
-<p>There is currently an issue on Windows for all SSH based commands since Windows does not come with a native SSH client. This is being looked at and a fix is pending, track progress at this <a href="https://github.com/cloudyr/googleComputeEngineR/issues/35">Github issue #35</a>. Without SSH, all the <code>docker_x</code> commands will fail. It is recommended to either use the <code>gce_ssh_browser()</code> directly or for building docker images use the <code>gce_docker_build</code> VM template.</p>
-</blockquote>
+<p>SSH is useful for many applications, but is also currently used by the <code>docker_x</code> commands to manipulate docker images on the VM - this may change in future versions, but currently, without SSH authentication, you won’t be able to use Docker commands from your local session.</p>
+<div id="macunix" class="section level3">
+<h3>Mac/Unix</h3>
 <p>You can also send ssh commands to your running instance from R via the <code>gce_ssh()</code> commands.</p>
-<p>For this you will need to either connect first via the <code>gcloud compute ssh</code> command that generates SSH-keys, or generate them yourself following this <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Google guide</a>.</p>
-<p>Once you have generated for your username, the public and private key, you can connect via:</p>
+<div id="gcloud-default-keys" class="section level4">
+<h4>gcloud default keys</h4>
+<p>For this you will need to connect once via the Google Cloud SDK <code>gcloud compute ssh</code> , or copy the default keys.</p>
+<p>After that step, you will then in future be able to connect via:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;my-instance&quot;</span>)
+  
+## run command on instance            
+<span class="kw">gce_ssh</span>(vm, <span class="st">&quot;echo foo&quot;</span>)
+<span class="co"># foo</span></code></pre></div>
+<p>Calling <code>gce_ssh</code> directly will call <code>gce_ssh_setup</code> with defaults set if it has not been run already. It will look for a username via <code>Sys.info()[[&quot;user&quot;]]</code>.</p>
+</div>
+<div id="custom-ssh-keys" class="section level4">
+<h4>Custom SSH keys</h4>
+<p>If you want more customisation over the SSH connection, then you will need to generate SSH crudentials yourself following this <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Google guide</a>.</p>
+<p>Once you have generated details for your username, the public and private key, you can connect via:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;my-instance&quot;</span>)
 
 ## add SSH info to the VM object
-vm &lt;-<span class="st"> </span><span class="kw">gce_ssh_addkeys</span>(<span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, 
-                      <span class="dt">instance =</span> <span class="st">&quot;your-instance&quot;</span>, 
-                      <span class="dt">key.pub =</span> <span class="st">&quot;filepath.to.public.key&quot;</span>,
-                      <span class="dt">key.private =</span> <span class="st">&quot;filepath.to.private.key&quot;</span>)
-  
+vm &lt;-<span class="st"> </span><span class="kw">gce_ssh_setup</span>(vm,
+                    <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, 
+                    <span class="dt">key.pub =</span> <span class="st">&quot;filepath.to.public.key&quot;</span>,
+                    <span class="dt">key.private =</span> <span class="st">&quot;filepath.to.private.key&quot;</span>)
 ## run command on instance            
 <span class="kw">gce_ssh</span>(vm, <span class="st">&quot;echo foo&quot;</span>)
 <span class="co"># foo</span></code></pre></div>
-<p>You can also call <code>gce_ssh</code> directly which will call <code>gce_ssh_addkeys</code> if it has not been run already. It will look for a username via <code>Sys.info()[[&quot;user&quot;]]</code> or you will need to specify it in the first call you make.</p>
+<p>You may also need to specify the username if its not <code>SSH</code> safe - for instance uppercase or with symbols. The VM will generate a user account the same name as the one you log in with.</p>
+</div>
+</div>
+<div id="windows" class="section level3">
+<h3>Windows</h3>
+<p>Windows does not come with an SSH client installed, so it is recommended that you use the SSH client bundled with RStudio instead.</p>
+<blockquote>
+<p>We assume you already use RStudio, if you don’t want to use it or can’t then you will need to download an alterantive SSH client that will respond on the command line to <code>ssh</code>. RStudio uses <a href="http://www.mingw.org/wiki/msys">MSYS</a> you may want to try.</p>
+</blockquote>
+<p>Add the RStudio SSH client to your PATH variable, e.g. <code>C:\Program Files\RStudio\bin\msys-ssh-1000-18</code></p>
+<p>If you look in RStudio you can view the location of its stored SSH keys (<code>Options &gt; git/SVN</code>). These are the keys that we will add to the SSH information for the instance. By default they are <code>C://.ssh/id_rsa.pub</code> and <code>C://.ssh/id_rsa</code></p>
+<p>Create your VM as normal, and add the custom SHH information:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+
+## create a default RStudio VM
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;my-instance&quot;</span>)
+
+## add custom SSH keys to the VM object with assumed RStudio defaults
+vm &lt;-<span class="st"> </span><span class="kw">gce_ssh_setup</span>(vm 
+                    <span class="dt">key.pub =</span> <span class="st">&quot;C://.ssh/id_rsa.pub&quot;</span>,
+                    <span class="dt">key.private =</span> <span class="st">&quot;C://.ssh/id_rsa&quot;</span>)
+                      
+## test ssh
+<span class="kw">gce_ssh</span>(vm, <span class="st">&quot;echo foo&quot;</span>)</code></pre></div>
+</div>
 </div>
 <div id="docker-commands" class="section level2">
 <h2>Docker commands</h2>

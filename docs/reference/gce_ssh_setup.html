@@ -125,13 +125,14 @@
     <p>This loads a public ssh-key to an instance&#39;s metadata.  It does not use the project SSH-Keys, that may be set seperatly.</p>
     <p>You will need to generate a new SSH key-pair if you have not connected to an instance before.</p>
     <p>Instructions for this can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.  Once you have generated run this function once to initiate setup.</p>
-    <p>If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  These will be looked for and used if found, at <code>file.path(Sys.getenv(&quot;HOME&quot;), &quot;.ssh&quot;, &quot;google_compute_engine.pub&quot;)</code></p>
+    <p>If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.</p>
+    <p>These will be looked for and used if found, at <code>file.path(Sys.getenv(&quot;HOME&quot;), &quot;.ssh&quot;, &quot;google_compute_engine.pub&quot;)</code></p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p><a href = 'https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys'>https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys</a></p>
-    <p>Other ssh functions: <code><a href='gce_ssh_browser.html'>gce_ssh_browser</a></code>,
-  <code><a href='gce_ssh.html'>gce_ssh</a></code></p>
+    <p>Other ssh functions: <code><a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></code>,
+  <code><a href='gce_ssh_browser.html'>gce_ssh_browser</a></code>, <code><a href='gce_ssh.html'>gce_ssh</a></code></p>
     
 
   </div>

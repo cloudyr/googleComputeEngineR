@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add one firewall rule to the network — gce_make_firewall_rule • googleComputeEngineR</title>
+<title>Retrieves the specified global Operations resource. — gce_get_op.gce_global_operation • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,47 +92,25 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add one firewall rule to the network</h1>
+    <h1>Retrieves the specified global Operations resource.</h1>
     </div>
 
     
-    <p>Use this to create firewall rules to apply to the network settings.  
-  Most commonly this is to setup web access (port 80 and 443)</p>
+    <p>Retrieves the specified global Operations resource.</p>
     
 
-    <pre><span class='fu'>gce_make_firewall_rule</span>(<span class='no'>name</span>, <span class='no'>protocol</span>, <span class='no'>ports</span>, <span class='kw'>sourceRanges</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceTags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>())</pre>
+    <pre><span class='co'># S3 method for gce_global_operation</span>
+<span class='fu'><a href='gce_get_op.html'>gce_get_op</a></span>(<span class='no'>operation</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>Name of the firewall rule</dd>
-      <dt>protocol</dt>
-      <dd>Protocol such as <code>tcp, udp, icmp, esp, ah, sctp</code> or IP protocol number.</dd>
-      <dt>ports</dt>
-      <dd>Port numbers to open</dd>
-      <dt>sourceRanges</dt>
-      <dd>From where to accept connections.  If <code>NULL</code> then will default to <code>0.0.0.0/0</code> (everywhere)</dd>
-      <dt>sourceTags</dt>
-      <dd>A list of instance tags this rule applies to. One or both of <code>sourceRanges</code> and <code>sourceTags</code> may be set.</dd>
-      <dt>project</dt>
-      <dd>The Google Cloud project</dd>
+      <dt>operation</dt>
+      <dd>Name of the Operations resource to return</dd>
     </dl>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A global operation object</p>
-    
-    <h2 class="hasAnchor" id="sourceranges-and-or-sourcetags"><a class="anchor" href="#sourceranges-and-or-sourcetags"></a>sourceRanges and/or sourceTags</h2>
-
-    <p></p>
-    <p>If both properties are set, 
-  an inbound connection is allowed if the range or the tag of the source matches the 
-  sourceRanges OR matches the sourceTags property; the connection does not need to match both properties.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>API Documentation <a href = 'https://cloud.google.com/compute/docs/reference/latest/firewalls/insert'>https://cloud.google.com/compute/docs/reference/latest/firewalls/insert</a></p>
+    <p><a href = 'Google Documentation'>https://developers.google.com/compute/docs/reference/latest/</a></p>
     
 
   </div>
@@ -141,10 +119,6 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#sourceranges-and-or-sourcetags">sourceRanges and/or sourceTags</a></li>
-
       <li><a href="#see-also">See also</a></li>
           </ul>
 

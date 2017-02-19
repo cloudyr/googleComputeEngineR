@@ -31,12 +31,49 @@ You will need to generate a new SSH key-pair if you have not connected to an ins
 
 Instructions for this can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.  Once you have generated run this function once to initiate setup.
 
-If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
+If you have historically connected via gcloud or some other means, ssh keys may have been generated automatically.  
+
+These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
+}
+\examples{
+
+\dontrun{
+  
+  library(googleComputeEngineR)
+  
+  vm <- gce_vm("my-instance")
+  
+  ## if you have already logged in via gcloud, the default keys will be used
+  ## no need to run gce_ssh_addkeys
+  ## run command on instance            
+  gce_ssh(vm, "echo foo")
+  
+  
+  ## if running on Windows, use the RStudio default SSH client
+  ## e.g. add C:\\Program Files\\RStudio\\bin\\msys-ssh-1000-18 to your PATH
+  ## then run: 
+  vm2 <- gce_vm("my-instance2")
+
+  ## add SSH info to the VM object
+  ## custom info
+  vm <- gce_ssh_setup(vm,
+                      username = "mark", 
+                      key.pub = "C://.ssh/id_rsa.pub",
+                      key.private = "C://.ssh/id_rsa")
+                      
+  ## run command on instance            
+  gce_ssh(vm, "echo foo")
+  #> foo
+
+  ## example to check logs of rstudio docker container
+  gce_ssh(vm, "sudo journalctl -u rstudio")
+
+}
 }
 \seealso{
 \url{https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys}
 
-Other ssh functions: \code{\link{gce_ssh_browser}},
-  \code{\link{gce_ssh}}
+Other ssh functions: \code{\link{gce_ssh_addkeys}},
+  \code{\link{gce_ssh_browser}}, \code{\link{gce_ssh}}
 }
 
