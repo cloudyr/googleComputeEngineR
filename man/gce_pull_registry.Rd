@@ -33,4 +33,10 @@ The instance
 \description{
 Load a previously saved private Google Container
 }
+\seealso{
+Other container registry functions: \code{\link{gce_docker_build}},
+  \code{\link{gce_list_registry}},
+  \code{\link{gce_push_registry}},
+  \code{\link{gce_tag_container}}
+}
 

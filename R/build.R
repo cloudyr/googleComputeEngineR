@@ -34,6 +34,7 @@
 #' }
 #' 
 #' @export
+#' @family container registry functions
 gce_docker_build <- function(dockerfile, build_name, ...){
   
   dots <- list(...)
@@ -79,6 +80,7 @@ gce_docker_build <- function(dockerfile, build_name, ...){
 #'   this function will return whilst waiting but don't turn off the VM until its finished.
 #' @return The tag the image was tagged with on GCE
 #' @export
+#' @family container registry functions
 gce_push_registry <- function(instance,
                               save_name,
                               container_name = NULL,
@@ -129,6 +131,7 @@ gce_push_registry <- function(instance,
 #' @inheritParams gce_push_registry
 #' @return A tag for use in Google Container Registry
 #' @export
+#' @family container registry functions
 gce_tag_container <- function(container_name,
                               project = gce_get_global_project(),
                               container_url = "gcr.io"
@@ -156,6 +159,7 @@ gce_tag_container <- function(container_name,
 #' 
 #' @return The instance
 #' @export
+#' @family container registry functions
 gce_pull_registry <- function(instance,
                               container_name,
                               container_url = "gcr.io",
@@ -178,6 +182,42 @@ gce_pull_registry <- function(instance,
   
   
   instance
+}
+
+#' List the docker images you have on Google Container Registry
+#' 
+#' @param instance The VM to run within
+#' @param container_url The URL of where the container was saved
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param ... Other arguments passed to \link{gce_ssh}
+#' 
+#' @details 
+#' Currently needs to run on a Google VM, not locally
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' vm <- gce_vm("my_instance")
+#' gce_list_registry(vm)
+#' 
+#' }
+#' 
+#' @export
+#' @family container registry functions
+gce_list_registry <- function(instance,
+                              container_url = "gcr.io",
+                              project = gce_get_global_project(),
+                              ...){
+  
+  search_string <- paste0(container_url, "/", project)
+  
+  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  
+  out <- docker_cmd(instance, cmd = "search", search_string, capture_text = TRUE)
+  
+  out 
+  
 }
 
 

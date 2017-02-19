@@ -44,4 +44,10 @@ gce_docker_build(dockerfile = my_dockerfile,
 }
 
 }
+\seealso{
+Other container registry functions: \code{\link{gce_list_registry}},
+  \code{\link{gce_pull_registry}},
+  \code{\link{gce_push_registry}},
+  \code{\link{gce_tag_container}}
+}
 

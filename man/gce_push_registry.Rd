@@ -35,4 +35,10 @@ The tag the image was tagged with on GCE
 \description{
 Commit and save a running container or docker image to the Google Container Registry
 }
+\seealso{
+Other container registry functions: \code{\link{gce_docker_build}},
+  \code{\link{gce_list_registry}},
+  \code{\link{gce_pull_registry}},
+  \code{\link{gce_tag_container}}
+}
 
