@@ -14,4 +14,12 @@ gce_delete_firewall_rule(name, project = gce_get_global_project())
 \description{
 Deletes a firewall rule of name specified
 }
+\seealso{
+API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/delete}
+
+Other firewall functions: \code{\link{gce_get_firewall_rule}},
+  \code{\link{gce_list_firewall_rules}},
+  \code{\link{gce_make_firewall_rule}},
+  \code{\link{gce_make_firewall_webports}}
+}
 

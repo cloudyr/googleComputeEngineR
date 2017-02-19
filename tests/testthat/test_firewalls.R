@@ -19,7 +19,9 @@ test_that("We can create a firewall rule", {
   ## global op
   expect_equal(the_rule$kind, "compute#operation")
   
-  ## TODO: wait for global operation, test operaation finished
+  fw <- gce_wait(the_rule)
+  
+  expect_equal(fw$kind, "compute#firewall")
   
 })
 
@@ -38,5 +40,15 @@ test_that("We can delete a firewall rule", {
   the_op <- gce_delete_firewall_rule("test-rule", project = "mark-edmondson-gde")
   expect_equal(the_op$kind, "compute#operation")
   
-  ## TODO: wait for global operation, test operatation finished
+  job <- gce_wait(the_op)
+  expect_equal(job$status, "DONE")
+})
+
+test_that("We can create a web firewall rule", {
+  skip_on_cran()
+  
+  fws <- gce_make_firewall_webports()
+  
+  expect_equal(fws[[1]], "compute#firewall")
+  expect_equal(fws[[2]], "compute#firewall")
 })

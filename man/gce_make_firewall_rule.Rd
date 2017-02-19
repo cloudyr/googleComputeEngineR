@@ -34,7 +34,22 @@ If both properties are set,
   an inbound connection is allowed if the range or the tag of the source matches the 
   sourceRanges OR matches the sourceTags property; the connection does not need to match both properties.
 }
+\examples{
+
+\dontrun{
+
+  gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80)
+  gce_make_firewall_rule("allow-https", protocol = "tcp", ports = 443)
+  
+}
+
+}
 \seealso{
 API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/insert}
+
+Other firewall functions: \code{\link{gce_delete_firewall_rule}},
+  \code{\link{gce_get_firewall_rule}},
+  \code{\link{gce_list_firewall_rules}},
+  \code{\link{gce_make_firewall_webports}}
 }
 

@@ -20,8 +20,18 @@
 #' If both properties are set, 
 #'   an inbound connection is allowed if the range or the tag of the source matches the 
 #'   sourceRanges OR matches the sourceTags property; the connection does not need to match both properties.
+#'
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#'   gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80)
+#'   gce_make_firewall_rule("allow-https", protocol = "tcp", ports = 443)
+#'   
+#' }
 #' 
 #' @return A global operation object
+#' @family firewall functions
 #' @export
 gce_make_firewall_rule <- function(name,
                                    protocol,
@@ -58,8 +68,9 @@ gce_make_firewall_rule <- function(name,
 #' Deletes a firewall rule of name specified
 #' 
 #' @inheritParams gce_make_firewall_rule
-#' 
+#' @seealso API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/delete}
 #' @export
+#' @family firewall functions
 gce_delete_firewall_rule <- function(name, project = gce_get_global_project()){
   
   url <-
@@ -77,8 +88,9 @@ gce_delete_firewall_rule <- function(name, project = gce_get_global_project()){
 #' Get a firewall rule of name specified
 #' 
 #' @inheritParams gce_make_firewall_rule
-#' 
+#' @seealso API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/get}
 #' @export
+#' @family firewall functions
 gce_get_firewall_rule <- function(name, project = gce_get_global_project()){
   
   url <-
@@ -96,8 +108,9 @@ gce_get_firewall_rule <- function(name, project = gce_get_global_project()){
 #' 
 #' @inheritParams gce_make_firewall_rule
 #' @inheritParams gce_list_networks
-#' 
+#' @seealso API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/list}
 #' @export
+#' @family firewall functions
 gce_list_firewall_rules <- function(filter = NULL, 
                                     maxResults = NULL, 
                                     pageToken = NULL, 
@@ -115,4 +128,49 @@ gce_list_firewall_rules <- function(filter = NULL,
   f <- gar_api_generator(url, "GET", pars_args = pars, data_parse_function = function(x) x)
   f()
   
+}
+
+#' Make HTTP and HTTPS firewall rules
+#' 
+#' Do the common use case of opening HTTP and HTTPS ports
+#' 
+#' @param project The project the firewall will open for
+#' 
+#' @details 
+#' 
+#' This will invoke \link{gce_make_firewall_rule} and look for the rules named \code{allow-http} and \code{allow-https}.
+#' If not present, it will create them.
+#' 
+#' @return Vector of the firewall objects
+#' 
+#' @export
+#' @family firewall functions
+gce_make_firewall_webports <- function(project = gce_get_global_project()){
+  
+  existing <- gce_list_firewall_rules(project = project)
+  names <- existing$items$name
+  
+  ## find 'default-allow-http' or 'allow-http'
+  if(any(grepl("allow-http$", names))){
+    myMessage("http firewall exists: ", paste(names[grepl("allow-http$", names)], collapse = " "), level = 3)
+    out1 <- lapply(names[grepl("allow-http$", names)], gce_get_firewall_rule, project = project)
+  } else {
+    myMessage("Creating http firewall rule", level = 3)
+    ## make the firewall
+    op <- gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80)
+    out1 <- gce_wait(op)
+  }
+  
+  ## find 'default-allow-https' or 'allow-https'
+  if(any(grepl("allow-https$", names))){
+    myMessage("https firewall exists: ", paste(names[grepl("allow-https$", names)], collapse = " "), level = 3)
+    out2 <- lapply(names[grepl("allow-https$", names)], gce_get_firewall_rule, project = project)
+  } else {
+    ## make the firewall
+    myMessage("Creating https firewall rule", level = 3)
+    op <- gce_make_firewall_rule("allow-https", protocol = "tcp", ports = 443)
+    out2 <- gce_wait(op)
+  }
+  
+  c(out1, out2)
 }

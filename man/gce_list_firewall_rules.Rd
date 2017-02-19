@@ -19,4 +19,12 @@ gce_list_firewall_rules(filter = NULL, maxResults = NULL,
 \description{
 Get a firewall rule of name specified
 }
+\seealso{
+API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/list}
+
+Other firewall functions: \code{\link{gce_delete_firewall_rule}},
+  \code{\link{gce_get_firewall_rule}},
+  \code{\link{gce_make_firewall_rule}},
+  \code{\link{gce_make_firewall_webports}}
+}
 

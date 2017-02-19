@@ -4,6 +4,7 @@
 #' 
 #' @inheritParams gce_vm_create
 #' @param name The name of the instance
+#' @param open_webports If TRUE, will open firewall ports 80 and 443 if not open already
 #' @param ... Other arguments passed to create an instance if it doesn't exist
 #' 
 #' @details 
@@ -29,7 +30,8 @@
 gce_vm <- function(name, 
                    ...,                           
                    project = gce_get_global_project(), 
-                   zone = gce_get_global_zone() ) {
+                   zone = gce_get_global_zone(),
+                   open_webports = TRUE) {
   
   if(inherits(name, "gce_instance")){
     myMessage("Refreshing instance data", level = 3)
@@ -70,6 +72,11 @@ gce_vm <- function(name,
       
     }
   })
+  
+  ## check firewalls
+  if(open_webports){
+    gce_make_firewall_webports(project = project)
+  }
   
   myMessage("VM running", level = 3)
   vm

@@ -155,7 +155,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   }
   
   template <- match.arg(template)
-  
+
   cloud_init_file <- get_cloud_init_file(template, 
                                          cloud_init = get_template_file(template),
                                          username = username, 

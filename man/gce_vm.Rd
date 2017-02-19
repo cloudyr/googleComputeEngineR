@@ -5,7 +5,7 @@
 \title{Create or fetch a virtual machine}
 \usage{
 gce_vm(name, ..., project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+  zone = gce_get_global_zone(), open_webports = TRUE)
 }
 \arguments{
 \item{name}{The name of the instance}
@@ -15,6 +15,8 @@ gce_vm(name, ..., project = gce_get_global_project(),
 \item{project}{Project ID for this request}
 
 \item{zone}{The name of the zone for this request}
+
+\item{open_webports}{If TRUE, will open firewall ports 80 and 443 if not open already}
 }
 \value{
 A \code{gce_instance} object

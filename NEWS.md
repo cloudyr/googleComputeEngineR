@@ -8,6 +8,7 @@
 - Add ability to specify disk size when creating a VM (#38) - thanks @jburos
 - Add firewall functions (#34)
 - Add a builder template to build docker images on a dedicated VM (#32)
+- Add global operation class
 
 # googleComputeEngineR 0.1.0
 
