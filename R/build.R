@@ -54,7 +54,10 @@ gce_docker_build <- function(dockerfile, build_name, ...){
                          dots))
   
   ## check for when job is done
-  ## kubernetes API call?
+  # DO_IT <- TRUE
+  # while(DO_IT){
+  #   images <- gce_list_registry(vm)
+  # }
   
   ## delete the VM
   
@@ -121,6 +124,9 @@ gce_push_registry <- function(instance,
   
   docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
   
+  gce_list_registry(instance,
+                    container_url = container_url,
+                    project = project)
   build_tag
   
 }
@@ -189,7 +195,6 @@ gce_pull_registry <- function(instance,
 #' @param instance The VM to run within
 #' @param container_url The URL of where the container was saved
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
-#' @param ... Other arguments passed to \link{gce_ssh}
 #' 
 #' @details 
 #' Currently needs to run on a Google VM, not locally
@@ -198,8 +203,8 @@ gce_pull_registry <- function(instance,
 #' 
 #' \dontrun{
 #' 
-#' vm <- gce_vm("my_instance")
-#' gce_list_registry(vm)
+#'   vm <- gce_vm("my_instance")
+#'   gce_list_registry(vm)
 #' 
 #' }
 #' 
@@ -207,8 +212,7 @@ gce_pull_registry <- function(instance,
 #' @family container registry functions
 gce_list_registry <- function(instance,
                               container_url = "gcr.io",
-                              project = gce_get_global_project(),
-                              ...){
+                              project = gce_get_global_project()){
   
   search_string <- paste0(container_url, "/", project)
   

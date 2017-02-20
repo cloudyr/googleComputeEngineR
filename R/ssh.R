@@ -120,7 +120,7 @@ gce_ssh <- function(instance,
 
   if(capture_text) {
     # Assume that the remote host uses /tmp as the temp dir, and is unix based
-    temp_remote <- paste0("/tmp", tempfile("gcer_cmd", ""))
+    temp_remote <- paste0("/tmp/gce_cmd", idempotency())
     temp_local <- tempfile("gcer_cmd")
     on.exit(unlink(temp_local))
     
