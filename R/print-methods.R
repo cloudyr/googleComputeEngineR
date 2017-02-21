@@ -34,6 +34,24 @@ print.gce_instance <- function(x, ...){
 }
 
 #' @export
+print.gce_gpuList <- function(x, ...){
+  
+  cat("==Google Compute Engine GPU List==\n")
+  out <- x$items
+  if (!is.null(out)) {
+    out$zone <- basename(out$zone)
+    out$creationTimestamp <- timestamp_to_r(out$creationTimestamp)
+    
+    print_cols <- c("name","description","maximumCardsPerInstance","zone","creationTimestamp")
+    
+    print(out[, print_cols])
+  } else {
+    cat("<none>\n")
+  }
+  invisible(x)
+}
+
+#' @export
 print.gce_zone_operation <- function(x, ...){
   
   cat("==Zone Operation", x$operationType, ": ", x$status)

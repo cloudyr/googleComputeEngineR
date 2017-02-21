@@ -242,8 +242,6 @@ gce_ssh_download <- function(instance,
   ## original that works on local unix based systems
   if(.Platform$OS.type != "windows"){
     
-
-    
     # This ssh's to the remote machine, tars the file(s), and sends it to the
     # local host where it is untarred.
     cmd <- paste0(
