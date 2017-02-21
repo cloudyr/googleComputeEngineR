@@ -5,7 +5,7 @@
 \title{List the docker images you have on Google Container Registry}
 \usage{
 gce_list_registry(instance, container_url = "gcr.io",
-  project = gce_get_global_project(), ...)
+  project = gce_get_global_project())
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -13,8 +13,6 @@ gce_list_registry(instance, container_url = "gcr.io",
 \item{container_url}{The URL of where the container was saved}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
-
-\item{...}{Other arguments passed to \link{gce_ssh}}
 }
 \description{
 List the docker images you have on Google Container Registry
@@ -26,8 +24,8 @@ Currently needs to run on a Google VM, not locally
 
 \dontrun{
 
-vm <- gce_vm("my_instance")
-gce_list_registry(vm)
+  vm <- gce_vm("my_instance")
+  gce_list_registry(vm)
 
 }
 

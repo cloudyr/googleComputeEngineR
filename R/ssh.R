@@ -133,8 +133,7 @@ gce_ssh <- function(instance,
     do_system(instance, cmd, wait = wait)
     gce_ssh_download(instance, temp_remote, temp_local)
 
-    text <- readLines(temp_local, warn = FALSE)
-    out <- text
+    out <- readLines(temp_local, warn = FALSE)
     
   } else {
     
@@ -230,7 +229,7 @@ gce_ssh_download <- function(instance,
     stop("Destination file already exists.")
   }
 
-  dir.create(local_tempdir)
+  external_ip <- gce_get_external_ip(instance, verbose = FALSE)
 
   # Rename the downloaded files when we exit
   on.exit({
@@ -238,17 +237,32 @@ gce_ssh_download <- function(instance,
     file.rename(local_tempfile, dest)
     unlink(local_tempdir, recursive = TRUE)
   })
-
-  external_ip <- gce_get_external_ip(instance, verbose = FALSE)
-  # This ssh's to the remote machine, tars the file(s), and sends it to the
-  # local host where it is untarred.
-  cmd <- paste0(
-    "ssh ", ssh_options(instance),
-    " ", username, "@", external_ip, " ",
-    sprintf("'cd %s && tar cz %s'", dirname(remote), basename(remote)),
-    " | ",
-    sprintf("(cd %s && tar xz)", local_tempdir)
-  )
+  
+  ## original that works on local unix based systems
+  if(.Platform$OS.type != "windows"){
+    
+    dir.create(local_tempdir)
+    
+    # This ssh's to the remote machine, tars the file(s), and sends it to the
+    # local host where it is untarred.
+    cmd <- paste0(
+      "ssh ", ssh_options(instance),
+      " ", username, "@", external_ip, " ",
+      sprintf("'cd %s && tar cz %s'", dirname(remote), basename(remote)),
+      " | ",
+      sprintf("(cd %s && tar xz)", local_tempdir)
+    )
+    
+  } else {
+    
+    ## if on Windows no untarring as tar isn't on Windows (#35)
+    cmd <- paste0(
+      "ssh ", ssh_options(instance),
+      " ", username, "@", external_ip, " ",
+      " > ",
+      shQuote(local_tempfile)
+    )
+  }
 
   do_system(instance, cmd, wait = wait)
 }

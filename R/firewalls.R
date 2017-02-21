@@ -152,7 +152,7 @@ gce_make_firewall_webports <- function(project = gce_get_global_project()){
   
   ## find 'default-allow-http' or 'allow-http'
   if(any(grepl("allow-http$", names))){
-    myMessage("http firewall exists: ", paste(names[grepl("allow-http$", names)], collapse = " "), level = 3)
+    myMessage("http firewall exists: ", paste(names[grepl("allow-http$", names)], collapse = " "), level = 2)
     out1 <- lapply(names[grepl("allow-http$", names)], gce_get_firewall_rule, project = project)
   } else {
     myMessage("Creating http firewall rule", level = 3)
@@ -163,7 +163,7 @@ gce_make_firewall_webports <- function(project = gce_get_global_project()){
   
   ## find 'default-allow-https' or 'allow-https'
   if(any(grepl("allow-https$", names))){
-    myMessage("https firewall exists: ", paste(names[grepl("allow-https$", names)], collapse = " "), level = 3)
+    myMessage("https firewall exists: ", paste(names[grepl("allow-https$", names)], collapse = " "), level = 2)
     out2 <- lapply(names[grepl("allow-https$", names)], gce_get_firewall_rule, project = project)
   } else {
     ## make the firewall
