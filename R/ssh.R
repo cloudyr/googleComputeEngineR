@@ -231,6 +231,7 @@ gce_ssh_download <- function(instance,
 
   external_ip <- gce_get_external_ip(instance, verbose = FALSE)
 
+  dir.create(local_tempdir)
   # Rename the downloaded files when we exit
   on.exit({
     if (file.exists(dest)) unlink(dest, recursive = TRUE)
@@ -241,7 +242,7 @@ gce_ssh_download <- function(instance,
   ## original that works on local unix based systems
   if(.Platform$OS.type != "windows"){
     
-    dir.create(local_tempdir)
+
     
     # This ssh's to the remote machine, tars the file(s), and sends it to the
     # local host where it is untarred.
