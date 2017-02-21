@@ -10,6 +10,7 @@
 - Add a builder template to build docker images on a dedicated VM (#32)
 - Add global operation class
 - Add `open_webports` argument to `gce_vm` that will open web ports 80 and 443 if necessary
+- Add GPU functions
 
 # googleComputeEngineR 0.1.0
 

@@ -25,11 +25,12 @@
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 gce_list_gpus <- function(filter = NULL, 
-                               maxResults = NULL, 
-                               pageToken = NULL,
-                               project = gce_get_global_project(), 
-                               zone = gce_get_global_zone()) {
+                          maxResults = NULL, 
+                          pageToken = NULL,
+                          project = gce_get_global_project(), 
+                          zone = gce_get_global_zone()) {
   
+  warning("This is using the beta version of the Google Compute Engine API and may not work in the future.")
   url <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/acceleratorTypes", 
                  project, zone)
   pars <- list(filter = filter, 

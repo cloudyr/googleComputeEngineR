@@ -164,6 +164,9 @@ gce_vm_delete <- function(instance,
 #' @param dry_run whether to just create the request JSON
 #' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' @param disk_size_gb If not NULL, override default size of the boot disk (size in GB) 
+#' @param use_beta If set to TRUE will use the beta version of the API. Should not be used for production purposes.
+#' @param acceleratorCount \code{[BETA]} Number of GPUs to add to instance
+#' @param acceleratorType \code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}
 #' 
 #' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 #' 
@@ -189,12 +192,46 @@ gce_vm_create <- function(name,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone(),
                           dry_run = FALSE,
-                          disk_size_gb = NULL) {
+                          disk_size_gb = NULL,
+                          use_beta = FALSE,
+                          acceleratorCount = NULL,
+                          acceleratorType = "nvidia-tesla-k80") {
   
   stopifnot(inherits(name, "character"))
   
-  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
-                 project, zone)
+  if(!use_beta){
+    url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
+                   project, zone)
+    
+    ## beta elements are NULL
+    guestAccelerators = NULL
+  } else {
+    warning("This is using the beta version of the Google Compute Engine API and may not work in the future.")
+    url <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances", 
+                   project, zone)
+    
+    ## beta GPU addition
+    if(!is.null(acceleratorCount)){
+      
+      acctype <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/acceleratorTypes/%s",
+                         project, zone, acceleratorType)
+                    
+      guestAccelerators = list(
+        list(
+          acceleratorCount = acceleratorCount,
+          acceleratorType = acctype
+        )
+      )
+      
+      scheduling = list(
+        onHostMaintenance = "terminate",
+        automaticRestart = TRUE
+      )
+    }
+  }
+  
+
+
   
   if(missing(predefined_type) && !is.character(predefined_type)){
     if(any(is.null(cpus), is.null(memory))){
@@ -285,6 +322,7 @@ gce_vm_create <- function(name,
                            networkInterfaces = networkInterfaces, 
                            scheduling = scheduling, 
                            serviceAccounts = serviceAccounts, 
+                           guestAccelerators = guestAccelerators,
                            tags = tags)
   if(dry_run){
     return(jsonlite::toJSON(the_instance, pretty = TRUE))

@@ -193,7 +193,8 @@ Instance <- function(name = NULL,
                      networkInterfaces = NULL, 
                      scheduling = NULL, 
                      serviceAccounts = NULL, 
-                     tags = NULL) {
+                     tags = NULL,
+                     guestAccelerators = NULL) {
   
   structure(list(canIpForward = canIpForward,
                  description = description, 
@@ -204,6 +205,7 @@ Instance <- function(name = NULL,
                  networkInterfaces = networkInterfaces, 
                  scheduling = scheduling, 
                  serviceAccounts = serviceAccounts, 
+                 guestAccelerators = guestAccelerators,
                  tags = tags), 
             class = c("gar_Instance", "list"))
 }
