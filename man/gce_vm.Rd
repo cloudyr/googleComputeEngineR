@@ -22,23 +22,57 @@ gce_vm(name, ..., project = gce_get_global_project(),
 A \code{gce_instance} object
 }
 \description{
-Pass in the instance name to fetch its object, or create the instance.
+Pass in the instance name to fetch its object, or create the instance via \link{gce_vm_create}.
 }
 \details{
 Will get or create the instance as specified.  Will wait for instance to be created if necessary.
 
-Make sure the instance is big enough to handle what you need, for instance the default "f1-micro" will hang the instance 
-when trying to install certain R libraries.
+Make sure the instance is big enough to handle what you need, 
+  for instance the default \code{f1-micro} will hang the instance when trying to install large R libraries.
 }
 \section{Creation logic}{
 
 
 You need these parameters defined to call the right function for creation.  Check the function definitions for more details. 
 
+If the VM name exists but is not running, it start the VM and return the VM object
+
+If the VM is running, it will return the VM object
+
 If you specify the argument \code{template} it will call \link{gce_vm_template}
 
 If you specify one of \code{file} or \code{cloud_init} it will call \link{gce_vm_container}
 
 Otherwise it will call \link{gce_vm_create}
+}
+\examples{
+
+\dontrun{
+
+library(googleComputeEngineR)
+## auto auth, project and zone pre-set
+## list your VMs in the project/zone
+
+the_list <- gce_list_instances()
+
+## start an existing instance
+vm <- gce_vm("markdev")
+
+## for rstudio, you also need to specify a username and password to login
+vm <- gce_vm(template = "rstudio",
+             name = "rstudio-server",
+             username = "mark", password = "mark1234")
+
+## specify your own cloud-init file and pass it into gce_vm_container()
+vm <- gce_vm(cloud_init = "example.yml",
+             name = "test-container",
+             predefined_type = "f1-micro")
+
+## specify disk size at creation
+vm <- gce_vm('my-image3', disk_size_gb = 20)
+
+
+}
+
 }
 

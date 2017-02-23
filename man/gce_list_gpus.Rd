@@ -34,5 +34,8 @@ To filter you need a single string in the form \code{field_name eq|ne string}
 }
 \seealso{
 \href{https://cloud.google.com/compute/docs/gpus/add-gpus#create-new-gpu-instance}{Google Documentation}
+
+Other GPU instances: \code{\link{gce_check_gpu}},
+  \code{\link{gce_vm_gpu}}
 }
 

@@ -23,6 +23,7 @@
 #' @param zone The name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
+#' @family GPU instances
 #' @export
 gce_list_gpus <- function(filter = NULL, 
                           maxResults = NULL, 
@@ -48,5 +49,89 @@ gce_list_gpus <- function(filter = NULL,
     out,
     class = c("gce_gpuList", class(out))
   )
+  
+}
+
+#' Launch a GPU enabled instance
+#' 
+#' Helper function that fills in some defaults passed to \link{gce_vm}
+#' 
+#' @param ... arguments passed to \link{gce_vm}
+#' @param acceleratorCount \code{[BETA]} Number of GPUs to add to instance
+#' @param acceleratorType \code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}
+#' 
+#' @details 
+#' 
+#' If not specified, this function will enter defaults to get a GPU instance up and running.
+#' 
+#' \itemize{
+#'   \item \code{use_beta: TRUE}
+#'   \item \code{acceleratorCount: 1}
+#'   \item \code{acceleratorType: "nvidia-tesla-k80"}
+#'   \item \code{scheduling: list(onHostMaintenance = "terminate", automaticRestart = TRUE)}
+#'   \item \code{image_project: "centos-cloud"}
+#'   \item \code{image_family: "centos-7"}
+#'   \item \code{predefined_type: "n1-standard-1"}
+#'   \item \code{metadata: the contents of the the startup script in \code{system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}}
+#'  }
+#' 
+#' @family GPU instances
+#' @export
+#' 
+#' @return A VM object
+gce_vm_gpu <- function(...){
+  
+  dots <- list(...)
+  
+  if(is.null(dots$scheduling)){
+    dots$scheduling <- list(
+      onHostMaintenance = "terminate",
+      automaticRestart = TRUE
+    )
+  }
+  
+  if(is.null(dots$acceleratorCount)){
+    
+    dots$acceleratorCount <- 1
+    dots$acceleratorType <- "nvidia-tesla-k80"
+  }
+  
+  if(is.null(dots$image_project)){
+    dots$image_project <- "centos-cloud"
+  }
+  
+  if(is.null(dots$image_family)){
+    dots$image_family <- "centos-7"
+  }
+  
+  if(is.null(dots$predefined_type)){
+    dots$predefined_type <- "n1-standard-1"
+  }
+  
+  dots$use_beta <- TRUE
+  
+  if(is.null(dots$metadata)){
+    startup_file <- system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")
+    dots$metadata <- list("startup-script" = readChar(startup_file, 
+                                                      nchars = file.info(startup_file)$size))
+  }
+  
+  do.call(gce_vm,
+          args = dots)
+  
+}
+
+#' Check GPU installed ok
+#' 
+#' @param vm The instance to check
+#' @export
+#' @family GPU instances
+#' 
+#' @seealso \url{https://cloud.google.com/compute/docs/gpus/add-gpus#verify-driver-install}
+#' 
+#' @return The NVIDIA-SMI output via ssh
+gce_check_gpu <- function(vm){
+  
+  gce_ssh(vm, "nvidia-smi")
   
 }
