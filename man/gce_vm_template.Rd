@@ -20,6 +20,8 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{dockerfile}{If template is \code{builder} the Dockerfile to run on startup}
 
+\item{build_name}{The name of the build}
+
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
 \item{...}{Other arguments passed to \link{gce_vm_create}}

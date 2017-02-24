@@ -15,6 +15,8 @@ gce_check_zone_op(operation, wait = 3, verbose = TRUE)
 \item{wait}{Time in seconds between checks, default 3 seconds.}
 
 \item{verbose}{Whether to give user feedback}
+
+\item{timeout_tries}{Number of times to wait}
 }
 \value{
 The completed job object, invisibly

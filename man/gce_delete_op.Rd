@@ -4,8 +4,7 @@
 \alias{gce_delete_op}
 \title{Deletes the specified Operations resource.}
 \usage{
-gce_delete_op(operation, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_delete_op(operation)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to delete}

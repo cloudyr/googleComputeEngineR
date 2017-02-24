@@ -19,7 +19,9 @@ test_that("We can create a firewall rule", {
   ## global op
   expect_equal(the_rule$kind, "compute#operation")
   
-  fw <- gce_wait(the_rule)
+  gce_wait(the_rule)
+  
+  fw <- gce_get_firewall_rule("test-rule")
   
   expect_equal(fw$kind, "compute#firewall")
   
@@ -49,6 +51,6 @@ test_that("We can create a web firewall rule", {
   
   fws <- gce_make_firewall_webports()
   
-  expect_equal(fws[[1]], "compute#firewall")
-  expect_equal(fws[[2]], "compute#firewall")
+  expect_equal(fws[[1]]$kind, "compute#firewall")
+  expect_equal(fws[[2]]$kind, "compute#firewall")
 })

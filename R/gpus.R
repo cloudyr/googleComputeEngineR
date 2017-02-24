@@ -57,8 +57,6 @@ gce_list_gpus <- function(filter = NULL,
 #' Helper function that fills in some defaults passed to \link{gce_vm}
 #' 
 #' @param ... arguments passed to \link{gce_vm}
-#' @param acceleratorCount \code{[BETA]} Number of GPUs to add to instance
-#' @param acceleratorType \code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}
 #' 
 #' @details 
 #' 

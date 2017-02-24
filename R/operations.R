@@ -47,9 +47,7 @@ as.global_operation <- function(x){
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_delete_op <- function(operation,
-                          project = gce_get_global_project(), 
-                          zone = gce_get_global_zone() ) {
+gce_delete_op <- function(operation) {
 
   
   if(inherits(operation, c("gce_global_operation", "gce_zone_operation","gce_region_operation"))){
@@ -300,6 +298,7 @@ gce_list_zone_op <- function(filter = NULL,
 #' @param operation The operation object
 #' @param wait Time in seconds between checks, default 3 seconds.
 #' @param verbose Whether to give user feedback
+#' @param timeout_tries Number of times to wait
 #' 
 #' @return The completed job object, invisibly
 #' 

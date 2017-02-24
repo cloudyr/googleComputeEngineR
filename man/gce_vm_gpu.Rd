@@ -8,10 +8,6 @@ gce_vm_gpu(...)
 }
 \arguments{
 \item{...}{arguments passed to \link{gce_vm}}
-
-\item{acceleratorCount}{\code{[BETA]} Number of GPUs to add to instance}
-
-\item{acceleratorType}{\code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}}
 }
 \value{
 A VM object

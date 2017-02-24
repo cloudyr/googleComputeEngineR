@@ -31,17 +31,19 @@ gce_ssh_browser <- function(instance){
 #' Remotely execute ssh code, upload & download files.
 #' 
 #' @description 
-#' Assumes that you have ssh & scp installed.  If on Windows see website for workarounds. 
+#' Assumes that you have ssh & scp installed.  If on Windows see website and examples for workarounds. 
 #' 
 #' @details 
 #' 
 #' Only works connecting to linux based instances.
 #' 
-#' On Windows you will need to install an ssh command line client.
+#' On Windows you will need to install an ssh command line client - see examples for an example using RStudio's built in client. 
 #' 
 #' You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.
 #' 
-#' To customise SSH connection see \link{gce_ssh_addkeys}
+#' To customise SSH connection see \link{gce_ssh_setup}
+#' 
+#' \code{capture_text} is passed to \code{stdout} and \code{stderr} of \link{system2} 
 #' 
 #' Otherwise, instructions for generating SSH keys can be found here: \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}.
 #'
@@ -55,17 +57,14 @@ gce_ssh_browser <- function(instance){
 #' @param overwrite If TRUE, will overwrite the local file if exists.
 #' @param verbose If TRUE, will print command before executing it.
 #' @param wait Whether then SSH output should be waited for or run it asynchronously.
-#' @param capture_text whether to return the output of the SSH command into an R text
+#' @param capture_text Possible values are "", to the R console (the default), NULL or FALSE (discard output), TRUE (capture the output in a character vector) or a character string naming a file.
 #' 
 #' @seealso \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
-#' @return If capture_text is TRUE, the text of the SSH command result.
-#' 
 #' 
 #' @examples 
 #' 
 #' \dontrun{
 #'   
-#'   library(googleComputeEngineR)
 #'   
 #'   vm <- gce_vm("my-instance")
 #'   
@@ -73,7 +72,7 @@ gce_ssh_browser <- function(instance){
 #'   ## no need to run gce_ssh_addkeys
 #'   ## run command on instance            
 #'   gce_ssh(vm, "echo foo")
-#'   
+#'   #> foo
 #'   
 #'   ## if running on Windows, use the RStudio default SSH client
 #'   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
@@ -82,17 +81,15 @@ gce_ssh_browser <- function(instance){
 #' 
 #'   ## add SSH info to the VM object
 #'   ## custom info
-#'   vm <- gce_ssh_setup(vm,
+#'   vm2 <- gce_ssh_setup(vm2,
 #'                       username = "mark", 
 #'                       key.pub = "C://.ssh/id_rsa.pub",
 #'                       key.private = "C://.ssh/id_rsa")
 #'                       
 #'   ## run command on instance            
-#'   gce_ssh(vm, "echo foo")
+#'   gce_ssh(vm2, "echo foo")
 #'   #> foo
 #' 
-#'   ## example to check logs of rstudio docker container
-#'   gce_ssh(vm, "sudo journalctl -u rstudio")
 #' 
 #' }
 #' 
@@ -195,7 +192,7 @@ do_system <- function(instance,
   
   stopifnot(is.gce_instance(instance))
   
-  ## check ssh installed
+  ## check ssh/scp installed
   cli_tools()
   
   external_ip <- gce_get_external_ip(instance, verbose = FALSE)

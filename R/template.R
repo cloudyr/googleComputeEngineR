@@ -93,6 +93,7 @@ get_cloud_init_file <- function(template,
 #' @param dynamic_image Supply an alternative to the default Docker image here to download
 #' @param dockerfile If template is \code{builder} the Dockerfile to run on startup
 #' @param image_name If template is \code{builder} or \code{dynamic}, the name of Docker image
+#' @param build_name The name of the build
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
 #' @details 
