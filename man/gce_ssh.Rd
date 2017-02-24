@@ -7,7 +7,7 @@
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
 gce_ssh(instance, ..., key.pub = NULL, key.private = NULL, wait = TRUE,
-  capture_text = FALSE, username = Sys.info()[["user"]])
+  capture_text = "", username = Sys.info()[["user"]])
 
 gce_ssh_upload(instance, local, remote, username = Sys.info()[["user"]],
   key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE)

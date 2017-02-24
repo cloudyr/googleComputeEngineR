@@ -103,7 +103,7 @@ gce_ssh <- function(instance,
                     key.pub = NULL,
                     key.private = NULL,
                     wait = TRUE,
-                    capture_text = FALSE,
+                    capture_text = "",
                     username = Sys.info()[["user"]]) {
   
   stopifnot(is.gce_instance(instance))
@@ -117,37 +117,15 @@ gce_ssh <- function(instance,
   
   lines <- paste(c(...), collapse = " \\\n&& ")
   if (lines == "") stop("Provide commands", call. = FALSE)
-
-  if(capture_text) {
-    # Assume that the remote host uses /tmp as the temp dir, and is unix based
-    temp_remote <- paste0("/tmp/gce_cmd", idempotency())
-    temp_local <- tempfile("gcer_cmd")
-    on.exit(unlink(temp_local))
     
-    cmd <- paste0(
-      "ssh ", ssh_options(instance),
-      " ", username, "@", gce_get_external_ip(instance, verbose = FALSE),
-      " ", shQuote(paste(lines, ">", temp_remote))
-    )
+  sargs <- c(
+    ssh_options(instance),
+    paste0(username, "@", gce_get_external_ip(instance, verbose = FALSE)),
+    shQuote(lines)
+  )
     
-    do_system(instance, cmd, wait = wait)
-    gce_ssh_download(instance, temp_remote, temp_local)
-
-    out <- readLines(temp_local, warn = FALSE)
-    
-  } else {
-    
-    cmd <- paste0(
-      "ssh ", ssh_options(instance),
-      " ", username, "@", gce_get_external_ip(instance, verbose = FALSE),
-      " ", shQuote(lines)
-    )
-    
-    out <- do_system(instance, cmd, wait = wait)
-    
-  }
+  do_system(instance, cmd = "ssh", sargs = sargs, wait = wait, capture = capture_text)
   
-  out
 }
 
 #' @export
@@ -170,13 +148,12 @@ gce_ssh_upload <- function(instance,
   
   username <- instance$ssh$username
   
-  cmd <- paste0(
-    "scp -r ", ssh_options(instance),
-    " ", local,
-    " ", username, "@", gce_get_external_ip(instance, verbose = FALSE), ":", remote
-  )
+  sargs <- c(
+    "-r ", ssh_options(instance),
+    local,
+    paste0(username, "@", gce_get_external_ip(instance, verbose = FALSE), ":", remote))
 
-  do_system(instance, cmd, wait = wait)
+  do_system(instance, cmd = "scp", sargs = sargs, wait = wait)
 }
 
 #' @export
@@ -200,92 +177,68 @@ gce_ssh_download <- function(instance,
   
   username <- instance$ssh$username
   
-  local <- normalizePath(local, mustWork = FALSE)
-
-  if (file.exists(local) && file.info(local)$isdir) {
-    # If `local` exists and is a dir, then just put the result in that directory
-    local_dir <- local
-    need_rename <- FALSE
-
-  } else {
-    # If `local` isn't an existing directory, put the result in the parent
-    local_dir <- dirname(local)
-    need_rename <- TRUE
-  }
-
-  # A temp dir for the downloaded file(s)
-  local_tempdir <- tempfile("download", local_dir)
-  local_tempfile <- file.path(local_tempdir, basename(remote))
-
-  if (need_rename) {
-    # Rename to local name
-    dest <- file.path(local_dir, basename(local))
-  } else {
-    # Keep original name
-    dest <- file.path(local_dir, basename(remote))
-  }
-
-  if (file.exists(dest) && !overwrite) {
-    stop("Destination file already exists.")
-  }
-
-  external_ip <- gce_get_external_ip(instance, verbose = FALSE)
-
-  dir.create(local_tempdir)
-  # Rename the downloaded files when we exit
-  on.exit({
-    if (file.exists(dest)) unlink(dest, recursive = TRUE)
-    file.rename(local_tempfile, dest)
-    unlink(local_tempdir, recursive = TRUE)
-  })
+  sargs <- c(
+    "-r ", ssh_options(instance),
+    paste0(username, "@", gce_get_external_ip(instance, verbose = FALSE), ":", remote),
+    local)
   
-  ## original that works on local unix based systems
-  if(.Platform$OS.type != "windows"){
-    
-    # This ssh's to the remote machine, tars the file(s), and sends it to the
-    # local host where it is untarred.
-    cmd <- paste0(
-      "ssh ", ssh_options(instance),
-      " ", username, "@", external_ip, " ",
-      sprintf("'cd %s && tar cz %s'", dirname(remote), basename(remote)),
-      " | ",
-      sprintf("(cd %s && tar xz)", local_tempdir)
-    )
-    
-  } else {
-    
-    ## if on Windows no untarring as tar isn't on Windows (#35)
-    cmd <- paste0(
-      "ssh ", ssh_options(instance),
-      " ", username, "@", external_ip, " ",
-      " > ",
-      shQuote(local_tempfile)
-    )
-  }
-
-  do_system(instance, cmd, wait = wait)
+  do_system(instance, cmd = "scp", sargs = sargs, wait = wait)
 }
 
 
 do_system <- function(instance, 
-                      cmd,  
-                      wait = TRUE
+                      cmd = "ssh",
+                      sargs = character(),
+                      wait = TRUE,
+                      capture = ""
                       ) {
   
   stopifnot(is.gce_instance(instance))
   
+  ## check ssh installed
   cli_tools()
+  
   external_ip <- gce_get_external_ip(instance, verbose = FALSE)
   # check to make sure port 22 open, otherwise ssh commands will fail
   if (!is_port_open(external_ip, 22)) {
     stop("port 22 is not open for ", external_ip, call. = FALSE)
   }
-  myMessage(cmd, level = 2)
   
-  status <- system(cmd, wait = wait)
-  if (status != 0) {
-    stop("ssh failed\n", cmd, call. = FALSE)
+  ## do the command
+  myMessage(cmd, " ", paste(sargs, collapse = " "), level = 2)
+  status <- system2(cmd, args = sargs, wait = wait, stdout = capture, stderr = capture)
+  
+  if(capture == TRUE){
+    ## return the command text to local R
+    
+    ## maybe a warning available in attr(status, "status) or attr(status, "errmsg)
+    if(!is.null(attr(status, "status"))){
+      myMessage("Remote error: ", attr(status, "status"), attr(status, "errmsg"), level = 3)
+    }
+    
+    ## status is the output text
+    ## parse out the connection warning
+    host_warn <- status[grepl("^Warning: Permanently added .* to the list of known hosts.\r$", status)]
+    myMessage(host_warn, level = 3)
+    status <- status[!grepl("^Warning: Permanently added .* to the list of known hosts.\r$", status)]
+    out <- status
+    
+  } else {
+    ## status if error code (0 for success)
+    if (status == 127) {
+      stop("ssh failed\n", cmd, sargs, call. = FALSE)
+    }
+    
+    ## output may be written to file if capture = "filepath"
+    if(is.character(capture) && file.exists(capture)){
+      myMessage("Wrote output to ", capture, level = 2)
+    }
+    
+    myMessage("status: ", status, " wait: ", wait, level = 2)
+    out <-   invisible(TRUE)
   }
+    
 
-  invisible(TRUE)
+  out
+
 }

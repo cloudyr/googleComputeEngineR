@@ -8,4 +8,5 @@ if ! rpm -q  cuda; then
   yum install epel-release -y
   yum update -y
   yum install cuda -y
+  yum install pciutils -y
 fi

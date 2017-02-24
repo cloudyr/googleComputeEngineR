@@ -13,9 +13,9 @@ ssh_options <- function(instance) {
 
   if(!file.exists(private_key)) stop("Couldn't find private key")
   
-  paste0(paste0("-o ", names(opts), "=", opts, collapse = " "), 
-         " -i ", 
-         private_key)
+  c(paste0("-o ", names(opts), "=", opts, collapse = " "), 
+    " -i ", 
+    private_key)
 }
 
 #' Add SSH details to a gce_instance
