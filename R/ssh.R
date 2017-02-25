@@ -203,7 +203,13 @@ do_system <- function(instance,
   
   ## do the command
   myMessage(cmd, " ", paste(sargs, collapse = " "), level = 2)
-  status <- system2(cmd, args = sargs, wait = wait, stdout = capture, stderr = capture)
+  
+  if(.Platform$OS.type != "windows"){
+    status <- system2(cmd, args = sargs, wait = wait, stdout = capture, stderr = capture)
+  } else {
+    status <- shell(paste(cmd, sargs), wait = wait)
+  }
+
   
   if(capture == TRUE){
     ## return the command text to local R

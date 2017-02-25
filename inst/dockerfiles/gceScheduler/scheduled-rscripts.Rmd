@@ -1,0 +1,178 @@
+---
+title: "Scheduled R scripts on Master and Slave Google Compute Engine VMs"
+author: "Mark Edmondson"
+date: "2/24/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup for schedluing an R script in your own custom Docker containers
+
+[Pricing calculator here](https://cloud.google.com/products/calculator/#id=1e09cb90-d5bb-4e88-99f3-99b3807fbbeb)
+
+$4.09 a month + $1.52 a month for a daily 30 min cron job on a 7.5GB RAW instance.
+
+
+## Create the master and slave templates
+
+The master needs to have only enough libraries to start up other VMs and download files from Google Cloud Storage.
+
+The slave needs to be have enough R libaries to run your scheduled script.
+
+```r
+library(googleComputeEngineR)
+
+master_image <- system.file("dockerfiles", "gceScheduler", "master","Dockerfile", 
+                          package = "googleComputeEngineR")
+
+slave_image <- system.file("dockerfiles", "googleAuthR-verse","Dockerfile", 
+                          package = "googleComputeEngineR")
+                          
+b1 <- gce_docker_build(name = "build1", master_image, build_name = "cron-master")
+b2 <- gce_docker_build(name = "build2", slave_image, build_name = "cron-slave")
+
+## wait a bit
+
+## should see your custom image once done
+gce_list_registry(b1)
+#> [1] "NAME                                       DESCRIPTION   STARS     OFFICIAL   AUTOMATED"
+#> [2] "your-project/cron-master                                    0                    "         
+#> [3] "your-project/cron-slave                                     0                    "
+
+## delete the build instances
+gce_vm_delete(b1)
+gce_vm_delete(b2)
+
+```
+
+## Setup the worker VM
+
+Now we have the templates saved to Container Registry, make a worker VM that is small, and will always be on 24/7 to run cron.   This costs $4.09 a month. 
+
+```r
+library(googleComputeEngineR)
+
+## make the cron-master
+master <- gce_vm("cron-master", 
+                 predefined_type = "f1-micro",
+                 template = "rstudio", 
+                 dynamic_image = gce_tag_container("cron-master"),
+                 username = "mark", 
+                 password = "mark1234")
+
+## remove any existing if necessary
+gce_ssh(master, "rm ~/.ssh/google_compute_engine.pub")
+gce_ssh(master, "rm ~/.ssh/google_compute_engine")
+## set up SSH from slave to workers (replace with your username)
+gce_ssh(master, "ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -C master -N ''")
+
+docker_cmd(master, cmd = "cp", args = "~/.ssh/ rstudio:/home/mark/.ssh/")
+docker_cmd(master, cmd = "exec", args = "rstudio chown -R mark /home/mark/.ssh/")
+```
+
+## Setup slave instance
+
+Create the larger slave instance, that can be then stopped ready for the cron job.  These will cost in total $1.52 a month if they run every day for 30 minutes. 
+
+
+```r
+slave <- gce_vm("slave-1", 
+                 predefined_type = "n1-standard-2",
+                 template = "rstudio", 
+                 dynamic_image = gce_tag_container("cron-slave"),
+                 username = "mark", 
+                 password = "mark1234")
+                 
+gce_vm_stop(slave)
+```
+
+## Create scheduled script
+
+Create the script you want to schedule.  Make sure it is self sufficient in that it can authenticate, do the stuff and upload to a safe repository, such as Google Cloud Storage.
+
+Upload the script itself to cloud storage too.
+
+```r
+library(googleCloudStorageR)
+library(googleAnalyticsR)
+gce_global_project("mark-edmondson-gde")
+gce_global_zone("europe-west1-b")
+
+## gcs can authenticate via GCE auth keys
+googleAuthR::gar_gce_auth()
+
+## use GCS to download auth key (that you have previously uploaded)
+gcs_get_object("ga.httr-oauth", bucket = "mark-cron", saveToDisk = "ga.httr-oauth")
+
+auth_token <- readRDS("ga.httr-oauth")
+options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/analytics", 
+                                        "https://www.googleapis.com/auth/analytics.readonly"),
+        googleAuthR.httr_oauth_cache = "ga.httr-oauth")
+googleAuthR::gar_auth(auth_token)
+
+## fetch data
+
+gadata <- google_analytics_4(81416156,
+                             date_range = c(Sys.Date() - 8, Sys.Date() - 1),
+                             dimensions = c("medium", "source", "landingPagePath"),
+                             metrics = "sessions",
+                             max = -1)
+
+## back to Cloud Storage
+googleAuthR::gar_gce_auth()
+gcs_upload(gadata, bucket = "mark-cron", name = "uploads/gadata_81416156.csv")
+gcs_upload("ga.httr-oauth", bucket = "mark-cron")
+
+message("Upload complete", Sys.time())
+```
+
+
+## Create worker script
+
+Create and upload script that will run on worker VM, create the slave instance, and run your script.
+
+```r
+## intended to be run on a small instance via cron
+## use this script to launch other VMs with more expensive tasks
+library(googleComputeEngineR)
+library(googleCloudStorageR)
+
+## auth to same project we're on
+googleAuthR::gar_gce_auth()
+
+## download your customised RStudio with necessary packages installed
+tag <- gce_tag_container("slave-1")
+
+## launch the VM
+## will either create or start the VM if its not created already
+vm <- gce_vm(name = "slave1",
+             predefined_type = "n1-standard-1",
+             template = "rstudio",
+             dynamic_image = tag)
+
+## get the script from googleCloudStorage
+myscript <- tempfile(fileext = ".R")
+gcs_get_object("file_name.R", saveToDisk = myscript)
+
+## upload script to VM
+gce_ssh_upload(vm, myscript, "./myscript.R")
+
+## copy script to docker container
+docker_cmd(vm, cmd = "cp", args = c("./myscript.R", "rstudio:tmp/myscript.R"))
+           
+## run the script on the VM
+out <- docker_cmd(vm, 
+                  cmd = "exec", 
+                  args = c("rstudio", "Rscript 'tmp/myscript.R'"), 
+                  wait = TRUE)
+
+## once finished, stop the VM
+gce_vm_stop(vm)
+```
+
+## Add worker script to cron
+
+Run the worker script on a schedule.
