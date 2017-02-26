@@ -18,9 +18,10 @@ $4.09 a month for the master + $1.52 a month per slave (daily 30 min cron job on
 ## Create the master and slave templates
 
 The master needs to only have enough to up other VMs and download files from Google Cloud Storage:
+
 * `googleComputeEngineR`
 * `googleCloudStorageR`
-* >0.4.0.9000 of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()` - currently on Github
+* Version `>0.4.0.9000` of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()` - currently on Github
 
 The master is build from a custom Dockerfile, an example is found in system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")`
 

@@ -76,8 +76,11 @@
 </div>
 <div id="create-the-master-and-slave-templates" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#create-the-master-and-slave-templates" class="anchor"> </a></body></html>Create the master and slave templates</h2>
-<p>The master needs to only have enough to up other VMs and download files from Google Cloud Storage: * <code>googleComputeEngineR</code> * <code>googleCloudStorageR</code> * &gt;0.4.0.9000 of <code>googleAuthR</code> for easy auth on GCE instances via <code>gar_gce_auth()</code> - currently on Github</p>
-<p>The master is build from a custom Dockerfile, an example is found in system.file(&ldquo;dockerfiles&rdquo;, &ldquo;gceScheduler&rdquo;, &ldquo;master&rdquo;,&ldquo;Dockerfile&rdquo;, package = &ldquo;googleComputeEngineR&rdquo;)`</p>
+<p>The master needs to only have enough to up other VMs and download files from Google Cloud Storage:</p>
+<ul><li><code>googleComputeEngineR</code></li>
+<li><code>googleCloudStorageR</code></li>
+<li>Version <code>&gt;0.4.0.9000</code> of <code>googleAuthR</code> for easy auth on GCE instances via <code>gar_gce_auth()</code> - currently on Github</li>
+</ul><p>The master is build from a custom Dockerfile, an example is found in system.file(&ldquo;dockerfiles&rdquo;, &ldquo;gceScheduler&rdquo;, &ldquo;master&rdquo;,&ldquo;Dockerfile&rdquo;, package = &ldquo;googleComputeEngineR&rdquo;)`</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 master_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"master"</span>,<span class="st">"Dockerfile"</span>, 
