@@ -55,22 +55,23 @@ Now we have the templates saved to Container Registry, make a worker VM that is 
 ```r
 library(googleComputeEngineR)
 
+username <- "mark"
+
 ## make the cron-master
 master <- gce_vm("cron-master", 
                  predefined_type = "f1-micro",
                  template = "rstudio", 
                  dynamic_image = gce_tag_container("cron-master"),
-                 username = "mark", 
+                 username = username, 
                  password = "mark1234")
 
-## remove any existing if necessary
-gce_ssh(master, "rm ~/.ssh/google_compute_engine.pub")
-gce_ssh(master, "rm ~/.ssh/google_compute_engine")
-## set up SSH from slave to workers (replace with your username)
+
+## set up SSH from master to slaves with username 'master'
 gce_ssh(master, "ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -C master -N ''")
 
-docker_cmd(master, cmd = "cp", args = "~/.ssh/ rstudio:/home/mark/.ssh/")
-docker_cmd(master, cmd = "exec", args = "rstudio chown -R mark /home/mark/.ssh/")
+## upload to your username folder
+docker_cmd(master, cmd = "cp", args = sprintf("~/.ssh/ rstudio:/home/%s/.ssh/", username)
+docker_cmd(master, cmd = "exec", args = sprintf("rstudio chown -R %s /home/%s/.ssh/", username, username)
 ```
 
 ## Setup slave instance
@@ -98,14 +99,17 @@ Upload the script itself to cloud storage too.
 ```r
 library(googleCloudStorageR)
 library(googleAnalyticsR)
+
+## set defaults
 gce_global_project("mark-edmondson-gde")
 gce_global_zone("europe-west1-b")
+gcs_global_bucket("mark-cron")
 
 ## gcs can authenticate via GCE auth keys
 googleAuthR::gar_gce_auth()
 
 ## use GCS to download auth key (that you have previously uploaded)
-gcs_get_object("ga.httr-oauth", bucket = "mark-cron", saveToDisk = "ga.httr-oauth")
+gcs_get_object("ga.httr-oauth", saveToDisk = "ga.httr-oauth")
 
 auth_token <- readRDS("ga.httr-oauth")
 options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/analytics", 
@@ -123,8 +127,8 @@ gadata <- google_analytics_4(81416156,
 
 ## back to Cloud Storage
 googleAuthR::gar_gce_auth()
-gcs_upload(gadata, bucket = "mark-cron", name = "uploads/gadata_81416156.csv")
-gcs_upload("ga.httr-oauth", bucket = "mark-cron")
+gcs_upload(gadata, name = "uploads/gadata_81416156.csv")
+gcs_upload("ga.httr-oauth")
 
 message("Upload complete", Sys.time())
 ```
@@ -139,6 +143,7 @@ Create and upload script that will run on worker VM, create the slave instance, 
 ## use this script to launch other VMs with more expensive tasks
 library(googleComputeEngineR)
 library(googleCloudStorageR)
+gcs_global_bucket("mark-cron")
 
 ## auth to same project we're on
 googleAuthR::gar_gce_auth()
@@ -153,6 +158,9 @@ vm <- gce_vm(name = "slave1",
              template = "rstudio",
              dynamic_image = tag)
 
+## set SSH to use 'master' username
+vm <- gce_ssh_setup(vm, username = "master", ssh_overwrite = TRUE)
+
 ## get the script from googleCloudStorage
 myscript <- tempfile(fileext = ".R")
 gcs_get_object("file_name.R", saveToDisk = myscript)
@@ -164,6 +172,7 @@ gce_ssh_upload(vm, myscript, "./myscript.R")
 docker_cmd(vm, cmd = "cp", args = c("./myscript.R", "rstudio:tmp/myscript.R"))
            
 ## run the script on the VM
+## or "googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'mark-cron')"
 out <- docker_cmd(vm, 
                   cmd = "exec", 
                   args = c("rstudio", "Rscript 'tmp/myscript.R'"), 
