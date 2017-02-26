@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -120,6 +132,13 @@
   the name of the VM will be <code>dockerbuild</code> and the predefined_type will be <code>n1-standard-1</code></p>
     <p>TODO: After uploading it will then delete the build VM</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p>Other container registry functions: <code><a href='gce_list_registry.html'>gce_list_registry</a></code>,
+  <code><a href='gce_pull_registry.html'>gce_pull_registry</a></code>,
+  <code><a href='gce_push_registry.html'>gce_push_registry</a></code>,
+  <code><a href='gce_tag_container.html'>gce_tag_container</a></code></p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -142,6 +161,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

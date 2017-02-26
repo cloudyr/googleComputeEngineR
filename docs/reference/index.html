@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -228,6 +240,11 @@
       <p><a href="gce_docker_build.html">Build a dockerfile on a remote VM</a></p>
       <ul>
         <li><code><a href="gce_docker_build.html">gce_docker_build</a></code></li>
+      </ul>
+      
+      <p><a href="gce_list_registry.html">List the docker images you have on Google Container Registry</a></p>
+      <ul>
+        <li><code><a href="gce_list_registry.html">gce_list_registry</a></code></li>
       </ul>
       
       <p><a href="gce_pull_registry.html">Load a previously saved private Google Container</a></p>
@@ -514,6 +531,11 @@
         <li><code><a href="gce_make_firewall_rule.html">gce_make_firewall_rule</a></code></li>
       </ul>
       
+      <p><a href="gce_make_firewall_webports.html">Make HTTP and HTTPS firewall rules</a></p>
+      <ul>
+        <li><code><a href="gce_make_firewall_webports.html">gce_make_firewall_webports</a></code></li>
+      </ul>
+      
       <p><a href="gce_make_network.html">Make a network interface for instance creation</a></p>
       <ul>
         <li><code><a href="gce_make_network.html">gce_make_network</a></code></li>
@@ -559,18 +581,61 @@
       <ul>
         <li><code><a href="gce_set_metadata.html">gce_set_metadata</a></code></li>
       </ul>
+          <h2 id="section-gpus" class="hasAnchor"><a href="#section-gpus" class="anchor"></a>GPUs</h2>
+      <p class="section-desc"><p>For working with GPUS attached to your instances.</p></p>
+
+      
+      <p><a href="gce_check_gpu.html">Check GPU installed ok</a></p>
+      <ul>
+        <li><code><a href="gce_check_gpu.html">gce_check_gpu</a></code></li>
+      </ul>
+      
+      <p><a href="gce_list_gpus.html">Retrieves a list GPUs you can attach to an instance</a></p>
+      <ul>
+        <li><code><a href="gce_list_gpus.html">gce_list_gpus</a></code></li>
+      </ul>
+      
+      <p><a href="gce_vm_gpu.html">Launch a GPU enabled instance</a></p>
+      <ul>
+        <li><code><a href="gce_vm_gpu.html">gce_vm_gpu</a></code></li>
+      </ul>
           <h2 id="section-operations" class="hasAnchor"><a href="#section-operations" class="anchor"></a>Operations</h2>
       <p class="section-desc"><p>A lot of the functions return an operation object whilst GCE works on your request. These functions let you work with those.</p></p>
 
+      
+      <p><a href="gce_delete_op.gce_global_operation.html">Deletes the specified global Operations resource.</a></p>
+      <ul>
+        <li><code><a href="gce_delete_op.gce_global_operation.html">gce_delete_op.gce_global_operation</a></code></li>
+      </ul>
+      
+      <p><a href="gce_delete_op.gce_zone_operation.html">Deletes the specified zone-specific Operations resource.</a></p>
+      <ul>
+        <li><code><a href="gce_delete_op.gce_zone_operation.html">gce_delete_op.gce_zone_operation</a></code></li>
+      </ul>
+      
+      <p><a href="gce_delete_op.html">Deletes the specified Operations resource.</a></p>
+      <ul>
+        <li><code><a href="gce_delete_op.html">gce_delete_op</a></code></li>
+      </ul>
       
       <p><a href="gce_delete_zone_op.html">Deletes the specified zone-specific Operations resource.</a></p>
       <ul>
         <li><code><a href="gce_delete_zone_op.html">gce_delete_zone_op</a></code></li>
       </ul>
       
+      <p><a href="gce_get_op.gce_global_operation.html">Retrieves the specified global Operations resource.</a></p>
+      <ul>
+        <li><code><a href="gce_get_op.gce_global_operation.html">gce_get_op.gce_global_operation</a></code></li>
+      </ul>
+      
       <p><a href="gce_get_op.gce_zone_operation.html">Retrieves the specified zone-specific Operations resource.</a></p>
       <ul>
         <li><code><a href="gce_get_op.gce_zone_operation.html">gce_get_op.gce_zone_operation</a></code></li>
+      </ul>
+      
+      <p><a href="gce_get_op.html">Retrieves the specified Operations resource.</a></p>
+      <ul>
+        <li><code><a href="gce_get_op.html">gce_get_op</a></code></li>
       </ul>
       
       <p><a href="gce_get_zone_op.html">Retrieves the specified zone-specific Operations resource.</a></p>
@@ -586,6 +651,16 @@
       <p><a href="gce_wait.html">Wait for an operation to finish</a></p>
       <ul>
         <li><code><a href="gce_wait.html">gce_check_zone_op</a></code></li><li><code><a href="gce_wait.html">gce_wait</a></code></li>
+      </ul>
+      
+      <p><a href="is.gce_global_operation.html">Check if is a gce_global_operation</a></p>
+      <ul>
+        <li><code><a href="is.gce_global_operation.html">is.gce_global_operation</a></code></li>
+      </ul>
+      
+      <p><a href="is.gce_region_operation.html">Check if is a gce_region_operation</a></p>
+      <ul>
+        <li><code><a href="is.gce_region_operation.html">is.gce_region_operation</a></code></li>
       </ul>
       
       <p><a href="is.gce_zone_operation.html">Check if is a gce_zone_operation</a></p>
@@ -613,6 +688,7 @@
       <li><a href="#section-networks-and-firewalls">Networks and Firewalls</a></li>
       <li><a href="#section-ssh">SSH</a></li>
       <li><a href="#section-metadata">Metadata</a></li>
+      <li><a href="#section-gpus">GPUs</a></li>
       <li><a href="#section-operations">Operations</a></li>
     </ul>
   </div>

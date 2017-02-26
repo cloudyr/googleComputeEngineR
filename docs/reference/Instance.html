@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -102,7 +114,7 @@
     <pre><span class='fu'>Instance</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>machineType</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>canIpForward</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>disks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>metadata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>networkInterfaces</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scheduling</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serviceAccounts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>guestAccelerators</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">

@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -109,6 +121,10 @@
 <li>Add ability to specify disk size when creating a VM (#38) - thanks @jburos</li>
 <li>Add firewall functions (#34)</li>
 <li>Add a builder template to build docker images on a dedicated VM (#32)</li>
+<li>Add global operation class</li>
+<li>Add <code>open_webports</code> argument to <code>gce_vm</code> that will open web ports 80 and 443 if necessary</li>
+<li>Add GPU functions</li>
+<li>Migrate to use <code>system2</code> instead of <code>system</code> for cross-platform SSH (#35)</li>
 </ul></div>
 </div>
     <div id="googlecomputeenginer-0-1-0" class="section level1">

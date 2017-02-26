@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -156,10 +168,10 @@
 <span class='co'># </span>
 <span class='co'>#   ## add SSH info to the VM object</span>
 <span class='co'>#   ## custom info</span>
-<span class='co'>#   vm &lt;- gce_ssh_addkeys(vm,</span>
-<span class='co'>#                         username = "mark", </span>
-<span class='co'>#                         key.pub = "C://.ssh/id_rsa.pub",</span>
-<span class='co'>#                         key.private = "C://.ssh/id_rsa")</span>
+<span class='co'>#   vm &lt;- gce_ssh_setup(vm,</span>
+<span class='co'>#                       username = "mark", </span>
+<span class='co'>#                       key.pub = "C://.ssh/id_rsa.pub",</span>
+<span class='co'>#                       key.private = "C://.ssh/id_rsa")</span>
 <span class='co'>#                       </span>
 <span class='co'>#   ## run command on instance            </span>
 <span class='co'>#   gce_ssh(vm, "echo foo")</span>

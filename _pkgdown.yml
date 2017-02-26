@@ -13,7 +13,11 @@ navbar:
     - text: "SSH & Docker"
       href: articles/docker-ssh-futures.html
     - text: "Examples"
-      href: articles/example-workflows.html
+      menu:
+      - text: "Workflows"
+        href: articles/example-workflows.html
+      - text: "Scheduled cron master/slave"
+        href: articles/scheduled-rscripts.html
     - text: "Help"
       menu:
       - text: "Reference"
@@ -108,9 +112,14 @@ reference:
       Setting metadata for your instance, such as startup scripts.
     contents:
       - matches("metadata")
+  - title: GPUs
+    desc: >
+      For working with GPUS attached to your instances.
+    contents:
+      - matches("gpu")
   - title: Operations
     desc: >
       A lot of the functions return an operation object whilst GCE works on your request.
       These functions let you work with those.
     contents:
-      - matches("zone_op")
+      - matches("_op")

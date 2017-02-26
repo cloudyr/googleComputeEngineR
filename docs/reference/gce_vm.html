@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -96,11 +108,11 @@
     </div>
 
     
-    <p>Pass in the instance name to fetch its object, or create the instance.</p>
+    <p>Pass in the instance name to fetch its object, or create the instance via <a href='gce_vm_create.html'>gce_vm_create</a>.</p>
     
 
     <pre><span class='fu'>gce_vm</span>(<span class='no'>name</span>, <span class='no'>...</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
-  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
+  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>(), <span class='kw'>open_webports</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -112,6 +124,8 @@
       <dd>Project ID for this request</dd>
       <dt>zone</dt>
       <dd>The name of the zone for this request</dd>
+      <dt>open_webports</dt>
+      <dd>If TRUE, will open firewall ports 80 and 443 if not open already</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -121,18 +135,48 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Will get or create the instance as specified.  Will wait for instance to be created if necessary.</p>
-    <p>Make sure the instance is big enough to handle what you need, for instance the default &quot;f1-micro&quot; will hang the instance 
-when trying to install certain R libraries.</p>
+    <p>Make sure the instance is big enough to handle what you need, 
+  for instance the default <code>f1-micro</code> will hang the instance when trying to install large R libraries.</p>
     
     <h2 class="hasAnchor" id="creation-logic"><a class="anchor" href="#creation-logic"></a>Creation logic</h2>
 
     <p></p>
     <p>You need these parameters defined to call the right function for creation.  Check the function definitions for more details.</p>
+    <p>If the VM name exists but is not running, it start the VM and return the VM object</p>
+    <p>If the VM is running, it will return the VM object</p>
     <p>If you specify the argument <code>template</code> it will call <a href='gce_vm_template.html'>gce_vm_template</a></p>
     <p>If you specify one of <code>file</code> or <code>cloud_init</code> it will call <a href='gce_vm_container.html'>gce_vm_container</a></p>
     <p>Otherwise it will call <a href='gce_vm_create.html'>gce_vm_create</a></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='co'>## Not run: ------------------------------------</span>
+<span class='co'># </span>
+<span class='co'># library(googleComputeEngineR)</span>
+<span class='co'># ## auto auth, project and zone pre-set</span>
+<span class='co'># ## list your VMs in the project/zone</span>
+<span class='co'># </span>
+<span class='co'># the_list &lt;- gce_list_instances()</span>
+<span class='co'># </span>
+<span class='co'># ## start an existing instance</span>
+<span class='co'># vm &lt;- gce_vm("markdev")</span>
+<span class='co'># </span>
+<span class='co'># ## for rstudio, you also need to specify a username and password to login</span>
+<span class='co'># vm &lt;- gce_vm(template = "rstudio",</span>
+<span class='co'>#              name = "rstudio-server",</span>
+<span class='co'>#              username = "mark", password = "mark1234")</span>
+<span class='co'># </span>
+<span class='co'># ## specify your own cloud-init file and pass it into gce_vm_container()</span>
+<span class='co'># vm &lt;- gce_vm(cloud_init = "example.yml",</span>
+<span class='co'>#              name = "test-container",</span>
+<span class='co'>#              predefined_type = "f1-micro")</span>
+<span class='co'># </span>
+<span class='co'># ## specify disk size at creation</span>
+<span class='co'># vm &lt;- gce_vm('my-image3', disk_size_gb = 20)</span>
+<span class='co'># </span>
+<span class='co'># </span>
+<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -144,7 +188,9 @@ when trying to install certain R libraries.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#creation-logic">Creation logic</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

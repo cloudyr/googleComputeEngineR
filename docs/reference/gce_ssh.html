@@ -57,8 +57,20 @@
 <li>
   <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
 </li>
-<li>
-  <a href="../articles/example-workflows.html">Examples</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/example-workflows.html">Workflows</a>
+    </li>
+    <li>
+      <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -96,11 +108,11 @@
     </div>
 
     
-    <p>Assumes that you have ssh &amp; scp installed.  If on Windows see website for workarounds.</p>
+    <p>Assumes that you have ssh &amp; scp installed.  If on Windows see website and examples for workarounds.</p>
     
 
     <pre><span class='fu'>gce_ssh</span>(<span class='no'>instance</span>, <span class='no'>...</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]])
+  <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]])
 
 <span class='fu'>gce_ssh_upload</span>(<span class='no'>instance</span>, <span class='no'>local</span>, <span class='no'>remote</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]],
   <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -123,7 +135,7 @@
       <dt>wait</dt>
       <dd>Whether then SSH output should be waited for or run it asynchronously.</dd>
       <dt>capture_text</dt>
-      <dd>whether to return the output of the SSH command into an R text</dd>
+      <dd>Possible values are &quot;&quot;, to the R console (the default), NULL or FALSE (discard output), TRUE (capture the output in a character vector) or a character string naming a file.</dd>
       <dt>username</dt>
       <dd>The username you used to generate the key-pair</dd>
       <dt>local, remote</dt>
@@ -134,16 +146,13 @@
       <dd>If TRUE, will overwrite the local file if exists.</dd>
     </dl>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>If capture_text is TRUE, the text of the SSH command result.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Only works connecting to linux based instances.</p>
-    <p>On Windows you will need to install an ssh command line client.</p>
+    <p>On Windows you will need to install an ssh command line client - see examples for an example using RStudio&#39;s built in client.</p>
     <p>You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.</p>
-    <p>To customise SSH connection see <a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></p>
+    <p>To customise SSH connection see <a href='gce_ssh_setup.html'>gce_ssh_setup</a></p>
+    <p><code>capture_text</code> is passed to <code>stdout</code> and <code>stderr</code> of system2</p>
     <p>Otherwise, instructions for generating SSH keys can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
     <p>Uploads and downloads are recursive, so if you specify a directory,
 everything inside the directory will also be downloaded.</p>
@@ -160,7 +169,6 @@ everything inside the directory will also be downloaded.</p>
     <pre class="examples"><div class='input'>
 <span class='co'>## Not run: ------------------------------------</span>
 <span class='co'>#   </span>
-<span class='co'>#   library(googleComputeEngineR)</span>
 <span class='co'>#   </span>
 <span class='co'>#   vm &lt;- gce_vm("my-instance")</span>
 <span class='co'>#   </span>
@@ -168,7 +176,7 @@ everything inside the directory will also be downloaded.</p>
 <span class='co'>#   ## no need to run gce_ssh_addkeys</span>
 <span class='co'>#   ## run command on instance            </span>
 <span class='co'>#   gce_ssh(vm, "echo foo")</span>
-<span class='co'>#   </span>
+<span class='co'>#   #&gt; foo</span>
 <span class='co'>#   </span>
 <span class='co'>#   ## if running on Windows, use the RStudio default SSH client</span>
 <span class='co'>#   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
@@ -177,17 +185,15 @@ everything inside the directory will also be downloaded.</p>
 <span class='co'># </span>
 <span class='co'>#   ## add SSH info to the VM object</span>
 <span class='co'>#   ## custom info</span>
-<span class='co'>#   vm &lt;- gce_ssh_addkeys(vm,</span>
-<span class='co'>#                         username = "mark", </span>
-<span class='co'>#                         key.pub = "C://.ssh/id_rsa.pub",</span>
-<span class='co'>#                         key.private = "C://.ssh/id_rsa")</span>
+<span class='co'>#   vm2 &lt;- gce_ssh_setup(vm2,</span>
+<span class='co'>#                       username = "mark", </span>
+<span class='co'>#                       key.pub = "C://.ssh/id_rsa.pub",</span>
+<span class='co'>#                       key.private = "C://.ssh/id_rsa")</span>
 <span class='co'>#                       </span>
 <span class='co'>#   ## run command on instance            </span>
-<span class='co'>#   gce_ssh(vm, "echo foo")</span>
+<span class='co'>#   gce_ssh(vm2, "echo foo")</span>
 <span class='co'>#   #&gt; foo</span>
 <span class='co'># </span>
-<span class='co'>#   ## example to check logs of rstudio docker container</span>
-<span class='co'>#   gce_ssh(vm, "sudo journalctl -u rstudio")</span>
 <span class='co'># </span>
 <span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
@@ -196,8 +202,6 @@ everything inside the directory will also be downloaded.</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>

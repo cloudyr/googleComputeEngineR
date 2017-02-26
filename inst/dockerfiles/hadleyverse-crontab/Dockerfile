@@ -20,4 +20,4 @@ RUN install2.r --error \
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
 
 ## Start cron
-RUN service cron start
+RUN sudo service cron start
