@@ -80,7 +80,7 @@
 <ul><li><code>googleComputeEngineR</code></li>
 <li><code>googleCloudStorageR</code></li>
 <li>Version <code>&gt;0.4.0.9000</code> of <code>googleAuthR</code> for easy auth on GCE instances via <code>gar_gce_auth()</code> - currently on Github</li>
-</ul><p>The master is build from a custom Dockerfile, an example is found in system.file(&ldquo;dockerfiles&rdquo;, &ldquo;gceScheduler&rdquo;, &ldquo;master&rdquo;,&ldquo;Dockerfile&rdquo;, package = &ldquo;googleComputeEngineR&rdquo;)`</p>
+</ul><p>The master is built from a custom Dockerfile, an example is found in <code>system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 master_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"master"</span>,<span class="st">"Dockerfile"</span>, 
@@ -105,7 +105,7 @@ b2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_dock
 </div>
 <div id="setup-the-worker-vm" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#setup-the-worker-vm" class="anchor"> </a></body></html>Setup the worker VM</h2>
-<p>Now we have the templates saved to Container Registry, make a worker VM that is small, and will always be on 24/7 to run cron. This costs ~$4.09 a month.</p>
+<p>Now we have the templates saved to Container Registry, make a worker VM that is small, and will always be on 24/7 to run cron. This costs ~$4.09 a month. Give it a strong password.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
 username &lt;-<span class="st"> "mark"</span>
@@ -122,7 +122,8 @@ master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_
 ## set up SSH from master to slaves with username 'master'
 <span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(master, <span class="st">"ssh-keygen -t rsa -f ~/.ssh/google_compute_engine -C master -N ''"</span>)
 
-## upload SSH keys to the docker container (probably more secure than keeping keys in Docker container itself)
+## copy SSH keys into the docker container 
+## (probably more secure than keeping keys in Docker container itself)
 <span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"cp"</span>, <span class="dt">args =</span> <span class="kw">sprintf</span>(<span class="st">"~/.ssh/ rstudio:/home/%s/.ssh/"</span>, username)
 <span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"exec"</span>, <span class="dt">args =</span> <span class="kw">sprintf</span>(<span class="st">"rstudio chown -R %s /home/%s/.ssh/"</span>, username, username)</code></pre></div>
 </div>
@@ -143,17 +144,17 @@ master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_
 <div id="create-scheduled-script" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#create-scheduled-script" class="anchor"> </a></body></html>Create scheduled script</h2>
 <p>Create the R script you want to schedule. Make sure it is self sufficient in that it can authenticate, do stuff and upload to a safe repository, such as Google Cloud Storage.</p>
-<p>This script is uploaded itself to Google Cloud Storage, so the slave isntance can call it via:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">googleCloudStorageR::<span class="kw">gcs_source</span>(<span class="st">'download.R'</span>, <span class="dt">bucket =</span> <span class="st">'mark-cron'</span>)</code></pre></div>
+<p>This script is uploaded itself to Google Cloud Storage, so the slave instance can call it via:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">googleCloudStorageR::<span class="kw">gcs_source</span>(<span class="st">'download.R'</span>, <span class="dt">bucket =</span> <span class="st">'your-gcs-bucket'</span>)</code></pre></div>
 <p>An example below authenticates with Google Cloud Storage, then downloads a <code>ga.httr-oauth</code> file that carries the Google Analytics authentication, runs the download then reauthenticates with Google Cloud Storage to upload the results.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## download.R - called from slave VM
 <span class="kw">library</span>(googleCloudStorageR)
 <span class="kw">library</span>(googleAnalyticsR)
 
 ## set defaults
-<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"mark-edmondson-gde"</span>)
+<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)
 <span class="kw"><a href="../reference/gce_global_zone.html">gce_global_zone</a></span>(<span class="st">"europe-west1-b"</span>)
-<span class="kw">gcs_global_bucket</span>(<span class="st">"mark-cron"</span>)
+<span class="kw">gcs_global_bucket</span>(<span class="st">"your-gcs-bucket"</span>)
 
 ## gcs can authenticate via GCE auth keys
 googleAuthR::<span class="kw">gar_gce_auth</span>()
@@ -189,9 +190,9 @@ googleAuthR::<span class="kw">gar_gce_auth</span>()
 ## use this script to launch other VMs with more expensive tasks
 <span class="kw">library</span>(googleComputeEngineR)
 <span class="kw">library</span>(googleCloudStorageR)
-<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"mark-edmondson-gde"</span>)
+<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)
 <span class="kw"><a href="../reference/gce_global_zone.html">gce_global_zone</a></span>(<span class="st">"europe-west1-b"</span>)
-<span class="kw">gcs_global_bucket</span>(<span class="st">"mark-cron"</span>)
+<span class="kw">gcs_global_bucket</span>(<span class="st">"your-gcs-bucket"</span>)
 
 ## auth to same project we're on
 googleAuthR::<span class="kw">gar_gce_auth</span>()
@@ -199,10 +200,10 @@ googleAuthR::<span class="kw">gar_gce_auth</span>()
 ## launch the premade VM
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"slave-1"</span>)
 
-## set SSH to use 'master' username
+## set SSH to use 'master' username as configured before
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm, <span class="dt">username =</span> <span class="st">"master"</span>, <span class="dt">ssh_overwrite =</span> <span class="ot">TRUE</span>)
 
-## run the script on the VM
+## run the script on the VM that will source from GCS
 runme &lt;-<span class="st"> "Rscript -e </span><span class="ch">\"</span><span class="st">googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'mark-cron')</span><span class="ch">\"</span><span class="st">"</span>
 out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, 
                   <span class="dt">cmd =</span> <span class="st">"exec"</span>, 
@@ -214,7 +215,7 @@ out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_
 </div>
 <div id="add-worker-script-to-cron" class="section level2">
 <h2 class="hasAnchor"><html><body><a href="#add-worker-script-to-cron" class="anchor"> </a></body></html>Add worker script to cron</h2>
-<p>Log in to the master VM and save the script, then schedule it via the <code>cronR</code> RStudio addin.</p>
+<p>Log in to the master VM and save the script, then schedule it via the <a href="https://github.com/bnosac/cronR"><code>cronR</code> RStudio addin</a>.</p>
 </div>
 </div>
   </div>
