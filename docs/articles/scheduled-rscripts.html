@@ -204,7 +204,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm, <span class="dt">username =</span> <span class="st">"master"</span>, <span class="dt">ssh_overwrite =</span> <span class="ot">TRUE</span>)
 
 ## run the script on the VM that will source from GCS
-runme &lt;-<span class="st"> "Rscript -e </span><span class="ch">\"</span><span class="st">googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'mark-cron')</span><span class="ch">\"</span><span class="st">"</span>
+runme &lt;-<span class="st"> "Rscript -e </span><span class="ch">\"</span><span class="st">googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'your-gcs-bucket')</span><span class="ch">\"</span><span class="st">"</span>
 out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, 
                   <span class="dt">cmd =</span> <span class="st">"exec"</span>, 
                   <span class="dt">args =</span> <span class="kw">c</span>(<span class="st">"rstudio"</span>, runme), 

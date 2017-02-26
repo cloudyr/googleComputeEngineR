@@ -179,7 +179,7 @@ vm <- gce_vm("slave-1")
 vm <- gce_ssh_setup(vm, username = "master", ssh_overwrite = TRUE)
 
 ## run the script on the VM that will source from GCS
-runme <- "Rscript -e \"googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'mark-cron')\""
+runme <- "Rscript -e \"googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'your-gcs-bucket')\""
 out <- docker_cmd(vm, 
                   cmd = "exec", 
                   args = c("rstudio", runme), 
