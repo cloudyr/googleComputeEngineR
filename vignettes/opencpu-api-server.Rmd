@@ -1,0 +1,94 @@
+---
+title: "OpenCPU Server"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{OpenCPU Server}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Setting up a custom OpenCPU server
+
+The below installs your Github repo into the Docker container using a small `Dockerfile`.
+
+In summary:
+
+1. Launch an OpenCPU instance
+2. Build a new OpenCPU image with your Github custom package 
+3. Push the image to the Container Registry for safe-keeping
+4. Stop the default OpenCPU docker container and launch your own
+
+### Launch an OpenCPU Instance
+
+```r
+library(googleComputeEngineR)
+
+## start an opencpu template
+vm <- gce_vm(name = "opencpu", template = "opencpu", predefined_type = "n1-standard-2")
+
+## wait for opencpu image to load
+gce_check_container(vm, "opencpu")
+```
+
+### Build a new OpenCPU image
+
+This Dockerfile is available via `get_dockerfolder("opencpu-installgithub")` and below.  It installs an OpenCPU package from my [prediction of user URLs for prefetching](code.markedmondson.me/predictClickOpenCPU/supercharge.html#1) application.
+
+```sh
+FROM opencpu/base
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install any package dependencies
+RUN apt-get update && apt-get install -y \
+    nano \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install your custom package from Github
+RUN Rscript -e "devtools::install_github(c('MarkEdmondson1234/predictClickOpenCPU'))"
+
+```
+
+The Dockerfile is used to build the custom image below:
+
+```r
+## build a docker image with your package installed
+docker_build(vm, 
+             dockerfolder = get_dockerfolder("opencpu-installgithub"),
+             new_image = "opencpu-predictclick")
+```
+
+### Push the image to the Container Registry
+
+```r
+## push up to your private Google Container registry
+gce_push_registry(vm, 
+                  save_name = "opencpu-predictclick", 
+                  image_name = "opencpu-predictclick")
+```
+
+### Deploy 
+
+In this case we don't start a new instance, just stop the running OpenCPU container and start our own.  We need to stop the default container to free up the ports `80` and `8004` that are needed for OpenCPU to work.
+
+```r
+## stop default opencpu container
+docker_cmd(vm, "stop opencpu-server")
+
+## run custom opencpu server
+docker_run(vm, 
+           image = "opencpu-predictclick", 
+           name = "predictclick", 
+           detach = TRUE, 
+           docker_opts = "-p 80:80 -p 8004:8004")
+``` 
+
+Clean up when you are done to avoid charges. 
+
+```r
+gce_vm_stop(vm)
+```

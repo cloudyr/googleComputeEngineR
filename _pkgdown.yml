@@ -14,8 +14,16 @@ navbar:
       href: articles/docker-ssh-futures.html
     - text: "Examples"
       menu:
-      - text: "Workflows"
+      - text: "Introduction"
         href: articles/example-workflows.html
+      - text: "Custom team RStudio Server"
+        href: articles/rstudio-team.html
+      - text: "RStudio Server + scheduler"
+        href: articles/single-scheduler.html
+      - text: "Shiny App"
+        href: articles/shiny-app.html
+      - text: "OpenCPU R API"
+        href: articles/opencpu-api-server.html
       - text: "Scheduled cron master/slave"
         href: articles/scheduled-rscripts.html
     - text: "Help"

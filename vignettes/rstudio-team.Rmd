@@ -1,0 +1,102 @@
+---
+title: "RStudio Server for a team"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RStudio Server for a team}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Custom Team RStudio Server
+
+This gives you a private RStudio Server with your custom packages and users.  
+
+In summary it:
+
+1. Launches an RStudio template with Hadley's tidyverse
+2. Lets you add users and passwords
+3. Log into RStudio and install packages as you would in normal RStudio desktop
+4. Once satisfied, save the state of the RStudio into a private Docker repo on Google Container Engine
+5. Lets you start other instances of RStudio server with your custom settings
+
+
+### Launch the RStudio server template
+
+Here we are setting up a 13GB RAM instance, as found via `gce_list_machinetype()`
+
+```r
+library(googleComputeEngineR)
+
+## setting up a 13GB RAM instance 
+## see gce_list_machinetype() for options of predefined_type
+vm <- gce_vm(template = "rstudio-hadleyverse",
+             name = "rstudio-team",
+             username = "mark", password = "mark1234",
+             predefined_type = "n1-highmem-2")
+
+## wait a bit, login at the IP it gives you
+
+```
+
+### Add users and setting up packages
+
+You can add users via:
+
+```r
+gce_rstudio_adduser(vm, username = "bill", password = "flowerpot")
+```
+
+You can then login at the IP address given via `vm` or `gce_get_external_ip(vm)`,
+and install packages as you would on RStudio Desktop. 
+
+
+### Saving the Docker container to Google Container REgistry
+
+Every Google project has its own private Docker repo called the Container Registry.  
+
+This command takes the running container that has your changes and saves it to there.
+
+By default, the RStudio container runs with name "rstudio" which you can see via `containers(vm)`
+
+```r
+gce_push_registry(vm, 
+                  save_name = "my_rstudio",
+                  container_name = "rstudio")
+```
+
+This can take a while the first time so go make a cup of tea. If successful you should be able to see your container saved
+at this URL `https://console.cloud.google.com/kubernetes/images/list`
+
+
+### Start up another VM your configuration
+
+Now say you want a larger more powerful instance, or to launch another with your settings.  You can now pull from the Container Registry and start up a VM with your settings enabled.
+
+We use `template=rstudio` to make sure the right ports and so forth are configured for your Rstudio, and `dynamic_image="my_rstudio"` to instruct the template to pull from your own image instead of using the default. You need to make sure the dynamic image is based on an RStudio one for this to work correctly.
+
+The function `gce_tag_container` constructs the name of the custom image on your Container Registry for you. 
+
+```r
+## construct the correct tag name for your custom image
+tag <- gce_tag_container("my_rstudio")
+# gcr.io/mark-edmondson-gde/my_rstudio
+
+## start a 50GB RAM instance
+vm2 <- gce_vm(name = "rstudio-big",
+              predefined_type = "n1-highmem-8",
+              template = "rstudio",
+              dynamic_image = tag)
+
+## wait for it to launch
+```
+
+### Clean up
+
+You don't get charged for stopped containers, and the next time you start them they will start within 20 seconds.
+
+```r
+gce_vm_stop(vm2)
+gce_vm_stop(vm)
+```

@@ -1,7 +1,12 @@
 ---
 title: "Scheduled R scripts on Master and Slave Google Compute Engine VMs"
 author: "Mark Edmondson"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Scheduled R scripts on Master and Slave Google Compute Engine VMs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
