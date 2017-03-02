@@ -219,9 +219,9 @@ do_system <- function(instance,
 
     ## status is the output text
     ## parse out the connection warning
-    host_warn <- status[grepl("^Warning: Permanently added .* to the list of known hosts.\r$", status)]
+    host_warn <- status[grepl("^Warning: Permanently added .* to the list of known hosts", status)]
     myMessage(host_warn, level = 3)
-    status <- status[!grepl("^Warning: Permanently added .* to the list of known hosts.\r$", status)]
+    status <- status[!grepl("^Warning: Permanently added .* to the list of known hosts", status)]
     out <- status
     
   } else {
