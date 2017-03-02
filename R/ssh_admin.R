@@ -4,7 +4,7 @@ ssh_options <- function(instance) {
   opts <- c(
     BatchMode = "yes",
     StrictHostKeyChecking = "no",
-    UserKnownHostsFile = file.path(tempdir(), "hosts")
+    UserKnownHostsFile = paste0("'",file.path(tempdir(), "hosts"),"'")
   )
   
   if(exists("ssh", instance)){
@@ -15,7 +15,7 @@ ssh_options <- function(instance) {
   
   c(paste0("-o ", names(opts), "=", opts, collapse = " "), 
     " -i ", 
-    private_key)
+    paste0("'",private_key,"'"))
 }
 
 #' Add SSH details to a gce_instance

@@ -204,11 +204,9 @@ do_system <- function(instance,
   ## do the command
   myMessage(cmd, " ", paste(sargs, collapse = " "), level = 2)
   
-  if(.Platform$OS.type != "windows"){
-    status <- system2(cmd, args = sargs, wait = wait, stdout = capture, stderr = capture)
-  } else {
-    status <- shell(paste(cmd, sargs), wait = wait)
-  }
+
+  status <- system2(cmd, args = sargs, wait = wait, stdout = capture, stderr = capture)
+
 
   
   if(capture == TRUE){
@@ -218,7 +216,7 @@ do_system <- function(instance,
     if(!is.null(attr(status, "status"))){
       myMessage("Remote error: ", attr(status, "status"), attr(status, "errmsg"), level = 3)
     }
-    
+
     ## status is the output text
     ## parse out the connection warning
     host_warn <- status[grepl("^Warning: Permanently added .* to the list of known hosts.\r$", status)]
@@ -229,7 +227,7 @@ do_system <- function(instance,
   } else {
     ## status if error code (0 for success)
     if (status == 127) {
-      stop("ssh failed\n", cmd, sargs, call. = FALSE)
+      stop("ssh failed\n", cmd, paste(sargs, collapse = " "), call. = FALSE)
     }
     
     ## output may be written to file if capture = "filepath"
