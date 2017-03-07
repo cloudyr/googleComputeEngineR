@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     && pip install cython \
     && pip install numpy \
     && pip install pandas \
-    && export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.11.0-cp27-none-linux_x86_64.whl \
+    && export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.0.0-cp27-none-linux_x86_64.whl \
     && pip install --upgrade $TF_BINARY_URL \
     && pip install git+https://github.com/tflearn/tflearn.git \
 
