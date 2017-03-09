@@ -283,8 +283,7 @@ vm2 <- gce_vm("cluster2", template = "r-base")
 vm3 <- gce_vm("cluster2", template = "r-base")
 
 vms <- list(vm1, vm2, vm3)
-cl <- lapply(vms, FUN = as.cluster)
-plan(cluster, workers = cl)
+plan(cluster, workers = vms)
 
 ## use futures %<-% to send a function to the cluster
 si %<-% Sys.info()
