@@ -86,7 +86,7 @@ vms <- lapply(vms, gce_ssh_setup)
 We now make the VM cluster as per details given in the [future README](https://github.com/HenrikBengtsson/future)
 ```r
 ## make a future cluster
-plan(cluster, workers = as.cluster(vms))
+plan(cluster, workers = vms)
 ```
 
 ### Using the cluster
