@@ -22,13 +22,13 @@ $4.09 a month for the master + $1.52 a month per slave (daily 30 min cron job on
 
 ## Create the master and slave templates
 
-The master needs to only have enough to up other VMs and download files from Google Cloud Storage:
+The master needs to only have enough to create other VMs and download files from Google Cloud Storage:
 
 * `googleComputeEngineR`
 * `googleCloudStorageR`
 * Version `>0.4.0.9000` of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()` - currently on Github
 
-The master is built from a custom Dockerfile, an example is found in `system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")`
+The master is built from a custom Dockerfile. An example is found in `system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")`
 
 
 ```r
@@ -40,7 +40,7 @@ master_image <- system.file("dockerfiles", "gceScheduler", "master","Dockerfile"
 b1 <- gce_docker_build(name = "build1", master_image, build_name = "cron-master")
 ```
 
-The slave needs to be have enough R libaries to run your scheduled script, plus `googleCloudStorageR` to download/uplaod the auth files and script.  An example that includes `googleAnalyticsR`, `searchConsoleR`and others is found at `system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", package = "googleComputeEngineR")`
+The slave needs to be have enough R libraries to run your scheduled script, plus `googleCloudStorageR` to download/upload the auth files and script.  An example that includes `googleAnalyticsR`, `searchConsoleR`and others is found at `system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", package = "googleComputeEngineR")`
 
 ```r
 slave_image <- system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", 
@@ -67,7 +67,7 @@ gce_vm_delete(b2)
 
 ## Setup the worker VM
 
-Now we have the templates saved to Container Registry, make a worker VM that is small, and will always be on 24/7 to run cron.   This costs ~$4.09 a month. Give it a strong password.
+Now we have the templates saved to Container Registry, make a 'Master' VM that is small, and will be on 24/7 to run cron.   This costs ~$4.09 a month. Give it a strong password.
 
 ```r
 library(googleComputeEngineR)
@@ -94,7 +94,7 @@ docker_cmd(master, cmd = "exec", args = sprintf("rstudio chown -R %s /home/%s/.s
 
 ## Setup slave instance
 
-Create the larger slave instance, that can be then stopped ready for the cron job.  These will cost in total $1.52 a month if they run every day for 30 minutes. Here its called `slave-1` but a more descriptive name helps, such as a client name. 
+Create the larger slave instance, that can be then stopped ready for the master to activate as needed.  These will cost in total $1.52 a month if they run every day for 30 minutes. Here its called `slave-1` but a more descriptive name helps, such as a client name. 
 
 
 ```r
@@ -114,13 +114,13 @@ gce_vm_stop(slave)
 
 Create the R script you want to schedule.  Make sure it is self sufficient in that it can authenticate, do stuff and upload to a safe repository, such as Google Cloud Storage.
 
-This script is uploaded itself to Google Cloud Storage, so the slave instance can call it via:
+This script will be in turn uploaded itself to Google Cloud Storage, so the slave instance can call it via a handy `googleCloudStorageR` function that runs a script locally from a cloud storage file:
 
 ```r
 googleCloudStorageR::gcs_source('download.R', bucket = 'your-gcs-bucket')
 ```
 
-An example below authenticates with Google Cloud Storage, then downloads a `ga.httr-oauth` file that carries the Google Analytics authentication, runs the download then reauthenticates with Google Cloud Storage to upload the results. 
+The example script below authenticates with Google Cloud Storage, downloads a `ga.httr-oauth` file that carries the Google Analytics authentication, runs the download then reauthenticates with Google Cloud Storage to upload the results. Modify for your own expensive operation.
 
 ```r
 ## download.R - called from slave VM

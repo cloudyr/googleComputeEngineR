@@ -11,12 +11,12 @@ vignette: >
 
 The following are some R scripts for common workflows.  They assume you have previously signed up and setup a Google project, authentication and SSH.
 
-* [Custom team RStudio Server](articles/rstudio-team.html)
-* [Remote R cluster](articles/remote-cluster.html)
-* [RStudio server + scheduler](articles/single-scheduler.html)
-* [Self-contained Shiny app](articles/shiny-app.html)
-* [OpenCPU R API server](articles/opencpu-api-server.html)
-* [Master/Slave R script scheduler](articles/scheduled-rscripts.html)
+* [Custom team RStudio Server](rstudio-team.html)
+* [Remote R cluster](remote-cluster.html)
+* [RStudio server + scheduler](single-scheduler.html)
+* [Self-contained Shiny app](shiny-app.html)
+* [OpenCPU R API server](opencpu-api-server.html)
+* [Master/Slave R script scheduler](scheduled-rscripts.html)
 
 ## Terminology
 
