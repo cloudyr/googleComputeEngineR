@@ -24,7 +24,7 @@ indent <- function(str, indent = 0) {
 auth_email <- function(source){
   
   if(Sys.getenv(source) == ""){
-    stop("No email source found")
+    stop("No email found in the authentication file at ", source, ".  Set argument auth_email to the environment file containing your service JSON file e.g. 'GCE_AUTH_FILE', or supply the authentication email directly. e.g. 'example@blah.com'")
   }
   
   if(!grepl("@", source)){
