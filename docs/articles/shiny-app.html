@@ -176,7 +176,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <h3 class="hasAnchor">
 <a href="#deploy-and-push-to-the-google-container-registry-via-gce_shiny_addapp" class="anchor"></a>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code>
 </h3>
-<p>You can now deploy your Shiny app by calling it from your Container Registry:</p>
+<p>You can now deploy your Shiny app up from your local machine:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_folder &lt;-<span class="st"> "~/where/your/build/folderis"</span>
 <span class="kw"><a href="../reference/gce_shiny_addapp.html">gce_shiny_addapp</a></span>(vm, <span class="dt">app_image =</span> <span class="st">"gceshinygoogleauthrdemo"</span>, <span class="dt">dockerfolder =</span> build_folder)</code></pre></div>
 <p>This will upload the build folder, build the image, save the build Docker image to Google Container Registry (<code>https://console.cloud.google.com/gcr/images/</code>) and start up your Shiny app.</p>
@@ -185,12 +185,12 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level3">
 <h3 class="hasAnchor">
 <a href="#re-deploy-already-built-shiny-app-to-another-vm" class="anchor"></a>Re-deploy already built Shiny app to another VM</h3>
-<p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument</p>
+<p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument. This will ask the function to look on the Container Registry for the <code>app_image</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"myapp2"</span>, 
              <span class="dt">template =</span> <span class="st">"shiny"</span>,
              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)
 
-<span class="kw"><a href="../reference/gce_shiny_addapp.html">gce_shiny_addapp</a></span>(vm, <span class="dt">app_image =</span> <span class="st">"gceshinygoogleauthrdemo"</span>)</code></pre></div>
+<span class="kw"><a href="../reference/gce_shiny_addapp.html">gce_shiny_addapp</a></span>(vm2, <span class="dt">app_image =</span> <span class="st">"gceshinygoogleauthrdemo"</span>)</code></pre></div>
 </div>
 <div id="tidy-up" class="section level3">
 <h3 class="hasAnchor">
