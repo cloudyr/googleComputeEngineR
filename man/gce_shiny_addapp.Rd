@@ -4,18 +4,90 @@
 \alias{gce_shiny_addapp}
 \title{Add Shiny app to a Shiny template instance}
 \usage{
-gce_shiny_addapp(instance, shinyapp = ".", ...)
+gce_shiny_addapp(instance, app_image, dockerfolder = NULL)
 }
 \arguments{
 \item{instance}{The instance running Shiny}
 
-\item{shinyapp}{The folder container the local Shiny app}
+\item{app_image}{The name of the Docker image to create or use existing from Google Container Registry. Must be lowercase and contain no symbols}
 
-\item{...}{Other arguments passed to \link{gce_ssh_upload}}
+\item{dockerfolder}{The folder location containing the \code{Dockerfile} and app dependencies}
 }
 \value{
 The instance
 }
 \description{
 Add a local shiny app to a running Shiny VM installed via \link{gce_vm_template}
+}
+\details{
+To deploy a Shiny app, you first need to construct a \code{Dockerfile} which load the R packages and
+  dependencies, as well as copying over the Shiny app in the same folder.
+
+This function will take the Dockerfile, build it into a Docker image and 
+  upload it to Google Container Registry for use later.
+
+If already created, then the function will download the \code{app_image} from Google Container Registry 
+  and start it on the instance provided. 
+
+Any existing Shiny Docker containers are stopped and removed, 
+  so if you want multiple apps put them in the same \code{Dockerfile}.
+}
+\examples{
+
+An example \\code{Dockerfile} is show below.  
+This file in the same folder as your shiny app, which consists of a \\code{ui.R} and \\code{server.R} in a shiny subfolder.  
+This is copied into the Dockerfile in the last line.  
+Change the name of the subfolder to have that name appear in the final URL of the Shinyapp. 
+
+\dontrun{
+FROM rocker/shiny
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \\
+        libssl-dev \\
+        ## clean up
+        && apt-get clean \\ 
+        && rm -rf /var/lib/apt/lists/ \\ 
+        && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+        
+## Install packages from CRAN
+RUN install2.r --error \\ 
+     -r 'http://cran.rstudio.com' \\
+     googleAuthR \\
+## install Github packages
+## clean up
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## assume shiny app is in build folder /shiny
+COPY ./shiny/ /srv/shiny-server/shiny/
+
+}
+
+This is then run using the R commands below:
+
+\dontrun{
+
+## create shiny VM template
+vm <- gce_vm("shiny-test",
+             template = "shiny",
+             predefined_type = "n1-standard-1")
+
+## add your SSH keys do docker commands work
+vm <- vm_ssh_setup(vm)
+
+## a demo Shiny app from googleAuthR
+app_dir <- system.file("dockerfiles","shiny-googleAuthRdemo", package = "googleComputeEngineR")
+
+## build Dockerfile on VM, and upload created Dockerimage to Container Registry
+gce_shiny_addapp(vm, app_image = "gceshinydemo", dockerfolder = app_dir)
+
+## if you want to deploy the same Shiny app to a different VM, use the saved Container Registry 
+gce_shiny_addapp(vm2, app_image = "gceshinydemo")
+
+}
+
+}
+\seealso{
+The vignette entry called \code{Shiny App} has examples and a walk through.
 }

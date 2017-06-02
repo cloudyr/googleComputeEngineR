@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-02-27" />
+<meta name="date" content="2017-06-02" />
 
 <title>Shiny App</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Shiny App</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-02-27</em></h4>
+<h4 class="date"><em>2017-06-02</em></h4>
 
 
 
@@ -80,23 +80,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The Shiny app can then be deployed on new instances.</p>
 <p>In summary:</p>
 <ol style="list-style-type: decimal">
-<li>Create a build VM</li>
-<li>Build your custom image with your Shiny app directory included</li>
-<li>Push to the Container registry</li>
-<li>Deploy to a production VM</li>
+<li>Create your Shiny app and place in subfolder of your build folder</li>
+<li>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</li>
+<li>Start up a Shiny templated Google Compute Engine VM</li>
+<li>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></li>
+<li>Enjoy your Shiny app</li>
 </ol>
-<div id="create-a-build-vm" class="section level3">
-<h3>Create a build VM</h3>
-<p>We start with a Shiny template:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-
-## make sure the instance is big enough to install, 
-## the default &quot;f1-micro&quot; does not compile packages easily
-vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;build-app&quot;</span>, <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>, <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)</code></pre></div>
+<p>Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.</p>
+<div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
+<h3>Create your Shiny app and place in subfolder of your build folder</h3>
 </div>
-<div id="build-your-custom-image" class="section level3">
-<h3>Build your custom image</h3>
-<p>This is as before, but the <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
+<div id="create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="section level3">
+<h3>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h3>
+<p>The <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
 <p>The Shiny app used is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code>get_dockerfolder(&quot;shiny-googleAuthRdemo&quot;)</code></p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/shiny
 <span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
@@ -123,41 +119,34 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 <p>The file structure for the build is then:</p>
 <pre><code>list.files(get_dockerfolder(&quot;shiny-googleAuthRdemo&quot;), recursive = TRUE)
 # &quot;Dockerfile&quot;        &quot;shiny/DESCRIPTION&quot; &quot;shiny/readme.md&quot;   &quot;shiny/server.R&quot;    &quot;shiny/ui.R&quot;</code></pre>
-<p>We now build the custom image:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">docker_build</span>(vm, 
-             <span class="dt">dockerfolder =</span> <span class="kw">get_dockerfolder</span>(<span class="st">&quot;shiny-googleAuthRdemo&quot;</span>),
-             <span class="dt">new_image =</span> <span class="st">&quot;shiny_gar&quot;</span>)</code></pre></div>
 </div>
-<div id="push-to-the-container-registry" class="section level3">
-<h3>Push to the Container registry</h3>
-<p>On a successful build, you can now upload to the Container Registry.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## push up to your private Google Container registry
-<span class="kw">gce_push_registry</span>(vm, 
-                  <span class="dt">save_name =</span> <span class="st">&quot;shiny_gar&quot;</span>, 
-                  <span class="dt">image_name =</span> <span class="st">&quot;shiny_gar&quot;</span>)
-<span class="co"># ...</span>
-<span class="co"># ...</span>
-<span class="co"># b363013633c9: Pushed</span>
-<span class="co"># 4809649dffb9: Pushed</span>
-<span class="co"># latest: digest: sha256:cb233f547d84dd94e7616fa7615522e15213d65cc2abb423dd4f3305d19309ce size: 19731</span></code></pre></div>
+<div id="start-up-a-shiny-templated-google-compute-engine-vm" class="section level3">
+<h3>Start up a Shiny templated Google Compute Engine VM</h3>
+<p>Start up a Shiny templated image, which makes sure the right ports are open etc.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM for your self-contained Shiny app
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;myapp&quot;</span>, 
+             <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>,
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)</code></pre></div>
 </div>
-<div id="deploy" class="section level3">
-<h3>Deploy</h3>
-<p>You can now deploy your Shiny app on any instance by calling it from your Container Registry:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM with your self-contained Shiny app
-vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;deployedapp&quot;</span>, 
-              <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>, 
-              <span class="dt">dynamic_image =</span> <span class="kw">gce_tag_container</span>(<span class="st">&quot;shiny_gar&quot;</span>),
-              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)
-              
-## check for when image has finished downloading              
-<span class="kw">gce_check_container</span>(vm2, <span class="st">&quot;shinyserver&quot;</span>)
-<span class="co"># ...</span>
-<span class="co"># ...</span>
-<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [cont-init.d] done.</span>
-<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] starting services</span>
-<span class="co"># Nov 17 22:11:15 myshinyapp2 docker[1039]: [services.d] done.</span></code></pre></div>
-<p>Your app should now be running on your IP + folder in Dockerfile, such as <code>http://123.456.XXX.XXX/myapp/</code></p>
+<div id="deploy-and-push-to-the-google-container-registry-via-gce_shiny_addapp" class="section level3">
+<h3>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></h3>
+<p>You can now deploy your Shiny app by calling it from your Container Registry:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_folder &lt;-<span class="st"> &quot;~/where/your/build/folderis&quot;</span>
+<span class="kw">gce_shiny_addapp</span>(vm, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>, <span class="dt">dockerfolder =</span> build_folder)</code></pre></div>
+<p>This will upload the build folder, build the image, save the build Docker image to Google Container Registry (<code>https://console.cloud.google.com/gcr/images/</code>) and start up your Shiny app.</p>
+<p>Your app should now be running on your IP + folder you copied into in Dockerfile, such as <code>http://123.456.XXX.XXX/myapp/</code></p>
+</div>
+<div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level3">
+<h3>Re-deploy already built Shiny app to another VM</h3>
+<p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;myapp2&quot;</span>, 
+             <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>,
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)
+
+<span class="kw">gce_shiny_addapp</span>(vm, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>)</code></pre></div>
+</div>
+<div id="tidy-up" class="section level3">
+<h3>Tidy up</h3>
 <p>Clean up the VMs to avoid unnecessary costs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># delete build VM</span>
 <span class="kw">gce_vm_delete</span>(vm)
@@ -174,7 +163,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

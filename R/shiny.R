@@ -3,37 +3,157 @@
 #' Add a local shiny app to a running Shiny VM installed via \link{gce_vm_template}
 #' 
 #' @param instance The instance running Shiny
-#' @param shinyapp The folder container the local Shiny app
-#' @param ... Other arguments passed to \link{gce_ssh_upload}
+#' @param dockerfolder The folder location containing the \code{Dockerfile} and app dependencies
+#' @param app_image The name of the Docker image to create or use existing from Google Container Registry. Must be lowercase and contain no symbols
+#' 
+#' @details 
+#' 
+#' To deploy a Shiny app, you first need to construct a \code{Dockerfile} which load the R packages and
+#'   dependencies, as well as copying over the Shiny app in the same folder.
+#'
+#' This function will take the Dockerfile, build it into a Docker image and 
+#'   upload it to Google Container Registry for use later.
+#' 
+#' If already created, then the function will download the \code{app_image} from Google Container Registry 
+#'   and start it on the instance provided. 
+#' 
+#' Any existing Shiny Docker containers are stopped and removed, 
+#'   so if you want multiple apps put them in the same \code{Dockerfile}.
+#'   
+#'
+#' @seealso The vignette entry called \code{Shiny App} has examples and a walk through.
+#'   
+#' @examples 
+#' 
+#' An example \code{Dockerfile} is show below.  
+#' This file in the same folder as your shiny app, which consists of a \code{ui.R} and \code{server.R} in a shiny subfolder.  
+#' This is copied into the Dockerfile in the last line.  
+#' Change the name of the subfolder to have that name appear in the final URL of the Shinyapp. 
+#' 
+#' \dontrun{
+#' FROM rocker/shiny
+#' MAINTAINER Mark Edmondson (r@sunholo.com)
+#' 
+#' # install R package dependencies
+#' RUN apt-get update && apt-get install -y \
+#'         libssl-dev \
+#'         ## clean up
+#'         && apt-get clean \ 
+#'         && rm -rf /var/lib/apt/lists/ \ 
+#'         && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+#'         
+#' ## Install packages from CRAN
+#' RUN install2.r --error \ 
+#'      -r 'http://cran.rstudio.com' \
+#'      googleAuthR \
+#' ## install Github packages
+#' ## clean up
+#' && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+#' 
+#' ## assume shiny app is in build folder /shiny
+#' COPY ./shiny/ /srv/shiny-server/shiny/
+#' 
+#' }
+#' 
+#' This is then run using the R commands below:
+#' 
+#' \dontrun{
+#' 
+#' ## create shiny VM template
+#' vm <- gce_vm("shiny-test",
+#'              template = "shiny",
+#'              predefined_type = "n1-standard-1")
+#' 
+#' ## add your SSH keys do docker commands work
+#' vm <- vm_ssh_setup(vm)
+#' 
+#' ## a demo Shiny app from googleAuthR
+#' app_dir <- system.file("dockerfiles","shiny-googleAuthRdemo", package = "googleComputeEngineR")
+#' 
+#' ## build Dockerfile on VM, and upload created Dockerimage to Container Registry
+#' gce_shiny_addapp(vm, app_image = "gceshinydemo", dockerfolder = app_dir)
+#' 
+#' ## if you want to deploy the same Shiny app to a different VM, use the saved Container Registry 
+#' gce_shiny_addapp(vm2, app_image = "gceshinydemo")
+#' 
+#' }
 #' 
 #' @return The instance
 #' @export
-gce_shiny_addapp <- function(instance, shinyapp = ".", ...){
+gce_shiny_addapp <- function(instance, app_image, dockerfolder = NULL){
   
-  if(!check_ssh_set(instance)){
-    stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
+  if(!grepl("^[a-z]+$", app_image)){
+    stop("app_image must only be lowercase and contain no symbols. Got ", app_image)
   }
   
-  perm <- gce_ssh(instance, "sudo chmod -R 777 /home/gcer/shinyapps")
+  assertthat::assert_that(
+    is.gce_instance(instance),
+    "shiny" %in% vm$metadata$items$value,
+    assertthat::is.string(app_image)
+  )
   
-  if(perm){
-    uploaded <- gce_ssh_upload(instance, 
-                               local = shinyapp, 
-                               remote = "/home/gcer/shinyapps",
-                               ...)
-    if(uploaded){
-      app_name <- basename(normalizePath(shinyapp))
-      gce_set_metadata(list(shinyapps = paste0(app_name,",", 
-                                               gce_get_metadata(instance, "shinyapps")$value)), 
-                       instance = instance)
-    }
-  } else {
-    stop("Problems setting user permissions")
+  if(!check_ssh_set(instance)){
+    stop("SSH settings not setup. Run 'vm <- gce_ssh_setup(vm)'", call. = FALSE)
   }
   
   ip <- gce_get_external_ip(vm, verbose = FALSE)
+  
+  
+  check_connected <- try(httr::GET(paste0("http://",ip)))
+  if(is.error(check_connected)){
+    check_connected <- try(httr::GET(paste0("https://",ip)))
+    if(is.error(check_connected)){
+      stop("Couldn't connect to ", ip)
+    }
+  } else {
+    myMessage("Checked connection to ", ip, " : status_code ", check_connected$status_code, level = 3)
+  }
+  
 
-  myMessage("Shiny app running at ", paste0(ip,"/gcer/", app_name,"/"), level = 3)
+  if(!is.null(dockerfolder)){
+    assertthat::assert_that(
+      assertthat::is.readable(file.path(dockerfolder, "Dockerfile"))
+    )
+    
+    myMessage("Building dockerfile to create Shiny app:", app_image)
+    
+    ## builds images, then lists current images on VM
+    images <- docker_build(instance, dockerfolder = dockerfolder, new_image = app_image, wait = TRUE)
+    
+    if(!any(grepl(app_image, images))){
+      stop("Problem building image on instance")
+    }
+    
+    image_tag <- gce_push_registry(instance, save_name = app_image, image_name = app_image, wait = TRUE)
+    myMessage("Pushed built Shiny app image to Google Container Registry: ", image_tag, level =3)
+  } else {
+    myMessage("Pulling existing Shiny app from Google Container Registry", level = 3)
+    
+    gce_pull_registry(instance, container_name = app_image, pull_only = TRUE)
+    image_tag <- gce_tag_container(app_image)
+    
+  }
+  
+  ## stop previously running docker shiny server
+  docker_cmd(instance, cmd = "stop", args = "shinyserver")
+  docker_cmd(instance, cmd = "rm", args = "shinyserver")  
+  
+  container <- docker_run(instance, 
+                          image = image_tag, 
+                          name = "shinyserver", 
+                          detach = TRUE, 
+                          docker_opts = '-p 80:3838')
+
+  if(class(container) == "container"){
+    
+    gce_set_metadata(list(shinyapps = paste0(app_image,",", 
+                                             gce_get_metadata(instance, "shinyapps")$value)), 
+                     instance = instance)
+  }
+  
+
+  
+  myMessage("Shiny app running at ", ip, " in the folder copied to in your Dockerfile i.e.",ip,"/shiny/", level = 3)
   instance
   
 }

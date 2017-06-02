@@ -85,7 +85,7 @@ gce_ssh_addkeys <- function(instance,
   
   if(exists("ssh", instance)){
     if(!overwrite){
-      myMessage("SSH keys already set", level = 2)
+      myMessage("SSH keys already set", level = 1)
       return(instance)
     } else {
       myMessage("Overwriting SSH keys data on local instance object", level = 3)
@@ -117,7 +117,7 @@ gce_ssh_addkeys <- function(instance,
       
       myMessage("Using existing public key in ", 
                 g_public, 
-                level = 2)
+                level = 1)
       
       key.private <- g_private
       key.pub.content <- readChar(g_public, 10000)
@@ -221,7 +221,7 @@ gce_ssh_setup <- function(instance,
   cloud_keys <- gce_check_ssh(instance)
   
   if(ins$ssh$username %in% cloud_keys$username){
-    myMessage("Username SSH key already exists", level = 2)
+    myMessage("Username SSH key already exists", level = 1)
   } else {
     ## make SSH Key metadata for upload to instance.
     new_key <- paste0(ins$ssh$username, ":", ins$ssh$key.pub, collapse = "")
@@ -265,8 +265,8 @@ gce_check_ssh <- function(instance){
   
   myMessage("Current local settings: ", instance$ssh$username, ", 
             private key: ", instance$ssh$key.private, ",
-            public key: ", instance$ssh$key.pub, level = 2)
-  myMessage("Returning SSH keys on instance: ", level = 2)
+            public key: ", instance$ssh$key.pub, level = 1)
+  myMessage("Returning SSH keys on instance", level = 2)
   
   out
 }

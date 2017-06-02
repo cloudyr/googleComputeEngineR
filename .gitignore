@@ -11,5 +11,4 @@ auth/travis-ssh-key.pub
 secrets.tar
 tests/testthat/travis-ssh-key
 tests/testthat/travis-ssh-key.pub
-
 *.httr-oauth

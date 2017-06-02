@@ -77,12 +77,13 @@ test_that("We can make a VM with custom disk size", {
 #                predefined_type = "n1-standard-1")
 #   expect_equal(vm$kind, "compute#instance")
 #   expect_equal(gce_get_metadata(vm, "template")$value, "shiny")
-#   
-#   app_dir <- system.file("shiny", package = "googleAuthR")
-#   
+# 
+#   app_dir <- system.file("dockerfiles","shiny-googleAuthRdemo", 
+#                          package = "googleComputeEngineR")
+# 
 #   vm <- gce_ssh_setup(vm)
 #   job <- gce_shiny_addapp(vm, shinyapp = app_dir)
-#   
+# 
 # })
 
 
