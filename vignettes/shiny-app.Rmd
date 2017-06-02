@@ -19,15 +19,13 @@ The Shiny app can then be deployed on new instances.
 
 In summary:
 
-1. Create your Shiny app and place in subfolder of your build folder
-2. Create a Dockerfile in build folder, including copying the Shiny app into the Docker image
+1. Create a Dockerfile in build folder, including copying the Shiny app into the Docker image
+2. Create your Shiny app and place in subfolder of your build folder
 3. Start up a Shiny templated Google Compute Engine VM
 4. Deploy and push to the Google Container Registry via `gce_shiny_addapp`
 5. Enjoy your Shiny app
 
 Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.
-
-### Create your Shiny app and place in subfolder of your build folder
 
 ### Create a Dockerfile in build folder, including copying the Shiny app into the Docker image
 
@@ -68,6 +66,20 @@ The file structure for the build is then:
 ```
 list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
 # "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"
+```
+
+### Create your Shiny app and place in subfolder of your build folder
+
+Create your Shiny app as normal, then place into a folder with this structure:
+
+```
+|
+|- /appname/
+   |
+   |- ui.R
+   |- server.R
+| Dockerfile
+
 ```
 
 ### Start up a Shiny templated Google Compute Engine VM

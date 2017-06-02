@@ -80,16 +80,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The Shiny app can then be deployed on new instances.</p>
 <p>In summary:</p>
 <ol style="list-style-type: decimal">
-<li>Create your Shiny app and place in subfolder of your build folder</li>
 <li>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</li>
+<li>Create your Shiny app and place in subfolder of your build folder</li>
 <li>Start up a Shiny templated Google Compute Engine VM</li>
 <li>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></li>
 <li>Enjoy your Shiny app</li>
 </ol>
 <p>Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.</p>
-<div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
-<h3>Create your Shiny app and place in subfolder of your build folder</h3>
-</div>
 <div id="create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="section level3">
 <h3>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h3>
 <p>The <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
@@ -119,6 +116,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The file structure for the build is then:</p>
 <pre><code>list.files(get_dockerfolder(&quot;shiny-googleAuthRdemo&quot;), recursive = TRUE)
 # &quot;Dockerfile&quot;        &quot;shiny/DESCRIPTION&quot; &quot;shiny/readme.md&quot;   &quot;shiny/server.R&quot;    &quot;shiny/ui.R&quot;</code></pre>
+</div>
+<div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
+<h3>Create your Shiny app and place in subfolder of your build folder</h3>
+<p>Create your Shiny app as normal, then place into a folder with this structure:</p>
+<pre><code>|
+|- /appname/
+   |
+   |- ui.R
+   |- server.R
+| Dockerfile
+</code></pre>
 </div>
 <div id="start-up-a-shiny-templated-google-compute-engine-vm" class="section level3">
 <h3>Start up a Shiny templated Google Compute Engine VM</h3>
