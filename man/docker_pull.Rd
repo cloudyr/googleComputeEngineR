@@ -27,4 +27,3 @@ docker_pull(localhost, "debian:testing")
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

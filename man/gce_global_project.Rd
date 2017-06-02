@@ -19,4 +19,3 @@ Set a project name used for this R session
 This sets a project to a global environment value so you don't need to
 supply the project argument to other API calls.
 }
-

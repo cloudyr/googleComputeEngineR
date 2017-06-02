@@ -14,7 +14,7 @@ gce_shiny_addapp <- function(instance, shinyapp = ".", ...){
     stop("SSH settings not setup. Run gce_ssh_addkeys().", .call = FALSE)
   }
   
-  perm <- gce_ssh(instance, "sudo chmod -R 755 /home/gcer/shinyapps")
+  perm <- gce_ssh(instance, "sudo chmod -R 777 /home/gcer/shinyapps")
   
   if(perm){
     uploaded <- gce_ssh_upload(instance, 
@@ -22,14 +22,18 @@ gce_shiny_addapp <- function(instance, shinyapp = ".", ...){
                                remote = "/home/gcer/shinyapps",
                                ...)
     if(uploaded){
-      gce_set_metadata(list(shinyapps = c(basename(normalizePath(shinyapp)), 
-                                          gce_get_metadata(instance, "shinyapps"))), 
+      app_name <- basename(normalizePath(shinyapp))
+      gce_set_metadata(list(shinyapps = paste0(app_name,",", 
+                                               gce_get_metadata(instance, "shinyapps")$value)), 
                        instance = instance)
     }
   } else {
     stop("Problems setting user permissions")
   }
+  
+  ip <- gce_get_external_ip(vm, verbose = FALSE)
 
+  myMessage("Shiny app running at ", paste0(ip,"/gcer/", app_name,"/"), level = 3)
   instance
   
 }

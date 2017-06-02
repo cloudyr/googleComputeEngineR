@@ -45,6 +45,7 @@ If you specify one of \code{file} or \code{cloud_init} it will call \link{gce_vm
 
 Otherwise it will call \link{gce_vm_create}
 }
+
 \examples{
 
 \dontrun{
@@ -75,4 +76,3 @@ vm <- gce_vm('my-image3', disk_size_gb = 20)
 }
 
 }
-

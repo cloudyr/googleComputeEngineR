@@ -17,4 +17,3 @@ logs
 \description{
 Check the docker logs of a container
 }
-

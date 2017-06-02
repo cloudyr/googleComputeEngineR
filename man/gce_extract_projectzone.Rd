@@ -15,4 +15,3 @@ A list of $project and $zone
 \description{
 Extract zone and project from an instance object
 }
-

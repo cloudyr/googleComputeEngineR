@@ -35,4 +35,3 @@ To filter you need a single string in the form \code{field_name eq|ne string}
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

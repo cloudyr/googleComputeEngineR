@@ -45,4 +45,3 @@ An instance-attached disk resource.
 Other AttachedDisk functions: \code{\link{gce_attach_disk}}
 }
 \keyword{internal}
-

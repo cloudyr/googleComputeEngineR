@@ -17,4 +17,3 @@ log printout
 \description{
 Get the latest shiny logs for a shinyapp
 }
-

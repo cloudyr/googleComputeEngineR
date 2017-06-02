@@ -18,4 +18,3 @@ as.gce_instance(x, project = gce_get_global_project(),
 Turn an instance name into an instance, or return the instance
 }
 \keyword{internal}
-

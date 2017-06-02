@@ -26,4 +26,3 @@ You may want to use \link{gce_get_image_family} instead to ensure the most up to
 \href{https://cloud.google.com/compute/docs/images}{Google
   Documentation}
 }
-

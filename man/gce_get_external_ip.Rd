@@ -21,4 +21,3 @@ The external IP
 \description{
 Get the external IP of an instance
 }
-

@@ -26,4 +26,3 @@ Construct a machineType URL
 \code{cpus} must be in multiples of 2 up to 32
 \code{memory} must be in multiples of 256
 }
-

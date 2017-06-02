@@ -25,4 +25,3 @@ A Network object
 Make a network interface for instance creation
 }
 \keyword{internal}
-

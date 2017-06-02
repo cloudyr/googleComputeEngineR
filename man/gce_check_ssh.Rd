@@ -15,4 +15,3 @@ A data.frame of SSH users and public keys
 \description{
 Calls API for the current SSH settings for an instance
 }
-

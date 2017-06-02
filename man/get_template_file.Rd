@@ -29,4 +29,3 @@ Templates available are:
   \item builder A VM that can build a supplied Dockerfile
  }
 }
-

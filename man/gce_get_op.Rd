@@ -23,4 +23,3 @@ S3 Methods for classes
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

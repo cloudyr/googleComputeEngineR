@@ -25,4 +25,3 @@ Authentication scopes used by this function are:
 \seealso{
 \href{https://cloud.google.com/compute/docs/images}{Google Documentation}
 }
-

@@ -21,4 +21,3 @@ The instance
 \description{
 RStudio has users based on unix user accounts
 }
-

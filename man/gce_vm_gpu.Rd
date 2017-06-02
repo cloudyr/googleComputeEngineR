@@ -33,4 +33,3 @@ If not specified, this function will enter defaults to get a GPU instance up and
 Other GPU instances: \code{\link{gce_check_gpu}},
   \code{\link{gce_list_gpus}}
 }
-

@@ -12,4 +12,3 @@ localhost
 An object representing the current computer that R is running on.
 }
 \keyword{datasets}
-

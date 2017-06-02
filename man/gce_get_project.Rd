@@ -23,4 +23,3 @@ Authentication scopes used by this function are:
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

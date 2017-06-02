@@ -19,4 +19,3 @@ Metadata Object
 Other Metadata functions: \code{\link{gce_set_metadata}}
 }
 \keyword{internal}
-

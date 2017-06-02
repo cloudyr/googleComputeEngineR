@@ -13,4 +13,3 @@ as.gce_instance_name_one(x)
 Get the instance name if passed an instance
 }
 \keyword{internal}
-

@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-02-27" />
+<meta name="date" content="2017-06-01" />
 
 <title>RStudio Server for a team</title>
 
@@ -70,23 +70,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">RStudio Server for a team</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-02-27</em></h4>
+<h4 class="date"><em>2017-06-01</em></h4>
 
 
 
-<p>The following are some R scripts for common workflows. They assume you have previously signed up and setup a Google project, authentication and SSH.</p>
-<div id="terminology" class="section level1">
-<h1>Terminology</h1>
-<p>The below refers to these objects:</p>
-<ul>
-<li>Instance - Sometimes called Virtual Machine (VM), this is the computer you start in the Google Cloud. It can be configured just like your desktop computer at home. <code>googleComputeEngineR</code> uses instances with the Debain Linux operating system installed. You are charged per minute they are up.</li>
-<li>Docker - A program that allows you to run a further type of virtual machine on any computer. The idea is that if any computer installs Docker, they can run the images created.</li>
-<li>Docker Image - Templates of the applications you run. Contain all the information and files needed to run it within Docker. They can contain different operating systems to what Docker is installed upon (e.g. you can run a Linux Docker image on OSX)</li>
-<li>Docker container - The running process made from a Docker Image when you run them.</li>
-</ul>
-<p>Read me about <a href="https://www.docker.com/">Docker here</a>.</p>
-<p>An instance/VM can have multiple docker images, which are running multiple docker containers.</p>
-</div>
 <div id="custom-team-rstudio-server" class="section level1">
 <h1>Custom Team RStudio Server</h1>
 <p>This gives you a private RStudio Server with your custom packages and users.</p>
@@ -160,7 +147,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

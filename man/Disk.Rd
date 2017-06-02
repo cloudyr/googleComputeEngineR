@@ -40,4 +40,3 @@ Disk Object
 A Disk resource.
 }
 \keyword{internal}
-

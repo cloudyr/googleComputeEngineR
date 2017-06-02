@@ -27,4 +27,3 @@ Docker S3 method for use with harbor package
 Instances launched in the \code{google-containers} image family automatically add your user to the docker group, 
   but for others you will need to run \code{sudo usermod -a -G docker ${USER}} and log out and back in.
 }
-

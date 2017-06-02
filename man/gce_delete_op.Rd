@@ -22,4 +22,3 @@ Deletes the specified Operations resource.
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

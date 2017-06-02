@@ -40,4 +40,3 @@ Instance Object
 An Instance resource.
 }
 \keyword{internal}
-

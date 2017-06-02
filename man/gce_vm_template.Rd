@@ -72,4 +72,3 @@ Use \code{dynamic_image} to override the default rocker images e.g. \code{rocker
 
 
 }
-

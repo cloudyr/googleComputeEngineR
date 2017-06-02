@@ -54,4 +54,3 @@ Authentication scopes used by this function are:
 
 Other AttachedDisk functions: \code{\link{AttachedDisk}}
 }
-

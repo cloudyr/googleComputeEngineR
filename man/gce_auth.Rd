@@ -29,4 +29,3 @@ Invisibly, the token that has been saved to the session
 \description{
 A wrapper for \link[googleAuthR]{gar_auth} and \link[googleAuthR]{gar_auth_service}
 }
-

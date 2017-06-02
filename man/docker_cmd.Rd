@@ -35,4 +35,3 @@ docker_cmd(localhost, "ps", "-a")
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

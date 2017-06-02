@@ -21,4 +21,3 @@ Check GPU installed ok
 Other GPU instances: \code{\link{gce_list_gpus}},
   \code{\link{gce_vm_gpu}}
 }
-

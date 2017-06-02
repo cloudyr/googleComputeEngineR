@@ -43,4 +43,3 @@ An example Dockerfile for \href{https://hub.docker.com/r/rocker/ropensci/~/docke
 
 General R Docker images found at \href{https://github.com/rocker-org}{rocker-org}
 }
-

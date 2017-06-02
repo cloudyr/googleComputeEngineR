@@ -35,4 +35,3 @@ If you want to get a list of publicly-available images,
 \seealso{
 \href{https://cloud.google.com/compute/docs/images}{Google Documentation}
 }
-

@@ -24,4 +24,3 @@ container_rm(con)
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

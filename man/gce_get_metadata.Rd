@@ -17,4 +17,3 @@ data.frame $key and $value of metadata or NULL
 \description{
 Extract metadata from an instance object
 }
-

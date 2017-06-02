@@ -19,4 +19,3 @@ The selfLink of the image object
 \description{
 Make initial disk image object
 }
-

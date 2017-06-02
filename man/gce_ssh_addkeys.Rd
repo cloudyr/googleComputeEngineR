@@ -72,4 +72,3 @@ If key.pub is NULL then will look for default Google credentials at
 Other ssh functions: \code{\link{gce_ssh_browser}},
   \code{\link{gce_ssh_setup}}, \code{\link{gce_ssh}}
 }
-

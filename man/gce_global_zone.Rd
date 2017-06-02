@@ -19,4 +19,3 @@ Set a zone name used for this R session
 This sets a zone to a global environment value so you don't need to
 supply the zone argument to other API calls.
 }
-

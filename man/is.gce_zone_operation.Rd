@@ -15,4 +15,3 @@ TRUE or FALSE
 \description{
 Check if is a gce_zone_operation
 }
-

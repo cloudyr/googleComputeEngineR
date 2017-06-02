@@ -17,4 +17,3 @@ Get list of all containers on a host.
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

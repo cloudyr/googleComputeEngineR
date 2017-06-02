@@ -23,4 +23,3 @@ con <- container_update_info(con)
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

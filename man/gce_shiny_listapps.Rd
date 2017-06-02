@@ -15,4 +15,3 @@ character vector
 \description{
 List shiny apps on the instance
 }
-

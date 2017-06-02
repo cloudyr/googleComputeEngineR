@@ -15,4 +15,3 @@ Project name set this session to use by default
 \details{
 Set the project name via \link{gce_global_project}
 }
-

@@ -32,4 +32,3 @@ Stopped instances do not incur per-minute, virtual machine usage charges
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

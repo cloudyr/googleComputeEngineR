@@ -32,4 +32,3 @@ This lets you specify docker images when creating the VM
 \seealso{
 \url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
 }
-

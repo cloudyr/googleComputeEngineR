@@ -22,4 +22,3 @@ Other firewall functions: \code{\link{gce_get_firewall_rule}},
   \code{\link{gce_make_firewall_rule}},
   \code{\link{gce_make_firewall_webports}}
 }
-

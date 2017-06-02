@@ -36,4 +36,3 @@ Other container registry functions: \code{\link{gce_docker_build}},
   \code{\link{gce_push_registry}},
   \code{\link{gce_tag_container}}
 }
-

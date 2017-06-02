@@ -15,4 +15,3 @@ file location
 \description{
 This gets the folder location of available Dockerfile examples
 }
-

@@ -11,4 +11,3 @@ get_cloud_init_file(template, cloud_init, username = NULL, password = NULL,
 create the cloud_init file to upload
 }
 \keyword{internal}
-

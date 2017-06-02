@@ -19,4 +19,3 @@ The instance
 \description{
 Add a local shiny app to a running Shiny VM installed via \link{gce_vm_template}
 }
-

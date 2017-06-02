@@ -15,4 +15,3 @@ Retrieves the specified global Operations resource.
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

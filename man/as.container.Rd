@@ -19,4 +19,3 @@ Coerce an object into a container object.
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

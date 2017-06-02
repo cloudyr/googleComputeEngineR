@@ -31,4 +31,3 @@ If using devtools github, will look for an auth token via \code{devtools::github
  Will start a container, install packages and then commit 
    the container to an image of the same name via \code{docker commit -m "installed packages via gceR"}
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/ssh.R
 \name{gce_ssh}
 \alias{gce_ssh}
-\alias{gce_ssh_download}
 \alias{gce_ssh_upload}
+\alias{gce_ssh_download}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
 gce_ssh(instance, ..., key.pub = NULL, key.private = NULL, wait = TRUE,
@@ -97,4 +97,3 @@ Other ssh functions: \code{\link{gce_ssh_addkeys}},
   \code{\link{gce_ssh_browser}},
   \code{\link{gce_ssh_setup}}
 }
-

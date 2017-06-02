@@ -30,4 +30,3 @@ docker_inspect(localhost, "harbor-test")
 \author{
 Winston Change \email{winston@stdout.org}
 }
-

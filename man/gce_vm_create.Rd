@@ -99,4 +99,3 @@ To create an instance you need to specify:
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
-

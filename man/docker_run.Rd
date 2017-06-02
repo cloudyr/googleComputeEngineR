@@ -51,4 +51,3 @@ docker_run(localhost, "rocker/r-base", c("Rscript", "-e", "1+1"))
 \author{
 Winston Change \email{winston@stdout.org}
 }
-
