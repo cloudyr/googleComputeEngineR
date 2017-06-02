@@ -6,10 +6,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scheduled RStudio • googleComputeEngineR</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -99,7 +99,7 @@
       <h1>Scheduled RStudio</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-03-20</h4>
+            <h4 class="date">2017-06-02</h4>
           </div>
 
     
@@ -108,7 +108,7 @@
 <p>See also scheduling via a <a href="articles/scheduled-rscripts.html">master/slave cluster</a></p>
 <div id="rstudio-server-scheduler" class="section level1">
 <h1 class="hasAnchor">
-<html><body><a href="#rstudio-server-scheduler" class="anchor"> </a></body></html>RStudio server + scheduler</h1>
+<a href="#rstudio-server-scheduler" class="anchor"></a>RStudio server + scheduler</h1>
 <p>This workflow demonstrates how you can take advatage of <a href="https://docs.docker.com/engine/reference/builder/">Dockerfiles</a> to customise the VM templates.</p>
 <p>Using <code>Dockerfiles</code> is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.</p>
 <p>In summary:</p>
@@ -122,7 +122,7 @@
 </ol>
 <div id="launch-a-template-vm" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#launch-a-template-vm" class="anchor"> </a></body></html>Launch a template VM</h3>
+<a href="#launch-a-template-vm" class="anchor"></a>Launch a template VM</h3>
 <p>Build VMs should be more powerful than the default machine type (<code>f1-micro</code>) else there is a danger of it hanging for big expensive builds.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
@@ -133,7 +133,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="construct-a-dockerfile" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#construct-a-dockerfile" class="anchor"> </a></body></html>Construct a <code>Dockerfile</code>
+<a href="#construct-a-dockerfile" class="anchor"></a>Construct a <code>Dockerfile</code>
 </h3>
 <p>The <code>Dockerfile</code> here is available via <code>get_dockerfile("hadleyverse-crontab")</code>.</p>
 <p>It is shown below, which you could base your own upon. This one installs <code>cron</code> for scheduling, and <code>nano</code> a simple text editor. It then also installs some libraries needed for my scheduled scripts:</p>
@@ -180,7 +180,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="using-docker_build" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#using-docker_build" class="anchor"> </a></body></html>Using <code>docker_build</code>
+<a href="#using-docker_build" class="anchor"></a>Using <code>docker_build</code>
 </h3>
 <p>We now upload to the instance the Dockerfile, and build a new docker image called <code>my-cron-verse</code>.</p>
 <p>This can take some time the first time, so its time for another cup of tea.</p>
@@ -201,7 +201,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="save-your-custom-image-to-the-container-registry" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#save-your-custom-image-to-the-container-registry" class="anchor"> </a></body></html>Save your custom image to the Container Registry</h3>
+<a href="#save-your-custom-image-to-the-container-registry" class="anchor"></a>Save your custom image to the Container Registry</h3>
 <p>This image is now saved to the Container Registry</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, <span class="dt">save_name =</span> <span class="st">"my-cron-verse"</span>, <span class="dt">image_name =</span> <span class="st">"myrstudio"</span>)</code></pre></div>
 <p>Once that is done, we don’t need this instance anymore.</p>
@@ -209,7 +209,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="launch-another-vm-to-run-your-custom-image" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#launch-another-vm-to-run-your-custom-image" class="anchor"> </a></body></html>Launch another VM to run your custom image</h3>
+<a href="#launch-another-vm-to-run-your-custom-image" class="anchor"></a>Launch another VM to run your custom image</h3>
 <p>You can now launch instances using your constructed image.</p>
 <p>You can also use your custom image to create further <code>Dockerfiles</code> that use it as a dependency, using <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> to get its correct name.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## now start an instance using our rstudio image in cloud-config
@@ -255,7 +255,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 </div>
 <div id="a-demo-script" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#a-demo-script" class="anchor"> </a></body></html>A demo script</h3>
+<a href="#a-demo-script" class="anchor"></a>A demo script</h3>
 <p>A demo script for scheduling is below.</p>
 <p>It is not recommended to put critical data within a Docker contianer, as it can be destroyed if the container crashes. Instead, call dedicated data stores such as BigQuery or Cloud Storage, which as you are using Google Compute Engine you already have access to under the same project.</p>
 <p>In summary the script below:</p>

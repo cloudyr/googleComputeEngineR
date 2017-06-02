@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -124,32 +126,51 @@
 It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a></p>
     
 
-    <pre><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
+    <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
   <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>, <span class='st'>"builder"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>build_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>template</dt>
-      <dd>The template available</dd>
-      <dt>username</dt>
-      <dd>username if needed (RStudio)</dd>
-      <dt>password</dt>
-      <dd>password if needed (RStudio)</dd>
-      <dt>dynamic_image</dt>
-      <dd>Supply an alternative to the default Docker image here to download</dd>
-      <dt>dockerfile</dt>
-      <dd>If template is <code>builder</code> the Dockerfile to run on startup</dd>
-      <dt>build_name</dt>
-      <dd>The name of the build</dd>
-      <dt>image_family</dt>
-      <dd>An image-family.  It must come from the <code>google-containers</code> family.</dd>
-      <dt>...</dt>
-      <dd>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></dd>
-      <dt>image_name</dt>
-      <dd>If template is <code>builder</code> or <code>dynamic</code>, the name of Docker image</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>template</th>
+      <td><p>The template available</p></td>
+    </tr>
+    <tr>
+      <th>username</th>
+      <td><p>username if needed (RStudio)</p></td>
+    </tr>
+    <tr>
+      <th>password</th>
+      <td><p>password if needed (RStudio)</p></td>
+    </tr>
+    <tr>
+      <th>dynamic_image</th>
+      <td><p>Supply an alternative to the default Docker image here to download</p></td>
+    </tr>
+    <tr>
+      <th>dockerfile</th>
+      <td><p>If template is <code>builder</code> the Dockerfile to run on startup</p></td>
+    </tr>
+    <tr>
+      <th>build_name</th>
+      <td><p>The name of the build</p></td>
+    </tr>
+    <tr>
+      <th>image_family</th>
+      <td><p>An image-family.  It must come from the <code>google-containers</code> family.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></p></td>
+    </tr>
+    <tr>
+      <th>image_name</th>
+      <td><p>If template is <code>builder</code> or <code>dynamic</code>, the name of Docker image</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -157,45 +178,35 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Templates available are:</p>
-    <p><ul>
-<li> rstudio An RStudio server docker image
-  </li>
-<li> rstudio-hadleyverse RStudio with the tidyverse installed
-  </li>
-<li> shiny A Shiny docker image
-  </li>
-<li> opencpu An OpenCPU docker image
-  </li>
-<li> r_base Latest version of R stable
-  </li>
-<li> example A non-R test container running busybox
-  </li>
-<li> dynamic Supply your own docker image to download such as <code>rocker/verse</code>
-  </li>
-<li> builder A VM to build a Dockerfile upon and uplaod to Google container engine
- </li>
-</ul></p>
-    <p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
+    <p>Templates available are:</p><ul>
+<li><p>rstudio An RStudio server docker image</p></li>
+<li><p>rstudio-hadleyverse RStudio with the tidyverse installed</p></li>
+<li><p>shiny A Shiny docker image</p></li>
+<li><p>opencpu An OpenCPU docker image</p></li>
+<li><p>r_base Latest version of R stable</p></li>
+<li><p>example A non-R test container running busybox</p></li>
+<li><p>dynamic Supply your own docker image to download such as <code>rocker/verse</code></p></li>
+<li><p>builder A VM to build a Dockerfile upon and uplaod to Google container engine</p></li>
+</ul><p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
    other settings etc. via <a href='docker_run.html'>docker_run</a>.</p>
-    <p>Use <code>dynamic_image</code> to override the default rocker images e.g. <code>rocker/shiny</code> for shiny, etc.</p>
+<p>Use <code>dynamic_image</code> to override the default rocker images e.g. <code>rocker/shiny</code> for shiny, etc.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>## Not run: ------------------------------------</span>
-<span class='co'># </span>
-<span class='co'>#  library(googleComputeEngineR)</span>
-<span class='co'>#  </span>
-<span class='co'>#  ## make instance using R-base</span>
-<span class='co'>#  vm &lt;- gce_vm_template("r-base", predefined_type = "f1-micro", name = "rbase")</span>
-<span class='co'>#  </span>
-<span class='co'>#  ## run an R function on the instance within the R-base docker image</span>
-<span class='co'>#  docker_run(vm, "rocker/r-base", c("Rscript", "-e", "1+1"), user = "mark")</span>
-<span class='co'>#  #&gt; [1] 2</span>
-<span class='co'>#  </span>
-<span class='co'># </span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
+<span class='fu'>not_run</span>({
+
+   <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
+
+   <span class='co'>## make instance using R-base</span>
+   <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm_template</span>(<span class='st'>"r-base"</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rbase"</span>)
+
+   <span class='co'>## run an R function on the instance within the R-base docker image</span>
+   <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>vm</span>, <span class='st'>"rocker/r-base"</span>, <span class='fu'>c</span>(<span class='st'>"Rscript"</span>, <span class='st'>"-e"</span>, <span class='st'>"1+1"</span>), <span class='kw'>user</span> <span class='kw'>=</span> <span class='st'>"mark"</span>)
+   <span class='co'>#&gt; [1] 2</span>
+
+
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

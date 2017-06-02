@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -123,34 +125,55 @@
     <p>Instance Object</p>
     
 
-    <pre><span class='fu'>Instance</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>machineType</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>canIpForward</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>Instance</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>machineType</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>canIpForward</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>disks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>metadata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>networkInterfaces</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scheduling</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>serviceAccounts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>guestAccelerators</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>The name of the resource, provided by the client when initially creating the resource</dd>
-      <dt>machineType</dt>
-      <dd>Full or partial URL of the machine type resource to use for this instance, in the format: <code>zones/zone/machineTypes/machine-type</code></dd>
-      <dt>canIpForward</dt>
-      <dd>Allows this instance to send and receive packets with non-matching destination or source IPs</dd>
-      <dt>description</dt>
-      <dd>An optional description of this resource</dd>
-      <dt>disks</dt>
-      <dd>The source image used to create this disk</dd>
-      <dt>metadata</dt>
-      <dd>A named list of metadata key/value pairs assigned to this instance</dd>
-      <dt>networkInterfaces</dt>
-      <dd>An array of configurations for this interface</dd>
-      <dt>scheduling</dt>
-      <dd>Scheduling options for this instance</dd>
-      <dt>serviceAccounts</dt>
-      <dd>A list of service accounts, with their specified scopes, authorized for this instance</dd>
-      <dt>tags</dt>
-      <dd>A list of tags to apply to this instance</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>name</th>
+      <td><p>The name of the resource, provided by the client when initially creating the resource</p></td>
+    </tr>
+    <tr>
+      <th>machineType</th>
+      <td><p>Full or partial URL of the machine type resource to use for this instance, in the format: <code>zones/zone/machineTypes/machine-type</code></p></td>
+    </tr>
+    <tr>
+      <th>canIpForward</th>
+      <td><p>Allows this instance to send and receive packets with non-matching destination or source IPs</p></td>
+    </tr>
+    <tr>
+      <th>description</th>
+      <td><p>An optional description of this resource</p></td>
+    </tr>
+    <tr>
+      <th>disks</th>
+      <td><p>The source image used to create this disk</p></td>
+    </tr>
+    <tr>
+      <th>metadata</th>
+      <td><p>A named list of metadata key/value pairs assigned to this instance</p></td>
+    </tr>
+    <tr>
+      <th>networkInterfaces</th>
+      <td><p>An array of configurations for this interface</p></td>
+    </tr>
+    <tr>
+      <th>scheduling</th>
+      <td><p>Scheduling options for this instance</p></td>
+    </tr>
+    <tr>
+      <th>serviceAccounts</th>
+      <td><p>A list of service accounts, with their specified scopes, authorized for this instance</p></td>
+    </tr>
+    <tr>
+      <th>tags</th>
+      <td><p>A list of tags to apply to this instance</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 

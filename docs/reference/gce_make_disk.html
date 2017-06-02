@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -123,39 +125,64 @@
     <p>You can create a disk with a sourceImage, a sourceSnapshot, or create an empty 500 GB data disk by omitting all properties.</p>
     
 
-    <pre><span class='fu'>gce_make_disk</span>(<span class='no'>name</span>, <span class='kw'>sourceImage</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sizeGb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>gce_make_disk</span>(<span class='no'>name</span>, <span class='kw'>sourceImage</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sizeGb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>diskEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>licenses</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceSnapshot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>sourceImageEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceSnapshotEncryptionKey</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
   <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>Name of the resource</dd>
-      <dt>sourceImage</dt>
-      <dd>The source image used to create this disk</dd>
-      <dt>sizeGb</dt>
-      <dd>Size of the persistent disk, specified in GB</dd>
-      <dt>description</dt>
-      <dd>An optional description of this resource</dd>
-      <dt>diskEncryptionKey</dt>
-      <dd>Encrypts the disk using a customer-supplied encryption key</dd>
-      <dt>licenses</dt>
-      <dd>Any applicable publicly visible licenses</dd>
-      <dt>sourceSnapshot</dt>
-      <dd>The source snapshot used to create this disk</dd>
-      <dt>sourceImageEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source image</dd>
-      <dt>sourceSnapshotEncryptionKey</dt>
-      <dd>The customer-supplied encryption key of the source snapshot</dd>
-      <dt>type</dt>
-      <dd>URL of the disk type resource describing which disk type to use to create the disk</dd>
-      <dt>project</dt>
-      <dd>Project ID for this request</dd>
-      <dt>zone</dt>
-      <dd>The name of the zone for this request</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>name</th>
+      <td><p>Name of the resource</p></td>
+    </tr>
+    <tr>
+      <th>sourceImage</th>
+      <td><p>The source image used to create this disk</p></td>
+    </tr>
+    <tr>
+      <th>sizeGb</th>
+      <td><p>Size of the persistent disk, specified in GB</p></td>
+    </tr>
+    <tr>
+      <th>description</th>
+      <td><p>An optional description of this resource</p></td>
+    </tr>
+    <tr>
+      <th>diskEncryptionKey</th>
+      <td><p>Encrypts the disk using a customer-supplied encryption key</p></td>
+    </tr>
+    <tr>
+      <th>licenses</th>
+      <td><p>Any applicable publicly visible licenses</p></td>
+    </tr>
+    <tr>
+      <th>sourceSnapshot</th>
+      <td><p>The source snapshot used to create this disk</p></td>
+    </tr>
+    <tr>
+      <th>sourceImageEncryptionKey</th>
+      <td><p>The customer-supplied encryption key of the source image</p></td>
+    </tr>
+    <tr>
+      <th>sourceSnapshotEncryptionKey</th>
+      <td><p>The customer-supplied encryption key of the source snapshot</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>URL of the disk type resource describing which disk type to use to create the disk</p></td>
+    </tr>
+    <tr>
+      <th>project</th>
+      <td><p>Project ID for this request</p></td>
+    </tr>
+    <tr>
+      <th>zone</th>
+      <td><p>The name of the zone for this request</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -164,17 +191,14 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>You can also create a disk that is larger than the default size by specifying the sizeGb property.</p>
-    <p>Authentication scopes used by this function are:
-<ul>
-<li> https://www.googleapis.com/auth/cloud-platform
-</li>
-<li> https://www.googleapis.com/auth/compute
-</li>
-</ul></p>
+    <p>Authentication scopes used by this function are:</p><ul>
+<li><p>https://www.googleapis.com/auth/cloud-platform</p></li>
+<li><p>https://www.googleapis.com/auth/compute</p></li>
+</ul>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href = 'Google Documentation'>https://developers.google.com/compute/docs/reference/latest/</a></p>
+    <p><a href = 'https://developers.google.com/compute/docs/reference/latest/'>Google Documentation</a></p>
     
 
   </div>

@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -123,7 +125,7 @@
     <p>Assumes that you have ssh &amp; scp installed.  If on Windows see website and examples for workarounds.</p>
     
 
-    <pre><span class='fu'>gce_ssh</span>(<span class='no'>instance</span>, <span class='no'>...</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>gce_ssh</span>(<span class='no'>instance</span>, <span class='no'>...</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>capture_text</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]])
 
 <span class='fu'>gce_ssh_upload</span>(<span class='no'>instance</span>, <span class='no'>local</span>, <span class='no'>remote</span>, <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]],
@@ -134,80 +136,101 @@
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>instance</dt>
-      <dd>Name of the instance of run ssh command upon</dd>
-      <dt>...</dt>
-      <dd>Shell commands to run. Multiple commands are combined with
-<code>&amp;&amp;</code> so that execution will halt after the first failure.</dd>
-      <dt>key.pub</dt>
-      <dd>The filepath location of the public key, only needed first call per session</dd>
-      <dt>key.private</dt>
-      <dd>The filepath location of the private key, only needed first call per session</dd>
-      <dt>wait</dt>
-      <dd>Whether then SSH output should be waited for or run it asynchronously.</dd>
-      <dt>capture_text</dt>
-      <dd>Possible values are &quot;&quot;, to the R console (the default), NULL or FALSE (discard output), TRUE (capture the output in a character vector) or a character string naming a file.</dd>
-      <dt>username</dt>
-      <dd>The username you used to generate the key-pair</dd>
-      <dt>local, remote</dt>
-      <dd>Local and remote paths.</dd>
-      <dt>verbose</dt>
-      <dd>If TRUE, will print command before executing it.</dd>
-      <dt>overwrite</dt>
-      <dd>If TRUE, will overwrite the local file if exists.</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>instance</th>
+      <td><p>Name of the instance of run ssh command upon</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Shell commands to run. Multiple commands are combined with
+<code>&amp;&amp;</code> so that execution will halt after the first failure.</p></td>
+    </tr>
+    <tr>
+      <th>key.pub</th>
+      <td><p>The filepath location of the public key, only needed first call per session</p></td>
+    </tr>
+    <tr>
+      <th>key.private</th>
+      <td><p>The filepath location of the private key, only needed first call per session</p></td>
+    </tr>
+    <tr>
+      <th>wait</th>
+      <td><p>Whether then SSH output should be waited for or run it asynchronously.</p></td>
+    </tr>
+    <tr>
+      <th>capture_text</th>
+      <td><p>Possible values are "", to the R console (the default), NULL or FALSE (discard output), TRUE (capture the output in a character vector) or a character string naming a file.</p></td>
+    </tr>
+    <tr>
+      <th>username</th>
+      <td><p>The username you used to generate the key-pair</p></td>
+    </tr>
+    <tr>
+      <th>local, remote</th>
+      <td><p>Local and remote paths.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>If TRUE, will print command before executing it.</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>If TRUE, will overwrite the local file if exists.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Only works connecting to linux based instances.</p>
-    <p>On Windows you will need to install an ssh command line client - see examples for an example using RStudio&#39;s built in client.</p>
-    <p>You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.</p>
-    <p>To customise SSH connection see <a href='gce_ssh_setup.html'>gce_ssh_setup</a></p>
-    <p><code>capture_text</code> is passed to <code>stdout</code> and <code>stderr</code> of system2</p>
-    <p>Otherwise, instructions for generating SSH keys can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
-    <p>Uploads and downloads are recursive, so if you specify a directory,
+<p>On Windows you will need to install an ssh command line client - see examples for an example using RStudio's built in client.</p>
+<p>You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.</p>
+<p>To customise SSH connection see <a href='gce_ssh_setup.html'>gce_ssh_setup</a>
+    <code>capture_text</code> is passed to <code>stdout</code> and <code>stderr</code> of system2</p>
+<p>Otherwise, instructions for generating SSH keys can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
+<p>Uploads and downloads are recursive, so if you specify a directory,
 everything inside the directory will also be downloaded.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p><a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a></p>
-    <p>Other ssh functions: <code><a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></code>,
+<p>Other ssh functions: <code><a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></code>,
   <code><a href='gce_ssh_browser.html'>gce_ssh_browser</a></code>,
   <code><a href='gce_ssh_setup.html'>gce_ssh_setup</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>## Not run: ------------------------------------</span>
-<span class='co'>#   </span>
-<span class='co'>#   </span>
-<span class='co'>#   vm &lt;- gce_vm("my-instance")</span>
-<span class='co'>#   </span>
-<span class='co'>#   ## if you have already logged in via gcloud, the default keys will be used</span>
-<span class='co'>#   ## no need to run gce_ssh_addkeys</span>
-<span class='co'>#   ## run command on instance            </span>
-<span class='co'>#   gce_ssh(vm, "echo foo")</span>
-<span class='co'>#   #&gt; foo</span>
-<span class='co'>#   </span>
-<span class='co'>#   ## if running on Windows, use the RStudio default SSH client</span>
-<span class='co'>#   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
-<span class='co'>#   ## then run: </span>
-<span class='co'>#   vm2 &lt;- gce_vm("my-instance2")</span>
-<span class='co'># </span>
-<span class='co'>#   ## add SSH info to the VM object</span>
-<span class='co'>#   ## custom info</span>
-<span class='co'>#   vm2 &lt;- gce_ssh_setup(vm2,</span>
-<span class='co'>#                       username = "mark", </span>
-<span class='co'>#                       key.pub = "C://.ssh/id_rsa.pub",</span>
-<span class='co'>#                       key.private = "C://.ssh/id_rsa")</span>
-<span class='co'>#                       </span>
-<span class='co'>#   ## run command on instance            </span>
-<span class='co'>#   gce_ssh(vm2, "echo foo")</span>
-<span class='co'>#   #&gt; foo</span>
-<span class='co'># </span>
-<span class='co'># </span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
+<span class='fu'>not_run</span>({
+
+
+    <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance"</span>)
+
+    <span class='co'>## if you have already logged in via gcloud, the default keys will be used</span>
+    <span class='co'>## no need to run gce_ssh_addkeys</span>
+    <span class='co'>## run command on instance            </span>
+    <span class='fu'>gce_ssh</span>(<span class='no'>vm</span>, <span class='st'>"echo foo"</span>)
+    <span class='co'>#&gt; foo</span>
+
+    <span class='co'>## if running on Windows, use the RStudio default SSH client</span>
+    <span class='co'>## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
+    <span class='co'>## then run: </span>
+    <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance2"</span>)
+
+    <span class='co'>## add SSH info to the VM object</span>
+    <span class='co'>## custom info</span>
+    <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_ssh_setup.html'>gce_ssh_setup</a></span>(<span class='no'>vm2</span>,
+                        <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>,
+                        <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa.pub"</span>,
+                        <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa"</span>)
+
+    <span class='co'>## run command on instance            </span>
+    <span class='fu'>gce_ssh</span>(<span class='no'>vm2</span>, <span class='st'>"echo foo"</span>)
+    <span class='co'>#&gt; foo</span>
+
+
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

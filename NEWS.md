@@ -12,6 +12,7 @@
 - Add `open_webports` argument to `gce_vm` that will open web ports 80 and 443 if necessary
 - Add GPU functions
 - Migrate to use `system2` instead of `system` for cross-platform SSH (#35)
+- `gce_shiny_addapp` is now much more useful
 
 # googleComputeEngineR 0.1.0
 

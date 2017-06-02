@@ -6,10 +6,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SSH, Docker, Container Registry and Futures • googleComputeEngineR</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -99,7 +99,7 @@
       <h1>SSH, Docker, Container Registry and Futures</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-03-20</h4>
+            <h4 class="date">2017-06-02</h4>
           </div>
 
     
@@ -110,7 +110,7 @@
 </blockquote>
 <div id="logging-in-to-your-instance" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#logging-in-to-your-instance" class="anchor"> </a></body></html>Logging in to your instance</h2>
+<a href="#logging-in-to-your-instance" class="anchor"></a>Logging in to your instance</h2>
 <p>Google Cloud comes with a browser based SSH application, which you can launch via <code>gce_ssh_browser</code> to set it up further to your liking.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 <span class="kw"><a href="../reference/gce_ssh_browser.html">gce_ssh_browser</a></span>(<span class="st">"my-server"</span>)</code></pre></div>
@@ -120,15 +120,15 @@
 </div>
 <div id="ssh-commands" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#ssh-commands" class="anchor"> </a></body></html>SSH commands</h2>
+<a href="#ssh-commands" class="anchor"></a>SSH commands</h2>
 <p>SSH is useful for many applications, but is also currently used by the <code>docker_x</code> commands to manipulate docker images on the VM - this may change in future versions, but currently, without SSH authentication, you won’t be able to use Docker commands from your local session.</p>
 <div id="macunix" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#macunix" class="anchor"> </a></body></html>Mac/Unix</h3>
+<a href="#macunix" class="anchor"></a>Mac/Unix</h3>
 <p>You can also send ssh commands to your running instance from R via the <code><a href="../reference/gce_ssh.html">gce_ssh()</a></code> commands.</p>
 <div id="gcloud-default-keys" class="section level4">
 <h4 class="hasAnchor">
-<html><body><a href="#gcloud-default-keys" class="anchor"> </a></body></html>gcloud default keys</h4>
+<a href="#gcloud-default-keys" class="anchor"></a>gcloud default keys</h4>
 <p>For this you will need to connect once via the Google Cloud SDK <code>gcloud compute ssh</code> , or copy the default keys.</p>
 <p>After that step, you will then in future be able to connect via:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
@@ -142,7 +142,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 </div>
 <div id="custom-ssh-keys" class="section level4">
 <h4 class="hasAnchor">
-<html><body><a href="#custom-ssh-keys" class="anchor"> </a></body></html>Custom SSH keys</h4>
+<a href="#custom-ssh-keys" class="anchor"></a>Custom SSH keys</h4>
 <p>If you want more customisation over the SSH connection, then you will need to generate SSH crudentials yourself following this <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Google guide</a>.</p>
 <p>Once you have generated details for your username, the public and private key, you can connect via:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
@@ -162,7 +162,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_
 </div>
 <div id="windows" class="section level3">
 <h3 class="hasAnchor">
-<html><body><a href="#windows" class="anchor"> </a></body></html>Windows</h3>
+<a href="#windows" class="anchor"></a>Windows</h3>
 <p>Windows does not come with an SSH client installed, so it is recommended that you use the SSH client bundled with RStudio instead.</p>
 <blockquote>
 <p>We assume you already use RStudio, if you don’t want to use it or can’t then you will need to download an alterantive SSH client that will respond on the command line to <code>ssh</code>. RStudio uses <a href="http://www.mingw.org/wiki/msys">MSYS</a> you may want to try.</p>
@@ -186,7 +186,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_
 </div>
 <div id="docker-commands" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#docker-commands" class="anchor"> </a></body></html>Docker commands</h2>
+<a href="#docker-commands" class="anchor"></a>Docker commands</h2>
 <p>For docker containers, the <code>docker_cmd</code> functions run the shell commands within a docker container. These commands are derived from <a href="https://github.com/wch/harbor"><code>harbor</code></a>, which you may want to use for its other features. With harbor, you can also develop your docker container locally first using BootToDocker or similar before pushing it up.</p>
 <p>A demo using speaking to a docker container is below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
@@ -316,7 +316,7 @@ cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/contai
 </div>
 <div id="using-private-google-containers" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#using-private-google-containers" class="anchor"> </a></body></html>Using private Google Containers</h2>
+<a href="#using-private-google-containers" class="anchor"></a>Using private Google Containers</h2>
 <p>Google Cloud comes with a <a href="https://cloud.google.com/container-registry/">private container registry</a> that is available to all VMs created in the that project, where you can store docker containers.</p>
 <p>You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.</p>
 <p>Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save it to the local registry under the name you specify.</p>
@@ -334,7 +334,7 @@ cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/contai
 </div>
 <div id="futures" class="section level2">
 <h2 class="hasAnchor">
-<html><body><a href="#futures" class="anchor"> </a></body></html>Futures</h2>
+<a href="#futures" class="anchor"></a>Futures</h2>
 <p>You can run R functions asynchronously over a cluster of Google VMs using the R package <a href="https://CRAN.R-project.org/package=future"><code>future</code></a>.</p>
 <p>Consult the <a href="https://github.com/HenrikBengtsson/future">future readme</a> for further details, but a quick demo is shown below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
@@ -345,8 +345,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 vm3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)
 
 vms &lt;-<span class="st"> </span><span class="kw">list</span>(vm1, vm2, vm3)
-cl &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, <span class="dt">FUN =</span> as.cluster)
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> cl)
+<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)
 
 ## use futures %&lt;-% to send a function to the cluster
 si %&lt;-%<span class="st"> </span><span class="kw">Sys.info</span>()

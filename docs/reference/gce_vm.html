@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -123,22 +125,33 @@
     <p>Pass in the instance name to fetch its object, or create the instance via <a href='gce_vm_create.html'>gce_vm_create</a>.</p>
     
 
-    <pre><span class='fu'>gce_vm</span>(<span class='no'>name</span>, <span class='no'>...</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
+    <pre class="usage"><span class='fu'>gce_vm</span>(<span class='no'>name</span>, <span class='no'>...</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
   <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>(), <span class='kw'>open_webports</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>name</dt>
-      <dd>The name of the instance</dd>
-      <dt>...</dt>
-      <dd>Other arguments passed to create an instance if it doesn&#39;t exist</dd>
-      <dt>project</dt>
-      <dd>Project ID for this request</dd>
-      <dt>zone</dt>
-      <dd>The name of the zone for this request</dd>
-      <dt>open_webports</dt>
-      <dd>If TRUE, will open firewall ports 80 and 443 if not open already</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>name</th>
+      <td><p>The name of the instance</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to create an instance if it doesn't exist</p></td>
+    </tr>
+    <tr>
+      <th>project</th>
+      <td><p>Project ID for this request</p></td>
+    </tr>
+    <tr>
+      <th>zone</th>
+      <td><p>The name of the zone for this request</p></td>
+    </tr>
+    <tr>
+      <th>open_webports</th>
+      <td><p>If TRUE, will open firewall ports 80 and 443 if not open already</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -147,48 +160,48 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Will get or create the instance as specified.  Will wait for instance to be created if necessary.</p>
-    <p>Make sure the instance is big enough to handle what you need, 
+<p>Make sure the instance is big enough to handle what you need, 
   for instance the default <code>f1-micro</code> will hang the instance when trying to install large R libraries.</p>
     
     <h2 class="hasAnchor" id="creation-logic"><a class="anchor" href="#creation-logic"></a>Creation logic</h2>
 
-    <p></p>
+    
     <p>You need these parameters defined to call the right function for creation.  Check the function definitions for more details.</p>
-    <p>If the VM name exists but is not running, it start the VM and return the VM object</p>
-    <p>If the VM is running, it will return the VM object</p>
-    <p>If you specify the argument <code>template</code> it will call <a href='gce_vm_template.html'>gce_vm_template</a></p>
-    <p>If you specify one of <code>file</code> or <code>cloud_init</code> it will call <a href='gce_vm_container.html'>gce_vm_container</a></p>
-    <p>Otherwise it will call <a href='gce_vm_create.html'>gce_vm_create</a></p>
+<p>If the VM name exists but is not running, it start the VM and return the VM object</p>
+<p>If the VM is running, it will return the VM object</p>
+<p>If you specify the argument <code>template</code> it will call <a href='gce_vm_template.html'>gce_vm_template</a></p>
+<p>If you specify one of <code>file</code> or <code>cloud_init</code> it will call <a href='gce_vm_container.html'>gce_vm_container</a></p>
+<p>Otherwise it will call <a href='gce_vm_create.html'>gce_vm_create</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>## Not run: ------------------------------------</span>
-<span class='co'># </span>
-<span class='co'># library(googleComputeEngineR)</span>
-<span class='co'># ## auto auth, project and zone pre-set</span>
-<span class='co'># ## list your VMs in the project/zone</span>
-<span class='co'># </span>
-<span class='co'># the_list &lt;- gce_list_instances()</span>
-<span class='co'># </span>
-<span class='co'># ## start an existing instance</span>
-<span class='co'># vm &lt;- gce_vm("markdev")</span>
-<span class='co'># </span>
-<span class='co'># ## for rstudio, you also need to specify a username and password to login</span>
-<span class='co'># vm &lt;- gce_vm(template = "rstudio",</span>
-<span class='co'>#              name = "rstudio-server",</span>
-<span class='co'>#              username = "mark", password = "mark1234")</span>
-<span class='co'># </span>
-<span class='co'># ## specify your own cloud-init file and pass it into gce_vm_container()</span>
-<span class='co'># vm &lt;- gce_vm(cloud_init = "example.yml",</span>
-<span class='co'>#              name = "test-container",</span>
-<span class='co'>#              predefined_type = "f1-micro")</span>
-<span class='co'># </span>
-<span class='co'># ## specify disk size at creation</span>
-<span class='co'># vm &lt;- gce_vm('my-image3', disk_size_gb = 20)</span>
-<span class='co'># </span>
-<span class='co'># </span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
+<span class='fu'>not_run</span>({
+
+  <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
+  <span class='co'>## auto auth, project and zone pre-set</span>
+  <span class='co'>## list your VMs in the project/zone</span>
+
+  <span class='no'>the_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_list_instances.html'>gce_list_instances</a></span>()
+
+  <span class='co'>## start an existing instance</span>
+  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>"markdev"</span>)
+
+  <span class='co'>## for rstudio, you also need to specify a username and password to login</span>
+  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>,
+               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rstudio-server"</span>,
+               <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>, <span class='kw'>password</span> <span class='kw'>=</span> <span class='st'>"mark1234"</span>)
+
+  <span class='co'>## specify your own cloud-init file and pass it into gce_vm_container()</span>
+  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='st'>"example.yml"</span>,
+               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"test-container"</span>,
+               <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>)
+
+  <span class='co'>## specify disk size at creation</span>
+  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>'my-image3'</span>, <span class='kw'>disk_size_gb</span> <span class='kw'>=</span> <span class='fl'>20</span>)
+
+
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

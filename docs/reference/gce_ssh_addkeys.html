@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -123,22 +125,33 @@
     <p>Add SSH details to a gce_instance</p>
     
 
-    <pre><span class='fu'>gce_ssh_addkeys</span>(<span class='no'>instance</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>gce_ssh_addkeys</span>(<span class='no'>instance</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'>Sys.info</span>()<span class='kw'>[[</span><span class='st'>"user"</span>]], <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>instance</dt>
-      <dd>The gce_instance</dd>
-      <dt>key.pub</dt>
-      <dd>filepath to public SSH key</dd>
-      <dt>key.private</dt>
-      <dd>filepath to the private SSK key</dd>
-      <dt>username</dt>
-      <dd>SSH username to login with</dd>
-      <dt>overwrite</dt>
-      <dd>Overwrite existing SSH details if they exist</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>instance</th>
+      <td><p>The gce_instance</p></td>
+    </tr>
+    <tr>
+      <th>key.pub</th>
+      <td><p>filepath to public SSH key</p></td>
+    </tr>
+    <tr>
+      <th>key.private</th>
+      <td><p>filepath to the private SSK key</p></td>
+    </tr>
+    <tr>
+      <th>username</th>
+      <td><p>SSH username to login with</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>Overwrite existing SSH details if they exist</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -148,10 +161,10 @@
 
     <p>You will only need to run this yourself if you save your SSH keys somewhere other 
   than <code>$HOME/.ssh/google_compute_engine.pub</code> or use a different username than 
-  your local username as found in <code>Sys.info[[&quot;user&quot;]]</code>, otherwise it will configure 
+  your local username as found in <code>Sys.info[["user"]]</code>, otherwise it will configure 
   itself automatically the first time you use <a href='gce_ssh.html'>gce_ssh</a> in an R session.</p>
-    <p>If key.pub is NULL then will look for default Google credentials at 
-  <code>file.path(Sys.getenv(&quot;HOME&quot;), &quot;.ssh&quot;, &quot;google_compute_engine.pub&quot;)</code></p>
+<p>If key.pub is NULL then will look for default Google credentials at 
+  <code>file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")</code></p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -161,38 +174,38 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>## Not run: ------------------------------------</span>
-<span class='co'>#   </span>
-<span class='co'>#   library(googleComputeEngineR)</span>
-<span class='co'>#   </span>
-<span class='co'>#   vm &lt;- gce_vm("my-instance")</span>
-<span class='co'>#   </span>
-<span class='co'>#   ## if you have already logged in via gcloud, the default keys will be used</span>
-<span class='co'>#   ## no need to run gce_ssh_addkeys</span>
-<span class='co'>#   ## run command on instance            </span>
-<span class='co'>#   gce_ssh(vm, "echo foo")</span>
-<span class='co'>#   </span>
-<span class='co'>#   </span>
-<span class='co'>#   ## if running on Windows, use the RStudio default SSH client</span>
-<span class='co'>#   ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
-<span class='co'>#   ## then run: </span>
-<span class='co'>#   vm2 &lt;- gce_vm("my-instance2")</span>
-<span class='co'># </span>
-<span class='co'>#   ## add SSH info to the VM object</span>
-<span class='co'>#   ## custom info</span>
-<span class='co'>#   vm &lt;- gce_ssh_setup(vm,</span>
-<span class='co'>#                       username = "mark", </span>
-<span class='co'>#                       key.pub = "C://.ssh/id_rsa.pub",</span>
-<span class='co'>#                       key.private = "C://.ssh/id_rsa")</span>
-<span class='co'>#                       </span>
-<span class='co'>#   ## run command on instance            </span>
-<span class='co'>#   gce_ssh(vm, "echo foo")</span>
-<span class='co'>#   #&gt; foo</span>
-<span class='co'># </span>
-<span class='co'>#   ## example to check logs of rstudio docker container</span>
-<span class='co'>#   gce_ssh(vm, "sudo journalctl -u rstudio")</span>
-<span class='co'># </span>
-<span class='co'>## ---------------------------------------------</span></div></pre>
+<span class='fu'>not_run</span>({
+
+    <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
+
+    <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance"</span>)
+
+    <span class='co'>## if you have already logged in via gcloud, the default keys will be used</span>
+    <span class='co'>## no need to run gce_ssh_addkeys</span>
+    <span class='co'>## run command on instance            </span>
+    <span class='fu'><a href='gce_ssh.html'>gce_ssh</a></span>(<span class='no'>vm</span>, <span class='st'>"echo foo"</span>)
+
+
+    <span class='co'>## if running on Windows, use the RStudio default SSH client</span>
+    <span class='co'>## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
+    <span class='co'>## then run: </span>
+    <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance2"</span>)
+
+    <span class='co'>## add SSH info to the VM object</span>
+    <span class='co'>## custom info</span>
+    <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_ssh_setup.html'>gce_ssh_setup</a></span>(<span class='no'>vm</span>,
+                        <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>,
+                        <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa.pub"</span>,
+                        <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa"</span>)
+
+    <span class='co'>## run command on instance            </span>
+    <span class='fu'><a href='gce_ssh.html'>gce_ssh</a></span>(<span class='no'>vm</span>, <span class='st'>"echo foo"</span>)
+    <span class='co'>#&gt; foo</span>
+
+    <span class='co'>## example to check logs of rstudio docker container</span>
+    <span class='fu'><a href='gce_ssh.html'>gce_ssh</a></span>(<span class='no'>vm</span>, <span class='st'>"sudo journalctl -u rstudio"</span>)
+
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

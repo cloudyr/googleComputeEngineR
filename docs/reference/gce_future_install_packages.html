@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Install R packages onto an instance&#39;s stopped docker image — gce_future_install_packages • googleComputeEngineR</title>
+<title>Install R packages onto an instance's stopped docker image — gce_future_install_packages • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -116,27 +118,36 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Install R packages onto an instance&#39;s stopped docker image</h1>
+    <h1>Install R packages onto an instance's stopped docker image</h1>
     </div>
 
     
-    <p>Install R packages onto an instance&#39;s stopped docker image</p>
+    <p>Install R packages onto an instance's stopped docker image</p>
     
 
-    <pre><span class='fu'>gce_future_install_packages</span>(<span class='no'>instance</span>, <span class='no'>docker_image</span>, <span class='kw'>cran_packages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>gce_future_install_packages</span>(<span class='no'>instance</span>, <span class='no'>docker_image</span>, <span class='kw'>cran_packages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>github_packages</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>instance</dt>
-      <dd>The instance running the container</dd>
-      <dt>docker_image</dt>
-      <dd>A docker image to install packages within.</dd>
-      <dt>cran_packages</dt>
-      <dd>A character vector of CRAN packages to be installed</dd>
-      <dt>github_packages</dt>
-      <dd>A character vector of devtools packages to be installed</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>instance</th>
+      <td><p>The instance running the container</p></td>
+    </tr>
+    <tr>
+      <th>docker_image</th>
+      <td><p>A docker image to install packages within.</p></td>
+    </tr>
+    <tr>
+      <th>cran_packages</th>
+      <td><p>A character vector of CRAN packages to be installed</p></td>
+    </tr>
+    <tr>
+      <th>github_packages</th>
+      <td><p>A character vector of devtools packages to be installed</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -144,11 +155,11 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>See the images on the instance via <code>docker_cmd(instance, &quot;images&quot;)</code></p>
-    <p>If using devtools github, will look for an auth token via <code>devtools::github_pat()</code>.  
+    <p>See the images on the instance via <code>docker_cmd(instance, "images")</code></p>
+<p>If using devtools github, will look for an auth token via <code>devtools::github_pat()</code>.  
   This is an environment variable called <code>GITHUB_PAT</code></p>
-    <p>Will start a container, install packages and then commit 
-   the container to an image of the same name via <code>docker commit -m &quot;installed packages via gceR&quot;</code></p>
+<p>Will start a container, install packages and then commit 
+   the container to an image of the same name via <code>docker commit -m "installed packages via gceR"</code></p>
     
 
   </div>
