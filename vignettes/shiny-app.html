@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-06-02" />
+<meta name="date" content="2017-06-03" />
 
 <title>Shiny App</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Shiny App</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-06-02</em></h4>
+<h4 class="date"><em>2017-06-03</em></h4>
 
 
 
@@ -138,7 +138,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st"
 </div>
 <div id="deploy-and-push-to-the-google-container-registry-via-gce_shiny_addapp" class="section level3">
 <h3>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></h3>
-<p>You can now deploy your Shiny app by calling it from your Container Registry:</p>
+<p>You can now deploy your Shiny app up from your local machine:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_folder &lt;-<span class="st"> &quot;~/where/your/build/folderis&quot;</span>
 <span class="kw">gce_shiny_addapp</span>(vm, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>, <span class="dt">dockerfolder =</span> build_folder)</code></pre></div>
 <p>This will upload the build folder, build the image, save the build Docker image to Google Container Registry (<code>https://console.cloud.google.com/gcr/images/</code>) and start up your Shiny app.</p>
@@ -146,12 +146,12 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st"
 </div>
 <div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level3">
 <h3>Re-deploy already built Shiny app to another VM</h3>
-<p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument</p>
+<p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument. This will ask the function to look on the Container Registry for the <code>app_image</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;myapp2&quot;</span>, 
              <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>,
              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)
 
-<span class="kw">gce_shiny_addapp</span>(vm, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>)</code></pre></div>
+<span class="kw">gce_shiny_addapp</span>(vm2, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>)</code></pre></div>
 </div>
 <div id="tidy-up" class="section level3">
 <h3>Tidy up</h3>

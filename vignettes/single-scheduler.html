@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-02-27" />
+<meta name="date" content="2017-06-03" />
 
 <title>Scheduled RStudio</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Scheduled RStudio</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-02-27</em></h4>
+<h4 class="date"><em>2017-06-03</em></h4>
 
 
 
@@ -134,7 +134,10 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
     <span class="co">## install Github packages</span>
     <span class="kw">&amp;&amp;</span> <span class="kw">Rscript</span> -e <span class="st">&quot;devtools::install_github(c('bnosac/cronR'))&quot;</span> \
     <span class="co">## clean up</span>
-    <span class="kw">&amp;&amp;</span> <span class="kw">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds \</code></pre></div>
+    <span class="kw">&amp;&amp;</span> <span class="kw">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds \
+
+<span class="co">## Start cron</span>
+<span class="kw">RUN</span> sudo service cron start</code></pre></div>
 </div>
 <div id="using-docker_build" class="section level3">
 <h3>Using <code>docker_build</code></h3>
@@ -289,7 +292,7 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

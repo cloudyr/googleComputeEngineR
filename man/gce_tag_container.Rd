@@ -27,8 +27,7 @@ A tag for use in Google Container Registry
 Return a container tag for Google Container Registry
 }
 \seealso{
-Other container registry functions: \code{\link{gce_docker_build}},
-  \code{\link{gce_list_registry}},
+Other container registry functions: \code{\link{gce_list_registry}},
   \code{\link{gce_pull_registry}},
   \code{\link{gce_push_registry}}
 }

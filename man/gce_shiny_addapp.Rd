@@ -9,7 +9,7 @@ gce_shiny_addapp(instance, app_image, dockerfolder = NULL)
 \arguments{
 \item{instance}{The instance running Shiny}
 
-\item{app_image}{The name of the Docker image to create or use existing from Google Container Registry. Must be lowercase and contain no symbols}
+\item{app_image}{The name of the Docker image to create or use existing from Google Container Registry. Must be numbers, dashes or lowercase letters only.}
 
 \item{dockerfolder}{The folder location containing the \code{Dockerfile} and app dependencies}
 }

@@ -4,7 +4,7 @@
 #' 
 #' @param instance The instance running Shiny
 #' @param dockerfolder The folder location containing the \code{Dockerfile} and app dependencies
-#' @param app_image The name of the Docker image to create or use existing from Google Container Registry. Must be lowercase and contain no symbols
+#' @param app_image The name of the Docker image to create or use existing from Google Container Registry. Must be numbers, dashes or lowercase letters only.
 #' 
 #' @details 
 #' 
@@ -82,8 +82,8 @@
 #' @export
 gce_shiny_addapp <- function(instance, app_image, dockerfolder = NULL){
   
-  if(!grepl("^[a-z]+$", app_image)){
-    stop("app_image must only be lowercase and contain no symbols. Got ", app_image)
+  if(!grepl("^[a-z0-9\\-]+$", app_image)){
+    stop("app_image must only be lowercase, numbers, dash only. Got ", app_image)
   }
   
   assertthat::assert_that(

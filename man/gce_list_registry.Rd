@@ -31,8 +31,7 @@ Currently needs to run on a Google VM, not locally
 
 }
 \seealso{
-Other container registry functions: \code{\link{gce_docker_build}},
-  \code{\link{gce_pull_registry}},
+Other container registry functions: \code{\link{gce_pull_registry}},
   \code{\link{gce_push_registry}},
   \code{\link{gce_tag_container}}
 }

@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y \
 ## Install packages from CRAN
 RUN install2.r --error \ 
     -r 'http://cran.rstudio.com' \
-    googleAuthR shinyFiles \
+    googleAuthR shinyFiles cronR \
     ## install Github packages
-    && Rscript -e "devtools::install_github(c('bnosac/cronR'))" \
+    ## && Rscript -e "devtools::install_github(c('bnosac/cronR'))" \
     ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
 
