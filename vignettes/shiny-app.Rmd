@@ -25,9 +25,15 @@ In summary:
 4. Deploy and push to the Google Container Registry via `gce_shiny_addapp`
 5. Enjoy your Shiny app
 
-Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.
+Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.  
 
-### Create a Dockerfile in build folder, including copying the Shiny app into the Docker image
+## Google Container Registry - Build Triggers
+
+Alternativly, you can use build triggers from [Google Container Registry](https://cloud.google.com/container-registry/) to build the docker image.  
+
+This is typically done by pushing up to a GitHub repository with your Dockerfile, which [triggers a build](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers).  You can then call this docker image directly using `gce_shiny_addapp`.
+
+## Create a Dockerfile in build folder, including copying the Shiny app into the Docker image
 
 The `Dockerfile` also includes a `COPY` command to copy necessary Shiny `ui.R` and `server.R` files into the Docker image. 
 
@@ -68,7 +74,7 @@ list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
 # "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"
 ```
 
-### Create your Shiny app and place in subfolder of your build folder
+## Create your Shiny app and place in subfolder of your build folder
 
 Create your Shiny app as normal, then place into a folder with this structure:
 
@@ -82,7 +88,7 @@ Create your Shiny app as normal, then place into a folder with this structure:
 
 ```
 
-### Start up a Shiny templated Google Compute Engine VM
+## Start up a Shiny templated Google Compute Engine VM
 
 Start up a Shiny templated image, which makes sure the right ports are open etc.
 
@@ -94,7 +100,7 @@ vm <- gce_vm("myapp",
 ```
 
 
-### Deploy and push to the Google Container Registry via `gce_shiny_addapp`
+## Deploy and push to the Google Container Registry via `gce_shiny_addapp`
 
 You can now deploy your Shiny app up from your local machine:
 
@@ -107,9 +113,11 @@ This will upload the build folder, build the image, save the build Docker image 
 
 Your app should now be running on your IP + folder you copied into in Dockerfile, such as `http://123.456.XXX.XXX/myapp/`
 
-### Re-deploy already built Shiny app to another VM
+## Re-deploy already built Shiny app to another VM
 
-Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same `app_image` argument.  This will ask the function to look on the Container Registry for the `app_image`. 
+Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same `app_image` argument.  This will ask the function to look on the Container Registry for the `app_image`.  
+
+Alternativly, you could have built the image by pushing up to a GitHub repo with a set up [build trigger](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers). 
 
 ```r
 vm2 <- gce_vm("myapp2", 
@@ -119,7 +127,7 @@ vm2 <- gce_vm("myapp2",
 gce_shiny_addapp(vm2, app_image = "gceshinygoogleauthrdemo")
 ```
 
-### Tidy up
+## Tidy up
 
 Clean up the VMs to avoid unnecessary costs:
 

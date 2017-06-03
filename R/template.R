@@ -52,26 +52,6 @@ get_cloud_init_file <- function(template,
     image <- get_image("rocker/r-base", dynamic_image = dynamic_image)
     cloud_init_file <- sprintf(cloud_init_file, image)
     
-  } else if(template == "builder") {
-    
-    if(is.null(build_name)){
-      stop("Need to specify what to call the Docker image")
-    }
-    build_tag <- gce_tag_container(build_name)
-    myMessage("Creating build VM to create and upload ", build_tag, level = 3)
-    
-    if(is.null(dockerfile)){
-      stop("Need to supply Dockerfile file location to build from")
-    }
-    
-    ## indent "  " needed for cloud-config
-    the_file <- paste("  ", 
-                      readLines(dockerfile, file.info(dockerfile)$size), 
-                      collapse = "\n")
-    
-    cloud_init_file <- sprintf(cloud_init_file, 
-                               build_tag, build_tag, the_file)
-    
   } else {
     warning("No template settings found for ", template)
   }
@@ -108,7 +88,6 @@ get_cloud_init_file <- function(template,
 #'   \item r_base Latest version of R stable
 #'   \item example A non-R test container running busybox
 #'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
-#'   \item builder A VM to build a Dockerfile upon and uplaod to Google container engine
 #'  }
 #'  
 #'  For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 
@@ -139,7 +118,7 @@ get_cloud_init_file <- function(template,
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          "r-base", "example", "rstudio-hadleyverse",
-                                         "dynamic", "builder"),
+                                         "dynamic"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
