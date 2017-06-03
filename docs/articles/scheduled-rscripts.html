@@ -111,41 +111,15 @@
 <p>$4.09 a month for the master + $1.52 a month per slave (daily 30 min cron job on a 7.5GB RAW instance).</p>
 <p><a href="https://cloud.google.com/products/calculator/#id=1e09cb90-d5bb-4e88-99f3-99b3807fbbeb">Pricing calculator here</a></p>
 </div>
-<div id="create-the-master-and-slave-templates" class="section level2">
+<div id="the-master-and-slave-templates" class="section level2">
 <h2 class="hasAnchor">
-<a href="#create-the-master-and-slave-templates" class="anchor"></a>Create the master and slave templates</h2>
-<p>The master needs to only have enough to create other VMs and download files from Google Cloud Storage:</p>
-<ul>
-<li><code>googleComputeEngineR</code></li>
-<li><code>googleCloudStorageR</code></li>
-<li>Version <code>&gt;0.4.0.9000</code> of <code>googleAuthR</code> for easy auth on GCE instances via <code>gar_gce_auth()</code> - currently on Github</li>
-</ul>
-<p>The master is built from a custom Dockerfile. An example is found in <code>system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-
-master_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"master"</span>,<span class="st">"Dockerfile"</span>, 
-                          <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)
-
-b1 &lt;-<span class="st"> </span><span class="kw">gce_docker_build</span>(<span class="dt">name =</span> <span class="st">"build1"</span>, master_image, <span class="dt">build_name =</span> <span class="st">"cron-master"</span>)</code></pre></div>
-<p>The slave needs to be have enough R libraries to run your scheduled script, plus <code>googleCloudStorageR</code> to download/upload the auth files and script. An example that includes <code>googleAnalyticsR</code>, <code>searchConsoleR</code>and others is found at <code>system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", package = "googleComputeEngineR")</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">slave_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"slave"</span>,<span class="st">"Dockerfile"</span>, 
-                          <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)
-                          
-b2 &lt;-<span class="st"> </span><span class="kw">gce_docker_build</span>(<span class="dt">name =</span> <span class="st">"build2"</span>, slave_image, <span class="dt">build_name =</span> <span class="st">"cron-slave"</span>)</code></pre></div>
-<p>Wait a bit whilst the images build and upload to your own <a href="https://console.cloud.google.com/kubernetes/images/list">Google Container Registry</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## should see your custom image once done
-<span class="kw"><a href="../reference/gce_list_registry.html">gce_list_registry</a></span>(b1)
-<span class="co">#&gt; [1] "NAME                                       DESCRIPTION   STARS     OFFICIAL   AUTOMATED"</span>
-<span class="co">#&gt; [2] "your-project/cron-master                                    0                    "         </span>
-<span class="co">#&gt; [3] "your-project/cron-slave                                     0                    "</span>
-
-## delete the build instances
-<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(b1)
-<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(b2)</code></pre></div>
+<a href="#the-master-and-slave-templates" class="anchor"></a>The master and slave templates</h2>
+<p>These have been set up via a public Google Container Registry via <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build triggers</a>, tied to <code>googleComputeEngineR</code>’s repostiory on Github. You can see the <code>Dockerfiles</code> used in the dockerfiles in <code>system.file("dockerfiles", "gceScheduler", package = "googleComputeEngineR")</code></p>
+<p>Each time the GitHub repository is pushed, these Docker images are rebuilt, allowing for easy changes and versioning.</p>
 </div>
-<div id="setup-the-worker-vm" class="section level2">
+<div id="setup-the-master-vm" class="section level2">
 <h2 class="hasAnchor">
-<a href="#setup-the-worker-vm" class="anchor"></a>Setup the worker VM</h2>
+<a href="#setup-the-master-vm" class="anchor"></a>Setup the master VM</h2>
 <p>Now we have the templates saved to Container Registry, make a ‘Master’ VM that is small, and will be on 24/7 to run cron. This costs ~$4.09 a month. Give it a strong password.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 
@@ -153,9 +127,9 @@ username &lt;-<span class="st"> "mark"</span>
 
 ## make the cron-master
 master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cron-master"</span>, 
-                 <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>,
+                 <span class="dt">predefined_type =</span> <span class="st">"g1-small"</span>,
                  <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-                 <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"cron-master"</span>),
+                 <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"gce-master-scheduler"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>),
                  <span class="dt">username =</span> username, 
                  <span class="dt">password =</span> <span class="st">"mark1234"</span>)
 
@@ -175,13 +149,14 @@ master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">slave &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"slave-1"</span>, 
                  <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,
                  <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-                 <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"cron-slave"</span>),
+                 <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"gce-slave-scheduler"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>),
                  <span class="dt">username =</span> <span class="st">"mark"</span>, 
                  <span class="dt">password =</span> <span class="st">"mark1234"</span>)
                  
 ## wait for it to all install (e.g. RStudio login screen available)
 ## stop it ready for being started by master VM      
 <span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(slave)</code></pre></div>
+<p>If you want to use the latest version of the Docker built image, you need to recreate the instance, allowing you to create versioning.</p>
 </div>
 <div id="create-scheduled-script" class="section level2">
 <h2 class="hasAnchor">
@@ -270,8 +245,8 @@ out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#costs">Costs</a></li>
-      <li><a href="#create-the-master-and-slave-templates">Create the master and slave templates</a></li>
-      <li><a href="#setup-the-worker-vm">Setup the worker VM</a></li>
+      <li><a href="#the-master-and-slave-templates">The master and slave templates</a></li>
+      <li><a href="#setup-the-master-vm">Setup the master VM</a></li>
       <li><a href="#setup-slave-instance">Setup slave instance</a></li>
       <li><a href="#create-scheduled-script">Create scheduled script</a></li>
       <li><a href="#create-master-script">Create master script</a></li>

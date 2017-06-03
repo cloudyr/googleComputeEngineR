@@ -20,52 +20,13 @@ $4.09 a month for the master + $1.52 a month per slave (daily 30 min cron job on
 [Pricing calculator here](https://cloud.google.com/products/calculator/#id=1e09cb90-d5bb-4e88-99f3-99b3807fbbeb)
 
 
-## Create the master and slave templates
+## The master and slave templates
 
-The master needs to only have enough to create other VMs and download files from Google Cloud Storage:
+These have been set up via a public Google Container Registry via [build triggers](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers), tied to `googleComputeEngineR`'s repostiory on Github. You can see the `Dockerfiles` used in the dockerfiles in `system.file("dockerfiles", "gceScheduler", package = "googleComputeEngineR")`
 
-* `googleComputeEngineR`
-* `googleCloudStorageR`
-* Version `>0.5.0` of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()`
+Each time the GitHub repository is pushed, these Docker images are rebuilt, allowing for easy changes and versioning. 
 
-The master is built from a custom Dockerfile. An example is found in `system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")`
-
-
-```r
-library(googleComputeEngineR)
-
-master_image <- system.file("dockerfiles", "gceScheduler", "master","Dockerfile", 
-                          package = "googleComputeEngineR")
-
-b1 <- gce_docker_build(name = "build1", master_image, build_name = "cron-master")
-```
-
-The slave needs to be have enough R libraries to run your scheduled script, plus `googleCloudStorageR` to download/upload the auth files and script.  An example that includes `googleAnalyticsR`, `searchConsoleR`and others is found at `system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", package = "googleComputeEngineR")`
-
-```r
-slave_image <- system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", 
-                          package = "googleComputeEngineR")
-                          
-b2 <- gce_docker_build(name = "build2", slave_image, build_name = "cron-slave")
-
-```
-
-Wait a bit whilst the images build and upload to your own [Google Container Registry](https://console.cloud.google.com/kubernetes/images/list)
-
-```r
-## should see your custom image once done
-gce_list_registry(b1)
-#> [1] "NAME                                       DESCRIPTION   STARS     OFFICIAL   AUTOMATED"
-#> [2] "your-project/cron-master                                    0                    "         
-#> [3] "your-project/cron-slave                                     0                    "
-
-## delete the build instances
-gce_vm_delete(b1)
-gce_vm_delete(b2)
-
-```
-
-## Setup the worker VM
+## Setup the master VM
 
 Now we have the templates saved to Container Registry, make a 'Master' VM that is small, and will be on 24/7 to run cron.   This costs ~$4.09 a month. Give it a strong password.
 
@@ -76,9 +37,9 @@ username <- "mark"
 
 ## make the cron-master
 master <- gce_vm("cron-master", 
-                 predefined_type = "f1-micro",
+                 predefined_type = "g1-small",
                  template = "rstudio", 
-                 dynamic_image = gce_tag_container("cron-master"),
+                 dynamic_image = gce_tag_container("gce-master-scheduler", project = "gcer-public"),
                  username = username, 
                  password = "mark1234")
 
@@ -101,7 +62,7 @@ Create the larger slave instance, that can be then stopped ready for the master 
 slave <- gce_vm("slave-1", 
                  predefined_type = "n1-standard-2",
                  template = "rstudio", 
-                 dynamic_image = gce_tag_container("cron-slave"),
+                 dynamic_image = gce_tag_container("gce-slave-scheduler", project = "gcer-public"),
                  username = "mark", 
                  password = "mark1234")
                  
@@ -109,6 +70,8 @@ slave <- gce_vm("slave-1",
 ## stop it ready for being started by master VM      
 gce_vm_stop(slave)
 ```
+
+If you want to use the latest version of the Docker built image, you need to recreate the instance, allowing you to create versioning. 
 
 ## Create scheduled script
 
