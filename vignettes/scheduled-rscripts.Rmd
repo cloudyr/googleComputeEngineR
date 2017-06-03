@@ -26,7 +26,7 @@ The master needs to only have enough to create other VMs and download files from
 
 * `googleComputeEngineR`
 * `googleCloudStorageR`
-* Version `>0.4.0.9000` of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()` - currently on Github
+* Version `>0.5.0` of `googleAuthR` for easy auth on GCE instances via `gar_gce_auth()`
 
 The master is built from a custom Dockerfile. An example is found in `system.file("dockerfiles", "gceScheduler", "master","Dockerfile", package = "googleComputeEngineR")`
 
