@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-06-01" />
+<meta name="date" content="2017-06-03" />
 
 <title>RStudio Server for a team</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">RStudio Server for a team</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-06-01</em></h4>
+<h4 class="date"><em>2017-06-03</em></h4>
 
 
 
@@ -128,7 +128,8 @@ tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<spa
 vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;rstudio-big&quot;</span>,
               <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-8&quot;</span>,
               <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>,
-              <span class="dt">dynamic_image =</span> tag)
+              <span class="dt">dynamic_image =</span> tag,
+              <span class="dt">username =</span> <span class="st">&quot;me&quot;</span>, <span class="dt">password =</span> <span class="st">&quot;mypassword&quot;</span>)
 
 ## wait for it to launch</code></pre></div>
 </div>

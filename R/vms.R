@@ -5,8 +5,7 @@
 #' @inheritParams gce_vm_create
 #' @param name The name of the instance
 #' @param open_webports If TRUE, will open firewall ports 80 and 443 if not open already
-#' @param ... Other arguments passed to create an instance if it doesn't exist
-#' 
+#' @inheritDotParams gce_vm_create 
 #' @details 
 #' 
 #' Will get or create the instance as specified.  Will wait for instance to be created if necessary.
@@ -65,11 +64,18 @@ gce_vm <- function(name,
                    project = gce_get_global_project(), 
                    zone = gce_get_global_zone(),
                    open_webports = TRUE) {
-  
-  if(inherits(name, "gce_instance")){
+
+  if(is.gce_instance(name)){
     myMessage("Refreshing instance data", level = 3)
     name <- name$name
   }
+  
+  assertthat::assert_that(
+    assertthat::is.string(name),
+    assertthat::is.string(project),
+    assertthat::is.string(zone),
+    is.logical(open_webports)
+  )
   
   stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)
   
@@ -139,6 +145,11 @@ gce_vm_delete <- function(instance,
                           zone = gce_get_global_zone() 
                           ) {
 
+  assertthat::assert_that(
+    assertthat::is.string(project),
+    assertthat::is.string(zone)
+  )
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
                  project, zone, as.gce_instance_name(instance))
   # compute.instances.delete
@@ -230,7 +241,9 @@ gce_vm_create <- function(name,
                           acceleratorCount = NULL,
                           acceleratorType = "nvidia-tesla-k80") {
   
-  stopifnot(inherits(name, "character"))
+  assertthat::assert_that(
+    assertthat::is.string(name)
+  )
   
   ## beta elements are NULL
   guestAccelerators = NULL
@@ -260,7 +273,7 @@ gce_vm_create <- function(name,
   }
   
   
-  if(missing(predefined_type) && !is.character(predefined_type)){
+  if(missing(predefined_type) && !assertthat::is.string(predefined_type)){
     if(any(is.null(cpus), is.null(memory))){
      stop("Must supply one of 'predefined_type', or both 'cpus' and 'memory' arguments.") 
     }
@@ -359,7 +372,10 @@ gce_vm_create <- function(name,
   f <- gar_api_generator(url, 
                          "POST", 
                          data_parse_function = function(x) x)
-  stopifnot(inherits(the_instance, "gar_Instance"))
+  
+  assertthat::assert_that(
+    inherits(the_instance, "gar_Instance")
+  )
   
   out <- f(the_body = rmNullObs(the_instance))
   

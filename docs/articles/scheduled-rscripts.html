@@ -99,7 +99,7 @@
       <h1>Scheduled R scripts on Master and Slave Google Compute Engine VMs</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-06-02</h4>
+            <h4 class="date">2017-06-03</h4>
           </div>
 
     
@@ -126,12 +126,12 @@
 master_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"master"</span>,<span class="st">"Dockerfile"</span>, 
                           <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)
 
-b1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_docker_build.html">gce_docker_build</a></span>(<span class="dt">name =</span> <span class="st">"build1"</span>, master_image, <span class="dt">build_name =</span> <span class="st">"cron-master"</span>)</code></pre></div>
+b1 &lt;-<span class="st"> </span><span class="kw">gce_docker_build</span>(<span class="dt">name =</span> <span class="st">"build1"</span>, master_image, <span class="dt">build_name =</span> <span class="st">"cron-master"</span>)</code></pre></div>
 <p>The slave needs to be have enough R libraries to run your scheduled script, plus <code>googleCloudStorageR</code> to download/upload the auth files and script. An example that includes <code>googleAnalyticsR</code>, <code>searchConsoleR</code>and others is found at <code>system.file("dockerfiles", "gceScheduler", "slave","Dockerfile", package = "googleComputeEngineR")</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">slave_image &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"dockerfiles"</span>, <span class="st">"gceScheduler"</span>, <span class="st">"slave"</span>,<span class="st">"Dockerfile"</span>, 
                           <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)
                           
-b2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_docker_build.html">gce_docker_build</a></span>(<span class="dt">name =</span> <span class="st">"build2"</span>, slave_image, <span class="dt">build_name =</span> <span class="st">"cron-slave"</span>)</code></pre></div>
+b2 &lt;-<span class="st"> </span><span class="kw">gce_docker_build</span>(<span class="dt">name =</span> <span class="st">"build2"</span>, slave_image, <span class="dt">build_name =</span> <span class="st">"cron-slave"</span>)</code></pre></div>
 <p>Wait a bit whilst the images build and upload to your own <a href="https://console.cloud.google.com/kubernetes/images/list">Google Container Registry</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## should see your custom image once done
 <span class="kw"><a href="../reference/gce_list_registry.html">gce_list_registry</a></span>(b1)

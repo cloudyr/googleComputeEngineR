@@ -5,7 +5,7 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example", "rstudio-hadleyverse", "dynamic", "builder"), username = NULL,
+  "example", "rstudio-hadleyverse", "dynamic"), username = NULL,
   password = NULL, dynamic_image = NULL, dockerfile = NULL,
   build_name = NULL, image_family = "cos-stable", ...)
 }
@@ -46,7 +46,6 @@ Templates available are:
   \item r_base Latest version of R stable
   \item example A non-R test container running busybox
   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
-  \item builder A VM to build a Dockerfile upon and uplaod to Google container engine
  }
  
  For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 

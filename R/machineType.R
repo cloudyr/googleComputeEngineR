@@ -154,7 +154,12 @@ gce_list_machinetype <- function(filter = NULL,
                          "GET", 
                          pars_args = pars, 
                          data_parse_function = function(x) x)
-  f()
+  out <- f()
+  
+  structure(
+    out,
+    class = c("machineTypeList", "list")
+  )
   
 }
 

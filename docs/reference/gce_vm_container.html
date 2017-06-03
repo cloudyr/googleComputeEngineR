@@ -122,7 +122,7 @@
     </div>
 
     
-    <p>This lets you specify docker images when creating the VM</p>
+    <p>This lets you specify docker images when creating the VM.  These are a speical class of Google instances that are setup for running Docker containers.</p>
     
 
     <pre class="usage"><span class='fu'>gce_vm_container</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -145,17 +145,19 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></p>
-<p><code>file</code> expects a filepath to a <a href = 'cloud-init'>https://cloudinit.readthedocs.io/en/latest/topics/format.html</a> configuration file.</p>
-<p>A configuration file must be less than 32768 characters.
-
-<code>image_project</code> will be ignored if set, overriden to <code>cos-cloud</code></p></td>
+      <td><p>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A zone operation</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>file</code> expects a filepath to a <a href = 'cloud-init'>https://cloudinit.readthedocs.io/en/latest/topics/format.html</a> configuration file.
+    <code>image_project</code> will be ignored if set, overriden to <code>cos-cloud</code>.  
+If you want to set it then use the <a href='gce_vm_create.html'>gce_vm_create</a> function directly that this function wraps with some defaults.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -169,6 +171,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
           </ul>

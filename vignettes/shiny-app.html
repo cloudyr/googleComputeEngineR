@@ -87,8 +87,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Enjoy your Shiny app</li>
 </ol>
 <p>Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.</p>
-<div id="create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="section level3">
-<h3>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h3>
+<div id="google-container-registry---build-triggers" class="section level2">
+<h2>Google Container Registry - Build Triggers</h2>
+<p>Alternativly, you can use build triggers from <a href="https://cloud.google.com/container-registry/">Google Container Registry</a> to build the docker image.</p>
+<p>This is typically done by pushing up to a GitHub repository with your Dockerfile, which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>. You can then call this docker image directly using <code>gce_shiny_addapp</code>.</p>
+</div>
+<div id="create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="section level2">
+<h2>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h2>
 <p>The <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
 <p>The Shiny app used is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code>get_dockerfolder(&quot;shiny-googleAuthRdemo&quot;)</code></p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/shiny
@@ -117,8 +122,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>list.files(get_dockerfolder(&quot;shiny-googleAuthRdemo&quot;), recursive = TRUE)
 # &quot;Dockerfile&quot;        &quot;shiny/DESCRIPTION&quot; &quot;shiny/readme.md&quot;   &quot;shiny/server.R&quot;    &quot;shiny/ui.R&quot;</code></pre>
 </div>
-<div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
-<h3>Create your Shiny app and place in subfolder of your build folder</h3>
+<div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level2">
+<h2>Create your Shiny app and place in subfolder of your build folder</h2>
 <p>Create your Shiny app as normal, then place into a folder with this structure:</p>
 <pre><code>|
 |- /appname/
@@ -128,33 +133,34 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 | Dockerfile
 </code></pre>
 </div>
-<div id="start-up-a-shiny-templated-google-compute-engine-vm" class="section level3">
-<h3>Start up a Shiny templated Google Compute Engine VM</h3>
+<div id="start-up-a-shiny-templated-google-compute-engine-vm" class="section level2">
+<h2>Start up a Shiny templated Google Compute Engine VM</h2>
 <p>Start up a Shiny templated image, which makes sure the right ports are open etc.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM for your self-contained Shiny app
 vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;myapp&quot;</span>, 
              <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>,
              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)</code></pre></div>
 </div>
-<div id="deploy-and-push-to-the-google-container-registry-via-gce_shiny_addapp" class="section level3">
-<h3>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></h3>
+<div id="deploy-and-push-to-the-google-container-registry-via-gce_shiny_addapp" class="section level2">
+<h2>Deploy and push to the Google Container Registry via <code>gce_shiny_addapp</code></h2>
 <p>You can now deploy your Shiny app up from your local machine:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_folder &lt;-<span class="st"> &quot;~/where/your/build/folderis&quot;</span>
 <span class="kw">gce_shiny_addapp</span>(vm, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>, <span class="dt">dockerfolder =</span> build_folder)</code></pre></div>
 <p>This will upload the build folder, build the image, save the build Docker image to Google Container Registry (<code>https://console.cloud.google.com/gcr/images/</code>) and start up your Shiny app.</p>
 <p>Your app should now be running on your IP + folder you copied into in Dockerfile, such as <code>http://123.456.XXX.XXX/myapp/</code></p>
 </div>
-<div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level3">
-<h3>Re-deploy already built Shiny app to another VM</h3>
+<div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level2">
+<h2>Re-deploy already built Shiny app to another VM</h2>
 <p>Now you have a built app, you can deploy it to other instances simply by leaving out the dockerfolder and using the same <code>app_image</code> argument. This will ask the function to look on the Container Registry for the <code>app_image</code>.</p>
+<p>Alternativly, you could have built the image by pushing up to a GitHub repo with a set up <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build trigger</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;myapp2&quot;</span>, 
              <span class="dt">template =</span> <span class="st">&quot;shiny&quot;</span>,
              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)
 
 <span class="kw">gce_shiny_addapp</span>(vm2, <span class="dt">app_image =</span> <span class="st">&quot;gceshinygoogleauthrdemo&quot;</span>)</code></pre></div>
 </div>
-<div id="tidy-up" class="section level3">
-<h3>Tidy up</h3>
+<div id="tidy-up" class="section level2">
+<h2>Tidy up</h2>
 <p>Clean up the VMs to avoid unnecessary costs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># delete build VM</span>
 <span class="kw">gce_vm_delete</span>(vm)

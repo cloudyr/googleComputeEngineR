@@ -26,6 +26,5 @@ Templates available are:
   \item r_base Latest version of R stable
   \item example A non-R test container running busybox
   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
-  \item builder A VM that can build a supplied Dockerfile
  }
 }

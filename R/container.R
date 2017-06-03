@@ -15,7 +15,7 @@ gce_check_container <- function(instance, container){
 
 #' Launch a container-VM image
 #' 
-#' This lets you specify docker images when creating the VM
+#' This lets you specify docker images when creating the VM.  These are a speical class of Google instances that are setup for running Docker containers. 
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
@@ -24,12 +24,12 @@ gce_check_container <- function(instance, container){
 #' @param image_family An image-family.  It must come from the \code{google-containers} family.
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
+#' @details 
 #'  
 #' \code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
 #' 
-#' A configuration file must be less than 32768 characters.
-#' 
-#' \code{image_project} will be ignored if set, overriden to \code{cos-cloud}
+#' \code{image_project} will be ignored if set, overriden to \code{cos-cloud}.  
+#' If you want to set it then use the \link{gce_vm_create} function directly that this function wraps with some defaults.
 #' 
 #' @seealso \url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
 #' 
@@ -45,10 +45,13 @@ gce_vm_container <- function(file = NULL,
   }
   
   if(is.null(cloud_init)){
-    stopifnot(!is.null(file))
-    testthat::expect_type(file, "character")
-    testthat::expect_gt(nchar(file), 0)
-    cloud_init <-  readChar(file, nchars = 32768)
+
+    assertthat::assert_that(
+      !is.null(file),
+      assertthat::is.readable(file)
+    )
+    
+    cloud_init <-  readChar(file, nchars = file.info(file)$size)
     
     if(!grepl("^#cloud-config\n",cloud_init)){
       stop("file contents does not start with #cloud-config.  Must be a valid cloud-init file.

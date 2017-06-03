@@ -137,7 +137,32 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to create an instance if it doesn't exist</p></td>
+      <td><p>Arguments passed on to <code>gce_vm_create</code></p><dl class='dl-horizontal'>
+  <dt>image_project</dt><dd><p>Project ID of where the image lies</p></dd>
+  <dt>image</dt><dd><p>Name of the image resource to return</p></dd>
+  <dt>image_family</dt><dd><p>Name of the image family to search for</p></dd>
+  <dt>disk_source</dt><dd><p>Specifies a valid URL to an existing Persistent Disk resource.</p></dd>
+  <dt>network</dt><dd><p>The name of the network interface</p></dd>
+  <dt>externalIP</dt><dd><p>An external IP you have previously reserved, leave NULL to have one assigned or <code>"none"</code> for no external access.</p></dd>
+  <dt>project</dt><dd><p>Project ID for this request</p></dd>
+  <dt>zone</dt><dd><p>The name of the zone for this request</p></dd>
+  <dt>dry_run</dt><dd><p>whether to just create the request JSON</p></dd>
+  <dt>auth_email</dt><dd><p>If it includes '@' then assume the email, otherwise an environment file var that includes the email</p></dd>
+  <dt>disk_size_gb</dt><dd><p>If not NULL, override default size of the boot disk (size in GB)</p></dd>
+  <dt>use_beta</dt><dd><p>If set to TRUE will use the beta version of the API. Should not be used for production purposes.</p></dd>
+  <dt>acceleratorCount</dt><dd><p><code>[BETA]</code> Number of GPUs to add to instance</p></dd>
+  <dt>acceleratorType</dt><dd><p><code>[BETA]</code> Name of GPU to add, see <a href='gce_list_gpus.html'>gce_list_gpus</a></p></dd>
+  <dt>name</dt><dd><p>The name of the resource, provided by the client when initially creating the resource</p></dd>
+  <dt>canIpForward</dt><dd><p>Allows this instance to send and receive packets with non-matching destination or source IPs</p></dd>
+  <dt>description</dt><dd><p>An optional description of this resource</p></dd>
+  <dt>metadata</dt><dd><p>A named list of metadata key/value pairs assigned to this instance</p></dd>
+  <dt>scheduling</dt><dd><p>Scheduling options for this instance</p></dd>
+  <dt>serviceAccounts</dt><dd><p>A list of service accounts, with their specified scopes, authorized for this instance</p></dd>
+  <dt>tags</dt><dd><p>A list of tags to apply to this instance</p></dd>
+  <dt>predefined_type</dt><dd><p>A predefined machine type from <a href='gce_list_machinetype.html'>gce_list_machinetype</a></p></dd>
+  <dt>cpus</dt><dd><p>If not defining <code>predefined_type</code>, the number of CPUs</p></dd>
+  <dt>memory</dt><dd><p>If not defining <code>predefined_type</code>, amount of memory</p></dd>
+</dl></td>
     </tr>
     <tr>
       <th>project</th>

@@ -127,7 +127,7 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     
 
     <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
-  <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>, <span class='st'>"builder"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>build_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
     
@@ -186,7 +186,6 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
 <li><p>r_base Latest version of R stable</p></li>
 <li><p>example A non-R test container running busybox</p></li>
 <li><p>dynamic Supply your own docker image to download such as <code>rocker/verse</code></p></li>
-<li><p>builder A VM to build a Dockerfile upon and uplaod to Google container engine</p></li>
 </ul><p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
    other settings etc. via <a href='docker_run.html'>docker_run</a>.</p>
 <p>Use <code>dynamic_image</code> to override the default rocker images e.g. <code>rocker/shiny</code> for shiny, etc.</p>

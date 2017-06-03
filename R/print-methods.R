@@ -19,6 +19,25 @@ print.gce_instanceList <- function(x, ...){
 }
 
 #' @export
+print.machineTypeList <- function(x, ...){
+
+  cat("==Google Compute Engine Machine Type List==\n")  
+  out <- x$items
+  if (!is.null(out)) {
+    out$creationTimestamp <- timestamp_to_r(out$creationTimestamp)
+    
+    print_cols <- c("name","description","guestCpus","memoryMb",
+                    "maximumPersistentDisks","maximumPersistentDisksSizeGb",
+                    "creationTimestamp","isSharedCpu","zone")
+    
+    print(out[, print_cols])
+  } else {
+    cat("<none>\n")
+  }
+  invisible(x)  
+}
+
+#' @export
 print.gce_instance <- function(x, ...){
   
   cat("==Google Compute Engine Instance==\n")

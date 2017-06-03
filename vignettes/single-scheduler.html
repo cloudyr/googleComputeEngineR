@@ -77,32 +77,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>See also scheduling via a <a href="articles/scheduled-rscripts.html">master/slave cluster</a></p>
 <div id="rstudio-server-scheduler" class="section level1">
 <h1>RStudio server + scheduler</h1>
-<p>This workflow demonstrates how you can take advatage of <a href="https://docs.docker.com/engine/reference/builder/">Dockerfiles</a> to customise the VM templates.</p>
+<p>This workflow demonstrates how you can take advantage of premade <code>Docker</code> images. <code>googleComputeEngineR</code> has created custom images that have been built using Google Container Registry build triggers and made public, which you can use.</p>
 <p>Using <code>Dockerfiles</code> is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.</p>
-<p>In summary:</p>
+<p>In summary, these were the steps I took:</p>
 <ol style="list-style-type: decimal">
-<li>Launch a template VM with the container you want to base yours upon</li>
 <li>Construct a <code>Dockerfile</code> in a folder with any other files or dependencies, such as cron</li>
-<li>Use <code>docker_build</code> to upload and build your custom Docker image on the VM</li>
-<li>Save your custom image to the Container Registry</li>
-<li>Launch another VM to run your custom image</li>
+<li>Use <code>docker_build</code> or Google Container build triggers to build and save your custom Docker image</li>
+<li>Launch a VM using the <code>dynamic_image</code> keyword to load from the custom image</li>
 <li>Schedule a script to download from Google Analytics, send an email and upload to BigQuery</li>
 </ol>
-<div id="launch-a-template-vm" class="section level3">
-<h3>Launch a template VM</h3>
-<p>Build VMs should be more powerful than the default machine type (<code>f1-micro</code>) else there is a danger of it hanging for big expensive builds.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-
-## installs rocker/hadleyverse docker image
-vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;build-schedule-r&quot;</span>, 
-             <span class="dt">template =</span> <span class="st">&quot;rstudio-hadleyverse&quot;</span>, 
-             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>)</code></pre></div>
-</div>
+<p>You can modify this with your own <code>Dockerfile</code> to use your own custom packages, libraries etc. and load up to your own private Container Registry, that comes with every Google Cloud project.</p>
 <div id="construct-a-dockerfile" class="section level3">
-<h3>Construct a <code>Dockerfile</code></h3>
-<p>The <code>Dockerfile</code> here is available via <code>get_dockerfile(&quot;hadleyverse-crontab&quot;)</code>.</p>
+<h3>Construct a <em>Dockerfile</em></h3>
+<p>The <code>Dockerfile</code> used here is available via <code>get_dockerfolder(&quot;hadleyverse-crontab&quot;)</code>. Read it via</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readLines</span>(<span class="kw">file.path</span>(<span class="kw">get_dockerfolder</span>(<span class="st">&quot;hadleyverse-crontab&quot;</span>),<span class="st">&quot;Dockerfile&quot;</span>))</code></pre></div>
 <p>It is shown below, which you could base your own upon. This one installs <code>cron</code> for scheduling, and <code>nano</code> a simple text editor. It then also installs some libraries needed for my scheduled scripts:</p>
-<p>From CRAN:</p>
 <ul>
 <li><code>googleAuthR</code> - google authentication</li>
 <li><code>shinyFiles</code> - for cron jobs</li>
@@ -110,9 +99,6 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 <li><code>bigQueryR</code> - for uploading to BigQuery</li>
 <li><code>gmailR</code> - an email R package</li>
 <li><code>googleAnalyticsR</code> - for downloading Google Analytics data</li>
-</ul>
-<p>From Github</p>
-<ul>
 <li><code>bnosac/cronR</code> - to help with creating cron jobs within RStudio.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/hadleyverse
@@ -139,76 +125,30 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt"
 <span class="co">## Start cron</span>
 <span class="kw">RUN</span> sudo service cron start</code></pre></div>
 </div>
-<div id="using-docker_build" class="section level3">
-<h3>Using <code>docker_build</code></h3>
-<p>We now upload to the instance the Dockerfile, and build a new docker image called <code>my-cron-verse</code>.</p>
-<p>This can take some time the first time, so its time for another cup of tea.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## build a new image based on rocker/hadleyverse with this Dockerfile
-<span class="kw">docker_build</span>(vm, 
-             <span class="dt">dockerfile =</span> <span class="kw">get_dockerfile</span>(<span class="st">&quot;hadleyverse-crontab&quot;</span>), 
-             <span class="dt">new_image =</span> <span class="st">&quot;my-cron-verse&quot;</span>)
-
-## wait for it to build (5mins +)
-<span class="co"># ...</span>
-<span class="co"># [0m ---&gt; 059fe3ed926a</span>
-<span class="co"># Removing intermediate container 7695f3dc071f</span>
-<span class="co"># Successfully built 059fe3ed926a</span>
-<span class="co"># Using existing public key in /Users/mark/.ssh/google_compute_engine.pub</span>
-<span class="co"># REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE</span>
-<span class="co"># my-cron-verse        latest              059fe3ed926a        2 seconds ago       1.933 GB</span>
-<span class="co"># rocker/hadleyverse   latest              05e3b636e90b        24 hours ago        1.921 GB</span></code></pre></div>
+<div id="create-a-container-registry-build-trigger" class="section level3">
+<h3>Create a Container Registry build trigger</h3>
+<p>A build trigger was then created following the <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">guide here</a>.</p>
+<p>In this case, the GitHub repository used was <code>googleComputeEngineR</code>’s own, and the <code>inst/dockerfiles/hadleyverse-crontab</code> pointed at to watch for building the images. The image was saved under the name <code>hadleyverse-crontab</code> and [optional] made public via <a href="https://cloud.google.com/container-registry/docs/access-control">this procedure</a>.</p>
+<ul>
+<li>Make sure the build tags are all lowercase-or-hypens</li>
+<li>Add the <code>latest</code> tag to the name to ensure it can be pulled upon VM launch</li>
+</ul>
 </div>
-<div id="save-your-custom-image-to-the-container-registry" class="section level3">
-<h3>Save your custom image to the Container Registry</h3>
-<p>This image is now saved to the Container Registry</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_push_registry</span>(vm, <span class="dt">save_name =</span> <span class="st">&quot;my-cron-verse&quot;</span>, <span class="dt">image_name =</span> <span class="st">&quot;myrstudio&quot;</span>)</code></pre></div>
-<p>Once that is done, we don’t need this instance anymore.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_vm_delete</span>(vm)</code></pre></div>
-</div>
-<div id="launch-another-vm-to-run-your-custom-image" class="section level3">
-<h3>Launch another VM to run your custom image</h3>
-<p>You can now launch instances using your constructed image.</p>
+<div id="launch-a-vm-to-run-your-custom-image" class="section level3">
+<h3>Launch a VM to run your custom image</h3>
+<p>You can now launch instances using the constructed image.</p>
 <p>You can also use your custom image to create further <code>Dockerfiles</code> that use it as a dependency, using <code>gce_tag_container()</code> to get its correct name.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## now start an instance using our rstudio image in cloud-config
-## this takes care of rstudio friendly settings, restart behaviour etc.
-tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;my-rstudio&quot;</span>)
+<p>In this case the image project is different from the project the VM is created in, so the project needs specifing in the <code>gce_tag_container</code> call.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get tag name of public pre-made image
+tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;hadleyverse-crontab&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;gcer-public&quot;</span>)
 
-## rstudio template, but with your private rstudio build
-vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;myrstudio2&quot;</span>, 
+## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
+vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;rstudio-cron-googleauthr&quot;</span>, 
+              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-1&quot;</span>,
               <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>, 
               <span class="dt">dynamic_image =</span> tag, 
               <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, 
               <span class="dt">password =</span> <span class="st">&quot;mark1234&quot;</span>)</code></pre></div>
-<p>You can check when the images are downloaded by using <code>gce_check_container()</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## check on progress on the container pull
-<span class="kw">gce_check_container</span>(vm2, <span class="st">&quot;rstudio&quot;</span>)
-<span class="co"># -- Logs begin at Thu 2016-11-17 14:54:38 UTC, end at Thu 2016-11-17 14:57:38 UTC. --</span>
-<span class="co"># Nov 17 14:54:43 myrstudio2 docker[1045]: Unable to find image 'gcr.io/mark-edmondson-gde/my-rstudio:latest' locally</span>
-<span class="co"># Nov 17 14:54:47 myrstudio2 docker[1045]: latest: Pulling from mark-edmondson-gde/my-rstudio</span>
-<span class="co"># Nov 17 14:54:47 myrstudio2 docker[1045]: a84f66826a7f: Pulling fs layer</span>
-<span class="co"># ...</span>
-<span class="co"># ...</span>
-<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [cont-init.d] conf: exited 0.</span>
-<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [cont-init.d] done.</span>
-<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [services.d] starting services</span>
-<span class="co"># Nov 17 14:58:36 myrstudio2 docker[1045]: [services.d] done.</span>
-
-## your custom rstudio instance is now ready
-&gt;<span class="st"> </span>vm2
-<span class="co"># ==Google Compute Engine Instance==</span>
-<span class="co">#</span>
-<span class="co"># Name:                myrstudio2</span>
-<span class="co"># Created:             2016-11-17 06:54:18</span>
-<span class="co"># Machine Type:        f1-micro</span>
-<span class="co"># Status:              RUNNING</span>
-<span class="co"># Zone:                europe-west1-b</span>
-<span class="co"># External IP:         104.199.67.250</span>
-<span class="co"># Disks: </span>
-<span class="co">#             deviceName       type       mode boot autoDelete</span>
-<span class="co"># 1 myrstudio2-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span></code></pre></div>
-<p>You can delete your instances, knowing that the custom image is safe in the Container Registry, or just stop them using <code>gce_vm_stop()</code> and start again with <code>gce_vm_start()</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## delete the instance (the container is safe)
-<span class="kw">gce_vm_delete</span>(vm2)</code></pre></div>
 </div>
 <div id="a-demo-script" class="section level3">
 <h3>A demo script</h3>

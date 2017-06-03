@@ -10,17 +10,6 @@ get_cloud_init_file <- function(template,
   
   cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
   
-  # cloud_init_file <- switch(template,
-  #       rstudio = sprintf(cloud_init_file, username, password, get_image("rocker/rstudio", 
-  #                                                                        dynamic_image = dynamic_image)),
-  #       "rstudio-hadleyverse" = sprintf(cloud_init_file, username, password, get_image("rocker/rstudio", 
-  #                                                                        dynamic_image = dynamic_image)),
-  #       dynamic = sprintf(cloud_init_file, build_name, dynamic_image, dynamic_image),
-  #       shiny = sprintf(cloud_init_file, get_image("rocker/shiny", dynamic_image = dynamic_image)),
-  #       opencpu = sprintf(cloud_init_file, get_image("opencpu/base", dynamic_image = dynamic_image)),
-  #       "r-base" = sprintf(cloud_init_file, get_image("rocker/r-base", dynamic_image = dynamic_image))
-  #                           )
-  
   if(template %in% c("rstudio","rstudio-hadleyverse")){
     
     if(any(is.null(username), is.null(password))){
@@ -208,7 +197,6 @@ get_image <- function(default_image, dynamic_image = NULL){
 #'   \item r_base Latest version of R stable
 #'   \item example A non-R test container running busybox
 #'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
-#'   \item builder A VM that can build a supplied Dockerfile
 #'  }
 #' 
 #' @return file location

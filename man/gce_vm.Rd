@@ -10,7 +10,33 @@ gce_vm(name, ..., project = gce_get_global_project(),
 \arguments{
 \item{name}{The name of the instance}
 
-\item{...}{Other arguments passed to create an instance if it doesn't exist}
+\item{...}{Arguments passed on to \code{gce_vm_create}
+\describe{
+  \item{image_project}{Project ID of where the image lies}
+  \item{image}{Name of the image resource to return}
+  \item{image_family}{Name of the image family to search for}
+  \item{disk_source}{Specifies a valid URL to an existing Persistent Disk resource.}
+  \item{network}{The name of the network interface}
+  \item{externalIP}{An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.}
+  \item{project}{Project ID for this request}
+  \item{zone}{The name of the zone for this request}
+  \item{dry_run}{whether to just create the request JSON}
+  \item{auth_email}{If it includes '@' then assume the email, otherwise an environment file var that includes the email}
+  \item{disk_size_gb}{If not NULL, override default size of the boot disk (size in GB)}
+  \item{use_beta}{If set to TRUE will use the beta version of the API. Should not be used for production purposes.}
+  \item{acceleratorCount}{\code{[BETA]} Number of GPUs to add to instance}
+  \item{acceleratorType}{\code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}}
+  \item{name}{The name of the resource, provided by the client when initially creating the resource}
+  \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
+  \item{description}{An optional description of this resource}
+  \item{metadata}{A named list of metadata key/value pairs assigned to this instance}
+  \item{scheduling}{Scheduling options for this instance}
+  \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
+  \item{tags}{A list of tags to apply to this instance}
+  \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}
+  \item{cpus}{If not defining \code{predefined_type}, the number of CPUs}
+  \item{memory}{If not defining \code{predefined_type}, amount of memory}
+}}
 
 \item{project}{Project ID for this request}
 
