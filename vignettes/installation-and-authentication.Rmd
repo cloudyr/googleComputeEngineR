@@ -32,30 +32,6 @@ For `googleComputeEngineR` you will need:
 
 ## Authentication
 
-### OAuth2
-
-Authentication can be carried out via OAuth2 each session via `gce_auth()`.  The first time you run this you will be sent to a Google login prompt in your browser to allow the `googleAuthR` project access (or preferably the Google project you configure via client ID). 
-
-Once authenticated a file named `.httr-oauth` is saved to your working directory.  On subsequent authentication this file will hold your authentication details, and you won't need to go via the browser.  Deleting this file, or setting `new_user=TRUE` will start the authentication flow again.
-
-```r
-## set your project ID and secret if not using service account JSON
-options(googleAuthR.client_id = YOUR_CLIENT_ID)
-options(googleAuthR.client_secret = YOUR_CLIENT_SECRET)
-
-library(googleComputeEngineR)
-## first time this will send you to the browser to authenticate
-gce_auth()
-
-## to authenticate with a fresh user, delete .httr-oauth or run with new_user=TRUE
-gce_auth(new_user = TRUE)
-
-...call functions...etc...
-
-```
-
-Each new R session will need to run `gce_auth()` to authenticate future API calls.
-
 ### Auto-authentication
 
 Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created `.httr-oauth` token in a system environment:

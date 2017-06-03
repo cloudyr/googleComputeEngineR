@@ -114,11 +114,14 @@
 <h2 class="hasAnchor">
 <a href="#tldr" class="anchor"></a>TL;DR</h2>
 <p>Run this, and you get an RStudio server instance running with <code>cronR</code>, the <code>tidyverse</code>and <code>googleAnalyticsR</code> etc. running on it:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get tag name of public pre-made image
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+## set up and authenticate etc...
+
+## get tag name of public pre-made image
 tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"google-auth-r-cron-tidy"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
 
 ## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
-vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, 
+vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, 
               <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,
               <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
               <span class="dt">dynamic_image =</span> tag, 

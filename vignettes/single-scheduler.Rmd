@@ -21,11 +21,14 @@ Run this, and you get an RStudio server instance running with `cronR`, the `tidy
 
 
 ```r
+library(googleComputeEngineR)
+## set up and authenticate etc...
+
 ## get tag name of public pre-made image
 tag <- gce_tag_container("google-auth-r-cron-tidy", project = "gcer-public")
 
 ## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
-vm2 <- gce_vm("rstudio-cron-googleauthr", 
+vm <- gce_vm("rstudio-cron-googleauthr", 
               predefined_type = "n1-standard-1",
               template = "rstudio", 
               dynamic_image = tag, 

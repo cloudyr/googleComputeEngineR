@@ -131,25 +131,6 @@
 <div id="authentication" class="section level2">
 <h2 class="hasAnchor">
 <a href="#authentication" class="anchor"></a>Authentication</h2>
-<div id="oauth2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#oauth2" class="anchor"></a>OAuth2</h3>
-<p>Authentication can be carried out via OAuth2 each session via <code><a href="../reference/gce_auth.html">gce_auth()</a></code>. The first time you run this you will be sent to a Google login prompt in your browser to allow the <code>googleAuthR</code> project access (or preferably the Google project you configure via client ID).</p>
-<p>Once authenticated a file named <code>.httr-oauth</code> is saved to your working directory. On subsequent authentication this file will hold your authentication details, and you won’t need to go via the browser. Deleting this file, or setting <code>new_user=TRUE</code> will start the authentication flow again.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set your project ID and secret if not using service account JSON
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_id =</span> YOUR_CLIENT_ID)
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_secret =</span> YOUR_CLIENT_SECRET)
-
-<span class="kw">library</span>(googleComputeEngineR)
-## first time this will send you to the browser to authenticate
-<span class="kw"><a href="../reference/gce_auth.html">gce_auth</a></span>()
-
-## to authenticate with a fresh user, delete .httr-oauth or run with new_user=TRUE
-<span class="kw"><a href="../reference/gce_auth.html">gce_auth</a></span>(<span class="dt">new_user =</span> <span class="ot">TRUE</span>)
-
-...call functions...etc...</code></pre></div>
-<p>Each new R session will need to run <code><a href="../reference/gce_auth.html">gce_auth()</a></code> to authenticate future API calls.</p>
-</div>
 <div id="auto-authentication" class="section level3">
 <h3 class="hasAnchor">
 <a href="#auto-authentication" class="anchor"></a>Auto-authentication</h3>
