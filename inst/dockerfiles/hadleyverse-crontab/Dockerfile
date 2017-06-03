@@ -5,6 +5,7 @@ MAINTAINER Mark Edmondson (r@sunholo.com)
 RUN apt-get update && apt-get install -y \
     cron \
     nano \
+    libxml2-dev \
     ## clean up
     && apt-get clean \ 
     && rm -rf /var/lib/apt/lists/ \ 

@@ -87,7 +87,8 @@ tag <- gce_tag_container("my_rstudio")
 vm2 <- gce_vm(name = "rstudio-big",
               predefined_type = "n1-highmem-8",
               template = "rstudio",
-              dynamic_image = tag)
+              dynamic_image = tag,
+              username = "me", password = "mypassword")
 
 ## wait for it to launch
 ```
