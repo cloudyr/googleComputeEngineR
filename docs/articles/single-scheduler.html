@@ -110,6 +110,24 @@
 <h1 class="hasAnchor">
 <a href="#rstudio-server-scheduler" class="anchor"></a>RStudio server + scheduler</h1>
 <p>This workflow demonstrates how you can take advantage of premade <code>Docker</code> images. <code>googleComputeEngineR</code> has created custom images that have been built using Google Container Registry build triggers and made public, which you can use.</p>
+<div id="tldr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#tldr" class="anchor"></a>TL;DR</h2>
+<p>Run this, and you get an RStudio server instance running with <code>cronR</code>, the <code>tidyverse</code>and <code>googleAnalyticsR</code> etc. running on it:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get tag name of public pre-made image
+tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"google-auth-r-cron-tidy"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
+
+## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
+vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, 
+              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,
+              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
+              <span class="dt">dynamic_image =</span> tag, 
+              <span class="dt">username =</span> <span class="st">"mark"</span>, 
+              <span class="dt">password =</span> <span class="st">"mark1234"</span>)</code></pre></div>
+</div>
+<div id="how-to-customise-your-own-rstudio-server" class="section level2">
+<h2 class="hasAnchor">
+<a href="#how-to-customise-your-own-rstudio-server" class="anchor"></a>How to customise your own RStudio Server</h2>
 <p>Using <code>Dockerfiles</code> is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.</p>
 <p>In summary, these were the steps I took:</p>
 <ol style="list-style-type: decimal">
@@ -269,13 +287,19 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
 </div>
 </div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#rstudio-server-scheduler">RStudio server + scheduler</a></li>
+<li>
+<a href="#rstudio-server-scheduler">RStudio server + scheduler</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#tldr">TL;DR</a></li>
+      <li><a href="#how-to-customise-your-own-rstudio-server">How to customise your own RStudio Server</a></li>
+      </ul>
+</li>
       </ul>
 </div>
       </div>

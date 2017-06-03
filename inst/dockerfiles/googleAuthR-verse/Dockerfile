@@ -1,4 +1,4 @@
-FROM rocker/verse
+FROM rocker/tidyverse
 MAINTAINER Mark Edmondson (r@sunholo.com)
 
 # install R package dependencies

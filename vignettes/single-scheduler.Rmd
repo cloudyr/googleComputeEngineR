@@ -15,6 +15,26 @@ See also scheduling via a [master/slave cluster](articles/scheduled-rscripts.htm
 
 This workflow demonstrates how you can take advantage of premade `Docker` images.  `googleComputeEngineR` has created custom images that have been built using Google Container Registry build triggers and made public, which you can use. 
 
+## TL;DR
+
+Run this, and you get an RStudio server instance running with `cronR`, the `tidyverse`and `googleAnalyticsR` etc. running on it:
+
+
+```r
+## get tag name of public pre-made image
+tag <- gce_tag_container("google-auth-r-cron-tidy", project = "gcer-public")
+
+## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
+vm2 <- gce_vm("rstudio-cron-googleauthr", 
+              predefined_type = "n1-standard-1",
+              template = "rstudio", 
+              dynamic_image = tag, 
+              username = "mark", 
+              password = "mark1234")
+``` 
+
+## How to customise your own RStudio Server
+
 Using `Dockerfiles` is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.
 
 In summary, these were the steps I took:
