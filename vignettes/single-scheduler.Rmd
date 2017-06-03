@@ -43,21 +43,17 @@ Using `Dockerfiles` is recommended if you are making a lot of changes to a templ
 In summary, these were the steps I took:
 
 1. Construct a `Dockerfile` in a folder with any other files or dependencies, such as cron
-2. Use `docker_build` or Google Container build triggers to build and save your custom Docker image
-3. Launch a VM using the `dynamic_image` keyword to load from the custom image
+2. Use `docker_build()` or [Google Container build triggers](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers) to build and save your custom Docker image
+3. Launch a VM using the `dynamic_image` argument to load from the custom image
 4. Schedule a script to download from Google Analytics, send an email and upload to BigQuery
 
 You can modify this with your own `Dockerfile` to use your own custom packages, libraries etc. and load up to your own private Container Registry, that comes with every Google Cloud project.  
 
 ### Construct a *Dockerfile*
 
-The `Dockerfile` used here is available via `get_dockerfolder("hadleyverse-crontab")`.  Read it via
+The `Dockerfile` used here is shown below, which you could base your own upon.  Read up on [Dockerfile's here](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/). 
 
-```r
-readLines(file.path(get_dockerfolder("hadleyverse-crontab"),"Dockerfile"))
-```
-
-It is shown below, which you could base your own upon.  This one installs `cron` for scheduling, and `nano` a simple text editor. It then also installs some libraries needed for my scheduled scripts:
+This one installs `cron` for scheduling, and `nano` a simple text editor. It then also installs some libraries needed for my scheduled scripts:
 
 * `googleAuthR` - google authentication
 * `shinyFiles` - for cron jobs
@@ -69,7 +65,7 @@ It is shown below, which you could base your own upon.  This one installs `cron`
 
 
 ```sh
-FROM rocker/hadleyverse
+FROM rocker/tidyverse
 MAINTAINER Mark Edmondson (r@sunholo.com)
 
 # install cron and R package dependencies
@@ -92,22 +88,23 @@ RUN install2.r --error \
 
 ## Start cron
 RUN sudo service cron start
+
 ```
 
 ### Create a Container Registry build trigger
 
 A build trigger was then created following the [guide here](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers).
 
-In this case, the GitHub repository used was `googleComputeEngineR`'s own, and the `inst/dockerfiles/hadleyverse-crontab` pointed at to watch for building the images. The image was saved under the name `hadleyverse-crontab` and [optional] made public via [this procedure](https://cloud.google.com/container-registry/docs/access-control). 
+In this case, the GitHub repository used was `googleComputeEngineR`'s own, and the `inst/dockerfiles/hadleyverse-crontab` pointed at to watch for building the images. The image was saved under the name `google-auth-r-cron-tidy` and (optionally) made public via [this procedure](https://cloud.google.com/container-registry/docs/access-control). 
 
 * Make sure the build tags are all lowercase-or-hypens
 * Add the `latest` tag to the name to ensure it can be pulled upon VM launch
 
+Push to the GitHub repository and you should start to see the image being built in the [build history section](https://console.cloud.google.com/gcr/builds).  If there are any problems you can click through to the log and modify your Dockerfile as needed.  It also works with `cloud-config` files if you are looking to set up the VM beyond a `Dockerfile`. 
+
 ### Launch a VM to run your custom image
 
-You can now launch instances using the constructed image.  
-
-You can also use your custom image to create further `Dockerfiles` that use it as a dependency, using `gce_tag_container()` to get its correct name. 
+Once built, you can now launch instances using the constructed image.  
 
 In this case the image project is different from the project the VM is created in, so the project needs specifing in the `gce_tag_container` call. 
 
@@ -123,6 +120,8 @@ vm2 <- gce_vm("rstudio-cron-googleauthr",
               username = "mark", 
               password = "mark1234")
 ``` 
+
+You can also use your custom image to create further `Dockerfiles` that use it as a dependency, using `gce_tag_container()` to get its correct name. 
 
 ### A demo script
 
