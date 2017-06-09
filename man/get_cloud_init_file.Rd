@@ -4,8 +4,8 @@
 \alias{get_cloud_init_file}
 \title{create the cloud_init file to upload}
 \usage{
-get_cloud_init_file(template, cloud_init, username = NULL, password = NULL,
-  dynamic_image = NULL, build_name = NULL, dockerfile = NULL)
+get_cloud_init_file(template, username = NULL, password = NULL,
+  dynamic_image = NULL)
 }
 \description{
 create the cloud_init file to upload

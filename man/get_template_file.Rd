@@ -19,8 +19,7 @@ Show the cloud-config template files
 Templates available are:
 
 \itemize{
-  \item rstudio An RStudio server docker image
-  \item rstudio-hadleyverse RStudio with the tidyverse installed
+  \item rstudio An RStudio server docker image with the tidyverse installed
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
   \item r_base Latest version of R stable

@@ -194,6 +194,12 @@ gce_vm_delete <- function(instance,
 #'  
 #'  If you want to not have an external IP then modify the instance afterwards
 #' 
+#' @section Preemptible VMS: 
+#' 
+#'  You can set \href{https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance}[preemptible] VMs by passing this in the \code{scheduling} arguments: \code{scheduling = list(preemptible = TRUE)}
+#'  
+#' This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper. 
+#' 
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
@@ -350,7 +356,6 @@ gce_vm_create <- function(name,
       )
     )
   }
-  
 
   ## make instance object
   the_instance <- Instance(canIpForward = canIpForward, 

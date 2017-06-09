@@ -17,6 +17,7 @@ The following are some R scripts for common workflows.  They assume you have pre
 * [Self-contained Shiny app](shiny-app.html)
 * [OpenCPU R API server](opencpu-api-server.html)
 * [Master/Slave R script scheduler](scheduled-rscripts.html)
+* [Massive parallel computing](massive-parallel.html)
 
 ## Terminology
 

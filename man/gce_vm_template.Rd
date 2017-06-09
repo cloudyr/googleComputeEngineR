@@ -5,9 +5,8 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example", "rstudio-hadleyverse", "dynamic"), username = NULL,
-  password = NULL, dynamic_image = NULL, dockerfile = NULL,
-  build_name = NULL, image_family = "cos-stable", ...)
+  "example", "dynamic", "ropensci"), username = NULL, password = NULL,
+  dynamic_image = NULL, image_family = "cos-stable", ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -18,15 +17,14 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{dynamic_image}{Supply an alternative to the default Docker image here to download}
 
-\item{dockerfile}{If template is \code{builder} the Dockerfile to run on startup}
+\item{image_family}{An image-family.  It must come from the \code{cos-cloud} family.}
 
-\item{build_name}{The name of the build}
-
-\item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
-
-\item{...}{Other arguments passed to \link{gce_vm_create}}
-
-\item{image_name}{If template is \code{builder} or \code{dynamic}, the name of Docker image}
+\item{...}{Arguments passed on to \code{gce_vm_container}
+\describe{
+  \item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}
+  \item{cloud_init}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
+  \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
+}}
 }
 \value{
 The VM object
@@ -39,11 +37,11 @@ It passes the template on to \link{gce_vm_container}
 Templates available are:
 
 \itemize{
-  \item rstudio An RStudio server docker image
-  \item rstudio-hadleyverse RStudio with the tidyverse installed
+  \item rstudio An RStudio server docker image with tidyverse and devtools
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
   \item r_base Latest version of R stable
+  \item ropensci RStudio and tidyverse with all ropensci packages on CRAN and Github
   \item example A non-R test container running busybox
   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
  }

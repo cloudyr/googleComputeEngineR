@@ -176,7 +176,7 @@ as.gce_instance_name_one <- function(x){
 #' @param metadata A named list of metadata key/value pairs assigned to this instance
 #' @param name The name of the resource, provided by the client when initially creating the resource
 #' @param networkInterfaces An array of configurations for this interface
-#' @param scheduling Scheduling options for this instance
+#' @param scheduling Scheduling options for this instance, such as preemptible instances
 #' @param serviceAccounts A list of service accounts, with their specified scopes, authorized for this instance
 #' @param tags A list of tags to apply to this instance
 #' 

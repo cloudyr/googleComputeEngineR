@@ -1,51 +1,71 @@
 #' create the cloud_init file to upload
 #' @keywords internal
-get_cloud_init_file <- function(template, 
-                                cloud_init,
+get_cloud_init_file <- function(template,
                                 username = NULL, 
                                 password = NULL, 
-                                dynamic_image = NULL, 
-                                build_name = NULL, 
-                                dockerfile = NULL) {
+                                dynamic_image = NULL) {
   
-  cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
+  template_file <- switch(template,
+                          rstudio = "rstudio",
+                          dynamic = "dynamic",
+                          shiny = "shiny",
+                          opencpu = "opencpu",
+                          "r-base" = "r-base",
+                          ropensci = "rstudio")
   
-  if(template %in% c("rstudio","rstudio-hadleyverse")){
+  
+  if(template_file == "rstudio"){
     
     if(any(is.null(username), is.null(password))){
       stop("Must supply a username and password for RStudio Server templates", call. = FALSE)
     }
     
-    image <- get_image("rocker/rstudio", dynamic_image = dynamic_image)
-    
-    ## Add the username and password to the config file
-    cloud_init_file <- sprintf(cloud_init_file, username, password, image)
-    
-  } else if(template == "dynamic"){
+  } else if(template_file == "dynamic"){
     if(is.null(dynamic_image)){
-      stop("Must supply a docker image to download for template = 'dynamic'")
+      stop("Must supply a docker image to download for template = 'dynamic'", call. = FALSE)
     }
-    cloud_init_file <- sprintf(cloud_init_file, build_name, dynamic_image, dynamic_image)
-  } else if(template == "shiny"){
     
-    image <- get_image("rocker/shiny", dynamic_image = dynamic_image)
-    
-    cloud_init_file <- sprintf(cloud_init_file, image)
-  } else if(template == "opencpu"){
-    
-    image <- get_image("opencpu/base", dynamic_image = dynamic_image)
-    cloud_init_file <- sprintf(cloud_init_file, image)
-    
-  } else if(template == "r-base"){
-    
-    image <- get_image("rocker/r-base", dynamic_image = dynamic_image)
-    cloud_init_file <- sprintf(cloud_init_file, image)
-    
-  } else {
-    warning("No template settings found for ", template)
   }
   
-  cloud_init_file
+  switch(template,
+         rstudio = build_cloud_init_file_rstudio(template_file = template_file, 
+                                                 docker_image = "rocker/tidyverse", 
+                                                 dynamic_image = dynamic_image,
+                                                 username = username, 
+                                                 password = password),
+         dynamic = build_cloud_init_file(template_file = template_file, 
+                                         docker_image = dynamic_image, 
+                                         dynamic_image = dynamic_image),
+         shiny = build_cloud_init_file(template_file = template_file, 
+                                       docker_image = "rocker/shiny", 
+                                       dynamic_image = dynamic_image),
+         opencpu = build_cloud_init_file(template_file = template_file, 
+                                         docker_image = "opencpu/base", 
+                                         dynamic_image = dynamic_image),
+         "r-base" = build_cloud_init_file(template_file = template_file, 
+                                          docker_image = "rocker/r-base", 
+                                          dynamic_image = dynamic_image),
+         ropensci = build_cloud_init_file_rstudio(template_file = template_file, 
+                                                  docker_image = "rocker/ropensci:dev", 
+                                                  dynamic_image = dynamic_image,
+                                                  username = username,
+                                                  password = password))
+}
+
+# build a cloud init file for all non-rstudio 
+build_cloud_init_file <- function(template_file, docker_image, dynamic_image){
+  cloud_init <- get_template_file(template_file)
+  cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
+  image <- get_image(docker_image, dynamic_image = dynamic_image)
+  sprintf(cloud_init_file, image)
+}
+
+# build the cloud-init file with a username and password
+build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_image, username, password){
+  cloud_init <- get_template_file(template_file)
+  cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
+  image <- get_image(docker_image, dynamic_image = dynamic_image)
+  sprintf(cloud_init_file, username, password, image)
 }
 
 #' Create a template container VM
@@ -58,23 +78,20 @@ get_cloud_init_file <- function(template,
 #' @param template The template available
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
-#' @param image_family An image-family.  It must come from the \code{google-containers} family.
+#' @param image_family An image-family.  It must come from the \code{cos-cloud} family.
 #' @param dynamic_image Supply an alternative to the default Docker image here to download
-#' @param dockerfile If template is \code{builder} the Dockerfile to run on startup
-#' @param image_name If template is \code{builder} or \code{dynamic}, the name of Docker image
-#' @param build_name The name of the build
-#' @param ... Other arguments passed to \link{gce_vm_create}
+#' @inheritDotParams gce_vm_container
 #' 
 #' @details 
 #' 
 #' Templates available are:
 #' 
 #' \itemize{
-#'   \item rstudio An RStudio server docker image
-#'   \item rstudio-hadleyverse RStudio with the tidyverse installed
+#'   \item rstudio An RStudio server docker image with tidyverse and devtools
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
+#'   \item ropensci RStudio and tidyverse with all ropensci packages on CRAN and Github
 #'   \item example A non-R test container running busybox
 #'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
 #'  }
@@ -85,7 +102,6 @@ get_cloud_init_file <- function(template,
 #' Use \code{dynamic_image} to override the default rocker images e.g. \code{rocker/shiny} for shiny, etc. 
 #'  
 #' @return The VM object
-#' @importFrom utils browseURL
 #' 
 #' @examples 
 #' 
@@ -106,13 +122,11 @@ get_cloud_init_file <- function(template,
 #' 
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
-                                         "r-base", "example", "rstudio-hadleyverse",
-                                         "dynamic"),
+                                         "r-base", "example",
+                                         "dynamic", "ropensci"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
-                            dockerfile = NULL,
-                            build_name = NULL,
                             image_family = "cos-stable",
                             ...){
   
@@ -125,17 +139,14 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   
   template <- match.arg(template)
 
-  cloud_init_file <- get_cloud_init_file(template, 
-                                         cloud_init = get_template_file(template),
+  cloud_init_file <- get_cloud_init_file(template,
                                          username = username, 
                                          password = password, 
-                                         dynamic_image = dynamic_image, 
-                                         build_name = build_name, 
-                                         dockerfile = dockerfile)
+                                         dynamic_image = dynamic_image)
   
   ## metadata
   upload_meta <- list(template = template)
-  if(template %in% c("rstudio","rstudio-hadleyverse")){
+  if(template == "rstudio"){
     upload_meta$rstudio_users <- username
   }
   
@@ -190,8 +201,7 @@ get_image <- function(default_image, dynamic_image = NULL){
 #' Templates available are:
 #' 
 #' \itemize{
-#'   \item rstudio An RStudio server docker image
-#'   \item rstudio-hadleyverse RStudio with the tidyverse installed
+#'   \item rstudio An RStudio server docker image with the tidyverse installed
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable

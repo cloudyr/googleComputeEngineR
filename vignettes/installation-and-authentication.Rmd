@@ -34,7 +34,7 @@ For `googleComputeEngineR` you will need:
 
 ### Auto-authentication
 
-Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created `.httr-oauth` token in a system environment:
+Specify the location of a [service account JSON file](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) taken from your Google Project.
 
         Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")
 
@@ -49,7 +49,7 @@ GCE_DEFAULT_ZONE="europe-west1-a"
 GCE_SSH_USER="mark"
 ```
 
-This file will then used for authentication via `gce_auth()` when you load the library:
+This file will then used for authentication when you load the library:
 
 ```r
 ## GCE_AUTH_FILE set so auto-authentication

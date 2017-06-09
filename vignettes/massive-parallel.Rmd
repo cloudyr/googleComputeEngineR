@@ -1,0 +1,71 @@
+---
+title: "Massively parallel processing"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Massively parallel processing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Run massive parallel R jobs cheaply
+
+Due to its integration with [`future`](https://CRAN.R-project.org/package=future) you can run massive computing tasks using a Google Compute Engine cluster with just a few lines of code.
+
+Some [more examples of using future](http://www.jottr.org/2017/06/the-many-faced-future.html) can be found here, using fractals as an example. 
+
+On other platforms, see also an [Azure example here on Revolution Analytics](http://blog.revolutionanalytics.com/2017/06/doazureparallel-updated.html). 
+
+## Example code
+
+```r
+library(googleComputeEngineR)
+library(future)
+
+## auto auth to GCE via environment file arguments
+
+## create 50 preemptible CPUs as they are much cheaper
+vm_names <- paste0("cpu",1:50)
+
+## specify the cheapest VMs that may get turned off
+preemptible = list(preemptible = TRUE)
+
+## start up 50 VMs with R base on them (can customise via Dockerfiles)
+fiftyvms <- lapply(vm_names, gce_vm, predefined_type = "n1-standard-1", template = "r-base", scheduling = preemptible)
+
+## once all launched, add to cluster
+plan(cluster, workers = fiftyvms)
+
+## the action you want to perform via cluster
+my_single_function <- function(x){
+  an_expensive_function(x)
+}
+
+## use future::future_lapply to send each call to the cluster
+all_results <- future_lapply(1:50, my_single_function)
+
+## tidy up
+lapply(vms, FUN = gce_vm_stop)
+```
+
+## Pre-emptible VMs
+
+[Preemptible VMs](https://cloud.google.com/preemptible-vms/) are a lot cheaper (80%) than normal instances, but Google reserves the right to stop them at any time.  They are intended to be used in non-critical jobs where if they shutdown you can account for it and launch another.
+
+To create them, you need to pass `preemptible = list(preemptible = TRUE)` to the `scheduling`argument of the `gce_vm()` creation family of functions. 
+
+## Customising the VMs launched
+
+Using `Dockerfiles` and `gce_vm_template` or `gce_vm_container` you can customise the VMs launched.  This can include shutdown scripts that fire if Google shuts down your preemptible instance early, allowing you to save results so far to Cloud storage or similar. 
+
+## Authentication upon the VMs
+
+Since they are also running on Google Compute, you can authenticate with other cloud services such as BigQuery or Cloud Storage simply by using the `googleAuthR::gar_gce_auth()` function, which reuses the authentication that launched the VM. 
+
+## Quotas
+
+You can launch as many VMs as you have [quota](https://cloud.google.com/compute/quotas) for in your account.  These vary from region, from ~240 to 720.  You can apply for more quota if you need it. 
+
+
+

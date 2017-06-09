@@ -99,7 +99,7 @@
       <h1>Installation and Authentication</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-06-03</h4>
+            <h4 class="date">2017-06-09</h4>
           </div>
 
     
@@ -134,7 +134,7 @@
 <div id="auto-authentication" class="section level3">
 <h3 class="hasAnchor">
 <a href="#auto-authentication" class="anchor"></a>Auto-authentication</h3>
-<p>Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created <code>.httr-oauth</code> token in a system environment:</p>
+<p>Specify the location of a <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project.</p>
 <pre><code>    Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")</code></pre>
 <p>You can set default projects, zone and authentication via an <code>.Renviron</code> file or <code>Sys.setenv()</code>.</p>
 <p>Example entries:</p>
@@ -142,7 +142,7 @@
 GCE_DEFAULT_PROJECT_ID="mark-xxxxxxx"
 GCE_DEFAULT_ZONE="europe-west1-a"
 GCE_SSH_USER="mark"</code></pre>
-<p>This file will then used for authentication via <code><a href="../reference/gce_auth.html">gce_auth()</a></code> when you load the library:</p>
+<p>This file will then used for authentication when you load the library:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
 &gt;<span class="st"> </span><span class="kw">library</span>(googleComputeEngineR)
 Successfully authenticated via /Users/mark/auth.json

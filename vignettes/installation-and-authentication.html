@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2016-11-15" />
+<meta name="date" content="2017-06-04" />
 
 <title>Installation and Authentication</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Installation and Authentication</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2016-11-15</em></h4>
+<h4 class="date"><em>2017-06-04</em></h4>
 
 
 
@@ -96,27 +96,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="authentication" class="section level2">
 <h2>Authentication</h2>
-<div id="oauth2" class="section level3">
-<h3>OAuth2</h3>
-<p>Authentication can be carried out via OAuth2 each session via <code>gce_auth()</code>. The first time you run this you will be sent to a Google login prompt in your browser to allow the <code>googleAuthR</code> project access (or preferably the Google project you configure via client ID).</p>
-<p>Once authenticated a file named <code>.httr-oauth</code> is saved to your working directory. On subsequent authentication this file will hold your authentication details, and you won’t need to go via the browser. Deleting this file, or setting <code>new_user=TRUE</code> will start the authentication flow again.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set your project ID and secret if not using service account JSON
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_id =</span> YOUR_CLIENT_ID)
-<span class="kw">options</span>(<span class="dt">googleAuthR.client_secret =</span> YOUR_CLIENT_SECRET)
-
-<span class="kw">library</span>(googleComputeEngineR)
-## first time this will send you to the browser to authenticate
-<span class="kw">gce_auth</span>()
-
-## to authenticate with a fresh user, delete .httr-oauth or run with new_user=TRUE
-<span class="kw">gce_auth</span>(<span class="dt">new_user =</span> <span class="ot">TRUE</span>)
-
-...call functions...etc...</code></pre></div>
-<p>Each new R session will need to run <code>gce_auth()</code> to authenticate future API calls.</p>
-</div>
 <div id="auto-authentication" class="section level3">
 <h3>Auto-authentication</h3>
-<p>Alternatively, you can specify the location of a service account JSON file taken from your Google Project, or the location of a previously created <code>.httr-oauth</code> token in a system environment:</p>
+<p>Specify the location of a <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project.</p>
 <pre><code>    Sys.setenv(&quot;GCE_AUTH_FILE&quot; = &quot;/fullpath/to/auth.json&quot;)</code></pre>
 <p>You can set default projects, zone and authentication via an <code>.Renviron</code> file or <code>Sys.setenv()</code>.</p>
 <p>Example entries:</p>
@@ -124,7 +106,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 GCE_DEFAULT_PROJECT_ID=&quot;mark-xxxxxxx&quot;
 GCE_DEFAULT_ZONE=&quot;europe-west1-a&quot;
 GCE_SSH_USER=&quot;mark&quot;</code></pre>
-<p>This file will then used for authentication via <code>gce_auth()</code> when you load the library:</p>
+<p>This file will then used for authentication when you load the library:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
 &gt;<span class="st"> </span><span class="kw">library</span>(googleComputeEngineR)
 Successfully authenticated via /Users/mark/auth.json
@@ -156,7 +138,7 @@ $name
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

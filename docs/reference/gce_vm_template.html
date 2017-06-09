@@ -127,9 +127,8 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     
 
     <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
-  <span class='st'>"example"</span>, <span class='st'>"rstudio-hadleyverse"</span>, <span class='st'>"dynamic"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>build_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
+  <span class='st'>"example"</span>, <span class='st'>"dynamic"</span>, <span class='st'>"ropensci"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -151,24 +150,16 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
       <td><p>Supply an alternative to the default Docker image here to download</p></td>
     </tr>
     <tr>
-      <th>dockerfile</th>
-      <td><p>If template is <code>builder</code> the Dockerfile to run on startup</p></td>
-    </tr>
-    <tr>
-      <th>build_name</th>
-      <td><p>The name of the build</p></td>
-    </tr>
-    <tr>
       <th>image_family</th>
-      <td><p>An image-family.  It must come from the <code>google-containers</code> family.</p></td>
+      <td><p>An image-family.  It must come from the <code>cos-cloud</code> family.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></p></td>
-    </tr>
-    <tr>
-      <th>image_name</th>
-      <td><p>If template is <code>builder</code> or <code>dynamic</code>, the name of Docker image</p></td>
+      <td><p>Arguments passed on to <code>gce_vm_container</code></p><dl class='dl-horizontal'>
+  <dt>file</dt><dd><p>file location of a cloud-init file. One of <code>file</code> or <code>cloud_init</code> must be supplied</p></dd>
+  <dt>cloud_init</dt><dd><p>contents of a cloud-init file, for example read via <code>readChar(file, nchars = 32768)</code></p></dd>
+  <dt>image_family</dt><dd><p>An image-family.  It must come from the <code>google-containers</code> family.</p></dd>
+</dl></td>
     </tr>
     </table>
     
@@ -179,11 +170,11 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Templates available are:</p><ul>
-<li><p>rstudio An RStudio server docker image</p></li>
-<li><p>rstudio-hadleyverse RStudio with the tidyverse installed</p></li>
+<li><p>rstudio An RStudio server docker image with tidyverse and devtools</p></li>
 <li><p>shiny A Shiny docker image</p></li>
 <li><p>opencpu An OpenCPU docker image</p></li>
 <li><p>r_base Latest version of R stable</p></li>
+<li><p>ropensci RStudio and tidyverse with all ropensci packages on CRAN and Github</p></li>
 <li><p>example A non-R test container running busybox</p></li>
 <li><p>dynamic Supply your own docker image to download such as <code>rocker/verse</code></p></li>
 </ul><p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 

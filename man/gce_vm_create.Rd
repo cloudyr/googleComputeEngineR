@@ -96,6 +96,14 @@ To create an instance you need to specify:
  
  If you want to not have an external IP then modify the instance afterwards
 }
+\section{Preemptible VMS}{
+ 
+
+ You can set \href{https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance}[preemptible] VMs by passing this in the \code{scheduling} arguments: \code{scheduling = list(preemptible = TRUE)}
+ 
+This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.
+}
+
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 }
