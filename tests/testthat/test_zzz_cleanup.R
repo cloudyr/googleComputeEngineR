@@ -1,6 +1,3 @@
-library(googleAuthR)
-options(googleAuthR.cache_package = "googleAnalyticsR")
-gar_cache_set_loc("mock")
 
 ## forced to do thsi dependent on another file as need to avoid timeouts
 context("Clean up test VMs")

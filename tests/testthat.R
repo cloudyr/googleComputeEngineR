@@ -1,4 +1,6 @@
 library(testthat)
+library(googleAuthR)
 library(googleComputeEngineR)
-
+gar_setup_cache("googleComputeEngineR", location = "mock")
+options(googleAuthR.verbose = 2)
 test_check("googleComputeEngineR")

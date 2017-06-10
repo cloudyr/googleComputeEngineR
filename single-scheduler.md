@@ -1,0 +1,211 @@
+---
+title: "Scheduled RStudio"
+author: "Mark Edmondson"
+date: "2017-06-10"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Scheduled RStudio}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+See also scheduling via a [master/slave cluster](scheduled-rscripts.html)
+
+# RStudio server + scheduler
+
+This workflow demonstrates how you can take advantage of premade `Docker` images.  `googleComputeEngineR` has created custom images that have been built using Google Container Registry build triggers and made public, which you can use. 
+
+## TL;DR
+
+Run this, and you get an RStudio server instance running with `cronR`, the `tidyverse`and `googleAnalyticsR` etc. running on it:
+
+
+```r
+library(googleComputeEngineR)
+## set up and authenticate etc...
+
+## get tag name of public pre-made image
+tag <- gce_tag_container("google-auth-r-cron-tidy", project = "gcer-public")
+
+## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
+vm <- gce_vm("rstudio-cron-googleauthr", 
+              predefined_type = "n1-standard-1",
+              template = "rstudio", 
+              dynamic_image = tag, 
+              username = "mark", 
+              password = "mark1234")
+``` 
+
+## How to customise your own RStudio Server
+
+Using `Dockerfiles` is recommended if you are making a lot of changes to a template, as its a lot easier to keep track on what is happening.
+
+In summary, these were the steps I took:
+
+1. Construct a `Dockerfile` in a folder with any other files or dependencies, such as cron
+2. Use `docker_build()` or [Google Container build triggers](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers) to build and save your custom Docker image
+3. Launch a VM using the `dynamic_image` argument to load from the custom image
+4. Schedule a script to download from Google Analytics, send an email and upload to BigQuery
+
+You can modify this with your own `Dockerfile` to use your own custom packages, libraries etc. and load up to your own private Container Registry, that comes with every Google Cloud project.  
+
+### Construct a *Dockerfile*
+
+The `Dockerfile` used here is shown below, which you could base your own upon.  Read up on [Dockerfile's here](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/). 
+
+This one installs `cron` for scheduling, and `nano` a simple text editor. It then also installs some libraries needed for my scheduled scripts:
+
+* `googleAuthR` - google authentication
+* `shinyFiles` - for cron jobs
+* `googleCloudStorageR` - for uploading to Google Cloud Storage
+* `bigQueryR` - for uploading to BigQuery
+* `gmailR` - an email R package 
+* `googleAnalyticsR` - for downloading Google Analytics data
+* `bnosac/cronR` - to help with creating cron jobs within RStudio. 
+
+
+```sh
+FROM rocker/tidyverse
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install cron and R package dependencies
+RUN apt-get update && apt-get install -y \
+    cron \
+    nano \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install packages from CRAN
+RUN install2.r --error \ 
+    -r 'http://cran.rstudio.com' \
+    googleAuthR shinyFiles googleCloudStorageR bigQueryR gmailr googleAnalyticsR \
+    ## install Github packages
+    && Rscript -e "devtools::install_github(c('bnosac/cronR'))" \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+
+## Start cron
+RUN sudo service cron start
+
+```
+
+### Create a Container Registry build trigger
+
+A build trigger was then created following the [guide here](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers).
+
+In this case, the GitHub repository used was `googleComputeEngineR`'s own, and the `inst/dockerfiles/hadleyverse-crontab` pointed at to watch for building the images. The image was saved under the name `google-auth-r-cron-tidy` and (optionally) made public via [this procedure](https://cloud.google.com/container-registry/docs/access-control). 
+
+* Make sure the build tags are all lowercase-or-hypens
+* Add the `latest` tag to the name to ensure it can be pulled upon VM launch
+
+Push to the GitHub repository and you should start to see the image being built in the [build history section](https://console.cloud.google.com/gcr/builds).  If there are any problems you can click through to the log and modify your Dockerfile as needed.  It also works with `cloud-config` files if you are looking to set up the VM beyond a `Dockerfile`. 
+
+### Launch a VM to run your custom image
+
+Once built, you can now launch instances using the constructed image.  
+
+In this case the image project is different from the project the VM is created in, so the project needs specifing in the `gce_tag_container` call. 
+
+```r
+## get tag name of public pre-made image
+tag <- gce_tag_container("hadleyverse-crontab", project = "gcer-public")
+
+## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
+vm2 <- gce_vm("rstudio-cron-googleauthr", 
+              predefined_type = "n1-standard-1",
+              template = "rstudio", 
+              dynamic_image = tag, 
+              username = "mark", 
+              password = "mark1234")
+``` 
+
+You can also use your custom image to create further `Dockerfiles` that use it as a dependency, using `gce_tag_container()` to get its correct name. 
+
+### A demo script
+
+A demo script for scheduling is below.  
+
+It is not recommended to put critical data within a Docker contianer, as it can be destroyed if the container crashes.  Instead, call dedicated data stores such as BigQuery or Cloud Storage, which as you are using Google Compute Engine you already have access to under the same project. 
+
+ In summary the script below:
+ 
+ 1. Downloads data from Google Analytics
+ 2. Uploads the data to BigQuery
+ 3. Uploads the data to Google Cloud Storage
+ 3. Sends an email giving the daily total
+ 
+Log into your RStudio Server instance and create the following script:
+
+```r
+library(googleCloudStorageR)
+library(bigQueryR)
+library(gmailr)
+library(googleAnalyticsR)
+
+## set options for authentication
+options(googleAuthR.client_id = XXXXX)
+options(googleAuthR.client_secret = XXXX)
+options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/cloud-platform",
+                                        "https://www.googleapis.com/auth/analytics.readonly"))
+
+## authenticate
+## using service account, ensure service account email added to GA account, BigQuery user permissions set, etc.
+googleAuthR::gar_auth_service("auth.json")
+
+## get Google Analytics data
+gadata <- google_analytics_4(123456, 
+                             date_range = c(Sys.Date() - 2, Sys.Date() - 1),
+                             metrics = "sessions",
+                             dimensions = "medium",
+                             anti_sample = TRUE)
+
+## upload to Google BigQuery
+bqr_upload_data(projectId = "myprojectId", 
+                datasetId = "mydataset",
+                tableId = paste0("gadata_",format(Sys.Date(),"%Y%m%d")),
+                upload_data = gadata,
+                create = TRUE)
+
+## upload to Google Cloud Storage
+gcs_upload(gadata, name = paste0("gadata_",Sys.Date(),".csv"))
+
+
+## get top medium referrer
+top_ref <- paste(gadata[order(gadata$sessions, decreasing = TRUE),][1, ], collapse = ",")
+# 3456, organic
+
+## send email with todays figures
+daily_email <- mime(
+  To = "bob@myclient.com",
+  From = "bill@cool-agency.com",
+  Subject = "Todays winner is....",
+  body = paste0("Top referrer was: "),top_ref)
+send_message(daily_email)
+```
+
+Save the script within RStudio as `daily-report.R`
+
+You can then use [`cronR`](https://github.com/bnosac/cronR) to schedule the script for a daily extract.  
+
+Use `cronR`'s RStudio addin, or in the console issue:
+
+```r
+library(cronR)
+cron_add(paste0("Rscript ", normalizePath("daily-report")), frequency = "daily")
+# Adding cronjob:
+# ---------------
+#
+# ## cronR job
+# ## id:   fe9168c7543cc83c1c2489de82216c0f
+# ## tags: 
+# ## desc: 
+# 0 0 * * * Rscript /home/mark/demo-schedule.R
+```
+
+The script will then run every day.  
+
+Test the script locally and with a test schedule before using in production.  Once satisfied, you can run locally the `gce_push_registry()` again to save the RStudio image with your scehduled script embedded within. 
+
+If you want to call the scheduled data from a Shiny app, you can now fetch the data again via `bqr_query` from `bigQueryR` or `gcs_get_object` from `googleCloudStorageR` within your `server.R` to pull in the data into your app at runtime. 

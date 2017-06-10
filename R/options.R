@@ -1,5 +1,22 @@
 .onAttach <- function(libname, pkgname){
   
+  options(googleAuthR.cache_function = function(req){
+    out <- TRUE
+    content <- jsonlite::fromJSON(httr::content(req, as = "text", encoding = "UTF8"))
+    
+    ## if an operation that is not DONE
+    check_content <- all(!is.null(content$kind),
+                         content$kind == "compute#operation",
+                         content$status != "DONE")
+    check_content <- any(check_content, content$operationType == "delete")
+    
+    if(check_content){
+      out <- FALSE
+    }
+    
+    out
+  })
+  
   attempt <- try(googleAuthR::gar_attach_auto_auth("https://www.googleapis.com/auth/cloud-platform",
                                     environment_var = "GCE_AUTH_FILE",
                                     travis_environment_var = "TRAVIS_GCE_AUTH_FILE"))

@@ -1,6 +1,3 @@
-library(googleAuthR)
-options(googleAuthR.cache_package = "googleAnalyticsR")
-gar_cache_set_loc("mock")
 
 context("Futures and containers")
 
@@ -15,10 +12,6 @@ test_that("We can install a package via futures", {
   #              auth_email = "TRAVIS_GCE_AUTH_FILE")
   vm <- gce_vm("test-container-nodelete")
   
-  vm <- gce_ssh_addkeys(vm,
-                        username = "travis",
-                        key.pub = "travis-ssh-key.pub",
-                        key.private = "travis-ssh-key")
   ## install packages
   worked <- gce_future_install_packages(vm, "rocker/r-base", cran_packages = "corpcor")
   expect_true(worked)
@@ -36,11 +29,6 @@ test_that("Save docker containers", {
   skip_on_cran()
 
   vm <- gce_vm("test-container-nodelete")
-
-  vm <- gce_ssh_addkeys(vm,
-                        username = "travis",
-                        key.pub = "travis-ssh-key.pub",
-                        key.private = "travis-ssh-key")
   
   ## saves the running my-rstudio image that is named rstudio
   ## commits and saves it to container registry as travis-test-container
@@ -59,11 +47,6 @@ test_that("Load docker containers", {
   skip_on_cran()
 
   vm <- gce_vm("test-container-nodelete")
-  
-  vm <- gce_ssh_addkeys(vm,
-                        username = "travis",
-                        key.pub = "travis-ssh-key.pub",
-                        key.private = "travis-ssh-key")
 
   ## loads and runs an rstudio template from my projects container registry
   worked <- gce_pull_registry(vm,
