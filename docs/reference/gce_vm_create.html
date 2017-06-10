@@ -84,6 +84,9 @@
     <li>
       <a href="../articles/scheduled-rscripts.html">Scheduled cron master/slave</a>
     </li>
+    <li>
+      <a href="../articles/massive-parallel.html">Massive parallel computing</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -192,7 +195,7 @@
     </tr>
     <tr>
       <th>scheduling</th>
-      <td><p>Scheduling options for this instance</p></td>
+      <td><p>Scheduling options for this instance, such as preemptible instances</p></td>
     </tr>
     <tr>
       <th>serviceAccounts</th>
@@ -261,7 +264,7 @@
     <h2 class="hasAnchor" id="preemptible-vms"><a class="anchor" href="#preemptible-vms"></a>Preemptible VMS</h2>
 
     <p></p>
-<p>You can set <a href = 'https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance'>[preemptible] VMs by passing this in the </a><code>scheduling</code> arguments: <code>scheduling = list(preemptible = TRUE)</code>
+<p>You can set <a href = 'https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance'>preemptible</a> VMs by passing this in the <code>scheduling</code> arguments <code>scheduling = list(preemptible = TRUE)</code>
     This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>

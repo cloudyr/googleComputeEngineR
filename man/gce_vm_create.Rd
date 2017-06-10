@@ -41,7 +41,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
 
 \item{metadata}{A named list of metadata key/value pairs assigned to this instance}
 
-\item{scheduling}{Scheduling options for this instance}
+\item{scheduling}{Scheduling options for this instance, such as preemptible instances}
 
 \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
 
@@ -99,7 +99,7 @@ To create an instance you need to specify:
 \section{Preemptible VMS}{
  
 
- You can set \href{https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance}[preemptible] VMs by passing this in the \code{scheduling} arguments: \code{scheduling = list(preemptible = TRUE)}
+You can set \href{https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance}{preemptible} VMs by passing this in the \code{scheduling} arguments \code{scheduling = list(preemptible = TRUE)}
  
 This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.
 }

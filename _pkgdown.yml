@@ -26,6 +26,8 @@ navbar:
         href: articles/opencpu-api-server.html
       - text: "Scheduled cron master/slave"
         href: articles/scheduled-rscripts.html
+      - text: "Massive parallel computing"
+        href: articles/massive-parallel.html
     - text: "Help"
       menu:
       - text: "Reference"

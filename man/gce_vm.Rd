@@ -30,7 +30,7 @@ gce_vm(name, ..., project = gce_get_global_project(),
   \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}
   \item{description}{An optional description of this resource}
   \item{metadata}{A named list of metadata key/value pairs assigned to this instance}
-  \item{scheduling}{Scheduling options for this instance}
+  \item{scheduling}{Scheduling options for this instance, such as preemptible instances}
   \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
   \item{tags}{A list of tags to apply to this instance}
   \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}

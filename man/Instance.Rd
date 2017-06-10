@@ -24,7 +24,7 @@ Instance(name = NULL, machineType = NULL, canIpForward = NULL,
 
 \item{networkInterfaces}{An array of configurations for this interface}
 
-\item{scheduling}{Scheduling options for this instance}
+\item{scheduling}{Scheduling options for this instance, such as preemptible instances}
 
 \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
 

@@ -1,3 +1,7 @@
+library(googleAuthR)
+options(googleAuthR.cache_package = "googleAnalyticsR")
+gar_cache_set_loc("mock")
+
 context("Images")
 
 test_that("We can list images", {

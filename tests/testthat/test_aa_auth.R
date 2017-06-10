@@ -1,4 +1,6 @@
-
+library(googleAuthR)
+options(googleAuthR.cache_package = "googleAnalyticsR")
+gar_cache_set_loc("mock")
 context("Auth")
 
 test_that("We can login", {
