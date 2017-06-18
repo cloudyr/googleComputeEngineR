@@ -42,9 +42,9 @@ articles:
     desc: >
       Articles on how to work with googleComputeEngine features are below.
     contents: 
-      - installation-and-authentication
-      - creating-vms
-      - docker-ssh-futures
+      - "installation-and-authentication"
+      - "creating-vms"
+      - "docker-ssh-futures"
 reference:
   - title: "Authentication"
     contents:

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns the specified image. — gce_get_image • googleComputeEngineR</title>
+<title>Schedule a script upon a VM — gce_schedule_build_script • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -122,41 +122,35 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns the specified image.</h1>
+    <h1>Schedule a script upon a VM</h1>
     </div>
 
     
-    <p>Returns the specified image.</p>
+    <p>Utility function to start a VM, upload your script and set it up on a schedule</p>
     
 
-    <pre class="usage"><span class='fu'>gce_get_image</span>(<span class='no'>image_project</span>, <span class='no'>image</span>)</pre>
+    <pre class="usage"><span class='fu'>gce_schedule_build_script</span>(<span class='no'>script</span>, <span class='no'>vm</span>, <span class='no'>schedule</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>image_project</th>
-      <td><p>Project ID of where the image lies</p></td>
+      <th>script</th>
+      <td><p>The script to schedule</p></td>
     </tr>
     <tr>
-      <th>image</th>
-      <td><p>Name of the image resource to return</p></td>
+      <th>vm</th>
+      <td><p>A VM object to schedule the script upon</p></td>
+    </tr>
+    <tr>
+      <th>schedule</th>
+      <td><p>The schedule you want to run via cron</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments pass to <code>containeRit::dockerfile</code></p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Authentication scopes used by this function are:</p><ul>
-<li><p>https://www.googleapis.com/auth/cloud-platform</p></li>
-<li><p>https://www.googleapis.com/auth/compute</p></li>
-<li><p>https://www.googleapis.com/auth/compute.readonly</p></li>
-</ul>
-    <p>You may want to use <a href='gce_get_image_family.html'>gce_get_image_family</a> instead to ensure the most up to date image is used.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p><a href = 'https://cloud.google.com/compute/docs/images'>Google
-  Documentation</a></p>
     
 
   </div>
@@ -164,11 +158,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
