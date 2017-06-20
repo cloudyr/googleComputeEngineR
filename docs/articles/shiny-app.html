@@ -102,7 +102,7 @@
       <h1>Shiny App</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-06-18</h4>
+            <h4 class="date">2017-06-20</h4>
           </div>
 
     
@@ -116,19 +116,22 @@
 <p>In summary:</p>
 <ol style="list-style-type: decimal">
 <li>Create a Dockerfile including copying the Shiny app into the Docker image</li>
-<li>Use build triggers or <code>docker_build</code> to create and push your Shiny image to Google container registry</li>
+<li>Use build triggers or <code><a href="../reference/docker_build.html">docker_build()</a></code> to create and push your Shiny image to Google container registry</li>
 <li>Start up a Shiny templated Google Compute Engine VM calling your custom Shiny image</li>
 <li>Enjoy your Shiny app</li>
 </ol>
-<p>Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.<br>
-### Google Container Registry - Build Triggers</p>
+<p>Once built, you can deploy straight from the Container Registry, so not necessarily needing steps 1 and 2.</p>
+<div id="google-container-registry---build-triggers" class="section level3">
+<h3 class="hasAnchor">
+<a href="#google-container-registry---build-triggers" class="anchor"></a>Google Container Registry - Build Triggers</h3>
 <p>You can use build triggers from <a href="https://cloud.google.com/container-registry/">Google Container Registry</a> to build the docker image.</p>
-<p>This is typically done by pushing up to a GitHub repository with your Dockerfile, which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>. You can then call this docker image directly using <code>gce_shiny_addapp</code>.</p>
+<p>This is typically done by pushing up to a GitHub repository with your Dockerfile, which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>. You can then construct the name of this docker image directly using <code>gce_tag_container</code>, for use in a Shiny templated <code>gce_vm</code> call.</p>
+</div>
 <div id="create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="anchor"></a>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h2>
-<p>The <code>Dockerfile</code> also includes a <code>COPY</code> command to copy necessary Shiny <code>ui.R</code> and <code>server.R</code> files into the Docker image.</p>
-<p>The Shiny app used is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("shiny-googleAuthRdemo")</a></code></p>
+<p>The <code>Dockerfile</code> includes a <code>COPY</code> command to copy necessary Shiny files such as <code>ui.R</code> and <code>server.R</code> into the Docker image.</p>
+<p>The Shiny app example below is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("shiny-googleAuthRdemo")</a></code></p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> rocker/shiny
 <span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
 
@@ -144,17 +147,50 @@
 <span class="kw">RUN</span> install2.r --error <span class="dt">\ </span>
     <span class="kw">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
     googleAuthR \
+    <span class="kw">&amp;&amp;</span> <span class="kw">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \
     <span class="co">## clean up</span>
     <span class="kw">&amp;&amp;</span> <span class="kw">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 <span class="co">## assume shiny app is in build folder /shiny</span>
 <span class="kw">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
-<p>Note the <code>COPY</code> command at the end - this copies from a folder in the same location as the <code>Dockerfile</code>. and then places it in the <code>/srv/shiny-server/</code> folder which is the default location for Shiny apps - this location means that the Shiny app will be avialable at <code>your.ip.addr.ess/myapp/</code></p>
-<p>We also install <code>googleAuthR</code> from CRAN, and a Debian dependency for <code>googleAuthR</code> that is needed, <code>libssl-dev</code> via <code>apt-get</code>.</p>
+<p>The <code>COPY</code> command copies from a folder in the same location as the <code>Dockerfile</code>, and then places it within the <code>/srv/shiny-server/</code> folder which is the default location for Shiny apps. This location means that the Shiny app will be avialable at <code>xxx.xxx.xxx.xxx/myapp/</code></p>
+<p>The example Dockerfile above installs <code>googleAuthR</code> from CRAN, <code>googleID</code> from GitHub and a Debian dependency for <code>googleAuthR</code> that is needed, <code>libssl-dev</code> via <code>apt-get</code>. Modify this for your own needs.</p>
+<div id="public-docker-images" class="section level3">
+<h3 class="hasAnchor">
+<a href="#public-docker-images" class="anchor"></a>Public Docker images</h3>
+<p>The <code>FROM</code> field could be a previously made image you or someone else has already created, allowing you to layer on top. The above example is available via a public Google Continer Registry window, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
+<p>The <code>shiny-googleauthrdemo</code> is the Dockerfile above - the name for this can be created via the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+<span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</code></pre></div>
+<pre><code>## [1] "gcr.io/gcer-public/shiny-googleauthrdemo"</code></pre>
+<p>This can then be added to your Dockerfile:</p>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo
+<span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
+
+<span class="co"># install R package dependencies</span>
+<span class="kw">RUN</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="kw">apt-get</span> install -y \
+    <span class="co">##### ADD YOUR DEPENDENCIES</span>
+    <span class="co">## clean up</span>
+    <span class="kw">&amp;&amp;</span> <span class="kw">apt-get</span> clean <span class="dt">\ </span>
+    <span class="kw">&amp;&amp;</span> <span class="kw">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
+    <span class="kw">&amp;&amp;</span> <span class="kw">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+<span class="co">## Install packages from CRAN</span>
+<span class="kw">RUN</span> install2.r --error <span class="dt">\ </span>
+    <span class="kw">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
+    <span class="co">##### ADD YOUR CRAN PACKAGES</span>
+    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span>
+    <span class="co">## clean up</span>
+<span class="co">    &amp;&amp; rm -rf /tmp/downloaded_packages/ /tmp/*.rds</span>
+
+<span class="co">## copy your shiny app folder below</span>
+<span class="kw">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
+<p>Hopefully more images can be added in the future, along with community contributions. They are rebuilt every commit to the <code>googleComputeEngineR</code> GitHub repo.</p>
+</div>
 <div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="anchor"></a>Create your Shiny app and place in subfolder of your build folder</h3>
-<p>Create your Shiny app as normal, then place into a folder with this structure:</p>
+<p>Once you have the Dockerfile, place it into a folder with this structure alongside your Shiny app:</p>
 <pre><code>|
 |- /appname/
    |
@@ -162,21 +198,28 @@
    |- server.R
 | Dockerfile
 </code></pre>
-<p>The file structure for the build is then:</p>
-<pre><code>list.files(get_dockerfolder("shiny-googleAuthRdemo"), recursive = TRUE)
-# "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</code></pre>
+<p>The file structure for this build is then:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">list.files</span>(<span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
+<span class="co"># "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</span></code></pre></div>
 </div>
 </div>
 <div id="build-your-shiny-app-docker-image" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-your-shiny-app-docker-image" class="anchor"></a>Build your Shiny app Docker image</h2>
-<p>Build the image by pushing up to a GitHub repo with a set up <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build trigger</a>, or you can build locally or within a custom GCE image using <code>docker_build</code>.</p>
-<p>This may take 10mins or so, espeically if its the first layer of the image.</p>
+<p>You have a few options here:</p>
+<ul>
+<li>Build the Dockerfile image by pushing up to a GitHub repo with a set up <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build trigger</a>
+</li>
+<li>Build locally or within a custom GCE image using <code>docker_build</code>
+</li>
+<li>Use a premade Shiny app that someone else has created</li>
+</ul>
+<p>Building images may take 10mins or so, especially if its the first layer of the image.</p>
 </div>
 <div id="start-up-a-shiny-templated-google-compute-engine-vm-with-your-custom-image" class="section level2">
 <h2 class="hasAnchor">
 <a href="#start-up-a-shiny-templated-google-compute-engine-vm-with-your-custom-image" class="anchor"></a>Start up a Shiny templated Google Compute Engine VM with your custom image</h2>
-<p>Start up a Shiny templated image, which makes sure the right ports are open etc. We also add the <code>dynamic_image</code> argument pointing at the Docker image you have built in previous step.</p>
+<p>Start up a Shiny templated image, which makes sure the right ports are open etc. but also supply the <code>dynamic_image</code> argument pointing at the Docker image you have built in previous step.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM for your self-contained Shiny app
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"myapp"</span>, 
              <span class="dt">template =</span> <span class="st">"shiny"</span>,
