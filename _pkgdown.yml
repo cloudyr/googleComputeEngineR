@@ -10,8 +10,10 @@ navbar:
       href: articles/installation-and-authentication.html
     - text: "Creating VMs"
       href: articles/creating-vms.html
-    - text: "SSH & Docker"
+    - text: "SSH"
       href: articles/docker-ssh-futures.html
+    - text: "Docker"
+      href: articles/docker.html
     - text: "Examples"
       menu:
       - text: "Introduction"
@@ -30,21 +32,13 @@ navbar:
         href: articles/massive-parallel.html
     - text: "Help"
       menu:
-      - text: "Reference"
+      - text: "Function Reference"
         href: reference/index.html
       - text: "News"
         href: news/index.html
   right:
-    - text: "Google Compute Engine"
+    - text: "GCE Docs"
       href: https://cloud.google.com/compute/
-articles:
-  - title: "How-To Guides"
-    desc: >
-      Articles on how to work with googleComputeEngine features are below.
-    contents: 
-      - "installation-and-authentication"
-      - "creating-vms"
-      - "docker-ssh-futures"
 reference:
   - title: "Authentication"
     contents:

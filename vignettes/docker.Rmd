@@ -1,0 +1,166 @@
+---
+title: "Docker"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Docker}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Dockerfiles
+
+`googleComputeEngineR` has a lot of integration with [`Docker`](https://www.docker.com/), using it to launch custom pre-made images via the `gce_vm_container` and `gce_vm_template` commands. 
+
+Use `Dockerfiles` to create the VM you want to run within, including R packages you want to install.  As an example, this is a Dockerfile designed to install R packages for a Shiny app:
+
+```sh
+FROM rocker/shiny
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install packages from CRAN
+RUN install2.r --error \ 
+    -r 'http://cran.rstudio.com' \
+    googleAuthR \
+    && Rscript -e "devtools::install_github(c('MarkEdmondson1234/googleID')" \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## assume shiny app is in build folder /shiny
+COPY ./shiny/ /srv/shiny-server/myapp/
+
+```
+
+The `COPY` command copies from a folder in the same location as the `Dockerfile`, and then places it within the `/srv/shiny-server/` folder which is the default location for Shiny apps.  This location means that the Shiny app will be avialable at `xxx.xxx.xxx.xxx/myapp/`
+
+The example Dockerfile above installs `googleAuthR` from CRAN, `googleID` from GitHub and a Debian dependency for `googleAuthR` that is needed, `libssl-dev` via `apt-get`.  Modify this for your own needs. 
+
+## Google Container Registry
+
+Google Cloud comes with a [private container registry](https://cloud.google.com/container-registry/) that is available to all VMs created in the that project, where you can store docker containers.  It is distinct from the more usual Docker hosted hub, where most public Docker images sit. 
+
+You can create the correct name for a hosted image via `gce_tag_container` - by default it uses the project you are in, but change the project name if necessary, for example for the public images available:
+
+You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.
+
+## Build Triggers
+
+You can use build triggers from [Google Container Registry](https://cloud.google.com/container-registry/) to build the docker image when you push to a public or private repository. 
+
+This is typically done by pushing up to a GitHub repository with your Dockerfile, which [triggers a build](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers).  
+
+You can then construct the name of this docker image directly using `gce_tag_container`, for use in a Shiny templated `gce_vm` call.
+
+## Public Docker images
+
+The `FROM` field could be a previously made image you or someone else has already created, allowing you to layer on top.  The above example is available via a public Google Continer Registry window, made for this purpose, which you can see here: `https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public`
+
+The `shiny-googleauthrdemo` is the Dockerfile above - the name for this can be created via the `gce_tag_container()` function:
+
+```{r, message=FALSE, warning=FALSE}
+library(googleComputeEngineR)
+gce_tag_container("shiny-googleauthrdemo", project = "gcer-public")
+```
+
+This can then be added to your Dockerfile:
+
+```sh
+FROM gcr.io/gcer-public/shiny-googleauthrdemo
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+    ##### ADD YOUR DEPENDENCIES
+    ## clean up
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/ \ 
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    
+## Install packages from CRAN
+RUN install2.r --error \ 
+    -r 'http://cran.rstudio.com' \
+    ##### ADD YOUR CRAN PACKAGES
+    ##### && Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## copy your shiny app folder below
+COPY ./shiny/ /srv/shiny-server/myapp/
+```
+
+Hopefully more images can be added in the future, along with community contributions.  They are rebuilt every commit to the `googleComputeEngineR` GitHub repo. 
+
+## Saving a running container to the container registry
+
+If not building via Dockerfiles (preferred), you can save the state of a running container.
+
+For example, you may wish to install some R packages manually to an RStudio instance. Once done, then on your local machine you can save the running container to a new image on Google container registry via `gce_save_container`.
+
+This can take some time (10mins +) if its a new image. You should be able to see the image in the web UI when it is done.
+ 
+```r
+gce_save_container(vm, "my-rstudio")
+```
+
+Once saved, the new image can be used to launch new containers just like any other image.
+
+## Cloud Init
+
+If you want to customise further, the docker commands are triggered upon start up via [`cloud-init`](https://cloudinit.readthedocs.io/en/latest/) files.  
+
+These can be used to configured to do more system level commands such as starting the docker service, create users and running start up scripts.  These are accessible via the `gce_vm_container` function when you supply the `cloud_init` file. You can examine the `cloud-config` files used in `googleComputeEngineR` in this folder: 
+
+```
+system.file("cloudconfig", package = "googleComputeEngineR")
+```
+
+An example for the RStudio template is shown below.  The `%s` are replaced with metadata passed via the `gce_vm_create` function. 
+
+```sh
+#cloud-config
+
+users:
+- name: gcer
+  uid: 2000
+
+write_files:
+- path: /etc/systemd/system/rstudio.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=RStudio Server
+    Requires=docker.service
+    After=docker.service
+
+    [Service]
+    Restart=always
+    Environment="HOME=/home/gcer"
+    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStart=/usr/bin/docker run -p 80:8787 \
+                                  -e "ROOT=TRUE" \
+                                  -e "R_LIBS_USER=/library/" \
+                                  -e USER=%s -e PASSWORD=%s \
+                                  -v /home/gcer/library/:/library/ \
+                                  --name=rstudio \
+                                  %s
+    ExecStop=/usr/bin/docker stop rstudio
+    ExecStopPost=/usr/bin/docker rm rstudio
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start rstudio.service
+```

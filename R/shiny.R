@@ -82,9 +82,6 @@
 #' @export
 gce_shiny_addapp <- function(instance, app_image, dockerfolder = NULL){
   
-  .Deprecated("gce_vm_template")
-  myMessage("This function is no longer supported.  Build your Shiny app in a Dockerfile (via build triggers or docker_build(), then supply it to gce_vm_template instead", level = 3)
-  
   if(!grepl("^[a-z0-9\\-]+$", app_image)){
     stop("app_image must only be lowercase, numbers, dash only. Got ", app_image)
   }

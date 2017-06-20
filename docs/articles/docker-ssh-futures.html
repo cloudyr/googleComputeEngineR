@@ -35,7 +35,10 @@
   <a href="../articles/creating-vms.html">Creating VMs</a>
 </li>
 <li>
-  <a href="../articles/docker-ssh-futures.html">SSH &amp; Docker</a>
+  <a href="../articles/docker-ssh-futures.html">SSH</a>
+</li>
+<li>
+  <a href="../articles/docker.html">Docker</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -75,7 +78,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../reference/index.html">Reference</a>
+      <a href="../reference/index.html">Function Reference</a>
     </li>
     <li>
       <a href="../news/index.html">News</a>
@@ -85,7 +88,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://cloud.google.com/compute/">Google Compute Engine</a>
+  <a href="https://cloud.google.com/compute/">GCE Docs</a>
 </li>
       </ul>
 </div>
@@ -317,24 +320,6 @@ cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/contai
 <span class="st">               </span>deviceName       type       mode boot autoDelete
   <span class="dv">1</span> rstudio-dev-boot-disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></code></pre></div>
 </div>
-<div id="using-private-google-containers" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-private-google-containers" class="anchor"></a>Using private Google Containers</h2>
-<p>Google Cloud comes with a <a href="https://cloud.google.com/container-registry/">private container registry</a> that is available to all VMs created in the that project, where you can store docker containers.</p>
-<p>You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.</p>
-<p>Make your changes to the instance by logging in to the RStudio server at the IP provided, then this command will save it to the local registry under the name you specify.</p>
-<p>This can take some time (5mins +) if its a new container. You should be able to see the image in the web UI when it is done at <code>https://console.cloud.google.com/kubernetes/images/list</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_save_container</span>(vm, <span class="st">"my-rstudio"</span>)</code></pre></div>
-<p>The container <code>my-rstudio</code> with your changes is now saved, and can be used to launch new containers.</p>
-<p>To load onto another VM, use a Google container optimised instance with <code>image_project = "google-containers"</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st">  </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"new_instance"</span>,
-               <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>,
-               <span class="dt">image_family =</span> <span class="st">"gci-stable"</span>,
-               <span class="dt">image_project =</span> <span class="st">"google-containers"</span>)
-
-## load and run the container from previous setup
-<span class="kw">gce_load_container</span>(vm2, <span class="st">"my-rstudio"</span>)</code></pre></div>
-</div>
 <div id="futures" class="section level2">
 <h2 class="hasAnchor">
 <a href="#futures" class="anchor"></a>Futures</h2>
@@ -370,7 +355,6 @@ si %&lt;-%<span class="st"> </span><span class="kw">Sys.info</span>()
 <li><a href="#logging-in-to-your-instance">Logging in to your instance</a></li>
       <li><a href="#ssh-commands">SSH commands</a></li>
       <li><a href="#docker-commands">Docker commands</a></li>
-      <li><a href="#using-private-google-containers">Using private Google Containers</a></li>
       <li><a href="#futures">Futures</a></li>
       </ul>
 </div>
