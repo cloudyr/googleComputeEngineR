@@ -41,17 +41,18 @@
 #' 
 #' script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
 #' 
-#' ## put the script in the same working directory
+#' ## put the "schedule.R" script in the working directory
 #' file.copy(script, getwd())
 #' 
 #' ## it will run the script whilst making the dockerfile
 #' container <- dockerfile("schedule.R",
-#'                         save_image = TRUE,
-#'                         image = gce_tag_container("gcer-scheduler", project = "gcer-public"),
 #'                         copy = "script_dir",
 #'                         cmd = CMD_Rscript("schedule.R"))
 #' write(container, file = "Dockerfile")
-#' ## upload created Dockerfile to GitHub, then use a Build Trigger to create Docker image "example1"
+#' 
+#' ## upload created Dockerfile to GitHub, 
+#'   then use a Build Trigger to create Docker image "demoDockerScheduler"
+#' ## built trigger uses "demo-docker-scheduler" as must be lowercase
 #' 
 #' ## After image is built:
 #' ## Create a VM to run the schedule
@@ -60,8 +61,11 @@
 #' ## setup any SSH not on defaults
 #' vm <- gce_vm_setup(vm, username = "mark")
 #' 
-#' ## Schedule the docker_image to run every day at 0453AM
-#' gce_schedule_docker("example1", schedule = "53 4 * * *", vm = vm)
+#' ## get the name of the just built Docker image that runs your script
+#' docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
+#' 
+#' ## Schedule the docker_tag to run every day at 0453AM
+#' gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
 #' 
 #' 
 #' }

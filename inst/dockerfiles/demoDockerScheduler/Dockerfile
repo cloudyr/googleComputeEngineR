@@ -8,5 +8,4 @@ RUN ["install2.r", "-r 'https://cloud.r-project.org'", "googleCloudStorageR", "g
 RUN ["installGithub.r", "hadley/rlang@c351186"]
 WORKDIR /payload/
 COPY [".", "./"]
-COPY ["./.RData", "./"]
-CMD ["R", "--vanilla", "-f", "scheduleR"]
+CMD ["R", "--vanilla", "-f", "schedule.R"]
