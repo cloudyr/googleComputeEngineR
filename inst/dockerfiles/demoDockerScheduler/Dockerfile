@@ -14,5 +14,5 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 RUN ["install2.r", "-r 'https://cloud.r-project.org'", "googleCloudStorageR", "googleAuthR", "Rcpp", "assertthat", "digest", "crayon", "withr", "mime", "R6", "jsonlite", "xtable", "magrittr", "httr", "curl", "testthat", "devtools", "readr", "hms", "shiny", "httpuv", "memoise", "htmltools", "openssl", "tibble", "remotes"]
 RUN ["installGithub.r", "hadley/rlang@c351186"]
 WORKDIR /payload/
-COPY ["gineR/schedulescripts", "gineR/schedulescripts/"]
+COPY [".", "./"]
 CMD ["R", "--vanilla", "-f", "schedule.R"]
