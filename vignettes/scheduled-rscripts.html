@@ -12,9 +12,9 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-06-04" />
+<meta name="date" content="2017-06-23" />
 
-<title>Scheduled R scripts on Master and Slave Google Compute Engine VMs</title>
+<title>Scheduled R scripts on Google Compute Engine</title>
 
 
 
@@ -68,12 +68,99 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Scheduled R scripts on Master and Slave Google Compute Engine VMs</h1>
+<h1 class="title toc-ignore">Scheduled R scripts on Google Compute Engine</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-06-04</em></h4>
+<h4 class="date"><em>2017-06-23</em></h4>
 
 
 
+<div id="simple-scheduler" class="section level1">
+<h1>Simple Scheduler</h1>
+<p>The below lets you send any of your R scripts to a dedicated VM. It takes advantage of <a href="https://github.com/o2r-project/containerit">containeRit</a> to bundle up all the dependencies your R script may need.</p>
+<p>In brief you need to:</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>containeRit</code> to create a Dockerfile that will run your R script with all its dependencies</li>
+<li>Build a Docker image using that Dockerfile, easiest is via GitHub and <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a></li>
+<li>Launch a VM that will run your scheduled scripts - keep this live</li>
+<li>Fetch that VM via <code>gce_vm_scheduler</code></li>
+<li>Set up the scheduled cron for the Docker image using <code>gce_schedule_docker</code></li>
+</ol>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>The example below uses a script that comes with the package, that you can use as a template.</p>
+<p>The demo script is below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleAuthR)         ## authentication
+<span class="kw">library</span>(googleCloudStorageR) ## google cloud storage
+
+## set authentication details for non-cloud services
+<span class="co"># options(googleAuthR.scopes.selected = &quot;XXX&quot;,</span>
+<span class="co">#         googleAuthR.client_id = &quot;&quot;,</span>
+<span class="co">#         googleAuthR.client_secret = &quot;&quot;)</span>
+
+## download or do something
+something &lt;-<span class="st"> </span><span class="kw">tryCatch</span>({
+    <span class="kw">gcs_get_object</span>(<span class="st">&quot;schedule/test.csv&quot;</span>, 
+                   <span class="dt">bucket =</span> <span class="st">&quot;mark-edmondson-public-files&quot;</span>)
+  }, <span class="dt">error =</span> function(ex) {
+    <span class="ot">NULL</span>
+  })
+    
+something_else &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">X1 =</span> <span class="dv">1</span>,
+                             <span class="dt">time =</span> <span class="kw">Sys.time</span>(), 
+                             <span class="dt">blah =</span> <span class="kw">paste</span>(<span class="kw">sample</span>(letters, <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">collapse =</span> <span class="st">&quot;&quot;</span>))
+something &lt;-<span class="st"> </span><span class="kw">rbind</span>(something, something_else)
+
+## authenticate on GCE for google cloud services
+googleAuthR::<span class="kw">gar_gce_auth</span>()
+
+tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">fileext =</span> <span class="st">&quot;.csv&quot;</span>)
+<span class="kw">on.exit</span>(<span class="kw">unlink</span>(tmp))
+<span class="kw">write.csv</span>(something, <span class="dt">file =</span> tmp, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)
+## upload something
+<span class="kw">gcs_upload</span>(tmp, 
+           <span class="dt">bucket =</span> <span class="st">&quot;mark-edmondson-public-files&quot;</span>, 
+           <span class="dt">name =</span> <span class="st">&quot;schedule/test.csv&quot;</span>)</code></pre></div>
+<p>The above script can then be scheduled via:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">require</span>(containeRit)){
+  devtools::<span class="kw">install_github</span>(<span class="st">&quot;o2r-project/containerit&quot;</span>)
+  <span class="kw">library</span>(containeRit)
+}
+
+script &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;schedulescripts&quot;</span>, <span class="st">&quot;schedule.R&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;googleComputeEngineR&quot;</span>)
+
+## put the &quot;schedule.R&quot; script in the working directory
+<span class="kw">file.copy</span>(script, <span class="kw">getwd</span>())
+
+
+## it will run the script whilst making the dockerfile
+container &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(<span class="st">&quot;schedule.R&quot;</span>,
+                        <span class="dt">copy =</span> <span class="st">&quot;script_dir&quot;</span>,
+                        <span class="dt">cmd =</span> <span class="kw">CMD_Rscript</span>(<span class="st">&quot;schedule.R&quot;</span>),
+                        <span class="dt">soft =</span> <span class="ot">TRUE</span>)
+<span class="kw">write</span>(container, <span class="dt">file =</span> <span class="st">&quot;Dockerfile&quot;</span>)
+
+## upload created Dockerfile to GitHub, 
+  then use a Build Trigger to create Docker image <span class="st">&quot;demoDockerScheduler&quot;</span>
+## built trigger uses &quot;demo-docker-scheduler&quot; as must be lowercase
+
+## After image is built:
+## Create a VM to run the schedule
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm_scheduler</span>(<span class="st">&quot;my_scheduler&quot;</span>)
+
+## setup any SSH not on defaults
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm_setup</span>(vm, <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>)
+
+## get the name of the just built Docker image that runs your script
+docker_tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;demo-docker-scheduler&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;gcer-public&quot;</span>)
+
+## Schedule the docker_tag to run every day at 0453AM
+<span class="kw">gce_schedule_docker</span>(docker_tag, <span class="dt">schedule =</span> <span class="st">&quot;53 4 * * *&quot;</span>, <span class="dt">vm =</span> vm)</code></pre></div>
+<p>The dockerfile need not be an R related one, any Docker image can be scheduled using <code>gce_schedule_docker</code></p>
+</div>
+</div>
+<div id="master-slave-scheduler" class="section level1">
+<h1>Master-Slave Scheduler</h1>
+<p>For bigger jobs or more seperation, you can launch entire VMs dedicated for your scheduled task. This lets you tailor the VM individually.</p>
 <div id="costs" class="section level2">
 <h2>Costs</h2>
 <p>$4.09 a month for the master + $1.52 a month per slave (daily 30 min cron job on a 7.5GB RAW instance).</p>
@@ -198,6 +285,7 @@ out &lt;-<span class="st"> </span><span class="kw">docker_cmd</span>(vm,
 <div id="add-worker-script-to-cron" class="section level2">
 <h2>Add worker script to cron</h2>
 <p>Log in to the master VM and save the script, then schedule it via the <a href="https://github.com/bnosac/cronR"><code>cronR</code> RStudio addin</a>.</p>
+</div>
 </div>
 
 

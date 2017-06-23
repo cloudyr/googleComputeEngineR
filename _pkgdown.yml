@@ -26,7 +26,7 @@ navbar:
         href: articles/shiny-app.html
       - text: "OpenCPU R API"
         href: articles/opencpu-api-server.html
-      - text: "Scheduled cron master/slave"
+      - text: "Scheduled R scripts"
         href: articles/scheduled-rscripts.html
       - text: "Massive parallel computing"
         href: articles/massive-parallel.html
@@ -60,6 +60,9 @@ reference:
       - gce_vm_reset
       - gce_vm_delete
       - gce_get_external_ip
+  - title: "Scheduling helpers"
+    contents:
+      - matches("schedule")
   - title: "VM Templates, Docker images and containers"
     contents:
       - matches("container")

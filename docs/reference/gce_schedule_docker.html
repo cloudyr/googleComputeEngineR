@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check GPU installed ok — gce_check_gpu • googleComputeEngineR</title>
+<title>Schedule running a docker image upon a VM — gce_schedule_docker • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -125,35 +125,107 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check GPU installed ok</h1>
+    <h1>Schedule running a docker image upon a VM</h1>
     </div>
 
     
-    <p>Check GPU installed ok</p>
+    <p>Utility function to start a VM to run a docker container on a schedule.  
+You will need to create and build the Dockerfile first.</p>
     
 
-    <pre class="usage"><span class='fu'>gce_check_gpu</span>(<span class='no'>vm</span>)</pre>
+    <pre class="usage"><span class='fu'>gce_schedule_docker</span>(<span class='no'>docker_image</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='st'>"53 4 * * *"</span>,
+  <span class='kw'>vm</span> <span class='kw'>=</span> <span class='fu'><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></span>(), <span class='kw'>cronfile</span> <span class='kw'>=</span> <span class='st'>"crontab.out"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>docker_image</th>
+      <td><p>the hosted docker image to run on a schedule</p></td>
+    </tr>
+    <tr>
+      <th>schedule</th>
+      <td><p>The schedule you want to run via cron</p></td>
+    </tr>
+    <tr>
       <th>vm</th>
-      <td><p>The instance to check</p></td>
+      <td><p>A VM object to schedule the script upon that you can SSH into</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The NVIDIA-SMI output via ssh</p>
+    <p>The crontab schedule of the VM including your script</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>You may need to run <a href='gce_vm_scheduler.html'>gce_vm_scheduler</a> yourself first and then set 
+  up SSH details if not defaults, to pass to argument <code>vm</code></p>
+<p>You can create a Dockerfile with your R script installed by 
+  running it through <code>containeRit::dockerfile</code>.  It also takes care of any dependencies.
+    It is recommended to create a script that is self contained in output and input, 
+e.g. don't save files to the VM, instead upload or download any files 
+from Google Cloud Storage via authentication via <code>googleAuthR::gar_gce_auth()</code> 
+then downloading and uploading data using <code>library(googleCloudStorageR)</code> or similar.</p>
+<p>Once the script is working locally, build it and upload to a repository 
+  so it can be reached via argument <code>docker_image</code></p>
+<p>You can build via Google cloud repository build triggers, 
+  in which case the name can be created via <a href='gce_tag_container.html'>gce_tag_container</a>
+or build via <a href='docker_build.html'>docker_build</a> to build on another VM or locally, 
+then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</a>
+    Any Docker image can be run, it doesn't have to be an R one.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href = 'https://cloud.google.com/compute/docs/gpus/add-gpus#verify-driver-install'>https://cloud.google.com/compute/docs/gpus/add-gpus#verify-driver-install</a></p>
-<p>Other GPU instances: <code><a href='gce_list_gpus.html'>gce_list_gpus</a></code>,
-  <code><a href='gce_vm_gpu.html'>gce_vm_gpu</a></code></p>
+    <p>Other scheduler functions: <code><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></code></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+not_run({
+  # create a Dockerfile of your script
+  if(!require(containeRit)){
+    devtools::install_github("o2r-project/containerit")
+    library(containeRit)
+  }
+  
+  script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
+  
+  ## put the "schedule.R" script in the working directory
+  file.copy(script, getwd())
+  
+  
+  ## it will run the script whilst making the dockerfile
+  container <- dockerfile("schedule.R",
+                          copy = "script_dir",
+                          cmd = CMD_Rscript("schedule.R"),
+                          soft = TRUE)
+  write(container, file = "Dockerfile")
+  
+  ## upload created Dockerfile to GitHub, 
+    then use a Build Trigger to create Docker image "demoDockerScheduler"
+  ## built trigger uses "demo-docker-scheduler" as must be lowercase
+  
+  ## After image is built:
+  ## Create a VM to run the schedule
+  vm <- gce_vm_scheduler("my_scheduler")
+  
+  ## setup any SSH not on defaults
+  vm <- gce_vm_setup(vm, username = "mark")
+  
+  ## get the name of the just built Docker image that runs your script
+  docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
+  
+  ## Schedule the docker_tag to run every day at 0453AM
+  gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
+  
+  
+})
+
+</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:23:10: unexpected symbol</span>
+#&gt; <span class='error'>22:   ## upload created Dockerfile to GitHub, </span>
+#&gt; <span class='error'>23:     then use</span>
+#&gt; <span class='error'>             ^</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -162,8 +234,12 @@
       
       <li><a href="#value">Value</a></li>
 
+      <li><a href="#details">Details</a></li>
+
       <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -13,6 +13,7 @@
 - Add GPU functions
 - Migrate to use `system2` instead of `system` for cross-platform SSH (#35)
 - `gce_shiny_addapp` is now much more useful
+- Add `gce_schedule_docker` and `gce_vm_scheduler` for easy Dockerfile scheduling
 
 # googleComputeEngineR 0.1.0
 

@@ -1,5 +1,5 @@
 ---
-title: "Scheduled R scripts on Master and Slave Google Compute Engine VMs"
+title: "Scheduled R scripts on Google Compute Engine"
 author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -12,6 +12,103 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+# Simple Scheduler
+
+The below lets you send any of your R scripts to a dedicated VM.  It takes advantage of [containeRit](https://github.com/o2r-project/containerit) to bundle up all the dependencies your R script may need.
+
+In brief you need to:
+
+1. Use `containeRit` to create a Dockerfile that will run your R script with all its dependencies
+2. Build a Docker image using that Dockerfile, easiest is via GitHub and [Build Triggers](https://cloud.google.com/container-builder/docs/how-to/build-triggers)
+3. Launch a VM that will run your scheduled scripts - keep this live
+4. Fetch that VM via `gce_vm_scheduler`
+5. Set up the scheduled cron for the Docker image using `gce_schedule_docker`
+
+## Example
+
+The example below uses a script that comes with the package, that you can use as a template. 
+
+The demo script is below:
+
+```r
+library(googleAuthR)         ## authentication
+library(googleCloudStorageR) ## google cloud storage
+
+## set authentication details for non-cloud services
+# options(googleAuthR.scopes.selected = "XXX",
+#         googleAuthR.client_id = "",
+#         googleAuthR.client_secret = "")
+
+## download or do something
+something <- tryCatch({
+    gcs_get_object("schedule/test.csv", 
+                   bucket = "mark-edmondson-public-files")
+  }, error = function(ex) {
+    NULL
+  })
+    
+something_else <- data.frame(X1 = 1,
+                             time = Sys.time(), 
+                             blah = paste(sample(letters, 10, replace = TRUE), collapse = ""))
+something <- rbind(something, something_else)
+
+## authenticate on GCE for google cloud services
+googleAuthR::gar_gce_auth()
+
+tmp <- tempfile(fileext = ".csv")
+on.exit(unlink(tmp))
+write.csv(something, file = tmp, row.names = FALSE)
+## upload something
+gcs_upload(tmp, 
+           bucket = "mark-edmondson-public-files", 
+           name = "schedule/test.csv")
+```
+
+The above script can then be scheduled via:
+
+```r
+if(!require(containeRit)){
+  devtools::install_github("o2r-project/containerit")
+  library(containeRit)
+}
+
+script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
+
+## put the "schedule.R" script in the working directory
+file.copy(script, getwd())
+
+
+## it will run the script whilst making the dockerfile
+container <- dockerfile("schedule.R",
+                        copy = "script_dir",
+                        cmd = CMD_Rscript("schedule.R"),
+                        soft = TRUE)
+write(container, file = "Dockerfile")
+
+## upload created Dockerfile to GitHub, 
+  then use a Build Trigger to create Docker image "demoDockerScheduler"
+## built trigger uses "demo-docker-scheduler" as must be lowercase
+
+## After image is built:
+## Create a VM to run the schedule
+vm <- gce_vm_scheduler("my_scheduler")
+
+## setup any SSH not on defaults
+vm <- gce_vm_setup(vm, username = "mark")
+
+## get the name of the just built Docker image that runs your script
+docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
+
+## Schedule the docker_tag to run every day at 0453AM
+gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
+```
+
+The dockerfile need not be an R related one, any Docker image can be scheduled using `gce_schedule_docker`
+
+# Master-Slave Scheduler
+
+For bigger jobs or more seperation, you can launch entire VMs dedicated for your scheduled task.  This lets you tailor the VM individually.
 
 ## Costs
 
