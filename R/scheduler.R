@@ -44,10 +44,12 @@
 #' ## put the "schedule.R" script in the working directory
 #' file.copy(script, getwd())
 #' 
+#' 
 #' ## it will run the script whilst making the dockerfile
 #' container <- dockerfile("schedule.R",
 #'                         copy = "script_dir",
-#'                         cmd = CMD_Rscript("schedule.R"))
+#'                         cmd = CMD_Rscript("schedule.R"),
+#'                         soft = TRUE)
 #' write(container, file = "Dockerfile")
 #' 
 #' ## upload created Dockerfile to GitHub, 
