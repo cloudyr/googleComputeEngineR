@@ -100,7 +100,7 @@ This creates the Docker image for you on every GitHub push, and makes it availab
 
 The example does this via this public [Container Registry](https://console.cloud.google.com/gcr/triggers?project=gcer-public) service created for `googleComputeEngineR` and has the above scripts at `"demo-docker-scheduler"`
 
-After the image has built, you can call it to be called via a scheduled CRON task via the new dedicated function, `gce_vm_scheduler` and `gce_schedule_docker`
+After the image has built, you can schdule it to be called via a `crontab` task via the new dedicated functions, `gce_vm_scheduler` and `gce_schedule_docker`
 
 ```r
 ## Create a VM to run the schedule
@@ -113,6 +113,7 @@ vm <- gce_vm_setup(vm, username = "mark")
 docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
 
 ## Schedule the docker_tag to run every day at 0453AM
+## schedule uses crontab syntax
 gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
 ```
 
