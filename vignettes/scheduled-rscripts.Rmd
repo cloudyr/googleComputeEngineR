@@ -69,7 +69,7 @@ The above script can then be scheduled via:
 
 ```r
 if(!require(containeRit)){
-  devtools::install_github("o2r-project/containerit")
+  devtools::install_github("MarkEdmondson1234/containerit") #use my fork until fix merged
   library(containeRit)
 }
 
