@@ -1,3 +1,20 @@
+## from https://github.com/hadley/httr/blob/4624451f8cc395a90730b5a10b50ba005187f2ff/R/oauth-cache.R
+add_line <- function(line, path, quiet = FALSE) {
+  if (file.exists(path)) {
+    lines <- readLines(path, warn = FALSE)
+    lines <- lines[lines != ""]
+  } else {
+    lines <- character()
+  }
+  
+  if (line %in% lines) return(TRUE)
+  if (!quiet) message("Adding ", line, " to ", path)
+  
+  lines <- c(lines, line)
+  writeLines(lines, path)
+  TRUE
+}
+
 extract_ip <- function(ii){
   vapply(ii$items$networkInterfaces, function(x) {
     y <- x$accessConfigs[[1]]$natIP
