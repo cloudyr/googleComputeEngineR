@@ -77,29 +77,39 @@
 #' @export
 gce_schedule_docker <- function(docker_image, 
                                 schedule = "53 4 * * *", 
-                                vm = gce_vm_scheduler()){
+                                vm = gce_vm_scheduler(),
+                                cronfile = "crontab.out"){
   
   assertthat::assert_that(
     assertthat::is.string(docker_image)
   )
   
   ## upload cron tab that will call a script that runs docker of the image specified
-  docker_call <- sprintf("/usr/bin/docker run %s", docker_image)
+  docker_call <- sprintf("sudo /usr/bin/docker run %s", docker_image)
   
   ## copy cron over
   #http://www.unix.com/unix-for-dummies-questions-and-answers/105785-build-crontab-text-file.html
   cron_copy <- "export backup_date=`date +20%y%m%d-%H%M%S` && \
+  mkdir -p backup && sudo chmod 777 -R backup && \
+  sudo service docker start && \
   crontab -l > backup/crontab.${backup_date} && \
   crontab -l > backup/crontab.out"
   gce_ssh(vm, cron_copy, wait = TRUE)
   tmp <- tempfile()
   on.exit(unlink(tmp))
   
-  gce_ssh_download(vm, "backup/crontab.out", tmp)
+  tryCatch({
+    gce_ssh_download(vm, "backup/crontab.out", tmp)
+  }, error = function(ex) {
+    myMessage("No existing crontab to download")
+    add_line(paste("# empty line", Sys.time()), tmp)
+  })
+             
   add_line(paste(schedule, docker_call), tmp)
   readLines(tmp)
   gce_ssh_upload(vm, tmp, "backup/crontab.out")
   new_cron <- "crontab backup/crontab.out && crontab -l"
+  # '(crontab -l 2>/dev/null; echo "*/5 * * * * /path/to/job -with args") | crontab -'
   gce_ssh(vm, new_cron, wait = TRUE)
   
 }
