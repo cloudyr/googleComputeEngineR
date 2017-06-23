@@ -81,14 +81,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ol style="list-style-type: decimal">
 <li>Use <code>containeRit</code> to create a Dockerfile that will run your R script with all its dependencies</li>
 <li>Build a Docker image using that Dockerfile, easiest is via GitHub and <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a></li>
-<li>Launch a VM that will run your scheduled scripts - keep this live</li>
-<li>Fetch that VM via <code>gce_vm_scheduler</code></li>
+<li>Launch a VM that will run your scheduled scripts with <code>gce_vm_scheduler</code> - keep this live</li>
 <li>Set up the scheduled cron for the Docker image using <code>gce_schedule_docker</code></li>
 </ol>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>The example below uses a script that comes with the package, that you can use as a template.</p>
-<p>The demo script is below:</p>
+<div id="demo-script" class="section level3">
+<h3>Demo script</h3>
+<p>A demo script is below, that may look like something you want to schedule:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleAuthR)         ## authentication
 <span class="kw">library</span>(googleCloudStorageR) ## google cloud storage
 
@@ -120,7 +121,12 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="
 <span class="kw">gcs_upload</span>(tmp, 
            <span class="dt">bucket =</span> <span class="st">&quot;mark-edmondson-public-files&quot;</span>, 
            <span class="dt">name =</span> <span class="st">&quot;schedule/test.csv&quot;</span>)</code></pre></div>
-<p>The above script can then be scheduled via:</p>
+<p>Note that its best to not save data onto the scheduler - its much better to use an external storage to load and save data to such as Google Cloud Storage.</p>
+</div>
+<div id="schedule-setup-script" class="section level3">
+<h3>Schedule setup script</h3>
+<p>The above script can then be scheduled via the below.</p>
+<p>We first create a <code>Dockerfile</code> that holds all your scripts dependencies. This is the magic of <code>containeRit</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">require</span>(containeRit)){
   devtools::<span class="kw">install_github</span>(<span class="st">&quot;MarkEdmondson1234/containerit&quot;</span>) <span class="co">#use my fork until fix merged</span>
   <span class="kw">library</span>(containeRit)
@@ -137,17 +143,15 @@ container &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(<span
                         <span class="dt">copy =</span> <span class="st">&quot;script_dir&quot;</span>,
                         <span class="dt">cmd =</span> <span class="kw">CMD_Rscript</span>(<span class="st">&quot;schedule.R&quot;</span>),
                         <span class="dt">soft =</span> <span class="ot">TRUE</span>)
-<span class="kw">write</span>(container, <span class="dt">file =</span> <span class="st">&quot;Dockerfile&quot;</span>)
-
-## upload created Dockerfile to GitHub, 
-  then use a Build Trigger to create Docker image <span class="st">&quot;demoDockerScheduler&quot;</span>
-## built trigger uses &quot;demo-docker-scheduler&quot; as must be lowercase
-
-## After image is built:
-## Create a VM to run the schedule
+<span class="kw">write</span>(container, <span class="dt">file =</span> <span class="st">&quot;Dockerfile&quot;</span>)</code></pre></div>
+<p>Now you have the Dockerfile, it can be used to create Docker images. There are several options here, including <code>docker_build</code> function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a>.</p>
+<p>This creates the Docker image for you on every GitHub push, and makes it available either publically or privately to you.</p>
+<p>The example does this via this public <a href="https://console.cloud.google.com/gcr/triggers?project=gcer-public">Container Registry</a> service created for <code>googleComputeEngineR</code> and has the above scripts at <code>&quot;demo-docker-scheduler&quot;</code></p>
+<p>After the image has built, you can call it to be called via a scheduled CRON task via the new dedicated function, <code>gce_vm_scheduler</code> and <code>gce_schedule_docker</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create a VM to run the schedule
 vm &lt;-<span class="st"> </span><span class="kw">gce_vm_scheduler</span>(<span class="st">&quot;my_scheduler&quot;</span>)
 
-## setup any SSH not on defaults
+## setup any SSH settings if not using defaults
 vm &lt;-<span class="st"> </span><span class="kw">gce_vm_setup</span>(vm, <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>)
 
 ## get the name of the just built Docker image that runs your script
@@ -155,7 +159,9 @@ docker_tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</spa
 
 ## Schedule the docker_tag to run every day at 0453AM
 <span class="kw">gce_schedule_docker</span>(docker_tag, <span class="dt">schedule =</span> <span class="st">&quot;53 4 * * *&quot;</span>, <span class="dt">vm =</span> vm)</code></pre></div>
-<p>The dockerfile need not be an R related one, any Docker image can be scheduled using <code>gce_schedule_docker</code></p>
+<p>The Docker image is now downloaded the first time, and run on the schedule (0453 AM in above example)</p>
+<p>The <code>Dockerfile</code> used need not be an R related one, any Docker image can be scheduled.</p>
+</div>
 </div>
 </div>
 <div id="master-slave-scheduler" class="section level1">

@@ -21,15 +21,16 @@ In brief you need to:
 
 1. Use `containeRit` to create a Dockerfile that will run your R script with all its dependencies
 2. Build a Docker image using that Dockerfile, easiest is via GitHub and [Build Triggers](https://cloud.google.com/container-builder/docs/how-to/build-triggers)
-3. Launch a VM that will run your scheduled scripts - keep this live
-4. Fetch that VM via `gce_vm_scheduler`
+3. Launch a VM that will run your scheduled scripts with `gce_vm_scheduler` - keep this live
 5. Set up the scheduled cron for the Docker image using `gce_schedule_docker`
 
 ## Example
 
 The example below uses a script that comes with the package, that you can use as a template. 
 
-The demo script is below:
+### Demo script
+
+A demo script is below, that may look like something you want to schedule:
 
 ```r
 library(googleAuthR)         ## authentication
@@ -65,7 +66,13 @@ gcs_upload(tmp,
            name = "schedule/test.csv")
 ```
 
-The above script can then be scheduled via:
+Note that its best to not save data onto the scheduler - its much better to use an external storage to load and save data to such as Google Cloud Storage.
+
+### Schedule setup script
+
+The above script can then be scheduled via the below.
+
+We first create a `Dockerfile` that holds all your scripts dependencies.  This is the magic of `containeRit`:
 
 ```r
 if(!require(containeRit)){
@@ -85,16 +92,21 @@ container <- dockerfile("schedule.R",
                         cmd = CMD_Rscript("schedule.R"),
                         soft = TRUE)
 write(container, file = "Dockerfile")
+```
 
-## upload created Dockerfile to GitHub, 
-  then use a Build Trigger to create Docker image "demoDockerScheduler"
-## built trigger uses "demo-docker-scheduler" as must be lowercase
+Now you have the Dockerfile, it can be used to create Docker images.  There are several options here, including `docker_build` function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, [Build Triggers](https://cloud.google.com/container-builder/docs/how-to/build-triggers).  
 
-## After image is built:
+This creates the Docker image for you on every GitHub push, and makes it available either publically or privately to you.
+
+The example does this via this public [Container Registry](https://console.cloud.google.com/gcr/triggers?project=gcer-public) service created for `googleComputeEngineR` and has the above scripts at `"demo-docker-scheduler"`
+
+After the image has built, you can call it to be called via a scheduled CRON task via the new dedicated function, `gce_vm_scheduler` and `gce_schedule_docker`
+
+```r
 ## Create a VM to run the schedule
 vm <- gce_vm_scheduler("my_scheduler")
 
-## setup any SSH not on defaults
+## setup any SSH settings if not using defaults
 vm <- gce_vm_setup(vm, username = "mark")
 
 ## get the name of the just built Docker image that runs your script
@@ -104,7 +116,9 @@ docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public"
 gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
 ```
 
-The dockerfile need not be an R related one, any Docker image can be scheduled using `gce_schedule_docker`
+The Docker image is now downloaded the first time, and run on the schedule (0453 AM in above example)
+
+The `Dockerfile` used need not be an R related one, any Docker image can be scheduled.
 
 # Master-Slave Scheduler
 
