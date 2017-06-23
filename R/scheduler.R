@@ -41,12 +41,15 @@
 #' 
 #' script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
 #' 
+#' ## put the script in the same working directory
+#' file.copy(script, getwd())
+#' 
 #' ## it will run the script whilst making the dockerfile
-#' container <- dockerfile(script,
+#' container <- dockerfile("schedule.R",
 #'                         save_image = TRUE,
 #'                         image = gce_tag_container("gcer-scheduler", project = "gcer-public"),
 #'                         copy = "script_dir",
-#'                         cmd = CMD_Rscript(basename(script)))
+#'                         cmd = CMD_Rscript("schedule.R"))
 #' write(container, file = "Dockerfile")
 #' ## upload created Dockerfile to GitHub, then use a Build Trigger to create Docker image "example1"
 #' 
