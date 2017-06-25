@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-06-23" />
+<meta name="date" content="2017-06-25" />
 
 <title>Scheduled R scripts on Google Compute Engine</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Scheduled R scripts on Google Compute Engine</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-06-23</em></h4>
+<h4 class="date"><em>2017-06-25</em></h4>
 
 
 
@@ -147,7 +147,7 @@ container &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(<span
 <p>Now you have the Dockerfile, it can be used to create Docker images. There are several options here, including <code>docker_build</code> function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a>.</p>
 <p>This creates the Docker image for you on every GitHub push, and makes it available either publically or privately to you.</p>
 <p>The example does this via this public <a href="https://console.cloud.google.com/gcr/triggers?project=gcer-public">Container Registry</a> service created for <code>googleComputeEngineR</code> and has the above scripts at <code>&quot;demo-docker-scheduler&quot;</code></p>
-<p>After the image has built, you can call it to be called via a scheduled CRON task via the new dedicated function, <code>gce_vm_scheduler</code> and <code>gce_schedule_docker</code></p>
+<p>After the image has built, you can schdule it to be called via a <code>crontab</code> task via the new dedicated functions, <code>gce_vm_scheduler</code> and <code>gce_schedule_docker</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create a VM to run the schedule
 vm &lt;-<span class="st"> </span><span class="kw">gce_vm_scheduler</span>(<span class="st">&quot;my_scheduler&quot;</span>)
 
@@ -158,6 +158,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm_setup</span>(vm, <span 
 docker_tag &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;demo-docker-scheduler&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;gcer-public&quot;</span>)
 
 ## Schedule the docker_tag to run every day at 0453AM
+## schedule uses crontab syntax
 <span class="kw">gce_schedule_docker</span>(docker_tag, <span class="dt">schedule =</span> <span class="st">&quot;53 4 * * *&quot;</span>, <span class="dt">vm =</span> vm)</code></pre></div>
 <p>The Docker image is now downloaded the first time, and run on the schedule (0453 AM in above example)</p>
 <p>The <code>Dockerfile</code> used need not be an R related one, any Docker image can be scheduled.</p>
