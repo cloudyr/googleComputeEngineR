@@ -32,22 +32,23 @@ For `googleComputeEngineR` you will need:
 
 ## Authentication
 
-### Auto-authentication
+### Auto-authentication via .Renviron
 
-Specify the location of a [service account JSON file](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) taken from your Google Project.
+The best way to handle authentication is to set environment arguments with your setup details.
 
-        Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")
+These can be set in an `.Renviron` file located on your computer home directory - R will look in this file upon startup.  Read more via `?Startup`
 
-You can set default projects, zone and authentication via an `.Renviron` file or `Sys.setenv()`.
+The easiest way to find the right home directory is within RStudio, to click on the `Home` button in RStudio's file explorer.  Create a file via `File > New file > Text File`, save and call it `.Renviron`
 
-Example entries:
+My `.Renviron` file looks a bit like this:
 
 ```
 GCE_AUTH_FILE="/Users/mark/xxxxx/auth.json"
 GCE_DEFAULT_PROJECT_ID="mark-xxxxxxx"
 GCE_DEFAULT_ZONE="europe-west1-a"
-GCE_SSH_USER="mark"
 ```
+
+The `GCE_AUTH_FILE` points to the file location of the [service account JSON file](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) taken from your Google Project.  The other arguments set the default project and zone.  
 
 This file will then used for authentication when you load the library:
 
@@ -58,7 +59,7 @@ Successfully authenticated via /Users/mark/auth.json
 Set default project name to 'mark-xxxxx'
 Set default zone to 'europe-west1-a'
 
-## no need for gce_auth()
+## no need for gce_auth() and will call default project
 > gce_get_project()
 $kind
 [1] "compute#project"
@@ -74,3 +75,14 @@ $name
 
 ...etc.... 
 ```
+
+
+### Other authentication methods
+
+If you can't use an `.Renviron` you can set environment files within the script via `Sys.setenv`:
+
+```r
+Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")
+```
+
+

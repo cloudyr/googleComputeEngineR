@@ -105,7 +105,7 @@
       <h1>Installation and Authentication</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-06-23</h4>
+            <h4 class="date">2017-06-25</h4>
           </div>
 
     
@@ -137,17 +137,17 @@
 <div id="authentication" class="section level2">
 <h2 class="hasAnchor">
 <a href="#authentication" class="anchor"></a>Authentication</h2>
-<div id="auto-authentication" class="section level3">
+<div id="auto-authentication-via--renviron" class="section level3">
 <h3 class="hasAnchor">
-<a href="#auto-authentication" class="anchor"></a>Auto-authentication</h3>
-<p>Specify the location of a <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project.</p>
-<pre><code>    Sys.setenv("GCE_AUTH_FILE" = "/fullpath/to/auth.json")</code></pre>
-<p>You can set default projects, zone and authentication via an <code>.Renviron</code> file or <code>Sys.setenv()</code>.</p>
-<p>Example entries:</p>
+<a href="#auto-authentication-via--renviron" class="anchor"></a>Auto-authentication via .Renviron</h3>
+<p>The best way to handle authentication is to set environment arguments with your setup details.</p>
+<p>These can be set in an <code>.Renviron</code> file located on your computer home directory - R will look in this file upon startup. Read more via <code>?Startup</code></p>
+<p>The easiest way to find the right home directory is within RStudio, to click on the <code>Home</code> button in RStudio’s file explorer. Create a file via <code>File &gt; New file &gt; Text File</code>, save and call it <code>.Renviron</code></p>
+<p>My <code>.Renviron</code> file looks a bit like this:</p>
 <pre><code>GCE_AUTH_FILE="/Users/mark/xxxxx/auth.json"
 GCE_DEFAULT_PROJECT_ID="mark-xxxxxxx"
-GCE_DEFAULT_ZONE="europe-west1-a"
-GCE_SSH_USER="mark"</code></pre>
+GCE_DEFAULT_ZONE="europe-west1-a"</code></pre>
+<p>The <code>GCE_AUTH_FILE</code> points to the file location of the <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project. The other arguments set the default project and zone.</p>
 <p>This file will then used for authentication when you load the library:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
 &gt;<span class="st"> </span><span class="kw">library</span>(googleComputeEngineR)
@@ -155,7 +155,7 @@ Successfully authenticated via /Users/mark/auth.json
 Set default project name to <span class="st">'mark-xxxxx'</span>
 Set default zone to <span class="st">'europe-west1-a'</span>
 
-## no need for gce_auth()
+## no need for gce_auth() and will call default project
 &gt;<span class="st"> </span><span class="kw"><a href="../reference/gce_get_project.html">gce_get_project</a></span>()
 $kind
 [<span class="dv">1</span>] <span class="st">"compute#project"</span>
@@ -170,6 +170,12 @@ $name
 [<span class="dv">1</span>] <span class="st">"mark-xxxxx"</span>
 
 ...etc.... </code></pre></div>
+</div>
+<div id="other-authentication-methods" class="section level3">
+<h3 class="hasAnchor">
+<a href="#other-authentication-methods" class="anchor"></a>Other authentication methods</h3>
+<p>If you can’t use an <code>.Renviron</code> you can set environment files within the script via <code>Sys.setenv</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">"GCE_AUTH_FILE"</span> =<span class="st"> "/fullpath/to/auth.json"</span>)</code></pre></div>
 </div>
 </div>
 </div>
