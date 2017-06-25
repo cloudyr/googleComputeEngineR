@@ -30,6 +30,10 @@ For `googleComputeEngineR` you will need:
 
 > The recommended method to authenticate is using the JSON service account key via auto-authentication.
 
+A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is [available at this link](https://www.youtube.com/watch?v=1oM0NZbRhSI).
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen></iframe> 
+
 ## Authentication
 
 ### Auto-authentication via .Renviron
