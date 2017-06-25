@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-06-04" />
+<meta name="date" content="2017-06-25" />
 
 <title>Installation and Authentication</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Installation and Authentication</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-06-04</em></h4>
+<h4 class="date"><em>2017-06-25</em></h4>
 
 
 
@@ -93,19 +93,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>The recommended method to authenticate is using the JSON service account key via auto-authentication.</p>
 </blockquote>
+<p>A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is <a href="https://www.youtube.com/watch?v=1oM0NZbRhSI">available at this link</a>.</p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="authentication" class="section level2">
 <h2>Authentication</h2>
-<div id="auto-authentication" class="section level3">
-<h3>Auto-authentication</h3>
-<p>Specify the location of a <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project.</p>
-<pre><code>    Sys.setenv(&quot;GCE_AUTH_FILE&quot; = &quot;/fullpath/to/auth.json&quot;)</code></pre>
-<p>You can set default projects, zone and authentication via an <code>.Renviron</code> file or <code>Sys.setenv()</code>.</p>
-<p>Example entries:</p>
+<div id="auto-authentication-via-.renviron" class="section level3">
+<h3>Auto-authentication via .Renviron</h3>
+<p>The best way to handle authentication is to set environment arguments with your setup details.</p>
+<p>These can be set in an <code>.Renviron</code> file located on your computer home directory - R will look in this file upon startup. Read more via <code>?Startup</code></p>
+<p>The easiest way to find the right home directory is within RStudio, to click on the <code>Home</code> button in RStudio’s file explorer. Create a file via <code>File &gt; New file &gt; Text File</code>, save and call it <code>.Renviron</code></p>
+<p>My <code>.Renviron</code> file looks a bit like this:</p>
 <pre><code>GCE_AUTH_FILE=&quot;/Users/mark/xxxxx/auth.json&quot;
 GCE_DEFAULT_PROJECT_ID=&quot;mark-xxxxxxx&quot;
-GCE_DEFAULT_ZONE=&quot;europe-west1-a&quot;
-GCE_SSH_USER=&quot;mark&quot;</code></pre>
+GCE_DEFAULT_ZONE=&quot;europe-west1-a&quot;</code></pre>
+<p>The <code>GCE_AUTH_FILE</code> points to the file location of the <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project. The other arguments set the default project and zone.</p>
 <p>This file will then used for authentication when you load the library:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
 &gt;<span class="st"> </span><span class="kw">library</span>(googleComputeEngineR)
@@ -113,7 +116,7 @@ Successfully authenticated via /Users/mark/auth.json
 Set default project name to <span class="st">'mark-xxxxx'</span>
 Set default zone to <span class="st">'europe-west1-a'</span>
 
-## no need for gce_auth()
+## no need for gce_auth() and will call default project
 &gt;<span class="st"> </span><span class="kw">gce_get_project</span>()
 $kind
 [<span class="dv">1</span>] <span class="st">&quot;compute#project&quot;</span>
@@ -128,6 +131,11 @@ $name
 [<span class="dv">1</span>] <span class="st">&quot;mark-xxxxx&quot;</span>
 
 ...etc.... </code></pre></div>
+</div>
+<div id="other-authentication-methods" class="section level3">
+<h3>Other authentication methods</h3>
+<p>If you can’t use an <code>.Renviron</code> you can set environment files within the script via <code>Sys.setenv</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">&quot;GCE_AUTH_FILE&quot;</span> =<span class="st"> &quot;/fullpath/to/auth.json&quot;</span>)</code></pre></div>
 </div>
 </div>
 
