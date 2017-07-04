@@ -105,7 +105,7 @@
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-06-25</h4>
+            <h4 class="date">2017-07-04</h4>
           </div>
 
     
@@ -125,14 +125,17 @@
 
 ## auto auth to GCE via environment file arguments
 
-## create 50 preemptible CPUs as they are much cheaper
+## create 50 CPUs names
 vm_names &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"cpu"</span>,<span class="dv">1</span>:<span class="dv">50</span>)
 
 ## specify the cheapest VMs that may get turned off
 preemptible =<span class="st"> </span><span class="kw">list</span>(<span class="dt">preemptible =</span> <span class="ot">TRUE</span>)
 
-## start up 50 VMs with R base on them (can customise via Dockerfiles)
+## start up 50 VMs with R base on them (can also customise via Dockerfiles using gce_vm_template instead)
 fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>, <span class="dt">scheduling =</span> preemptible)
+
+## add any ssh details, username etc.
+fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(fiftyvms, gce_ssh_setup)
 
 ## once all launched, add to cluster
 <span class="kw">plan</span>(cluster, <span class="dt">workers =</span> fiftyvms)
@@ -146,7 +149,7 @@ my_single_function &lt;-<span class="st"> </span>function(x){
 all_results &lt;-<span class="st"> </span><span class="kw">future_lapply</span>(<span class="dv">1</span>:<span class="dv">50</span>, my_single_function)
 
 ## tidy up
-<span class="kw">lapply</span>(vms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
+<span class="kw">lapply</span>(fiftyvms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
 </div>
 <div id="pre-emptible-vms" class="section level2">
 <h2 class="hasAnchor">

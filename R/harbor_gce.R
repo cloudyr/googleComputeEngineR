@@ -49,7 +49,11 @@ docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
 #' }
 #' @return A table of active images on the instance
 #' @export
-docker_build <- function(host = localhost, dockerfolder, new_image, folder = "buildimage",  wait = FALSE, ...) {
+docker_build <- function(host = localhost, 
+                         dockerfolder, 
+                         new_image, 
+                         folder = "buildimage",  
+                         wait = FALSE, ...) {
   
   stopifnot(file.exists(dockerfolder))
   

@@ -25,14 +25,17 @@ library(future)
 
 ## auto auth to GCE via environment file arguments
 
-## create 50 preemptible CPUs as they are much cheaper
+## create 50 CPUs names
 vm_names <- paste0("cpu",1:50)
 
 ## specify the cheapest VMs that may get turned off
 preemptible = list(preemptible = TRUE)
 
-## start up 50 VMs with R base on them (can customise via Dockerfiles)
+## start up 50 VMs with R base on them (can also customise via Dockerfiles using gce_vm_template instead)
 fiftyvms <- lapply(vm_names, gce_vm, predefined_type = "n1-standard-1", template = "r-base", scheduling = preemptible)
+
+## add any ssh details, username etc.
+fiftyvms <- lapply(fiftyvms, gce_ssh_setup)
 
 ## once all launched, add to cluster
 plan(cluster, workers = fiftyvms)
@@ -46,7 +49,7 @@ my_single_function <- function(x){
 all_results <- future_lapply(1:50, my_single_function)
 
 ## tidy up
-lapply(vms, FUN = gce_vm_stop)
+lapply(fiftyvms, FUN = gce_vm_stop)
 ```
 
 ## Pre-emptible VMs
