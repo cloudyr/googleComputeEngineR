@@ -268,21 +268,21 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 googleAuthR::<span class="kw">gar_auth_service</span>(<span class="st">"auth.json"</span>)
 
 ## get Google Analytics data
-gadata &lt;-<span class="st"> </span><span class="kw">google_analytics_4</span>(<span class="dv">123456</span>, 
+gadata &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/googleAnalyticsR/topics/google_analytics_4">google_analytics_4</a></span>(<span class="dv">123456</span>, 
                              <span class="dt">date_range =</span> <span class="kw">c</span>(<span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">2</span>, <span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">1</span>),
                              <span class="dt">metrics =</span> <span class="st">"sessions"</span>,
                              <span class="dt">dimensions =</span> <span class="st">"medium"</span>,
                              <span class="dt">anti_sample =</span> <span class="ot">TRUE</span>)
 
 ## upload to Google BigQuery
-<span class="kw">bqr_upload_data</span>(<span class="dt">projectId =</span> <span class="st">"myprojectId"</span>, 
+<span class="kw"><a href="http://www.rdocumentation.org/packages/bigQueryR/topics/bqr_upload_data">bqr_upload_data</a></span>(<span class="dt">projectId =</span> <span class="st">"myprojectId"</span>, 
                 <span class="dt">datasetId =</span> <span class="st">"mydataset"</span>,
                 <span class="dt">tableId =</span> <span class="kw">paste0</span>(<span class="st">"gadata_"</span>,<span class="kw">format</span>(<span class="kw">Sys.Date</span>(),<span class="st">"%Y%m%d"</span>)),
                 <span class="dt">upload_data =</span> gadata,
                 <span class="dt">create =</span> <span class="ot">TRUE</span>)
 
 ## upload to Google Cloud Storage
-<span class="kw">gcs_upload</span>(gadata, <span class="dt">name =</span> <span class="kw">paste0</span>(<span class="st">"gadata_"</span>,<span class="kw">Sys.Date</span>(),<span class="st">".csv"</span>))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_upload">gcs_upload</a></span>(gadata, <span class="dt">name =</span> <span class="kw">paste0</span>(<span class="st">"gadata_"</span>,<span class="kw">Sys.Date</span>(),<span class="st">".csv"</span>))
 
 
 ## get top medium referrer
@@ -300,7 +300,7 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
 <p>You can then use <a href="https://github.com/bnosac/cronR"><code>cronR</code></a> to schedule the script for a daily extract.</p>
 <p>Use <code>cronR</code>’s RStudio addin, or in the console issue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cronR)
-<span class="kw">cron_add</span>(<span class="kw">paste0</span>(<span class="st">"Rscript "</span>, <span class="kw">normalizePath</span>(<span class="st">"daily-report"</span>)), <span class="dt">frequency =</span> <span class="st">"daily"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/cronR/topics/cron_add">cron_add</a></span>(<span class="kw">paste0</span>(<span class="st">"Rscript "</span>, <span class="kw">normalizePath</span>(<span class="st">"daily-report"</span>)), <span class="dt">frequency =</span> <span class="st">"daily"</span>)
 <span class="co"># Adding cronjob:</span>
 <span class="co"># ---------------</span>
 <span class="co">#</span>

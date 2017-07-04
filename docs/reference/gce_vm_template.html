@@ -203,26 +203,28 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
 <li><p>ropensci RStudio and tidyverse with all ropensci packages on CRAN and Github</p></li>
 <li><p>example A non-R test container running busybox</p></li>
 <li><p>dynamic Supply your own docker image to download such as <code>rocker/verse</code></p></li>
-</ul><p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
+</ul>
+    <p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
    other settings etc. via <a href='docker_run.html'>docker_run</a>.</p>
 <p>Use <code>dynamic_image</code> to override the default rocker images e.g. <code>rocker/shiny</code> for shiny, etc.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
+</div><span class='co'># NOT RUN {</span>
+ <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
 
-   <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
+ <span class='co'>## make instance using R-base</span>
+ <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm_template</span>(<span class='st'>"r-base"</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rbase"</span>)
 
-   <span class='co'>## make instance using R-base</span>
-   <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm_template</span>(<span class='st'>"r-base"</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rbase"</span>)
-
-   <span class='co'>## run an R function on the instance within the R-base docker image</span>
-   <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>vm</span>, <span class='st'>"rocker/r-base"</span>, <span class='fu'>c</span>(<span class='st'>"Rscript"</span>, <span class='st'>"-e"</span>, <span class='st'>"1+1"</span>), <span class='kw'>user</span> <span class='kw'>=</span> <span class='st'>"mark"</span>)
-   <span class='co'>#&gt; [1] 2</span>
+ <span class='co'>## run an R function on the instance within the R-base docker image</span>
+ <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>vm</span>, <span class='st'>"rocker/r-base"</span>, <span class='fu'>c</span>(<span class='st'>"Rscript"</span>, <span class='st'>"-e"</span>, <span class='st'>"1+1"</span>), <span class='kw'>user</span> <span class='kw'>=</span> <span class='st'>"mark"</span>)
+ <span class='co'>#&gt; [1] 2</span>
 
 
-})</div></pre>
+<span class='co'># }</span><div class='input'>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

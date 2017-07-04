@@ -27,7 +27,7 @@ It looks to make the deployment of cloud resources for R as painless as possible
 A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is [available at this link](https://www.youtube.com/watch?v=1oM0NZbRhSI).
 
 ```{r, echo=FALSE}
-knitr::include_url("http://www.youtube.com/embed/1oM0NZbRhSI?rel=0")
+knitr::include_url("https://www.youtube.com/embed/1oM0NZbRhSI?rel=0")
 ```
 
 

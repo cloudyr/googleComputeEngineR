@@ -194,16 +194,16 @@ rather than logging into a Docker container, making changes and committing.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href = 'https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/'>Best practices for writing Dockerfiles</a></p>
-<p>An example Dockerfile for <a href = 'https://hub.docker.com/r/rocker/ropensci/~/dockerfile/'>rOpensci</a></p>
-<p>General R Docker images found at <a href = 'https://github.com/rocker-org'>rocker-org</a></p>
+    <p><a href='https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/'>Best practices for writing Dockerfiles</a></p>
+<p>An example Dockerfile for <a href='https://hub.docker.com/r/rocker/ropensci/~/dockerfile/'>rOpensci</a></p>
+<p>General R Docker images found at <a href='https://github.com/rocker-org'>rocker-org</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
-  <span class='fu'>docker_build</span>(<span class='no'>localhost</span>, <span class='st'>"/home/stuff/dockerfolder"</span> ,<span class='st'>"new_image"</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>localhost</span>, <span class='st'>"new_image"</span>)
-})</div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>docker_build</span>(<span class='no'>localhost</span>, <span class='st'>"/home/stuff/dockerfolder"</span> ,<span class='st'>"new_image"</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>localhost</span>, <span class='st'>"new_image"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

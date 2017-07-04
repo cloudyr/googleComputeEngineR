@@ -214,13 +214,13 @@
 <p>You will need to generate a new SSH key-pair if you have not connected to the instance before via say the gcloud SDK.</p>
 <p>To customise SSH connection see <a href='gce_ssh_setup.html'>gce_ssh_setup</a>
     <code>capture_text</code> is passed to <code>stdout</code> and <code>stderr</code> of system2</p>
-<p>Otherwise, instructions for generating SSH keys can be found here: <a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
+<p>Otherwise, instructions for generating SSH keys can be found here: <a href='https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
 <p>Uploads and downloads are recursive, so if you specify a directory,
 everything inside the directory will also be downloaded.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href = 'https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a></p>
+    <p><a href='https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a></p>
 <p>Other ssh functions: <code><a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></code>,
   <code><a href='gce_ssh_browser.html'>gce_ssh_browser</a></code>,
   <code><a href='gce_ssh_setup.html'>gce_ssh_setup</a></code></p>
@@ -228,35 +228,36 @@ everything inside the directory will also be downloaded.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
+</div><span class='co'># NOT RUN {</span>
 
 
-    <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance"</span>)
+  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance"</span>)
 
-    <span class='co'>## if you have already logged in via gcloud, the default keys will be used</span>
-    <span class='co'>## no need to run gce_ssh_addkeys</span>
-    <span class='co'>## run command on instance            </span>
-    <span class='fu'>gce_ssh</span>(<span class='no'>vm</span>, <span class='st'>"echo foo"</span>)
-    <span class='co'>#&gt; foo</span>
+  <span class='co'>## if you have already logged in via gcloud, the default keys will be used</span>
+  <span class='co'>## no need to run gce_ssh_addkeys</span>
+  <span class='co'>## run command on instance            </span>
+  <span class='fu'>gce_ssh</span>(<span class='no'>vm</span>, <span class='st'>"echo foo"</span>)
+  <span class='co'>#&gt; foo</span>
 
-    <span class='co'>## if running on Windows, use the RStudio default SSH client</span>
-    <span class='co'>## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
-    <span class='co'>## then run: </span>
-    <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance2"</span>)
+  <span class='co'>## if running on Windows, use the RStudio default SSH client</span>
+  <span class='co'>## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH</span>
+  <span class='co'>## then run: </span>
+  <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"my-instance2"</span>)
 
-    <span class='co'>## add SSH info to the VM object</span>
-    <span class='co'>## custom info</span>
-    <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_ssh_setup.html'>gce_ssh_setup</a></span>(<span class='no'>vm2</span>,
-                        <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>,
-                        <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa.pub"</span>,
-                        <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa"</span>)
+  <span class='co'>## add SSH info to the VM object</span>
+  <span class='co'>## custom info</span>
+  <span class='no'>vm2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_ssh_setup.html'>gce_ssh_setup</a></span>(<span class='no'>vm2</span>,
+                      <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>,
+                      <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa.pub"</span>,
+                      <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='st'>"C://.ssh/id_rsa"</span>)
 
-    <span class='co'>## run command on instance            </span>
-    <span class='fu'>gce_ssh</span>(<span class='no'>vm2</span>, <span class='st'>"echo foo"</span>)
-    <span class='co'>#&gt; foo</span>
+  <span class='co'>## run command on instance            </span>
+  <span class='fu'>gce_ssh</span>(<span class='no'>vm2</span>, <span class='st'>"echo foo"</span>)
+  <span class='co'>#&gt; foo</span>
 
 
-})</div></pre>
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -349,7 +349,7 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 vm3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)
 
 vms &lt;-<span class="st"> </span><span class="kw">list</span>(vm1, vm2, vm3)
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)
 
 ## use futures %&lt;-% to send a function to the cluster
 si %&lt;-%<span class="st"> </span><span class="kw">Sys.info</span>()

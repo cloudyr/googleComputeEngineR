@@ -281,18 +281,19 @@
 <li><p>Machine type - either a predefined type or custom CPU and memory</p></li>
 <li><p>Network - usually default, specifies open ports etc.</p></li>
 <li><p>Image - a source image containing the operating system</p></li>
-</ul><p>You can add metadata to the server such as <code>startup-script</code> and <code>shutdown-script</code>.  Details available here: <a href = 'https://cloud.google.com/compute/docs/storing-retrieving-metadata'>https://cloud.google.com/compute/docs/storing-retrieving-metadata</a>
-    If you want to not have an external IP then modify the instance afterwards</p>
+</ul>
+    <p>You can add metadata to the server such as <code>startup-script</code> and <code>shutdown-script</code>.  Details available here: <a href='https://cloud.google.com/compute/docs/storing-retrieving-metadata'>https://cloud.google.com/compute/docs/storing-retrieving-metadata</a></p> 
+<p>If you want to not have an external IP then modify the instance afterwards</p>
     
     <h2 class="hasAnchor" id="preemptible-vms"><a class="anchor" href="#preemptible-vms"></a>Preemptible VMS</h2>
 
-    <p></p>
-<p>You can set <a href = 'https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance'>preemptible</a> VMs by passing this in the <code>scheduling</code> arguments <code>scheduling = list(preemptible = TRUE)</code>
-    This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.</p>
+    
+    <p>You can set <a href='https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance'>preemptible</a> VMs by passing this in the <code>scheduling</code> arguments <code>scheduling = list(preemptible = TRUE)</code></p> 
+<p>This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><a href = 'https://developers.google.com/compute/docs/reference/latest/'>Google Documentation</a></p>
+    <p><a href='https://developers.google.com/compute/docs/reference/latest/'>Google Documentation</a></p>
     
 
   </div>

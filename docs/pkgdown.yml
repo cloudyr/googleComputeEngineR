@@ -1,0 +1,17 @@
+urls:
+  reference: https://cloudyr.github.io/googleComputeEngineR//reference
+  article: https://cloudyr.github.io/googleComputeEngineR//articles
+articles:
+  creating-vms: creating-vms.html
+  docker-ssh-futures: docker-ssh-futures.html
+  docker: docker.html
+  example-workflows: example-workflows.html
+  installation-and-authentication: installation-and-authentication.html
+  massive-parallel: massive-parallel.html
+  opencpu-api-server: opencpu-api-server.html
+  remote-cluster: remote-cluster.html
+  rstudio-team: rstudio-team.html
+  scheduled-rscripts: scheduled-rscripts.html
+  shiny-app: shiny-app.html
+  single-scheduler: single-scheduler.html
+

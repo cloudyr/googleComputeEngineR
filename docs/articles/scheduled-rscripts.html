@@ -161,7 +161,7 @@
 
 ## download or do something
 something &lt;-<span class="st"> </span><span class="kw">tryCatch</span>({
-    <span class="kw">gcs_get_object</span>(<span class="st">"schedule/test.csv"</span>, 
+    <span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_get_object">gcs_get_object</a></span>(<span class="st">"schedule/test.csv"</span>, 
                    <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-files"</span>)
   }, <span class="dt">error =</span> function(ex) {
     <span class="ot">NULL</span>
@@ -173,13 +173,13 @@ something_else &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
 something &lt;-<span class="st"> </span><span class="kw">rbind</span>(something, something_else)
 
 ## authenticate on GCE for google cloud services
-googleAuthR::<span class="kw">gar_gce_auth</span>()
+googleAuthR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth">gar_gce_auth</a></span>()
 
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">fileext =</span> <span class="st">".csv"</span>)
 <span class="kw">on.exit</span>(<span class="kw">unlink</span>(tmp))
 <span class="kw">write.csv</span>(something, <span class="dt">file =</span> tmp, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)
 ## upload something
-<span class="kw">gcs_upload</span>(tmp, 
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_upload">gcs_upload</a></span>(tmp, 
            <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-files"</span>, 
            <span class="dt">name =</span> <span class="st">"schedule/test.csv"</span>)</code></pre></div>
 <p>Note that its best to not save data onto the scheduler - its much better to use an external storage to load and save data to such as Google Cloud Storage.</p>
@@ -201,9 +201,9 @@ script &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span c
 
 
 ## it will run the script whilst making the dockerfile
-container &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(<span class="st">"schedule.R"</span>,
+container &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/containeRit/topics/dockerfile">dockerfile</a></span>(<span class="st">"schedule.R"</span>,
                         <span class="dt">copy =</span> <span class="st">"script_dir"</span>,
-                        <span class="dt">cmd =</span> <span class="kw">CMD_Rscript</span>(<span class="st">"schedule.R"</span>),
+                        <span class="dt">cmd =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/containeRit/topics/CMD_Rscript">CMD_Rscript</a></span>(<span class="st">"schedule.R"</span>),
                         <span class="dt">soft =</span> <span class="ot">TRUE</span>)
 <span class="kw">write</span>(container, <span class="dt">file =</span> <span class="st">"Dockerfile"</span>)</code></pre></div>
 <p>Now you have the Dockerfile, it can be used to create Docker images. There are several options here, including <code>docker_build</code> function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a>.</p>
@@ -289,7 +289,7 @@ master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_
 <a href="#create-scheduled-script" class="anchor"></a>Create scheduled script</h2>
 <p>Create the R script you want to schedule. Make sure it is self sufficient in that it can authenticate, do stuff and upload to a safe repository, such as Google Cloud Storage.</p>
 <p>This script will be in turn uploaded itself to Google Cloud Storage, so the slave instance can call it via a handy <code>googleCloudStorageR</code> function that runs a script locally from a cloud storage file:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">googleCloudStorageR::<span class="kw">gcs_source</span>(<span class="st">'download.R'</span>, <span class="dt">bucket =</span> <span class="st">'your-gcs-bucket'</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">googleCloudStorageR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_source">gcs_source</a></span>(<span class="st">'download.R'</span>, <span class="dt">bucket =</span> <span class="st">'your-gcs-bucket'</span>)</code></pre></div>
 <p>The example script below authenticates with Google Cloud Storage, downloads a <code>ga.httr-oauth</code> file that carries the Google Analytics authentication, runs the download then reauthenticates with Google Cloud Storage to upload the results. Modify for your own expensive operation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## download.R - called from slave VM
 <span class="kw">library</span>(googleCloudStorageR)
@@ -298,32 +298,32 @@ master &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_
 ## set defaults
 <span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)
 <span class="kw"><a href="../reference/gce_global_zone.html">gce_global_zone</a></span>(<span class="st">"europe-west1-b"</span>)
-<span class="kw">gcs_global_bucket</span>(<span class="st">"your-gcs-bucket"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_global_bucket">gcs_global_bucket</a></span>(<span class="st">"your-gcs-bucket"</span>)
 
 ## gcs can authenticate via GCE auth keys
-googleAuthR::<span class="kw">gar_gce_auth</span>()
+googleAuthR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth">gar_gce_auth</a></span>()
 
 ## use GCS to download auth key (that you have previously uploaded)
-<span class="kw">gcs_get_object</span>(<span class="st">"ga.httr-oauth"</span>, <span class="dt">saveToDisk =</span> <span class="st">"ga.httr-oauth"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_get_object">gcs_get_object</a></span>(<span class="st">"ga.httr-oauth"</span>, <span class="dt">saveToDisk =</span> <span class="st">"ga.httr-oauth"</span>)
 
 auth_token &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">"ga.httr-oauth"</span>)
 <span class="kw">options</span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw">c</span>(<span class="st">"https://www.googleapis.com/auth/analytics"</span>, 
                                         <span class="st">"https://www.googleapis.com/auth/analytics.readonly"</span>),
         <span class="dt">googleAuthR.httr_oauth_cache =</span> <span class="st">"ga.httr-oauth"</span>)
-googleAuthR::<span class="kw">gar_auth</span>(auth_token)
+googleAuthR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_auth">gar_auth</a></span>(auth_token)
 
 ## fetch data
 
-gadata &lt;-<span class="st"> </span><span class="kw">google_analytics_4</span>(<span class="dv">81416156</span>,
+gadata &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/googleAnalyticsR/topics/google_analytics_4">google_analytics_4</a></span>(<span class="dv">81416156</span>,
                              <span class="dt">date_range =</span> <span class="kw">c</span>(<span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">8</span>, <span class="kw">Sys.Date</span>() -<span class="st"> </span><span class="dv">1</span>),
                              <span class="dt">dimensions =</span> <span class="kw">c</span>(<span class="st">"medium"</span>, <span class="st">"source"</span>, <span class="st">"landingPagePath"</span>),
                              <span class="dt">metrics =</span> <span class="st">"sessions"</span>,
                              <span class="dt">max =</span> -<span class="dv">1</span>)
 
 ## back to Cloud Storage
-googleAuthR::<span class="kw">gar_gce_auth</span>()
-<span class="kw">gcs_upload</span>(gadata, <span class="dt">name =</span> <span class="st">"uploads/gadata_81416156.csv"</span>)
-<span class="kw">gcs_upload</span>(<span class="st">"ga.httr-oauth"</span>)
+googleAuthR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth">gar_gce_auth</a></span>()
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_upload">gcs_upload</a></span>(gadata, <span class="dt">name =</span> <span class="st">"uploads/gadata_81416156.csv"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_upload">gcs_upload</a></span>(<span class="st">"ga.httr-oauth"</span>)
 
 <span class="kw">message</span>(<span class="st">"Upload complete"</span>, <span class="kw">Sys.time</span>())</code></pre></div>
 </div>
@@ -337,10 +337,10 @@ googleAuthR::<span class="kw">gar_gce_auth</span>()
 <span class="kw">library</span>(googleCloudStorageR)
 <span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)
 <span class="kw"><a href="../reference/gce_global_zone.html">gce_global_zone</a></span>(<span class="st">"europe-west1-b"</span>)
-<span class="kw">gcs_global_bucket</span>(<span class="st">"your-gcs-bucket"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/googleCloudStorageR/topics/gcs_global_bucket">gcs_global_bucket</a></span>(<span class="st">"your-gcs-bucket"</span>)
 
 ## auth to same project we're on
-googleAuthR::<span class="kw">gar_gce_auth</span>()
+googleAuthR::<span class="kw"><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth">gar_gce_auth</a></span>()
 
 ## launch the premade VM
 vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"slave-1"</span>)

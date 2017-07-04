@@ -197,7 +197,7 @@ vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_v
 vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)</code></pre></div>
 <p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
+<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
 </div>
 <div id="using-the-cluster" class="section level3">
 <h3 class="hasAnchor">
@@ -216,7 +216,7 @@ f &lt;-<span class="st"> </span>function(my_data, args){
 
 ## send to cluster
 result %&lt;-%<span class="st"> </span><span class="kw">f</span>(my_data) </code></pre></div>
-<p>For long running jobs you can use <code>future::resolved</code> to check on its progress.</p>
+<p>For long running jobs you can use <code><a href="http://www.rdocumentation.org/packages/future/topics/resolved">future::resolved</a></code> to check on its progress.</p>
 <pre><code>## check if resolved
 resolved(result)
 [1] TRUE</code></pre>

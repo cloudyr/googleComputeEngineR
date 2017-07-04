@@ -181,18 +181,18 @@ You will need to create and build the Dockerfile first.</p>
     <p>You may need to run <a href='gce_vm_scheduler.html'>gce_vm_scheduler</a> yourself first and then set 
   up SSH details if not defaults, to pass to argument <code>vm</code></p>
 <p>You can create a Dockerfile with your R script installed by 
-  running it through <code>containeRit::dockerfile</code>.  It also takes care of any dependencies.
-    It is recommended to create a script that is self contained in output and input, 
+  running it through <code><a href='http://www.rdocumentation.org/packages/containeRit/topics/dockerfile'>containeRit::dockerfile</a></code>.  It also takes care of any dependencies.</p>  
+<p>It is recommended to create a script that is self contained in output and input, 
 e.g. don't save files to the VM, instead upload or download any files 
-from Google Cloud Storage via authentication via <code>googleAuthR::gar_gce_auth()</code> 
+from Google Cloud Storage via authentication via <code><a href='http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth'>googleAuthR::gar_gce_auth()</a></code> 
 then downloading and uploading data using <code>library(googleCloudStorageR)</code> or similar.</p>
 <p>Once the script is working locally, build it and upload to a repository 
   so it can be reached via argument <code>docker_image</code></p>
 <p>You can build via Google cloud repository build triggers, 
   in which case the name can be created via <a href='gce_tag_container.html'>gce_tag_container</a>
 or build via <a href='docker_build.html'>docker_build</a> to build on another VM or locally, 
-then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</a>
-    Any Docker image can be run, it doesn't have to be an R one.</p>
+then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</a></p>  
+<p>Any Docker image can be run, it doesn't have to be an R one.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -201,50 +201,47 @@ then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-not_run({
-  # create a Dockerfile of your script
-  if(!require(containeRit)){
-    devtools::install_github("o2r-project/containerit")
-    library(containeRit)
-  }
-  
-  script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
-  
-  ## put the "schedule.R" script in the working directory
-  file.copy(script, getwd())
-  
-  
-  ## it will run the script whilst making the dockerfile
-  container <- dockerfile("schedule.R",
-                          copy = "script_dir",
-                          cmd = CMD_Rscript("schedule.R"),
-                          soft = TRUE)
-  write(container, file = "Dockerfile")
-  
-  ## upload created Dockerfile to GitHub, 
-    then use a Build Trigger to create Docker image "demoDockerScheduler"
-  ## built trigger uses "demo-docker-scheduler" as must be lowercase
-  
-  ## After image is built:
-  ## Create a VM to run the schedule
-  vm <- gce_vm_scheduler("my_scheduler")
-  
-  ## setup any SSH not on defaults
-  vm <- gce_vm_setup(vm, username = "mark")
-  
-  ## get the name of the just built Docker image that runs your script
-  docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
-  
-  ## Schedule the docker_tag to run every day at 0453AM
-  gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
-  
-  
-})
+</div># NOT RUN {
+# create a Dockerfile of your script
+if(!require(containeRit)){
+  devtools::install_github("o2r-project/containerit")
+  library(containeRit)
+}
 
-</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:23:10: unexpected symbol</span>
-#&gt; <span class='error'>22:   ## upload created Dockerfile to GitHub, </span>
-#&gt; <span class='error'>23:     then use</span>
-#&gt; <span class='error'>             ^</span></div></pre>
+script <- system.file("schedulescripts", "schedule.R", package = "googleComputeEngineR")
+
+## put the "schedule.R" script in the working directory
+file.copy(script, getwd())
+
+
+## it will run the script whilst making the dockerfile
+container <- dockerfile("schedule.R",
+                        copy = "script_dir",
+                        cmd = CMD_Rscript("schedule.R"),
+                        soft = TRUE)
+write(container, file = "Dockerfile")
+
+## upload created Dockerfile to GitHub, 
+  then use a Build Trigger to create Docker image "demoDockerScheduler"
+## built trigger uses "demo-docker-scheduler" as must be lowercase
+
+## After image is built:
+## Create a VM to run the schedule
+vm <- gce_vm_scheduler("my_scheduler")
+
+## setup any SSH not on defaults
+vm <- gce_vm_setup(vm, username = "mark")
+
+## get the name of the just built Docker image that runs your script
+docker_tag <- gce_tag_container("demo-docker-scheduler", project = "gcer-public")
+
+## Schedule the docker_tag to run every day at 0453AM
+gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
+
+
+# }
+<div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

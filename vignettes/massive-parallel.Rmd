@@ -38,7 +38,7 @@ fiftyvms <- lapply(vm_names, gce_vm, predefined_type = "n1-standard-1", template
 fiftyvms <- lapply(fiftyvms, gce_ssh_setup)
 
 ## once all launched, add to cluster
-plan(cluster, workers = fiftyvms)
+plan(cluster, workers = as.cluster(fiftyvms))
 
 ## the action you want to perform via cluster
 my_single_function <- function(x){

@@ -227,32 +227,32 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
+<span class='co'>## auto auth, project and zone pre-set</span>
+<span class='co'>## list your VMs in the project/zone</span>
 
-  <span class='fu'>library</span>(<span class='no'>googleComputeEngineR</span>)
-  <span class='co'>## auto auth, project and zone pre-set</span>
-  <span class='co'>## list your VMs in the project/zone</span>
+<span class='no'>the_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_list_instances.html'>gce_list_instances</a></span>()
 
-  <span class='no'>the_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_list_instances.html'>gce_list_instances</a></span>()
+<span class='co'>## start an existing instance</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>"markdev"</span>)
 
-  <span class='co'>## start an existing instance</span>
-  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>"markdev"</span>)
+<span class='co'>## for rstudio, you also need to specify a username and password to login</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>,
+             <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rstudio-server"</span>,
+             <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>, <span class='kw'>password</span> <span class='kw'>=</span> <span class='st'>"mark1234"</span>)
 
-  <span class='co'>## for rstudio, you also need to specify a username and password to login</span>
-  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='st'>"rstudio"</span>,
-               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rstudio-server"</span>,
-               <span class='kw'>username</span> <span class='kw'>=</span> <span class='st'>"mark"</span>, <span class='kw'>password</span> <span class='kw'>=</span> <span class='st'>"mark1234"</span>)
+<span class='co'>## specify your own cloud-init file and pass it into gce_vm_container()</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='st'>"example.yml"</span>,
+             <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"test-container"</span>,
+             <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>)
 
-  <span class='co'>## specify your own cloud-init file and pass it into gce_vm_container()</span>
-  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='st'>"example.yml"</span>,
-               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"test-container"</span>,
-               <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>)
-
-  <span class='co'>## specify disk size at creation</span>
-  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>'my-image3'</span>, <span class='kw'>disk_size_gb</span> <span class='kw'>=</span> <span class='fl'>20</span>)
+<span class='co'>## specify disk size at creation</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm</span>(<span class='st'>'my-image3'</span>, <span class='kw'>disk_size_gb</span> <span class='kw'>=</span> <span class='fl'>20</span>)
 
 
-})</div></pre>
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

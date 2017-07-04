@@ -197,58 +197,59 @@ This file in the same folder as your shiny app, which consists of a \code{ui.R} 
 This is copied into the Dockerfile in the last line.  
 Change the name of the subfolder to have that name appear in the final URL of the Shinyapp. 
 
-not_run({
-  FROM rocker/shiny
-  MAINTAINER Mark Edmondson (r@sunholo.com)
-  
-  # install R package dependencies
-  RUN apt-get update && apt-get install -y \
-          libssl-dev \
-          ## clean up
-          && apt-get clean \ 
-          && rm -rf /var/lib/apt/lists/ \ 
-          && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-          
-  ## Install packages from CRAN
-  RUN install2.r --error \ 
-       -r 'http://cran.rstudio.com' \
-       googleAuthR \
-  ## install Github packages
-  ## clean up
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-  
-  ## assume shiny app is in build folder /shiny
-  COPY ./shiny/ /srv/shiny-server/shiny/
-  
-})
-
-This is then run using the R commands below:
-
-not_run({
-  
-  ## create shiny VM template
-  vm <- gce_vm("shiny-test",
-               template = "shiny",
-               predefined_type = "n1-standard-1")
-  
-  ## add your SSH keys do docker commands work
-  vm <- vm_ssh_setup(vm)
-  
-  ## a demo Shiny app from googleAuthR
-  app_dir <- system.file("dockerfiles","shiny-googleAuthRdemo", package = "googleComputeEngineR")
-  
-  ## build Dockerfile on VM, and upload created Dockerimage to Container Registry
-  gce_shiny_addapp(vm, app_image = "gceshinydemo", dockerfolder = app_dir)
-  
-  ## if you want to deploy the same Shiny app to a different VM, use the saved Container Registry 
-  gce_shiny_addapp(vm2, app_image = "gceshinydemo")
-  
-})
-
 </div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:2:4: unexpected symbol</span>
 #&gt; <span class='error'>1: </span>
 #&gt; <span class='error'>2: An example</span>
-#&gt; <span class='error'>      ^</span></div></pre>
+#&gt; <span class='error'>      ^</span></div># NOT RUN {
+FROM rocker/shiny
+MAINTAINER Mark Edmondson (r@sunholo.com)
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+        libssl-dev \
+        ## clean up
+        && apt-get clean \ 
+        && rm -rf /var/lib/apt/lists/ \ 
+        && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+        
+## Install packages from CRAN
+RUN install2.r --error \ 
+     -r 'http://cran.rstudio.com' \
+     googleAuthR \
+## install Github packages
+## clean up
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## assume shiny app is in build folder /shiny
+COPY ./shiny/ /srv/shiny-server/shiny/
+
+# }
+<div class='input'>
+This is then run using the R commands below:
+
+</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:2:6: unexpected symbol</span>
+#&gt; <span class='error'>1: </span>
+#&gt; <span class='error'>2: This is</span>
+#&gt; <span class='error'>        ^</span></div><span class='co'># NOT RUN {</span>
+<span class='co'>## create shiny VM template</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"shiny-test"</span>,
+             <span class='kw'>template</span> <span class='kw'>=</span> <span class='st'>"shiny"</span>,
+             <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"n1-standard-1"</span>)
+
+<span class='co'>## add your SSH keys do docker commands work</span>
+<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>vm_ssh_setup</span>(<span class='no'>vm</span>)
+
+<span class='co'>## a demo Shiny app from googleAuthR</span>
+<span class='no'>app_dir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"dockerfiles"</span>,<span class='st'>"shiny-googleAuthRdemo"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleComputeEngineR"</span>)
+
+<span class='co'>## build Dockerfile on VM, and upload created Dockerimage to Container Registry</span>
+<span class='fu'>gce_shiny_addapp</span>(<span class='no'>vm</span>, <span class='kw'>app_image</span> <span class='kw'>=</span> <span class='st'>"gceshinydemo"</span>, <span class='kw'>dockerfolder</span> <span class='kw'>=</span> <span class='no'>app_dir</span>)
+
+<span class='co'>## if you want to deploy the same Shiny app to a different VM, use the saved Container Registry </span>
+<span class='fu'>gce_shiny_addapp</span>(<span class='no'>vm2</span>, <span class='kw'>app_image</span> <span class='kw'>=</span> <span class='st'>"gceshinydemo"</span>)
+
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

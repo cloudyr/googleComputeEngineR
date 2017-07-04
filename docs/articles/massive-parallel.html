@@ -157,7 +157,7 @@ fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, 
 fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(fiftyvms, gce_ssh_setup)
 
 ## once all launched, add to cluster
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> fiftyvms)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(fiftyvms))
 
 ## the action you want to perform via cluster
 my_single_function &lt;-<span class="st"> </span>function(x){
@@ -165,7 +165,7 @@ my_single_function &lt;-<span class="st"> </span>function(x){
 }
 
 ## use future::future_lapply to send each call to the cluster
-all_results &lt;-<span class="st"> </span><span class="kw">future_lapply</span>(<span class="dv">1</span>:<span class="dv">50</span>, my_single_function)
+all_results &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(<span class="dv">1</span>:<span class="dv">50</span>, my_single_function)
 
 ## tidy up
 <span class="kw">lapply</span>(fiftyvms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
@@ -184,7 +184,7 @@ all_results &lt;-<span class="st"> </span><span class="kw">future_lapply</span>(
 <div id="authentication-upon-the-vms" class="section level2">
 <h2 class="hasAnchor">
 <a href="#authentication-upon-the-vms" class="anchor"></a>Authentication upon the VMs</h2>
-<p>Since they are also running on Google Compute, you can authenticate with other cloud services such as BigQuery or Cloud Storage simply by using the <code>googleAuthR::gar_gce_auth()</code> function, which reuses the authentication that launched the VM.</p>
+<p>Since they are also running on Google Compute, you can authenticate with other cloud services such as BigQuery or Cloud Storage simply by using the <code><a href="http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth">googleAuthR::gar_gce_auth()</a></code> function, which reuses the authentication that launched the VM.</p>
 </div>
 <div id="quotas" class="section level2">
 <h2 class="hasAnchor">
