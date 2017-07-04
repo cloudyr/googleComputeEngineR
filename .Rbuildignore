@@ -18,4 +18,6 @@ _pkgdown\.yml
 ^auth
 ^secrets\.tar
 ^cran-comments\.md$
-^_pkgdown\.yml$
+^pkgdown
+^pkgdown$
+^index\.Rmd$

@@ -9,15 +9,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
+# Setup
 
-## Setup
-
-Google Compute Engine lets you create and run virtual machines on Google infrastructure.  See the [documentation here](https://cloud.google.com/compute/docs/).
+Google Compute Engine (GCE) lets you create and run virtual machines on Google infrastructure.  See the [general Google documentation here](https://cloud.google.com/compute/docs/).
 
 Before you begin, you will need to set up a Cloud Platform project, and enable billing by adding a credit card.  
 
-A quickstart guide is [available here](https://cloud.google.com/compute/docs/quickstart-linux) for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.
+A quickstart guide to using GCE is [available here](https://cloud.google.com/compute/docs/quickstart-linux) for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.
 
 Pricing is [available here](https://cloud.google.com/compute/pricing).
 
@@ -25,18 +23,21 @@ For `googleComputeEngineR` you will need:
 
 * Your project ID e.g. `my-project-name`
 * Your preferred geographical zone to launch VMs e.g. `europe-west1-a`
-* [Optional] A `Service account key` json file, downloaded from the API Manager > Credentials > Create credentials > Service account key > Key type = JSON
+* [Recommended] A `Service account key` json file, downloaded from the API Manager > Credentials > Create credentials > Service account key > Key type = JSON
 * [Optional] If not using service account key, you will need the `client-id` and `client-secret` for your project.
 
-> The recommended method to authenticate is using the JSON service account key via auto-authentication.
+## Setup video guide
 
 A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is [available at this link](https://www.youtube.com/watch?v=1oM0NZbRhSI).
 
-<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen></iframe> 
+```{r, echo=FALSE}
+knitr::include_url("http://www.youtube.com/embed/1oM0NZbRhSI?rel=0")
+```
 
-## Authentication
 
-### Auto-authentication via .Renviron
+# Authentication
+
+## Auto-authentication via .Renviron
 
 The best way to handle authentication is to set environment arguments with your setup details.
 
@@ -81,7 +82,7 @@ $name
 ```
 
 
-### Other authentication methods
+## Other authentication methods
 
 If you can't use an `.Renviron` you can set environment files within the script via `Sys.setenv`:
 

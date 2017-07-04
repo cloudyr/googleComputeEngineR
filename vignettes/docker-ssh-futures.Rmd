@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
-
 ## Logging in to your instance
 
 Google Cloud comes with a browser based SSH application, which you can launch via `gce_ssh_browser` to set it up further to your liking.

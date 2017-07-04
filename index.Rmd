@@ -1,25 +1,35 @@
-# googleComputeEngineR
-
 [![CRAN](http://www.r-pkg.org/badges/version/googleComputeEngineR)](http://cran.r-project.org/package=googleComputeEngineR)
 [![Build Status](https://travis-ci.org/cloudyr/googleComputeEngineR.png?branch=master)](https://travis-ci.org/cloudyr/googleComputeEngineR)
 [![codecov.io](https://codecov.io/github/cloudyr/googleComputeEngineR/coverage.svg?branch=master)](https://codecov.io/github/cloudyr/googleComputeEngineR?branch=master)
 
-`googleComputeEngineR` provides an R interface to the Google Cloud Compute Engine API, for launching virtual machines.  It looks to make the deployment of cloud resources for R as painless as possible, and includes some special templates to launch R-specific resources such as RStudio, Shiny, and OpenCPU with a few lines from your local R session.
 
-> See all documentation on the [googleComputeEngineR website](https://cloudyr.github.io/googleComputeEngineR/)
+```{r, echo=FALSE}
+knitr::include_graphics("articles/img/logo.png")
+```
 
-## TL;DR - Creating an RStudio server VM
+## Mission statement
 
-1. Configure a Google Cloud Project with billing
+`googleComputeEngineR` provides an R interface to the Google Cloud Compute Engine API, for launching virtual machines.  
+
+It looks to make the deployment of cloud resources for R as painless as possible, and includes some special templates to launch R-specific resources such as RStudio, Shiny, and OpenCPU with a few lines from your local R session. 
+
+## Quick startup - Creating an RStudio server VM
+
+1. Configure a Google Cloud Project with billing (see [setup](articles/installation-and-authentication.html))
 2. Download a service acount key JSON file
 3. Put your default project, zone and JSON file location in your `.Renviron`
 4. Run `library(googleComputeEngineR)` and auto-authenticate
 5. Run `vm <- gce_vm(template = "rstudio", name = "rstudio-server", username = "mark", password = "mark1234")` (or other credentials) to start up an RStudio Server.
 6. Wait for it to install, login via the returned URL.
 
+### Setup video guide
+
 A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is [available at this link](https://www.youtube.com/watch?v=1oM0NZbRhSI).
 
-<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen></iframe> 
+```{r, echo=FALSE}
+knitr::include_url("http://www.youtube.com/embed/1oM0NZbRhSI?rel=0")
+```
+
 
 ## Thanks to:
 
@@ -47,3 +57,4 @@ ghit::install_github("cloudyr/googleComputeEngineR")
 
 ---
 [![cloudyr project logo](http://i.imgur.com/JHS98Y7.png)](https://github.com/cloudyr)
+

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>R Interface with Google Compute Engine • googleComputeEngineR</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -15,7 +15,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-vignette">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -29,7 +29,11 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="articles/installation-and-authentication.html">Setup</a>
+  <a href="articles/installation-and-authentication.html">
+    <span class=" wrench"></span>
+     
+    Setup
+  </a>
 </li>
 <li>
   <a href="articles/creating-vms.html">Creating VMs</a>
@@ -88,7 +92,22 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://cloud.google.com/compute/">GCE Docs</a>
+  <a href="https://cloud.google.com/compute/">
+    <span class="fa fa-google fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/cloudyr/googleComputeEngineR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
+    <span class="fa fa-slack fa-lg"></span>
+     
+  </a>
 </li>
       </ul>
 </div>
@@ -100,20 +119,25 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
-    <div id="googlecomputeenginer" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#googlecomputeenginer" class="anchor"></a>googleComputeEngineR</h1></div>
+  <div class="col-md-9">
+    
 
-<p>An R interface to the Google Cloud Compute Engine API, for launching virtual machines.</p>
-<blockquote>
-<p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
-</blockquote>
-<div id="tldr---creating-an-rstudio-server-vm" class="section level2">
+    
+    
+<div class="contents">
+
+<p><img src="articles/img/logo.png"><!-- --></p>
+<div id="mission-statement" class="section level2">
 <h2 class="hasAnchor">
-<a href="#tldr---creating-an-rstudio-server-vm" class="anchor"></a>TL;DR - Creating an RStudio server VM</h2>
-<ol>
-<li>Configure a Google Cloud Project with billing</li>
+<a href="#mission-statement" class="anchor"></a>Mission statement</h2>
+<p><code>googleComputeEngineR</code> provides an R interface to the Google Cloud Compute Engine API, for launching virtual machines.</p>
+<p>It looks to make the deployment of cloud resources for R as painless as possible, and includes some special templates to launch R-specific resources such as RStudio, Shiny, and OpenCPU with a few lines from your local R session.</p>
+</div>
+<div id="quick-startup---creating-an-rstudio-server-vm" class="section level2">
+<h2 class="hasAnchor">
+<a href="#quick-startup---creating-an-rstudio-server-vm" class="anchor"></a>Quick startup - Creating an RStudio server VM</h2>
+<ol style="list-style-type: decimal">
+<li>Configure a Google Cloud Project with billing (see <a href="articles/installation-and-authentication.html">setup</a>)</li>
 <li>Download a service acount key JSON file</li>
 <li>Put your default project, zone and JSON file location in your <code>.Renviron</code>
 </li>
@@ -121,9 +145,13 @@
 <li>Run <code>vm &lt;- gce_vm(template = "rstudio", name = "rstudio-server", username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
 <li>Wait for it to install, login via the returned URL.</li>
 </ol>
+<div id="setup-video-guide" class="section level3">
+<h3 class="hasAnchor">
+<a href="#setup-video-guide" class="anchor"></a>Setup video guide</h3>
 <p>A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is <a href="https://www.youtube.com/watch?v=1oM0NZbRhSI">available at this link</a>.</p>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen>
+<iframe src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" width="672" height="400px">
 </iframe>
+</div>
 </div>
 <div id="thanks-to" class="section level2">
 <h2 class="hasAnchor">
@@ -141,13 +169,19 @@
 <p>CRAN version:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"googleComputeEngineR"</span>)</code></pre></div>
 <p>Development version:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"cloudyr/googleComputeEngineR"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">"ghit"</span>)) {
+    <span class="kw">install.packages</span>(<span class="st">"ghit"</span>)
+}
+ghit::<span class="kw">install_github</span>(<span class="st">"cloudyr/googleComputeEngineR"</span>)</code></pre></div>
+<hr>
+<p><a href="https://github.com/cloudyr"><img src="http://i.imgur.com/JHS98Y7.png" alt="cloudyr project logo"></a></p>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
-    <h2>Links</h2>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2 class="hasAnchor">
+<a href="#sidebar" class="anchor"></a>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cran.r-project.org/package=googleComputeEngineR">https://​cran.r-project.org/​package=googleComputeEngineR</a>
 </li>
@@ -160,21 +194,23 @@
 <p><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE.html">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Mark Edmondson <br><small class="roles"> Author, maintainer </small> </li>
+<li>
+<a href="http://code.markedmondson.me">Mark Edmondson</a> <br><small class="roles"> Author, maintainer </small> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="http://cran.r-project.org/package=googleComputeEngineR"><img src="http://www.r-pkg.org/badges/version/googleComputeEngineR" alt="CRAN"></a></li>
 <li><a href="https://travis-ci.org/cloudyr/googleComputeEngineR"><img src="https://travis-ci.org/cloudyr/googleComputeEngineR.png?branch=master" alt="Build Status"></a></li>
-<li><a href="https://codecov.io/github/cloudyr/googleComputeEngineR?branch=master"><img src="https://img.shields.io/codecov/c/github/cloudyr/googleComputeEngineR/master.svg" alt="Coverage Status"></a></li>
+<li><a href="https://codecov.io/github/cloudyr/googleComputeEngineR?branch=master"><img src="https://codecov.io/github/cloudyr/googleComputeEngineR/coverage.svg?branch=master" alt="codecov.io"></a></li>
 </ul>
 </div>
+
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Installation and Authentication • googleComputeEngineR</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -29,7 +29,11 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../articles/installation-and-authentication.html">Setup</a>
+  <a href="../articles/installation-and-authentication.html">
+    <span class=" wrench"></span>
+     
+    Setup
+  </a>
 </li>
 <li>
   <a href="../articles/creating-vms.html">Creating VMs</a>
@@ -88,7 +92,22 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://cloud.google.com/compute/">GCE Docs</a>
+  <a href="https://cloud.google.com/compute/">
+    <span class="fa fa-google fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/cloudyr/googleComputeEngineR">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
+    <span class="fa fa-slack fa-lg"></span>
+     
+  </a>
 </li>
       </ul>
 </div>
@@ -111,15 +130,12 @@
     
     
 <div class="contents">
-<blockquote>
-<p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
-</blockquote>
-<div id="setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
-<p>Google Compute Engine lets you create and run virtual machines on Google infrastructure. See the <a href="https://cloud.google.com/compute/docs/">documentation here</a>.</p>
+<div id="setup" class="section level1">
+<h1 class="hasAnchor">
+<a href="#setup" class="anchor"></a>Setup</h1>
+<p>Google Compute Engine (GCE) lets you create and run virtual machines on Google infrastructure. See the <a href="https://cloud.google.com/compute/docs/">general Google documentation here</a>.</p>
 <p>Before you begin, you will need to set up a Cloud Platform project, and enable billing by adding a credit card.</p>
-<p>A quickstart guide is <a href="https://cloud.google.com/compute/docs/quickstart-linux">available here</a> for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.</p>
+<p>A quickstart guide to using GCE is <a href="https://cloud.google.com/compute/docs/quickstart-linux">available here</a> for making your first VM via the web interface, if you are not familiar with GCE then its best to start there.</p>
 <p>Pricing is <a href="https://cloud.google.com/compute/pricing">available here</a>.</p>
 <p>For <code>googleComputeEngineR</code> you will need:</p>
 <ul>
@@ -127,22 +143,23 @@
 </li>
 <li>Your preferred geographical zone to launch VMs e.g. <code>europe-west1-a</code>
 </li>
-<li>[Optional] A <code>Service account key</code> json file, downloaded from the API Manager &gt; Credentials &gt; Create credentials &gt; Service account key &gt; Key type = JSON</li>
+<li>[Recommended] A <code>Service account key</code> json file, downloaded from the API Manager &gt; Credentials &gt; Create credentials &gt; Service account key &gt; Key type = JSON</li>
 <li>[Optional] If not using service account key, you will need the <code>client-id</code> and <code>client-secret</code> for your project.</li>
 </ul>
-<blockquote>
-<p>The recommended method to authenticate is using the JSON service account key via auto-authentication.</p>
-</blockquote>
+<div id="setup-video-guide" class="section level2">
+<h2 class="hasAnchor">
+<a href="#setup-video-guide" class="anchor"></a>Setup video guide</h2>
 <p>A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is <a href="https://www.youtube.com/watch?v=1oM0NZbRhSI">available at this link</a>.</p>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen>
+<iframe src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" width="672" height="400px">
 </iframe>
 </div>
-<div id="authentication" class="section level2">
+</div>
+<div id="authentication" class="section level1">
+<h1 class="hasAnchor">
+<a href="#authentication" class="anchor"></a>Authentication</h1>
+<div id="auto-authentication-via--renviron" class="section level2">
 <h2 class="hasAnchor">
-<a href="#authentication" class="anchor"></a>Authentication</h2>
-<div id="auto-authentication-via--renviron" class="section level3">
-<h3 class="hasAnchor">
-<a href="#auto-authentication-via--renviron" class="anchor"></a>Auto-authentication via .Renviron</h3>
+<a href="#auto-authentication-via--renviron" class="anchor"></a>Auto-authentication via .Renviron</h2>
 <p>The best way to handle authentication is to set environment arguments with your setup details.</p>
 <p>These can be set in an <code>.Renviron</code> file located on your computer home directory - R will look in this file upon startup. Read more via <code>?Startup</code></p>
 <p>The easiest way to find the right home directory is within RStudio, to click on the <code>Home</code> button in RStudio’s file explorer. Create a file via <code>File &gt; New file &gt; Text File</code>, save and call it <code>.Renviron</code></p>
@@ -174,9 +191,9 @@ $name
 
 ...etc.... </code></pre></div>
 </div>
-<div id="other-authentication-methods" class="section level3">
-<h3 class="hasAnchor">
-<a href="#other-authentication-methods" class="anchor"></a>Other authentication methods</h3>
+<div id="other-authentication-methods" class="section level2">
+<h2 class="hasAnchor">
+<a href="#other-authentication-methods" class="anchor"></a>Other authentication methods</h2>
 <p>If you can’t use an <code>.Renviron</code> you can set environment files within the script via <code>Sys.setenv</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">"GCE_AUTH_FILE"</span> =<span class="st"> "/fullpath/to/auth.json"</span>)</code></pre></div>
 </div>
@@ -189,8 +206,17 @@ $name
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#setup">Setup</a></li>
-      <li><a href="#authentication">Authentication</a></li>
+<li>
+<a href="#setup">Setup</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#setup-video-guide">Setup video guide</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#authentication">Authentication</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#auto-authentication-via--renviron">Auto-authentication via .Renviron</a></li>
+      <li><a href="#other-authentication-methods">Other authentication methods</a></li>
+      </ul>
+</li>
       </ul>
 </div>
       </div>
@@ -199,7 +225,7 @@ $name
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
