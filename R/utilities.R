@@ -1,3 +1,17 @@
+# is lowercase or hypens
+is.lower_hypen <- function(x){
+  assertthat::assert_that(
+    assertthat::is.string(x)
+  )
+  
+  grepl("^[a-z\\-]+$", x)
+  
+}
+assertthat::on_failure(is.lower_hypen) <- function(call, env){
+  paste0("Must be lowercase and/or hypens")
+}
+
+
 ## from https://github.com/hadley/httr/blob/4624451f8cc395a90730b5a10b50ba005187f2ff/R/oauth-cache.R
 add_line <- function(line, path, quiet = FALSE) {
   if (file.exists(path)) {

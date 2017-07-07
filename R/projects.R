@@ -46,8 +46,10 @@ gce_global_project <- function(project = gce_get_global_project()){
     project <- project$name
   }
   
-  stopifnot(inherits(project, "character"),
-            length(project) == 1)
+  assertthat::assert_that(
+    assertthat::is.string(project),
+    is.lower_hypen(project)
+  )
   
   .gce_env$project <- project
   message("Set default project name to '", project,"'")
