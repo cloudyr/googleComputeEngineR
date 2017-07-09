@@ -11,8 +11,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 	pandoc \
 	pandoc-citeproc \
 	zlib1g-dev
-RUN ["install2.r", "-r 'https://cloud.r-project.org'", "googleCloudStorageR", "Rcpp", "digest", "crayon", "withr", "mime", "R6", "jsonlite", "xtable", "magrittr", "httr", "curl", "testthat", "devtools", "shiny", "httpuv", "memoise", "htmltools", "openssl", "remotes"]
-RUN ["installGithub.r", "MarkEdmondson1234/googleAuthR@7917351"]
+RUN ["install2.r", "-r 'https://cloud.r-project.org'", "readr", "googleCloudStorageR", "Rcpp", "digest", "crayon", "withr", "mime", "R6", "jsonlite", "xtable", "magrittr", "httr", "curl", "testthat", "devtools", "hms", "shiny", "httpuv", "memoise", "htmltools", "openssl", "tibble", "remotes"]
+RUN ["installGithub.r", "MarkEdmondson1234/googleAuthR@7917351", "hadley/rlang@ff87439"]
 WORKDIR /payload/
 COPY [".", "./"]
 

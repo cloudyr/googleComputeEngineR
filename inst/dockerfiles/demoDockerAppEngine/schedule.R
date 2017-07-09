@@ -1,5 +1,6 @@
 library(googleAuthR)         ## authentication
 library(googleCloudStorageR)  ## google cloud storage
+library(readr)                ## 
 ## gcs auto authenticated via environment file 
 ## pointed to via sys.env GCS_AUTH_FILE
 
