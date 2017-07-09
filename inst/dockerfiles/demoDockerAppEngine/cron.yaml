@@ -1,0 +1,4 @@
+cron:
+- description: "test cron"
+  url: /demoR
+  schedule: every 1 hours
