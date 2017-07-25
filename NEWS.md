@@ -14,6 +14,7 @@
 - Migrate to use `system2` instead of `system` for cross-platform SSH (#35)
 - `gce_shiny_addapp` is now much more useful
 - Add `gce_schedule_docker` and `gce_vm_scheduler` for easy Dockerfile scheduling
+- Add `gce_vm_logs` to quickly browse to an instance logs online
 
 # googleComputeEngineR 0.1.0
 
