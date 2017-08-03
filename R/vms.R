@@ -510,3 +510,35 @@ gce_vm_stop <- function(instance,
   as.zone_operation(out)
 }
 
+#' Open browser to the serial console output for a VM
+#' 
+#' Saves a few clicks
+#' 
+#' @param vm The VM to see serial console output for
+#' @param open_browser Whether to return a URL or open the browser
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' 
+#' @return a URL
+#' @export
+gce_vm_logs <- function(instance, 
+                        open_brower = TRUE, 
+                        project = gce_get_global_project(), 
+                        zone = gce_get_global_zone() ){
+  
+  the_name <- as.gce_instance_name(instance)
+  the_url <- sprintf("https://console.cloud.google.com/compute/instancesDetail/zones/%s/instances/%s/console?project=%s",
+                     zone, the_name, project)
+  
+  if(open_brower){
+    if(!is.null(getOption("browser"))){
+      utils::browseURL(the_url)
+    }
+  }
+  
+  myMessage("Serial console output for", the_name ,": ",the_url)
+  
+  the_url
+  
+}
+
