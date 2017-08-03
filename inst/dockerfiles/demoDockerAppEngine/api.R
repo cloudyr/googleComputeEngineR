@@ -30,3 +30,6 @@ demoScheduleAPI <- function(){
   
   cat("Done", Sys.time())
 }
+
+## run locally via
+# pr <- plumber::plumb("schedule.R"); pr$run(port=8080)

@@ -17,5 +17,5 @@ WORKDIR /payload/
 COPY [".", "./"]
 
 EXPOSE 8080
-ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=8080)"]
-CMD ["schedule.R"]
+ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=8080, swagger=TRUE)"]
+CMD ["api.R"]

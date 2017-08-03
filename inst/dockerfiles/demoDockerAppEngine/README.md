@@ -93,13 +93,6 @@ Example:
 ```yaml
 runtime: custom
 env: flex
-automatic_scaling:
-  min_num_instances: 1
-  max_num_instances: 1
-
-resources:
-  cpu: 1
-  memory_gb: 2
 
 env_variables:
   GCS_AUTH_FILE: auth.json
@@ -116,5 +109,6 @@ cron:
 
 5. Deploy via `gcloud app deploy --project your-project`
 
-Deploy new cron via `gcloud app deploy cron.yaml`
+Deploy new cron via `gcloud app deploy cron.yaml --project your-project`
 
+6. App should then be deployed on https://your-project.appspot.com/ - every GET request to https://your-project.appspot.com/demoR (or other endpoints you have specified in R script) will run the R code.  The cron will run every hour to this endpoint as specified by the cron file above.  Logs for the instance are found [here](https://console.cloud.google.com/logs/viewer).
