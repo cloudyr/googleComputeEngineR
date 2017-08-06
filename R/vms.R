@@ -251,6 +251,11 @@ gce_vm_create <- function(name,
     assertthat::is.string(name)
   )
   
+  ## missing only works within function its called from
+  if(missing(predefined_type)){
+    predefined_type <- NULL
+  }
+  
   ## beta elements are NULL
   guestAccelerators = NULL
   
@@ -285,9 +290,11 @@ gce_vm_create <- function(name,
     }
   }
 
-  ## treat null image_project same as image_project = ''
-  if (is.null(image_project))
-    image_project <- ''
+  ## treat null image_project same as image_project = ""
+  if(is.null(image_project)){
+    image_project <- ""
+  }
+
   
   ## if an image project is defined, create a source_image_url
   if(nchar(image_project) > 0){

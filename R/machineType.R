@@ -12,21 +12,30 @@
 #' 
 #' @return A url for use in instance creation
 #' @export
-gce_make_machinetype_url <- function(predefined_type,
-                                     cpus,
-                                     memory,
+gce_make_machinetype_url <- function(predefined_type = NULL,
+                                     cpus = NULL,
+                                     memory = NULL,
                                      zone = gce_get_global_zone()){
   
-  if(missing(predefined_type)){
-    stopifnot(all(!missing(cpus), !missing(memory)))
+  if(is.null(predefined_type)){
     
-    testthat::expect_equal(cpus %% 2, 0)
-    testthat::expect_lt(cpus, 33)
-    testthat::expect_equal(memory %% 256, 0)
+    assertthat::assert_that(
+      !is.null(cpus),
+      !is.null(memory),
+      is.numeric(cpus),
+      is.numeric(memory),
+      (cpus %% 2 == 0),
+      cpus < 33,
+      (memory %% 256 == 0)
+    )
     
     out <- sprintf("zones/%s/machineTypes/custom-%s-%s", zone, cpus, memory)
     
   } else {
+    
+    assertthat::assert_that(
+      assertthat::is.string(predefined_type)
+    )
     
     out <- sprintf("zones/%s/machineTypes/%s", zone, predefined_type)
     
