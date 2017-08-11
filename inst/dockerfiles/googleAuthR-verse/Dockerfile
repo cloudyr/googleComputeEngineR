@@ -13,6 +13,8 @@ RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
     googleAuthR googleComputeEngineR googleAnalyticsR searchConsoleR googleCloudStorageR bigQueryR \
     ## install Github packages
-    && Rscript -e "devtools::install_github(c('MarkEdmondson1234/youtubeAnalyticsR', 'MarkEdmondson1234/googleID'))" \
+    && installGithub.r MarkEdmondson1234/youtubeAnalyticsR \
+                       MarkEdmondson1234/googleID \
+                       cloudyr/googleCloudStorageR \
     ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \

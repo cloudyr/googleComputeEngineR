@@ -15,7 +15,7 @@
 - `gce_shiny_addapp` is now much more useful
 - Add `gce_schedule_docker` and `gce_vm_scheduler` for easy Dockerfile scheduling
 - Add `gce_vm_logs` to quickly browse to an instance logs online
-- Fix custom machine types creation (#63)
+- Fix custom machine types creation (#63) - thanks @Blaza
 
 # googleComputeEngineR 0.1.0
 
