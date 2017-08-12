@@ -36,6 +36,6 @@ For a way of using RStudio more like when using it locally, this build also incl
 
 An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via `googleAuthR::gar_gce_auth()` so you don't need to supply your own auth file.
 
-To use, the VM needs to be supplied with a bucket name.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.
+To use, the VM needs to be supplied with a bucket name.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.  This can be set in the instance metadata on startup. 
 
 
