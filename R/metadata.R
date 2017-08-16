@@ -1,3 +1,37 @@
+#' Turn metadata into an environment argument
+#' 
+#' This turns instance metadata into an environment argument R (and other software) can see.  
+#'   Only works on a running instance. 
+#' 
+#' @param key The metadata key.  Pass "" to list the keys
+#' 
+#' @return The metadata key value, if successful
+#' @export
+gce_metadata_env <- function(key){
+  
+  call_url <- sprintf("http://metadata.google.internal/computeMetadata/v1/instance/attributes/%s", 
+                      key)
+  req <- tryCatch(httr::GET(call_url, httr::add_headers(`Metadata-Flavor` = "Google")),
+                  error = function(ex){
+                    myMessage("Not detected as being on Google Compute Engine", 
+                              level = 2)
+                    return(NULL)
+                  })
+                  
+  value <- httr::content(req, as = "text", encoding = "UTF-8")
+  
+  if(key != ""){
+    myMessage("Setting environment value: ", key, "=", value, level=3)
+    args = list(value)
+    names(args) = key
+    do.call(Sys.setenv, args)
+  }
+  
+  value
+  
+}
+
+
 #' Extract metadata from an instance object
 #' 
 #' @param instance instance to get metadata from
