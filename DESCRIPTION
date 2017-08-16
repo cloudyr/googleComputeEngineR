@@ -18,11 +18,12 @@ Depends:
     R (>= 3.3.0)
 Imports:
     assertthat,
-    googleAuthR (>= 0.5.1),
-    jsonlite (>= 1.1),
     future (>= 1.2.0),
     globals,
-    listenv
+    googleAuthR (>= 0.5.1),
+    jsonlite (>= 1.1),
+    listenv,
+    utils
 Suggests:
     devtools (>= 1.12.0),
     knitr,
