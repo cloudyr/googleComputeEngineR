@@ -25,9 +25,10 @@ Imports:
     listenv,
     utils
 Suggests:
-    devtools (>= 1.12.0),
-    knitr,
     covr,
+    devtools (>= 1.12.0),
+    googleCloudStorageR,
+    knitr,
     rmarkdown,
     testthat
 License: MIT + file LICENSE

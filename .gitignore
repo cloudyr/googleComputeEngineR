@@ -13,3 +13,4 @@ tests/testthat/travis-ssh-key
 tests/testthat/travis-ssh-key.pub
 *.httr-oauth
 *.history
+gcs_save_error
