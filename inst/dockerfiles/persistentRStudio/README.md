@@ -32,13 +32,13 @@ You don't have to use GitHub - Google also offers Git repos that are private wit
 
 However, using Git is not quite the same as running your own RStudio on your own laptop - you need to set up a Git repo for each project and that is a cost if you want to keep them private.
 
-For a way of using RStudio more like when using it locally, this build also includes `googleCloudStorageR` which can store data to Google's dedicated store via its `gcs_first` and `gcs_last` functions.  Putting these in a `.Rprofile` file will save the projects workspace data to its own bucket, if they have a `_gcssave.yaml` file in the folder.  This `.yaml` tells `googleCloudStorageR` which bucket to save the folder to.
+For a way of using RStudio more like when using it locally, this build also includes `googleCloudStorageR` which can store data to Google's dedicated store via its `gcs_first` and `gcs_last` functions.  This is automatically put into an `.Rprofile` file that will save the projects workspace data to its own bucket, if they have a `_gcssave.yaml` file in the folder.  This `.yaml` tells `googleCloudStorageR` which bucket to save the folder to.
 
-The buckt to save to is also set in an environment argument `GCS_SESSION_BUCKET` - this is used on first load. 
+The bucket to save to is also set in an environment argument `GCS_SESSION_BUCKET` - this is used on first load. 
 
-You can save this via your local computer, then launch an RStudio server with the same `.Rprofile` settings to load the files again.  Create a similar named project/working directory, and set up a `_gcssave.yaml` with the `loaddir` field set to the name of the folder you uploaded (as it will have a different name to your own local folder.)
+Thus, you can save an RStudio project via your local computer, then launch an RStudio server in the cloud with the `loaddir:` argument set to that directory name to load the files onto your cloud server.  Once done, when you quit the R session it will save your work to its own new folder, that when you stop/start a Docker container with RStudio within and create a project with the same name, will automatically load.
 
-When you restart that folder or call `gcs_first` manually, the saved files should be downloaded to your instance.  When you quit, a copy will be uploaded with the same file path, and the next time you launch a project of that name it should download automatically.  It will only download files to your folder that don't exist, so local changes wonøt be overwritten. 
+It will only download files to your folder that don't exist, so local changes won't be overwritten if they already exist. 
 
 If you upload to GCS, make sure you only load the versions you want - delete the GCS folder if you want to stop backups via `gcs_delete_all()`
 
@@ -62,9 +62,87 @@ An advantage on using R on a GCE instance is that you can reuse the authenticati
 
 To use, the VM needs to be supplied with a bucket name environment.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.  This can be set in the instance metadata, that will get copied over to an environment argument R can see.  
 
+# Workflow steps
 
+## On local computer
 
+1. Create Google Cloud Bucket to save your R sessions to - you can do this via the web UI or similar to below:
 
+```r
+library(googleCloudStorageR)
 
+## make the bucket to save to
+projectId = "your-project"
+bucket_name <- paste("gcer", projectId, Sys.Date(), sep ="-")
+bs <- gcs_list_buckets(projectId)
+
+if(bucket_name %in% bs$name){
+  message("Bucket found")
+  b <- bucket_name
+} else {
+  b <- gcs_create_bucket(bucket_name, 
+                         projectId, 
+                         location = "europe-west2", 
+                         storageClass = "REGIONAL")
+}
+gcs_global_bucket(b)
+```
+2. Add that bucket to your `.Renviron` as the `GCS_SESSION_BUCKET` argument:
+```
+GCS_SESSION_BUCKET=gcer-bucket-name
+```
+3. Add `gcs_first` and `gcs_last` to your `.RProfile` file. 
+4. Create RStudio Project
+5. Make R stuff
+6. Add a `_gcssave.yaml` file specifying GCS bucket to save to.
+7. Exit RStudio project.  You should see a message similar to: 
+```r
+Saving data to Google Cloud Storage:
+your-gcs-bucket
+2017-08-18 23:25:43 -- File size detected as 1.3 Mb
+```
+
+When you startup that project again you should see:
+```r
+[Workspace loaded from: 
+gs://your-gcs-bucket/Users/the-rproject-folder]
+```
+
+## On cloud RStudio server
+
+Now the R data is saved to GCS under the local folder name.  We can load this data in an RStudio server cloud instance via:
+
+1. Launch this RStudio server image (that has appropriate libraries loaded) in the same project as your bucket
+
+```r
+vm <- gce_vm("mark-rstudio",
+             template = "rstudio",
+             username = "mark", password = 'mypassword',
+             predefined_type = "n1-standard-2",
+             dynamic_image = "gcr.io/gcer-public/googleauthr-verse")
+```
+2. Login to RStudio server and create an RStudio project
+3. Create a `_gcssave.yaml` file at the root of the project with these entries:
+
+```yaml
+bucket: your-gcs-bucket
+loaddir: your-local-directory-name
+```
+4. Close and re-open the RStudio project.  Your local files should now load from GCS
+5. Do work, then exit the project.  It will be saved to a new folder on GCS
+6. Shutdown the VM to avoid charges.
+7. Restart the VM and repeat step 2 and 3, but without the `loaddir` line (as you should now have your work folder saved to GCS)
+
+```yaml
+bucket: your-gcs-bucket
+```
+
+Alternatively set the environment argument `GCS_SESSION_BUCKET` via:
+
+```r
+Sys.setenv("GCS_SESSION_BUCKET" = "your-bucket")
+```
+
+8. Repeat as required.
 
 
