@@ -2,7 +2,7 @@
 
 By default the Docker container will not remember any files or changes if relaunched.
 
-This Dockerfile installs tools on top of the defualt `rocker/tidyverse` to help.
+This Dockerfile installs tools on top of the default `rocker/tidyverse` to help.
 
 ## GitHub
 
@@ -121,8 +121,14 @@ vm <- gce_vm("mark-rstudio",
              predefined_type = "n1-standard-2",
              dynamic_image = "gcr.io/gcer-public/googleauthr-verse")
 ```
-2. Login to RStudio server and create an RStudio project
-3. Create a `_gcssave.yaml` file at the root of the project with these entries:
+
+2. Add metadata to the VM specifying the session bucket to load: either in the web UI or via:
+
+```r
+gce_set_metadata(vm, list(GCS_SESSION_BUCKET = "your-bucket"))
+```
+3. Login to RStudio server and create an RStudio project
+4. Create a `_gcssave.yaml` file at the root of the project with these entries:
 
 ```yaml
 bucket: your-gcs-bucket
@@ -131,18 +137,6 @@ loaddir: your-local-directory-name
 4. Close and re-open the RStudio project.  Your local files should now load from GCS
 5. Do work, then exit the project.  It will be saved to a new folder on GCS
 6. Shutdown the VM to avoid charges.
-7. Restart the VM and repeat step 2 and 3, but without the `loaddir` line (as you should now have your work folder saved to GCS)
-
-```yaml
-bucket: your-gcs-bucket
-```
-
-Alternatively set the environment argument `GCS_SESSION_BUCKET` via:
-
-```r
-Sys.setenv("GCS_SESSION_BUCKET" = "your-bucket")
-```
-
-8. Repeat as required.
+7. Restart the VM and repeat 3, creating an RStudio project with the exact same name as before.  The files from GCS should now automatically load as you are using same bucket (via VM metadata) and filepath (via RStudio Project name)
 
 
