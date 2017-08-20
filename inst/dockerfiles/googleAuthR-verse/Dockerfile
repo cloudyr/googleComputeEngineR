@@ -11,7 +11,13 @@ RUN apt-get update && apt-get install -y \
 ## Install packages from CRAN
 RUN install2.r --error \ 
     -r 'http://cran.rstudio.com' \
-    googleAuthR googleComputeEngineR googleAnalyticsR searchConsoleR googleCloudStorageR bigQueryR \
+    googleAuthR \ 
+    googleComputeEngineR \ 
+    googleAnalyticsR \ 
+    searchConsoleR \ 
+    googleCloudStorageR \
+    bigQueryR \ 
+    zip \
     ## install Github packages
     && installGithub.r MarkEdmondson1234/youtubeAnalyticsR \
                        MarkEdmondson1234/googleID \

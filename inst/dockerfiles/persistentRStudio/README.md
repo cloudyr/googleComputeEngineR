@@ -4,64 +4,6 @@ By default the Docker container will not remember any files or changes if relaun
 
 This Dockerfile installs tools on top of the defualt `rocker/tidyverse` to help.
 
-## GitHub
-
-Generally GitHub is the best place to keep code within projects.  
-
-### Installation
-
-`git` and `openssh-client` are installed so you can configure RStudio's Git client - the best sources for troubleshooting are:
-
-* [Happy with Git](http://happygitwithr.com/)
-* [This post on RBloggers](https://www.r-bloggers.com/rstudio-and-github/)
-
-The key sticking point looks to be you have to push to GitHub using the command line first, and to make sure you add these lines:
-
-```
-git remote add origin https://github.com/your-github-user/github-repo.git
-git config remote.origin.url git@github.com:your-github-user/github-repo.git
-```
-
-After one successful shell pull and push, you should then be able to use the RStudio Git UI without putting in your username and password.  You will unfortunetly need to repeat this after each stop/start of RStudio though, unless you save the container to your own private repo via `googleComputeEngineR::gce_push_repository` (todo - copy local github ssh keys to an instance?)
-
-You can then use GitHub via private and public repos to keep your code and data safe.  When RStudio is launched, pull in your project, work on it, then push up again.  You can then stop the RStudio instance without losing your code.
-
-You don't have to use GitHub - Google also offers Git repos that are private within the project - [Cloud Source Repositories](https://cloud.google.com/source-repositories/).  Set the remote to those as detailed [here](https://cloud.google.com/source-repositories/docs/adding-repositories-as-remotes).
-
-## Google Cloud Storage
-
-However, using Git is not quite the same as running your own RStudio on your own laptop - you need to set up a Git repo for each project and that is a cost if you want to keep them private.
-
-For a way of using RStudio more like when using it locally, this build also includes `googleCloudStorageR` which can store data to Google's dedicated store via its `gcs_first` and `gcs_last` functions.  This is automatically put into an `.Rprofile` file that will save the projects workspace data to its own bucket, if they have a `_gcssave.yaml` file in the folder.  This `.yaml` tells `googleCloudStorageR` which bucket to save the folder to.
-
-The bucket to save to is also set in an environment argument `GCS_SESSION_BUCKET` - this is used on first load. 
-
-Thus, you can save an RStudio project via your local computer, then launch an RStudio server in the cloud with the `loaddir:` argument set to that directory name to load the files onto your cloud server.  Once done, when you quit the R session it will save your work to its own new folder, that when you stop/start a Docker container with RStudio within and create a project with the same name, will automatically load.
-
-It will only download files to your folder that don't exist, so local changes won't be overwritten if they already exist. 
-
-If you upload to GCS, make sure you only load the versions you want - delete the GCS folder if you want to stop backups via `gcs_delete_all()`
-
-Example `_gcssave.yaml`:
-
-```yaml
-## The GCS bucket to save/load R workspace from
-bucket: gcer-store-my-rstudio-files
-
-## set to FALSE if you dont want to load on R session startup
-load_on_startup: TRUE
-
-## on first load and init, whether to look for a different directory on GCS than present getwd()
-loaddir: /Users/mark/the/folder/on/local
-
-## regex to only save these files to GCS
-pattern:
-```
-
-An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via `googleAuthR::gar_gce_auth()` so you don't need to supply your own auth file.
-
-To use, the VM needs to be supplied with a bucket name environment.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.  This can be set in the instance metadata, that will get copied over to an environment argument R can see.  
-
 # Workflow steps
 
 ## On local computer
@@ -87,6 +29,9 @@ if(bucket_name %in% bs$name){
 }
 gcs_global_bucket(b)
 ```
+
+Choose a bucket region that is closest to you and your VM for best performance
+
 2. Add that bucket to your `.Renviron` as the `GCS_SESSION_BUCKET` argument:
 ```
 GCS_SESSION_BUCKET=gcer-bucket-name
@@ -145,4 +90,73 @@ Sys.setenv("GCS_SESSION_BUCKET" = "your-bucket")
 
 8. Repeat as required.
 
+## Details on how the above is working
+
+This build includes the newest version of `googleCloudStorageR` and `googleComputeEngineR` which have had functions added to help with the workflow above.
+
+The functions can store data to Google's dedicated store via `googleCloudStorageR`s `gcs_first` and `gcs_last` functions.  This Dockerbuild puts the functions into a custom `.Rprofile` file that will save the projects workspace data to its own bucket, if they have a `_gcssave.yaml` file in the folder, or if the directory matches one already saved.  
+
+The `.yaml` tells `googleCloudStorageR` which bucket to save the folder to, or if not present an environment argument `GCS_SESSION_BUCKET` - this is used on first load when no `.yaml` file is present. 
+
+Thus, you can save an RStudio project via your local computer, then launch an RStudio server in the cloud with the `loaddir:` argument set to that directory name to load the files onto your cloud server.  Once done, when you quit the R session it will save your work to its own new folder, that when you stop/start a Docker container with RStudio within and create a project with the same name, will automatically load.
+
+It will only download files to your folder that don't exist, so local changes won't be overwritten if they already exist.  It is not git, treat it more as a backup that will load if the files are not already present (such as when you relaunch a Docker container)
+
+If you upload to GCS, make sure to load the directory and files you want - delete the GCS folder if you want to stop backups via `gcs_delete_all()`
+
+Example `_gcssave.yaml`:
+
+```yaml
+## The GCS bucket to save/load R workspace from
+bucket: gcer-store-my-rstudio-files
+
+## set to FALSE if you dont want to load on R session startup
+load_on_startup: TRUE
+
+## on first load and init, whether to look for a different directory on GCS than present getwd()
+loaddir: /Users/mark/the/folder/on/local
+
+## regex to only save these files to GCS
+pattern:
+```
+
+An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via `googleAuthR::gar_gce_auth()` so you don't need to supply your own auth file.
+
+To use, the VM needs to be supplied with a bucket name environment.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.  This is set in the instance running the Docker's metadata, that will get copied over to an environment argument R can see.  
+
+## GitHub
+
+Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to supply your GitHub SSH keys.
+
+### Google Source Repositories
+
+As you should by now have a Google Cloud project, with GCE and GCS, you may as well go all in and also use the [Google Source Repositories](https://cloud.google.com/source-repositories/) service. (This is intended mostly for Chromebook users, so this is probably ok!)  
+
+Source Repositories gives you your own private repos, or you can mirror your existing GitHub projects. After setup where you authorise once in the console, this means your Git repos can then be called from this RStudio Docker instance using just the Google authentication you used to connect to GCE and GCS. (e.g. no need to set up SSH keys) 
+
+1. Go to your [source repository section](https://console.cloud.google.com/code/develop) on Google Cloud Platform and click `Create Repository` 
+2. Mirror your existing (private or public) GitHub or BitBucket repos that you want to use in RStudio. 
+3. Locally, add 
+
+
+
+### Manual Installation
+
+If however, you want to use your local SSH keys, then the below is a guide.
+
+`git` and `openssh-client` are installed in the Dockerfile so you can configure RStudio's Git client - the best sources for troubleshooting are:
+
+* [Happy with Git](http://happygitwithr.com/)
+* [This post on RBloggers](https://www.r-bloggers.com/rstudio-and-github/)
+
+The key sticking point looks to be you have to push to GitHub using the command line first, and to make sure you add these lines:
+
+```
+git remote add origin https://github.com/your-github-user/github-repo.git
+git config remote.origin.url git@github.com:your-github-user/github-repo.git
+```
+
+After one successful shell pull and push, you should then be able to use the RStudio Git UI without putting in your username and password.  
+
+You will unfortunetly need to repeat this after each stop/start of RStudio though, unless you save the RStudio Docker container to your own private repo (perhaps via `googleComputeEngineR::gce_push_repository`)  This container and its ancestors needs to always be private, as your private SSH keys are exposed.  I don't recommend this, and use the Google Souce repositories method above instead. 
 
