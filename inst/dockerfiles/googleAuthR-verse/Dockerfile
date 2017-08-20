@@ -17,10 +17,9 @@ RUN install2.r --error \
     searchConsoleR \ 
     googleCloudStorageR \
     bigQueryR \ 
-    zip \
     ## install Github packages
     && installGithub.r MarkEdmondson1234/youtubeAnalyticsR \
                        MarkEdmondson1234/googleID \
-                       cloudyr/googleCloudStorageR \
     ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+
