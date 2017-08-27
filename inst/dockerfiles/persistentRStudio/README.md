@@ -131,7 +131,8 @@ Source Repositories gives you your own private repos, or you can mirror your exi
 
 1. Go to your [source repository section](https://console.cloud.google.com/code/develop) on Google Cloud Platform and click `Create Repository` 
 2. Mirror your existing (private or public) GitHub or BitBucket repos that you want to use in RStudio. 
-3. Locally, add 
+3. Click on Clone, and choose the manual option
+4. 
 
 
 
