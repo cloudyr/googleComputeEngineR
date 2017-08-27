@@ -45,20 +45,13 @@ RUN install2.r --error \
     searchConsoleR \ 
     googleCloudStorageR \
     bigQueryR \ 
+    zip \
 ## install Github packages
     && installGithub.r MarkEdmondson1234/youtubeAnalyticsR \
                        MarkEdmondson1234/googleID \
-## clean up
-    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
-
-## Install packages from CRAN
-RUN install2.r --error \ 
-    -r 'http://cran.rstudio.com' \
-    zip \ 
-## install Github packages
-    && installGithub.r cloudyr/googleCloudStorageR \
+                       cloudyr/googleCloudStorageR \
                        cloudyr/googleComputeEngineR \
-    ## clean up
-    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 COPY Rprofile.site /usr/local/lib/R/etc/Rprofile.site
