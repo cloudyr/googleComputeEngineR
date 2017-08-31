@@ -10,9 +10,9 @@ gce_ssh_setup(instance, key.pub = NULL, key.private = NULL,
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
 
-\item{key.pub}{The filepath location of the public key, only needed first call per session}
+\item{key.pub}{The filepath location of the public key}
 
-\item{key.private}{The filepath location of the private key, only needed first call per session}
+\item{key.private}{The filepath location of the private key}
 
 \item{ssh_overwrite}{Will check if SSH settings already set and overwrite them if TRUE}
 

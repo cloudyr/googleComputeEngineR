@@ -22,9 +22,9 @@ gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
 \item{...}{Shell commands to run. Multiple commands are combined with
 \code{&&} so that execution will halt after the first failure.}
 
-\item{key.pub}{The filepath location of the public key, only needed first call per session}
+\item{key.pub}{The filepath location of the public key}
 
-\item{key.private}{The filepath location of the private key, only needed first call per session}
+\item{key.private}{The filepath location of the private key}
 
 \item{wait}{Whether then SSH output should be waited for or run it asynchronously.}
 

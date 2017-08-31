@@ -284,7 +284,7 @@ gce_vm_create <- function(name,
   }
   
   
-  if(missing(predefined_type) && !assertthat::is.string(predefined_type)){
+  if(is.null(predefined_type) && !assertthat::is.string(predefined_type)){
     if(any(is.null(cpus), is.null(memory))){
      stop("Must supply one of 'predefined_type', or both 'cpus' and 'memory' arguments.") 
     }

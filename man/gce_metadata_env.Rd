@@ -7,7 +7,7 @@
 gce_metadata_env(key)
 }
 \arguments{
-\item{key}{The metadata key}
+\item{key}{The metadata key.  Pass "" to list the keys}
 }
 \value{
 The metadata key value, if successful

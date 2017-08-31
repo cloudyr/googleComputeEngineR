@@ -38,19 +38,26 @@ gce_extract_projectzone <- function(instance){
 #' @param zone The name of the zone for this request
 #' 
 #' @importFrom googleAuthR gar_api_generator
-#' @importFrom utils URLencode
 #' @export
 gce_list_instances <- function(filter = NULL, 
                                maxResults = NULL, 
                                pageToken = NULL,
                                project = gce_get_global_project(), 
                                zone = gce_get_global_zone()) {
+
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
-  pars <- list(filter = URLencode(filter, reserved = TRUE), 
+  
+  if(!is.null(filter)){
+    filter <- utils::URLencode(filter, reserved = TRUE)
+  }
+  
+  pars <- list(filter = filter, 
                maxResults = maxResults, 
                pageToken = pageToken)
   pars <- rmNullObs(pars)
+  
+
   # compute.instances.list
   f <- gar_api_generator(url, 
                          "GET", 

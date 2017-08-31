@@ -156,8 +156,8 @@ gce_ssh_addkeys <- function(instance,
 #' These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"), ".ssh", "google_compute_engine.pub")}
 #' 
 #' @param username The username you used to generate the key-pair
-#' @param key.pub The filepath location of the public key, only needed first call per session
-#' @param key.private The filepath location of the private key, only needed first call per session
+#' @param key.pub The filepath location of the public key
+#' @param key.private The filepath location of the private key
 #' @param instance Name of the instance of run ssh command upon
 #' @param ssh_overwrite Will check if SSH settings already set and overwrite them if TRUE
 #' 

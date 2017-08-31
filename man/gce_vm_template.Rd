@@ -5,8 +5,9 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "example", "dynamic", "ropensci"), username = NULL, password = NULL,
-  dynamic_image = NULL, image_family = "cos-stable", ...)
+  "example", "dynamic", "ropensci", "rstudio-ssh"), username = NULL,
+  password = NULL, dynamic_image = NULL, image_family = "cos-stable",
+  key.pub = NULL, key.private = NULL, ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -18,6 +19,10 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 \item{dynamic_image}{Supply an alternative to the default Docker image here to download}
 
 \item{image_family}{An image-family.  It must come from the \code{cos-cloud} family.}
+
+\item{key.pub}{The filepath location of the public key}
+
+\item{key.private}{The filepath location of the private key}
 
 \item{...}{Arguments passed on to \code{gce_vm_container}
 \describe{
@@ -38,6 +43,7 @@ Templates available are:
 
 \itemize{
   \item rstudio An RStudio server docker image with tidyverse and devtools
+  \item rstudio-ssh Above but with public and private ssh keys uploaded
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
   \item r_base Latest version of R stable
