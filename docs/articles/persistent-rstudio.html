@@ -136,18 +136,18 @@
 <div id="persistent-rstudio-on-google-compute-engine" class="section level1">
 <h1 class="hasAnchor">
 <a href="#persistent-rstudio-on-google-compute-engine" class="anchor"></a>Persistent RStudio on Google Compute Engine</h1>
-<p>This Dockerfile installs tools on top of the default <code>rocker/tidyverse</code> to help persist files over Docker containers.</p>
-<p>There are three ways to save files between Docker sessions:</p>
+<p>A new Docker image is available which installs tools on top of the default <a href="https://hub.docker.com/r/rocker/tidyverse/"><code>rocker/tidyverse</code></a> to help persist files over Docker containers. This image is part of the <a href="https://cloudyr.github.io/googleComputeEngineR/articles/docker.html#public-docker-images">public Docker images</a> built on top of <code>googleComputeEngineR</code>.</p>
+<p>With this image, there are three ways to save files between Docker sessions:</p>
 <ol style="list-style-type: decimal">
 <li>Write files to the host VM file system - this is through the -v flag upon Docker startup</li>
 <li>Use Git to pull/push from Git repositories.</li>
-<li>Use <code>googleCloudStorageR</code> to save and read R working directories between machines</li>
+<li>Use <a href="https://github.com/cloudyr/googleCloudStorageR"><code>googleCloudStorageR</code></a> to save and read R working directories between machines, including your GitHub/SSH configurations.</li>
 </ol>
 <p>A combination of the above should be used for what best fits your workflow.</p>
-<div id="using-base-vm" class="section level2">
+<div id="using-base-vm-file-system" class="section level2">
 <h2 class="hasAnchor">
-<a href="#using-base-vm" class="anchor"></a>Using base VM</h2>
-<p>These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods.</p>
+<a href="#using-base-vm-file-system" class="anchor"></a>Using base VM file system</h2>
+<p>These files will disappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well.</p>
 <p>If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the <code>disk_size_gb</code> argument:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"vm-larger-disk"</span>, 
              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
@@ -385,7 +385,7 @@ gs:<span class="er">//</span>your-session-bucket/home/you]</code></pre></div>
       <ul class="nav nav-pills nav-stacked">
 <li>
 <a href="#persistent-rstudio-on-google-compute-engine">Persistent RStudio on Google Compute Engine</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#using-base-vm">Using base VM</a></li>
+<li><a href="#using-base-vm-file-system">Using base VM file system</a></li>
       <li><a href="#github">GitHub</a></li>
       <li><a href="#using-googlecloudstorager">Using googleCloudStorageR</a></li>
       </ul>

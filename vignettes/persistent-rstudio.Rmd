@@ -11,19 +11,19 @@ vignette: >
 
 # Persistent RStudio on Google Compute Engine
 
-This Dockerfile installs tools on top of the default `rocker/tidyverse` to help persist files over Docker containers. 
+A new Docker image is available which installs tools on top of the default [`rocker/tidyverse`](https://hub.docker.com/r/rocker/tidyverse/) to help persist files over Docker containers. This image is part of the [public Docker images](https://cloudyr.github.io/googleComputeEngineR/articles/docker.html#public-docker-images) built on top of `googleComputeEngineR`.
 
-There are three ways to save files between Docker sessions:
+With this image, there are three ways to save files between Docker sessions:
 
 1. Write files to the host VM file system - this is through the -v flag upon Docker startup
 2. Use Git to pull/push from Git repositories. 
-3. Use `googleCloudStorageR` to save and read R working directories between machines
+3. Use [`googleCloudStorageR`](https://github.com/cloudyr/googleCloudStorageR) to save and read R working directories between machines, including your GitHub/SSH configurations.
 
 A combination of the above should be used for what best fits your workflow. 
 
-## Using base VM
+## Using base VM file system
 
-These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods.
+These files will disappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well.
 
 If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the `disk_size_gb` argument:
 
