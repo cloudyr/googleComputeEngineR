@@ -58,6 +58,9 @@
       <a href="../articles/rstudio-team.html">Custom team RStudio Server</a>
     </li>
     <li>
+      <a href="../articles/persistent-rstudio.html">Persistent RStudio Server</a>
+    </li>
+    <li>
       <a href="../articles/single-scheduler.html">RStudio Server + scheduler</a>
     </li>
     <li>
@@ -124,7 +127,7 @@
       <h1>Scheduled R scripts on Google Compute Engine</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-07-04</h4>
+            <h4 class="date">2017-09-01</h4>
           </div>
 
     
@@ -201,9 +204,9 @@ script &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span c
 
 
 ## it will run the script whilst making the dockerfile
-container &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/containeRit/topics/dockerfile">dockerfile</a></span>(<span class="st">"schedule.R"</span>,
+container &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(<span class="st">"schedule.R"</span>,
                         <span class="dt">copy =</span> <span class="st">"script_dir"</span>,
-                        <span class="dt">cmd =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/containeRit/topics/CMD_Rscript">CMD_Rscript</a></span>(<span class="st">"schedule.R"</span>),
+                        <span class="dt">cmd =</span> <span class="kw">CMD_Rscript</span>(<span class="st">"schedule.R"</span>),
                         <span class="dt">soft =</span> <span class="ot">TRUE</span>)
 <span class="kw">write</span>(container, <span class="dt">file =</span> <span class="st">"Dockerfile"</span>)</code></pre></div>
 <p>Now you have the Dockerfile, it can be used to create Docker images. There are several options here, including <code>docker_build</code> function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a>.</p>

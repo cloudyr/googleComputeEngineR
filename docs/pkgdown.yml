@@ -9,6 +9,7 @@ articles:
   installation-and-authentication: installation-and-authentication.html
   massive-parallel: massive-parallel.html
   opencpu-api-server: opencpu-api-server.html
+  persistent-rstudio: persistent-rstudio.html
   remote-cluster: remote-cluster.html
   rstudio-team: rstudio-team.html
   scheduled-rscripts: scheduled-rscripts.html

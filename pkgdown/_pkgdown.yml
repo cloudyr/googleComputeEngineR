@@ -27,6 +27,8 @@ navbar:
         href: articles/example-workflows.html
       - text: "Custom team RStudio Server"
         href: articles/rstudio-team.html
+      - text: "Persistent RStudio Server"
+        href: articles/persistent-rstudio.html
       - text: "RStudio Server + scheduler"
         href: articles/single-scheduler.html
       - text: "Shiny App"

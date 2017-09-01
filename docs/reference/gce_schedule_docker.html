@@ -81,6 +81,9 @@
       <a href="../articles/rstudio-team.html">Custom team RStudio Server</a>
     </li>
     <li>
+      <a href="../articles/persistent-rstudio.html">Persistent RStudio Server</a>
+    </li>
+    <li>
       <a href="../articles/single-scheduler.html">RStudio Server + scheduler</a>
     </li>
     <li>
@@ -181,7 +184,7 @@ You will need to create and build the Dockerfile first.</p>
     <p>You may need to run <a href='gce_vm_scheduler.html'>gce_vm_scheduler</a> yourself first and then set 
   up SSH details if not defaults, to pass to argument <code>vm</code></p>
 <p>You can create a Dockerfile with your R script installed by 
-  running it through <code><a href='http://www.rdocumentation.org/packages/containeRit/topics/dockerfile'>containeRit::dockerfile</a></code>.  It also takes care of any dependencies.</p>  
+  running it through <code>containeRit::dockerfile</code>.  It also takes care of any dependencies.</p>  
 <p>It is recommended to create a script that is self contained in output and input, 
 e.g. don't save files to the VM, instead upload or download any files 
 from Google Cloud Storage via authentication via <code><a href='http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth'>googleAuthR::gar_gce_auth()</a></code> 

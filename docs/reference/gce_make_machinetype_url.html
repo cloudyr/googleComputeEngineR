@@ -81,6 +81,9 @@
       <a href="../articles/rstudio-team.html">Custom team RStudio Server</a>
     </li>
     <li>
+      <a href="../articles/persistent-rstudio.html">Persistent RStudio Server</a>
+    </li>
+    <li>
       <a href="../articles/single-scheduler.html">RStudio Server + scheduler</a>
     </li>
     <li>
@@ -151,8 +154,8 @@
     <p>Construct a machineType URL</p>
     
 
-    <pre class="usage"><span class='fu'>gce_make_machinetype_url</span>(<span class='no'>predefined_type</span>, <span class='no'>cpus</span>, <span class='no'>memory</span>,
-  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
+    <pre class="usage"><span class='fu'>gce_make_machinetype_url</span>(<span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cpus</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>memory</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
