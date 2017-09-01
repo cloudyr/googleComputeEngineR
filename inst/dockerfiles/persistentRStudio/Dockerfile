@@ -23,6 +23,3 @@ RUN install2.r --error \
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 COPY Rprofile.site /usr/local/lib/R/etc/Rprofile.site
-
-## add ssh key to agent
-RUN eval `ssh-agent -s` && ssh-add ~/.ssh/github_rsa

@@ -28,6 +28,11 @@ vm <- gce_vm("vm-larger-disk",
 
 Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.
 
+See also these references:
+
+* https://www.r-bloggers.com/rstudio-and-github/
+* http://happygitwithr.com/ 
+
 The below assumes you have started a VM using the `persistent-rstudio` image, which includes SSH tools:
 
 ```r
@@ -48,7 +53,7 @@ vm <- gce_vm("vm-ssh",
 git config --global user.email "your@githubemail.com"
 git config --global user.name "GitHubUserName"
 ```
-4. Check it in the terminal - you should see your GitHub details via `cat .gitconfig` and SSH keys in `ls .ssh`
+4. Check it in the terminal - you should see your GitHub details via `cat .gitconfig` and SSH keys in `ls .ssh` and `ssh -T git@github.com` works.
 
 ### A new GitHub project
 
@@ -63,7 +68,7 @@ This configuration should now persist across Docker sessions e.g. you can stop/s
 
 1. Stop the RStudio server via the Web UI or `gce_vm_stop()`
 2. Restart it via the Web UI or `gce_vm_start()`
-3. Login to RStudio via the URL, then open terminal and check your older configurations are there via `cat .gitconfig` and SSH keys in `ls .ssh`
+3. Login to RStudio via the URL, then open terminal and check your older configurations are there via `cat .gitconfig` and SSH keys in `ls .ssh` and `ssh -T git@github.com` works
 4. Redownload a GitHub project
 
 ## Using googleCloudStorageR
