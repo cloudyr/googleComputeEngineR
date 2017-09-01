@@ -123,12 +123,23 @@ To use, the VM needs to be supplied with a bucket name environment.  Using a sep
 
 Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.
 
+The below assumes you have started a VM as above, using the `persistent-rstudio`image 
+
+```r
+vm <- gce_vm("vm-ssh", 
+             predefined_type = "n1-standard-1", 
+             template = "rstudio", 
+             username = "mark", password = "blah", 
+             dynamic_image = "gcr.io/gcer-public/persistent-rstudio",
+             metadata = list(GCE_SESSION_BUCKET="my-session-bucket"))
+```
+
 Do this first time:
 
 1. In Tools > General Options > Git > SSH keys - generate an RStudio server github key, which will take care of permissions etc. 
 2. Add the public key to GitHub
 3. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL!**
-4. 
+4. Put that URI in RStudio Server > New Project > Version Control > Git > Repository URL
 
 
 ### Manual Installation

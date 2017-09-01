@@ -22,9 +22,7 @@ write_files:
                                   -e "ROOT=TRUE" \
                                   -e "R_LIBS_USER=/library/" \
                                   -e USER=%s -e PASSWORD=%s \
-                                  -v /home/gcer/library/:/home/%s/library/ \
-                                  -v /home/gcer/.ssh:/home/%s/.ssh \
-                                  -v /home/gcer/.gitconfig:/home/%s/.gitconfig \
+                                  -v /home/gcer:/home/%s \
                                   --name=rstudio \
                                   %s
     ExecStop=/usr/bin/docker stop rstudio

@@ -57,7 +57,7 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
   cloud_init <- get_template_file(template_file)
   cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
   image <- get_image(docker_image, dynamic_image = dynamic_image)
-  sprintf(cloud_init_file, username, password, username, username, username, image)
+  sprintf(cloud_init_file, username, password, username, image)
 }
 
 
