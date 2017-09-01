@@ -1,12 +1,76 @@
 # Persistent RStudio on Google Compute Engine
 
-By default the Docker container will not remember any files or changes if relaunched.
+This Dockerfile installs tools on top of the default `rocker/tidyverse` to help persist files over Docker containers. 
 
-This Dockerfile installs tools on top of the default `rocker/tidyverse` to help.
+There are three ways to save files between Docker sessions:
 
-# Workflow steps
+1. Write files to the host VM file system - this is through the VM command.
+2. Use `googleCloudStorageR` to save and read R working directories between machines
+3. Use Git to pull/push from Git repositories. 
 
-## On local computer
+A combination of the above should be used for what best fits your workflow. 
+
+## Using base VM
+
+These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods, but this is now enable don RStudio images as standard. 
+
+You may want to create a larger VM instance than the default 10GBs using the `disk_size_gb` argument:
+
+```r
+vm <- gce_vm("vm-larger-disk", 
+             predefined_type = "n1-standard-1", 
+             template = "rstudio", 
+             username = "mark", password = "blah",
+             disk_size_gb = 100)
+```
+
+## GitHub
+
+Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.
+
+The below assumes you have started a VM using the `persistent-rstudio` image, which includes SSH tools:
+
+```r
+vm <- gce_vm("vm-ssh", 
+             predefined_type = "n1-standard-1", 
+             template = "rstudio", 
+             username = "mark", password = "blah", 
+             dynamic_image = "gcr.io/gcer-public/persistent-rstudio")
+```
+
+### First time you launch a VM:
+
+1. In Tools > General Options > Git/SVN > Create RSA Key - generate an RStudio server github key, which will take care of permissions etc. 
+2. View public key, then add it to GitHub here: https://github.com/settings/keys
+3. Configure you GitHub email and username:
+
+```
+git config --global user.email "your@githubemail.com"
+git config --global user.name "GitHubUserName"
+```
+4. Check it in the terminal - you should see your GitHub details via `cat .gitconfig` and SSH keys in `ls .ssh`
+
+### A new GitHub project
+
+1. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL!**
+2. Put that URI in RStudio Server > New Project > Version Control > Git > Repository URL
+3. The first connect you will need to input "yes" in the scary dropdown
+4. Make changes, push to GitHub via the RStudio Git pane
+
+### Restarting the VM/Docker
+
+This configuration should now persist across Docker sessions e.g. you can stop/start the VM and still have GitHub configured. 
+
+1. Stop the RStudio server via the Web UI or `gce_vm_stop()`
+2. Restart it via the Web UI or `gce_vm_start()`
+3. Login to RStudio via the URL, then open terminal and check your older configurations are there via `cat .gitconfig` and SSH keys in `ls .ssh`
+4. Redownload a GitHub project
+
+## Using googleCloudStorageR
+
+This is useful as a backup that will persist across VMs without needing to reconfigure user keys - the authentication is using the crudentials you used to launch the VM in the first place.  Its not intended as a replacement for Git, but should give a more desktop feel.  I use it to copy projects over to more powerful VMs as required. 
+
+### On local computer
 
 1. Create Google Cloud Bucket to save your R sessions to - you can do this via the web UI or similar to below:
 
@@ -53,7 +117,7 @@ When you startup that project again you should see:
 gs://your-gcs-bucket/Users/the-rproject-folder]
 ```
 
-## On cloud RStudio server
+### On cloud RStudio server
 
 Now the R data is saved to GCS under the local folder name.  We can load this data in an RStudio server cloud instance via:
 
@@ -64,16 +128,12 @@ vm <- gce_vm("mark-rstudio",
              template = "rstudio",
              username = "mark", password = 'mypassword',
              predefined_type = "n1-standard-2",
-             dynamic_image = "gcr.io/gcer-public/persistent-rstudio")
+             dynamic_image = "gcr.io/gcer-public/persistent-rstudio",
+             metadata = list(GCS_SESSION_BUCKET = "your-bucket"))
 ```
 
-2. Add metadata to the VM specifying the session bucket to load: either in the web UI or via:
-
-```r
-gce_set_metadata(metadata = list(GCS_SESSION_BUCKET = "your-bucket"), instance = vm)
-```
-3. Login to RStudio server and create an RStudio project
-4. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
+2. Login to RStudio server and create an RStudio project
+3. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
 
 ```yaml
 bucket: your-gcs-bucket
@@ -85,7 +145,7 @@ loaddir: your-local-directory-name
 7. Restart the VM and repeat step 3, creating an RStudio project with the exact same name as before.  
 8. The files from GCS should now automatically load as you are using same bucket (via VM metadata) and filepath (via RStudio Project name)
 
-## Details on how the above is working
+#### Details on how the above is working
 
 This build includes the newest version of `googleCloudStorageR` and `googleComputeEngineR` which have had functions added to help with the workflow above.
 
@@ -118,47 +178,4 @@ pattern:
 An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via `googleAuthR::gar_gce_auth()` so you don't need to supply your own auth file.
 
 To use, the VM needs to be supplied with a bucket name environment.  Using a seperate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs.  This is set in the instance running the Docker's metadata, that will get copied over to an environment argument R can see.  
-
-## GitHub
-
-Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.
-
-The below assumes you have started a VM as above, using the `persistent-rstudio`image 
-
-```r
-vm <- gce_vm("vm-ssh", 
-             predefined_type = "n1-standard-1", 
-             template = "rstudio", 
-             username = "mark", password = "blah", 
-             dynamic_image = "gcr.io/gcer-public/persistent-rstudio",
-             metadata = list(GCE_SESSION_BUCKET="my-session-bucket"))
-```
-
-Do this first time:
-
-1. In Tools > General Options > Git > SSH keys - generate an RStudio server github key, which will take care of permissions etc. 
-2. Add the public key to GitHub
-3. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL!**
-4. Put that URI in RStudio Server > New Project > Version Control > Git > Repository URL
-
-
-### Manual Installation
-
-If however, you want to use your local SSH keys, then the below is a guide.
-
-`git` and `openssh-client` are installed in the Dockerfile so you can configure RStudio's Git client - the best sources for troubleshooting are:
-
-* [Happy with Git](http://happygitwithr.com/)
-* [This post on RBloggers](https://www.r-bloggers.com/rstudio-and-github/)
-
-The key sticking point looks to be you have to push to GitHub using the command line first, and to make sure you add these lines:
-
-```
-git remote add origin https://github.com/your-github-user/github-repo.git
-git config remote.origin.url git@github.com:your-github-user/github-repo.git
-```
-
-After one successful shell pull and push, you should then be able to use the RStudio Git UI without putting in your username and password.  
-
-You will unfortunetly need to repeat this after each stop/start of RStudio though, unless you save the RStudio Docker container to your own private repo (perhaps via `googleComputeEngineR::gce_push_repository`)  This container and its ancestors needs to always be private, as your private SSH keys are exposed.  I don't recommend this, and use the Google Souce repositories method above instead. 
 
