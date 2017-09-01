@@ -4,9 +4,7 @@
 get_cloud_init_file <- function(template,
                                 username = NULL, 
                                 password = NULL, 
-                                dynamic_image = NULL,
-                                key.pub = NULL,
-                                key.private = NULL) {
+                                dynamic_image = NULL) {
   
   
   if(template == "rstudio"){
@@ -19,14 +17,6 @@ get_cloud_init_file <- function(template,
     assert_that(
       is.string(dynamic_image)
     )
-  } else if(template == "rstudio-ssh"){
-    assert_that(
-      is.string(username),
-      is.string(password),
-      is.readable(key.pub),
-      is.readable(key.private)
-    )
-    
   }
   
   switch(template,
@@ -51,14 +41,7 @@ get_cloud_init_file <- function(template,
                                                   docker_image = "rocker/ropensci:dev", 
                                                   dynamic_image = dynamic_image,
                                                   username = username,
-                                                  password = password),
-         "rstudio-ssh" = build_cloud_init_file_rstudio_ssh(template_file = template, 
-                                                           docker_image = "rocker/tidyverse", 
-                                                           dynamic_image = dynamic_image,
-                                                           username = username,
-                                                           password = password,
-                                                           key.pub = key.pub,
-                                                           key.private = key.private))
+                                                  password = password))
 }
 
 # build a cloud init file for all non-rstudio 
@@ -74,27 +57,9 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
   cloud_init <- get_template_file(template_file)
   cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
   image <- get_image(docker_image, dynamic_image = dynamic_image)
-  sprintf(cloud_init_file, username, password, image)
+  sprintf(cloud_init_file, username, password, username, username, image)
 }
 
-# build the cloud-init file with a username and password and ssh keys added
-build_cloud_init_file_rstudio_ssh <- function(template_file, 
-                                              docker_image, 
-                                              dynamic_image, 
-                                              username, 
-                                              password,
-                                              key.pub,
-                                              key.private){
-
-  cloud_init <- get_template_file(template_file)
-  cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
-  image <- get_image(docker_image, dynamic_image = dynamic_image)
-  # hack to add indentation for valid yaml
-  key.private.content <- gsub("\n", "\n    ",readChar(key.private, nchars = file.info(key.private)$size))
-  key.pub.content <- readChar(key.pub, nchars = file.info(key.pub)$size)
-  sprintf(cloud_init_file, username, password, image, key.pub.content, key.private.content, key.pub.content)
-  
-}
 
 #' Create a template container VM
 #' 
@@ -117,7 +82,6 @@ build_cloud_init_file_rstudio_ssh <- function(template_file,
 #' 
 #' \itemize{
 #'   \item rstudio An RStudio server docker image with tidyverse and devtools
-#'   \item rstudio-ssh Above but with public and private ssh keys uploaded
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
@@ -153,13 +117,11 @@ build_cloud_init_file_rstudio_ssh <- function(template_file,
 #' @export  
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          "r-base", "example",
-                                         "dynamic", "ropensci", "rstudio-ssh"),
+                                         "dynamic", "ropensci"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
                             image_family = "cos-stable",
-                            key.pub = NULL,
-                            key.private = NULL,
                             ...){
   
   dots <- list(...)
@@ -174,9 +136,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   cloud_init_file <- get_cloud_init_file(template,
                                          username = username, 
                                          password = password, 
-                                         dynamic_image = dynamic_image,
-                                         key.pub = key.pub,
-                                         key.private = key.private)
+                                         dynamic_image = dynamic_image)
   
   ## metadata
   upload_meta <- list(template = template)

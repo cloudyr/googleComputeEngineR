@@ -5,7 +5,7 @@
 \title{create the cloud_init file to upload}
 \usage{
 get_cloud_init_file(template, username = NULL, password = NULL,
-  dynamic_image = NULL, key.pub = NULL, key.private = NULL)
+  dynamic_image = NULL)
 }
 \description{
 create the cloud_init file to upload
