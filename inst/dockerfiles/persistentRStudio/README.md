@@ -45,7 +45,8 @@ vm <- gce_vm("vm-ssh",
 
 ### First time you launch a VM:
 
-1. On RStudio Server, go to `Tools > General Options > Git/SVN > Create RSA Key`
+1. Once the VM is launched, log in to RStudio Server at the IP provided by the script
+2. Go to `Tools > Global Options > Git/SVN > Create RSA Key`
 2. Click on "View public key"" then add it to GitHub here: https://github.com/settings/keys
 3. Open the terminal in RStudio via `Tools > Shell...`, and configure you GitHub email and username:
 
@@ -61,7 +62,7 @@ Do the below for each new RStudio Project to download from GitHub:
 
 1. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL! - it won't work**
 2. Put the URI on RStudio Server via `New Project > Version Control > Git > Repository URL`
-3. The first connect you will need to input "yes" in the scary dropdown
+3. The first connect you may need to input "yes" in the scary dropdown
 4. Make changes, push to GitHub via the RStudio Git pane
 
 ### Restarting the VM/Docker
@@ -74,7 +75,11 @@ This configuration should now persist across Docker sessions e.g. you can stop/s
 
 ## Using googleCloudStorageR
 
-This is useful as a backup that will persist across VMs without needing to reconfigure user keys - the authentication is using the credentials you used to launch the VM in the first place.  It is not intended as a replacement for Git - it only adds files if they are not present locally.  I use it to copy projects over to more powerful VMs as required.
+This can be combined with the above GitHub settings to persist the GitHub settings over VMs.
+
+The authentication for the `googleCloudStorageR` backups is re-using the credentials you used to launch the VM
+
+It is not intended as a replacement for Git - it only adds files if they are not present locally.  I use it to copy projects over to more powerful VMs as required.
 
 ### On local computer
 
@@ -134,39 +139,88 @@ vm <- gce_vm("mark-rstudio",
              template = "rstudio",
              username = "mark", password = 'mypassword',
              predefined_type = "n1-standard-2",
-             dynamic_image = "gcr.io/gcer-public/persistent-rstudio",
-             metadata = list(GCS_SESSION_BUCKET = "your-bucket"))
+             dynamic_image = "gcr.io/gcer-public/persistent-rstudio")
+
+```
+2. Add a GCS_SESSION_BUCKET metadata, either via webUI or via:
+
+```r
+gce_set_metadata(list(GCS_SESSION_BUCKET = "your-session-bucket"), vm)
 ```
 
-2. Login to RStudio server and create an RStudio project
-3. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
+3. Login to RStudio server and create an RStudio project
+4. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
 
 ```yaml
 bucket: your-gcs-bucket
 loaddir: your-local-directory-name
 ```
-4. Close and re-open the RStudio project.  Your local files should now load from GCS
-5. Do work, then exit the project.  It will be saved to a new folder on GCS
-6. Shutdown the VM to avoid charges.
-7. Restart the VM and repeat step 3, creating an RStudio project with the exact same name as before.  
-8. The files from GCS should now automatically load as you are using same bucket (via VM metadata) and filepath (via RStudio Project name)
+5. Close and re-open the RStudio project.  Your local files should now load from GCS
+6. Do work, then exit the project.  It will be saved to a new folder on GCS
 
-### Persisting GitHub 
+### Persisting GitHub with googleCloudStorageR
 
-You can use the above in conjunction with the GitHub setup to persist over VMs.  Keep the same RStudio login username, and the configurations of GitHub that are saved in `.ssh` and `.gitconfig` folders in your home directory will be backed up.  
+You can also use the above in conjunction with the GitHub setup to persist over VMs.  
 
-Adding a `_gcssave.yaml` file to your home folder folder will download/upload the configurations. 
+To do so, you need to :
+
+1. Keep the same RStudio login username, 
+2. Use the same bucket for `GCS_SESSION_BUCKET` or in the `_gcssave.yaml`
+3. Use this Dockerfile's image - `gcr.io/gcer-public/persistent-rstudio`
+
+The configurations of GitHub that are saved in `.ssh` and `.gitconfig` folders in your home directory will be backed up to Google Cloud Storage.  
+
+#### Saving GitHub configurations
+
+1. Add a `_gcssave.yaml` file to your home folder that will download/upload the configurations. 
 
 ```yaml
 ## The GCS bucket to save/load R workspace from
 bucket: gcer-store-my-rstudio-files
 
-## set to FALSE if you dont want to load on R session startup
-load_on_startup: TRUE
-
 ## regex to only save these files to GCS
-pattern: "\.ssh|\.gitconfig"
+pattern: "id_rsa|.gitconfig"
 ```
+
+2. With no project open and your working directory the base (e.g. `getwd()` is `/home/you`) save the yaml file and quit the R session:
+
+```r
+q(save = "no")
+```
+
+You should see a message saying its saving the home folder. Upon restart, that folder will load from the bucket. 
+
+#### Loading GitHub configurations
+
+1. Start another VM, with the same details as before:
+
+```r
+vm2 <- gce_vm("mark-rstudio",
+             template = "rstudio",
+             username = "mark", password = 'mypassword',
+             predefined_type = "n1-standard-2",
+             dynamic_image = "gcr.io/gcer-public/persistent-rstudio")
+
+gce_set_metadata(list(GCS_SESSION_BUCKET = "your-session-bucket"), vm2)
+```
+
+2. Upon logging in, you should see a message saying its loading data from GCS:
+
+```r
+[Workspace loaded from: 
+gs://your-session-bucket/home/you]
+```
+
+3. Finally, open terminal and make sure your private key is private again:
+
+```
+chmod 400 ~/.ssh/id_rsa
+```
+
+4. You should now be able to run `ssh -T git@github.com` successfully
+5. Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.
+
+You can now delete VMs and start up new ones using RStudio Docker, and the GitHub configurations will persist so long as you follow the steps above. 
 
 ### Details on how the above is working
 
