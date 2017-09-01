@@ -20,6 +20,10 @@ gce_metadata_env <- function(key){
                   
   value <- httr::content(req, as = "text", encoding = "UTF-8")
   
+  if(grepl("Error 404",value)){
+    stop("404 for metdata key ", key)
+  }
+  
   if(key != ""){
     myMessage("Setting environment value: ", key, "=", value, level=3)
     args = list(value)

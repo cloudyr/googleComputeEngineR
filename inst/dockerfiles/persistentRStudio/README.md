@@ -121,19 +121,14 @@ To use, the VM needs to be supplied with a bucket name environment.  Using a sep
 
 ## GitHub
 
-Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to supply your GitHub SSH keys.
+Generally git is the best place for code under version control across many computers.  The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.
 
-### Google Source Repositories
+Do this first time:
 
-As you should by now have a Google Cloud project, with GCE and GCS, you may as well go all in and also use the [Google Source Repositories](https://cloud.google.com/source-repositories/) service. (This is intended mostly for Chromebook users, so this is probably ok!)  
-
-Source Repositories gives you your own private repos, or you can mirror your existing GitHub projects. After setup where you authorise once in the console, this means your Git repos can then be called from this RStudio Docker instance using just the Google authentication you used to connect to GCE and GCS. (e.g. no need to set up SSH keys) 
-
-1. Go to your [source repository section](https://console.cloud.google.com/code/develop) on Google Cloud Platform and click `Create Repository` 
-2. Mirror your existing (private or public) GitHub or BitBucket repos that you want to use in RStudio. 
-3. Click on Clone, and choose the manual option
+1. In Tools > General Options > Git > SSH keys - generate an RStudio server github key, which will take care of permissions etc. 
+2. Add the public key to GitHub
+3. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL!**
 4. 
-
 
 
 ### Manual Installation

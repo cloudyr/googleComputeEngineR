@@ -24,6 +24,7 @@ write_files:
                                   -e USER=%s -e PASSWORD=%s \
                                   -v /home/gcer/library/:/home/%s/library/ \
                                   -v /home/gcer/.ssh:/home/%s/.ssh \
+                                  -v /home/gcer/.gitconfig:/home/%s/.gitconfig \
                                   --name=rstudio \
                                   %s
     ExecStop=/usr/bin/docker stop rstudio
