@@ -4,17 +4,17 @@ This Dockerfile installs tools on top of the default `rocker/tidyverse` to help 
 
 There are three ways to save files between Docker sessions:
 
-1. Write files to the host VM file system - this is through the VM command.
-2. Use `googleCloudStorageR` to save and read R working directories between machines
-3. Use Git to pull/push from Git repositories. 
+1. Write files to the host VM file system - this is through the -v flag upon Docker startup
+2. Use Git to pull/push from Git repositories. 
+3. Use `googleCloudStorageR` to save and read R working directories between machines
 
 A combination of the above should be used for what best fits your workflow. 
 
 ## Using base VM
 
-These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods, but this is now enable don RStudio images as standard. 
+These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods.
 
-You may want to create a larger VM instance than the default 10GBs using the `disk_size_gb` argument:
+If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the `disk_size_gb` argument:
 
 ```r
 vm <- gce_vm("vm-larger-disk", 
@@ -45,20 +45,22 @@ vm <- gce_vm("vm-ssh",
 
 ### First time you launch a VM:
 
-1. In Tools > General Options > Git/SVN > Create RSA Key - generate an RStudio server github key, which will take care of permissions etc. 
-2. View public key, then add it to GitHub here: https://github.com/settings/keys
-3. Configure you GitHub email and username:
+1. On RStudio Server, go to `Tools > General Options > Git/SVN > Create RSA Key`
+2. Click on "View public key"" then add it to GitHub here: https://github.com/settings/keys
+3. Open the terminal in RStudio via `Tools > Shell...`, and configure you GitHub email and username:
 
 ```
 git config --global user.email "your@githubemail.com"
 git config --global user.name "GitHubUserName"
 ```
-4. Check it in the terminal - you should see your GitHub details via `cat .gitconfig` and SSH keys in `ls .ssh` and `ssh -T git@github.com` works.
+4. Check it works - you should see your GitHub details via `cat .gitconfig` and SSH keys in `ls .ssh`, `ssh -T git@github.com` should succeed. 
 
 ### A new GitHub project
 
-1. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL!**
-2. Put that URI in RStudio Server > New Project > Version Control > Git > Repository URL
+Do the below for each new RStudio Project to download from GitHub:
+
+1. On GitHub, click the `Clone or download` green button and copy the `Clone with SSH` URI. **Do not copy the browser URL! - it won't work**
+2. Put the URI on RStudio Server via `New Project > Version Control > Git > Repository URL`
 3. The first connect you will need to input "yes" in the scary dropdown
 4. Make changes, push to GitHub via the RStudio Git pane
 
@@ -69,11 +71,10 @@ This configuration should now persist across Docker sessions e.g. you can stop/s
 1. Stop the RStudio server via the Web UI or `gce_vm_stop()`
 2. Restart it via the Web UI or `gce_vm_start()`
 3. Login to RStudio via the URL, then open terminal and check your older configurations are there via `cat .gitconfig` and SSH keys in `ls .ssh` and `ssh -T git@github.com` works
-4. Redownload a GitHub project
 
 ## Using googleCloudStorageR
 
-This is useful as a backup that will persist across VMs without needing to reconfigure user keys - the authentication is using the crudentials you used to launch the VM in the first place.  Its not intended as a replacement for Git, but should give a more desktop feel.  I use it to copy projects over to more powerful VMs as required. 
+This is useful as a backup that will persist across VMs without needing to reconfigure user keys - the authentication is using the credentials you used to launch the VM in the first place.  It is not intended as a replacement for Git - it only adds files if they are not present locally.  I use it to copy projects over to more powerful VMs as required.
 
 ### On local computer
 
@@ -150,7 +151,24 @@ loaddir: your-local-directory-name
 7. Restart the VM and repeat step 3, creating an RStudio project with the exact same name as before.  
 8. The files from GCS should now automatically load as you are using same bucket (via VM metadata) and filepath (via RStudio Project name)
 
-#### Details on how the above is working
+### Persisting GitHub 
+
+You can use the above in conjunction with the GitHub setup to persist over VMs.  Keep the same RStudio login username, and the configurations of GitHub that are saved in `.ssh` and `.gitconfig` folders in your home directory will be backed up.  
+
+Adding a `_gcssave.yaml` file to your home folder folder will download/upload the configurations. 
+
+```yaml
+## The GCS bucket to save/load R workspace from
+bucket: gcer-store-my-rstudio-files
+
+## set to FALSE if you dont want to load on R session startup
+load_on_startup: TRUE
+
+## regex to only save these files to GCS
+pattern: "\.ssh|\.gitconfig"
+```
+
+### Details on how the above is working
 
 This build includes the newest version of `googleCloudStorageR` and `googleComputeEngineR` which have had functions added to help with the workflow above.
 
