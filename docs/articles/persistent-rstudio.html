@@ -127,7 +127,7 @@
       <h1>Persistent RStudio Server</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-09-01</h4>
+            <h4 class="date">2017-09-02</h4>
           </div>
 
     
@@ -339,15 +339,24 @@ gs:<span class="er">//</span>your-gcs-bucket/Users/the-rproject-folder]</code></
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[Workspace loaded from:<span class="st"> </span>
 gs:<span class="er">//</span>your-session-bucket/home/you]</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>Finally, open terminal and make sure your private key is private again:</li>
-</ol>
-<pre><code>chmod 400 ~/.ssh/id_rsa</code></pre>
-<ol start="4" style="list-style-type: decimal">
 <li>You should now be able to run <code>ssh -T git@github.com</code> successfully</li>
 <li>Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.</li>
 </ol>
 <p>You can now delete VMs and start up new ones using RStudio Docker, and the GitHub configurations will persist so long as you follow the steps above.</p>
 </div>
+</div>
+<div id="running-rstudio-server-on-app-engine" class="section level3">
+<h3 class="hasAnchor">
+<a href="#running-rstudio-server-on-app-engine" class="anchor"></a>Running RStudio Server on App Engine</h3>
+<p>Since the compute and the data are now separated, you can now become fully cloud native by running RStudio Server on App Engine. This means you don’t need to worry about servers at all. Each time you visit your RStudio Server App Engine URL, a new instance will start, loading your data from your last session. When you finish, close the browser and the VM will tear down itself.</p>
+<p>See more at GitHub: <a href="https://github.com/MarkEdmondson1234/appengine-rstudio">RStudio on App Engine</a>.</p>
+<p>Running on App Engine has many advantages, including:</p>
+<ul>
+<li>No servers to setup, stop/start</li>
+<li>Only pay for when you are on the VM</li>
+<li>Auto auth via the app engine service account</li>
+<li>Load balancing and OAuth2 login options</li>
+</ul>
 </div>
 <div id="details-on-how-the-above-is-working" class="section level3">
 <h3 class="hasAnchor">

@@ -142,7 +142,7 @@ vm <- gce_vm("mark-rstudio",
              dynamic_image = "gcr.io/gcer-public/persistent-rstudio")
 
 ```
-2. Add a GCS_SESSION_BUCKET metadata, either via webUI or via:
+2. Add a `GCS_SESSION_BUCKET` metadata, either via webUI or via:
 
 ```r
 gce_set_metadata(list(GCS_SESSION_BUCKET = "your-session-bucket"), vm)
@@ -211,14 +211,8 @@ gce_set_metadata(list(GCS_SESSION_BUCKET = "your-session-bucket"), vm2)
 gs://your-session-bucket/home/you]
 ```
 
-3. Finally, open terminal and make sure your private key is private again:
-
-```
-chmod 400 ~/.ssh/id_rsa
-```
-
-4. You should now be able to run `ssh -T git@github.com` successfully
-5. Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.
+3. You should now be able to run `ssh -T git@github.com` successfully
+4. Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.
 
 You can now delete VMs and start up new ones using RStudio Docker, and the GitHub configurations will persist so long as you follow the steps above. 
 
