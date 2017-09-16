@@ -36,28 +36,14 @@ Any existing Shiny Docker containers are stopped and removed,
 \section{Dockerfile}{
 
 
-An example \code{Dockerfile} is show below.  
-This file in the same folder as your shiny app, which consists of a \code{ui.R} and \code{server.R} in a shiny subfolder.  
+Example \code{Dockerfile}'s are found in 
+\code{system.file("dockerfiles",package = "googleComputeEngineR")}
+
+The Dockerfile is in the same folder as your shiny app, 
+which consists of a \code{ui.R} and \code{server.R} in a shiny subfolder.  
 This is copied into the Dockerfile in the last line.  
-Change the name of the subfolder to have that name appear in the final URL of the Shinyapp. 
-
-\code{
-FROM rocker/shiny 
-MAINTAINER Mark Edmondson (r@sunholo.com)
-
-RUN apt-get update && apt-get install -y
-        libssl-dev 
-        && apt-get clean 
-        && rm -rf /var/lib/apt/lists/ 
-        && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-RUN install2.r --error  
-     -r 'http://cran.rstudio.com' 
-     googleAuthR 
-&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds 
-
-COPY ./shiny/ /srv/shiny-server/shiny/ 
-}
+Change the name of the subfolder to have that name appear 
+in the final URL of the Shinyapp. 
 
 This is then run using the R commands below:
 }
