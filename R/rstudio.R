@@ -50,7 +50,7 @@ gce_rstudio_adduser <- function(instance, username, password, admin = TRUE,
 #' RStudio has users based on unix user accounts
 #' 
 #' @param instance An instance with RStudio installed via \link{gce_vm_template}
-#' @param username The user to chnage the password for
+#' @param username The user to change the password for
 #' @param password The user password
 #' @param container The rstudio container to add the user to
 #' 

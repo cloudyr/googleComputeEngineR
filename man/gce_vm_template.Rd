@@ -30,7 +30,7 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 The VM object
 }
 \description{
-This lets you specify templates for the VM you wnat to launch
+This lets you specify templates for the VM you want to launch
 It passes the template on to \link{gce_vm_container}
 }
 \details{

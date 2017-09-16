@@ -26,7 +26,7 @@ gce_get_external_ip <- function(instance,
 #' 
 #' @param name Name of the access config
 #' @param network Name of network resource
-#' @param externalIP An external IP you have created previouly, leave NULL to have one assigned or "none" for none
+#' @param externalIP An external IP you have created previously, leave NULL to have one assigned or "none" for none
 #' @param project Project ID for this request
 #' 
 #' You need to provide accessConfig explicitly if you want an ephemeral IP assigned, see \code{https://cloud.google.com/compute/docs/vm-ip-addresses}

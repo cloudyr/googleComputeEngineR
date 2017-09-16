@@ -20,7 +20,7 @@ gce_vm_container(file = NULL, cloud_init = NULL,
 A zone operation
 }
 \description{
-This lets you specify docker images when creating the VM.  These are a speical class of Google instances that are setup for running Docker containers.
+This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers.
 }
 \details{
 \code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 

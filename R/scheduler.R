@@ -28,7 +28,7 @@
 #' or build via \link{docker_build} to build on another VM or locally, 
 #' then push to a registry via \link{gce_push_registry}
 #'   
-#' Any Docker image can be run, it doesn't have to be an R one. 
+#' Any Docker image can be run, it does not have to be an R one. 
 #' 
 #' @examples 
 #' 

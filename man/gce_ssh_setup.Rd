@@ -25,7 +25,7 @@ TRUE if successful
 Uploads ssh-keys to an instance
 }
 \details{
-This loads a public ssh-key to an instance's metadata.  It does not use the project SSH-Keys, that may be set seperatly.
+This loads a public ssh-key to an instance's metadata.  It does not use the project SSH-Keys, that may be set separately.
 
 You will need to generate a new SSH key-pair if you have not connected to an instance before. 
 

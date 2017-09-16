@@ -15,7 +15,7 @@ gce_check_container <- function(instance, container){
 
 #' Launch a container-VM image
 #' 
-#' This lets you specify docker images when creating the VM.  These are a speical class of Google instances that are setup for running Docker containers. 
+#' This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers. 
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url

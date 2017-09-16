@@ -63,7 +63,7 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
 
 #' Create a template container VM
 #' 
-#' This lets you specify templates for the VM you wnat to launch
+#' This lets you specify templates for the VM you want to launch
 #' It passes the template on to \link{gce_vm_container}
 #' 
 #' @inheritParams Instance
