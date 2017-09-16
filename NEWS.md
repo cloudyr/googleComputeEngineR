@@ -1,4 +1,8 @@
-# googleComputeEngineR 0.2.0
+# 0.2.0.9000
+
+* ...
+
+# 0.2.0
 
 ## Changes
 
@@ -18,7 +22,7 @@
 - Fix custom machine types creation (#63) - thanks @Blaza
 - Set environment vars on VMs from metadata via `gce_metadata_env`
 
-# googleComputeEngineR 0.1.0
+# 0.1.0
 
 ## Major changes
 
