@@ -1,4 +1,4 @@
-# googleComputeEngineR 0.1.0.9000
+# googleComputeEngineR 0.2.0
 
 ## Changes
 

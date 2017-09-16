@@ -18,7 +18,8 @@ library(googleComputeEngineR)
 gce_ssh_browser("my-server")
 ```
 
-![](http://g.recordit.co/TpM4IfRLgf.gif)
+
+![](ssh-login.gif)
 
 ## SSH commands
 

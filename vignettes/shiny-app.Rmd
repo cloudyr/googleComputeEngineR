@@ -73,7 +73,7 @@ The `FROM` field could be a previously made image you or someone else has alread
 
 The `shiny-googleauthrdemo` is the Dockerfile above - the name for this can be created via the `gce_tag_container()` function:
 
-```{r, message=FALSE, warning=FALSE}
+```r
 library(googleComputeEngineR)
 gce_tag_container("shiny-googleauthrdemo", project = "gcer-public")
 ```

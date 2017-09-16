@@ -9,10 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Simple Scheduler
 
 The below lets you send any of your R scripts to a dedicated VM.  It takes advantage of [containeRit](https://github.com/o2r-project/containerit) to bundle up all the dependencies your R script may need.
