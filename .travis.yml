@@ -10,5 +10,4 @@ r_packages:
 - covr
 - drat
 after_success:
-- Rscript -e 'library("covr");codecov(line_exclusions = list("R/options.R",
-  "R/utilities.R"))'
+- Rscript -e 'library("covr");codecov(line_exclusions = list("R/options.R", "R/utilities.R"))'

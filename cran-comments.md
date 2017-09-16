@@ -1,16 +1,14 @@
 ## Test environments
-* local OS X install, R 3.4.1
-* ubuntu 12.04 (on travis-ci), R 3.4.1
-* win-builder (devel and release)
+* local - Debian GNU/Linux 9 (stretch), R 3.4.1
+* rhub - macOS 10.11 El Capitan, R-release (experimental), R 3.4.1
+* rhub - Windows Server 2008 R2 SP1, R-devel, 32/64 bit, R 3.4.1
+* win-builder - (devel and release)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
-
-* Possibly mis-spelled words in DESCRIPTION: API (5:50)
-This is spelt correctly
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+There are no reverse dependencies.
 
