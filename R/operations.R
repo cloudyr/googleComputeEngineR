@@ -40,8 +40,6 @@ as.global_operation <- function(x){
 #' 
 #' 
 #' @param operation Name of the Operations resource to delete
-#' @param project Project ID for this request
-#' @param zone Name of the zone for this request
 #' 
 #' @return TRUE if successful
 #' 
@@ -50,7 +48,8 @@ as.global_operation <- function(x){
 gce_delete_op <- function(operation) {
 
   
-  if(inherits(operation, c("gce_global_operation", "gce_zone_operation","gce_region_operation"))){
+  if(inherits(operation, 
+              c("gce_global_operation", "gce_zone_operation","gce_region_operation"))){
     UseMethod("gce_delete_op", operation)
   } else {
     myMessage("No operation class found. Got: ", class(operation), level = 1)

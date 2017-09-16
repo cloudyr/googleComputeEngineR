@@ -8,10 +8,6 @@ gce_delete_op(operation)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to delete}
-
-\item{project}{Project ID for this request}
-
-\item{zone}{Name of the zone for this request}
 }
 \value{
 TRUE if successful

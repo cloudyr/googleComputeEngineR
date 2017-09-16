@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-07-07" />
+<meta name="date" content="2017-09-16" />
 
 <title>Docker</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Docker</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-07-07</em></h4>
+<h4 class="date"><em>2017-09-16</em></h4>
 
 
 
@@ -120,7 +120,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The <code>shiny-googleauthrdemo</code> is the Dockerfile above - the name for this can be created via the <code>gce_tag_container()</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 <span class="kw">gce_tag_container</span>(<span class="st">&quot;shiny-googleauthrdemo&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;gcer-public&quot;</span>)</code></pre></div>
-<pre><code>## [1] &quot;gcr.io/gcer-public/shiny-googleauthrdemo&quot;</code></pre>
 <p>This can then be added to your Dockerfile:</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="kw">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo
 <span class="kw">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
@@ -157,7 +156,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Cloud Init</h2>
 <p>If you want to customise further, the docker commands are triggered upon start up via <a href="https://cloudinit.readthedocs.io/en/latest/"><code>cloud-init</code></a> files.</p>
 <p>These can be used to configured to do more system level commands such as starting the docker service, create users and running start up scripts. These are accessible via the <code>gce_vm_container</code> function when you supply the <code>cloud_init</code> file. You can examine the <code>cloud-config</code> files used in <code>googleComputeEngineR</code> in this folder:</p>
-<pre><code>system.file(&quot;cloudconfig&quot;, package = &quot;googleComputeEngineR&quot;)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">&quot;cloudconfig&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;googleComputeEngineR&quot;</span>)</code></pre></div>
 <p>An example for the RStudio template is shown below. The <code>%s</code> are replaced with metadata passed via the <code>gce_vm_create</code> function.</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="co">#cloud-config</span>
 

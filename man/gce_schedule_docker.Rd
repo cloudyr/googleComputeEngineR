@@ -5,7 +5,7 @@
 \title{Schedule running a docker image upon a VM}
 \usage{
 gce_schedule_docker(docker_image, schedule = "53 4 * * *",
-  vm = gce_vm_scheduler(), cronfile = "crontab.out")
+  vm = gce_vm_scheduler())
 }
 \arguments{
 \item{docker_image}{the hosted docker image to run on a schedule}

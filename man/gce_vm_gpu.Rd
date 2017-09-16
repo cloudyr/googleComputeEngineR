@@ -26,7 +26,8 @@ If not specified, this function will enter defaults to get a GPU instance up and
   \item \code{image_project: "centos-cloud"}
   \item \code{image_family: "centos-7"}
   \item \code{predefined_type: "n1-standard-1"}
-  \item \code{metadata: the contents of the the startup script in \code{system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}}
+  \item \code{metadata: the contents of the the startup script in 
+    system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}
  }
 }
 \seealso{

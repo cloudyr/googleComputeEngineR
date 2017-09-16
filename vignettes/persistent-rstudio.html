@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Mark Edmondson" />
+
+<meta name="date" content="2017-09-16" />
+
+<title>Persistent RStudio Server</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Persistent RStudio Server</h1>
+<h4 class="author"><em>Mark Edmondson</em></h4>
+<h4 class="date"><em>2017-09-16</em></h4>
+
+
+
+<div id="persistent-rstudio-on-google-compute-engine" class="section level1">
+<h1>Persistent RStudio on Google Compute Engine</h1>
+<p>A new Docker image is available which installs tools on top of the default <a href="https://hub.docker.com/r/rocker/tidyverse/"><code>rocker/tidyverse</code></a> to help persist files over Docker containers. This image is part of the <a href="https://cloudyr.github.io/googleComputeEngineR/articles/docker.html#public-docker-images">public Docker images</a> built on top of <code>googleComputeEngineR</code>.</p>
+<p>With this image, there are three ways to save files between Docker sessions:</p>
+<ol style="list-style-type: decimal">
+<li>Write files to the host VM file system - this is through the -v flag upon Docker startup</li>
+<li>Use Git to pull/push from Git repositories.</li>
+<li>Use <a href="https://github.com/cloudyr/googleCloudStorageR"><code>googleCloudStorageR</code></a> to save and read R working directories between machines, including your GitHub/SSH configurations.</li>
+</ol>
+<p>A combination of the above should be used for what best fits your workflow.</p>
+<div id="using-base-vm-file-system" class="section level2">
+<h2>Using base VM file system</h2>
+<p>These files will disappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well.</p>
+<p>If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the <code>disk_size_gb</code> argument:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;vm-larger-disk&quot;</span>, 
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-1&quot;</span>, 
+             <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>, 
+             <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, <span class="dt">password =</span> <span class="st">&quot;blah&quot;</span>,
+             <span class="dt">disk_size_gb =</span> <span class="dv">100</span>)</code></pre></div>
+</div>
+<div id="github" class="section level2">
+<h2>GitHub</h2>
+<p>Generally git is the best place for code under version control across many computers. The below details how you can pull code to your Docker container each restart without needing to resupply your GitHub SSH keys.</p>
+<p>See also these references:</p>
+<ul>
+<li><a href="https://www.r-bloggers.com/rstudio-and-github/" class="uri">https://www.r-bloggers.com/rstudio-and-github/</a></li>
+<li><a href="http://happygitwithr.com/" class="uri">http://happygitwithr.com/</a></li>
+</ul>
+<p>The below assumes you have started a VM using the <code>persistent-rstudio</code> image, which includes SSH tools:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;vm-ssh&quot;</span>, 
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-1&quot;</span>, 
+             <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>, 
+             <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, <span class="dt">password =</span> <span class="st">&quot;blah&quot;</span>, 
+             <span class="dt">dynamic_image =</span> <span class="st">&quot;gcr.io/gcer-public/persistent-rstudio&quot;</span>)</code></pre></div>
+<div id="first-time-you-launch-a-vm" class="section level3">
+<h3>First time you launch a VM:</h3>
+<ol style="list-style-type: decimal">
+<li>Once the VM is launched, log in to RStudio Server at the IP provided by the script</li>
+<li>Go to <code>Tools &gt; Global Options &gt; Git/SVN &gt; Create RSA Key</code></li>
+<li>Click on “View public key”&quot; then add it to GitHub here: <a href="https://github.com/settings/keys" class="uri">https://github.com/settings/keys</a></li>
+<li>Open the terminal in RStudio via <code>Tools &gt; Shell...</code>, and configure you GitHub email and username:</li>
+</ol>
+<pre><code>git config --global user.email &quot;your@githubemail.com&quot;
+git config --global user.name &quot;GitHubUserName&quot;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Check it works - you should see your GitHub details via <code>cat .gitconfig</code> and SSH keys in <code>ls .ssh</code>, <code>ssh -T git@github.com</code> should succeed.</li>
+</ol>
+</div>
+<div id="a-new-github-project" class="section level3">
+<h3>A new GitHub project</h3>
+<p>Do the below for each new RStudio Project to download from GitHub:</p>
+<ol style="list-style-type: decimal">
+<li>On GitHub, click the <code>Clone or download</code> green button and copy the <code>Clone with SSH</code> URI. <strong>Do not copy the browser URL! - it won’t work</strong></li>
+<li>Put the URI on RStudio Server via <code>New Project &gt; Version Control &gt; Git &gt; Repository URL</code></li>
+<li>The first connect you may need to input “yes” in the scary dropdown</li>
+<li>Make changes, push to GitHub via the RStudio Git pane</li>
+</ol>
+</div>
+<div id="restarting-the-vmdocker" class="section level3">
+<h3>Restarting the VM/Docker</h3>
+<p>This configuration should now persist across Docker sessions e.g. you can stop/start the VM and still have GitHub configured.</p>
+<ol style="list-style-type: decimal">
+<li>Stop the RStudio server via the Web UI or <code>gce_vm_stop()</code></li>
+<li>Restart it via the Web UI or <code>gce_vm_start()</code></li>
+<li>Login to RStudio via the URL, then open terminal and check your older configurations are there via <code>cat .gitconfig</code> and SSH keys in <code>ls .ssh</code> and <code>ssh -T git@github.com</code> works</li>
+</ol>
+</div>
+</div>
+<div id="using-googlecloudstorager" class="section level2">
+<h2>Using googleCloudStorageR</h2>
+<p>This can be combined with the above GitHub settings to persist the GitHub settings over VMs.</p>
+<p>The authentication for the <code>googleCloudStorageR</code> backups is re-using the credentials you used to launch the VM</p>
+<p>It is not intended as a replacement for Git - it only adds files if they are not present locally. I use it to copy projects over to more powerful VMs as required.</p>
+<div id="on-local-computer" class="section level3">
+<h3>On local computer</h3>
+<ol style="list-style-type: decimal">
+<li>Create Google Cloud Bucket to save your R sessions to - you can do this via the web UI or similar to below:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleCloudStorageR)
+
+## make the bucket to save to
+projectId =<span class="st"> &quot;your-project&quot;</span>
+bucket_name &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;gcer&quot;</span>, projectId, <span class="kw">Sys.Date</span>(), <span class="dt">sep =</span><span class="st">&quot;-&quot;</span>)
+bs &lt;-<span class="st"> </span><span class="kw">gcs_list_buckets</span>(projectId)
+
+if(bucket_name %in%<span class="st"> </span>bs$name){
+  <span class="kw">message</span>(<span class="st">&quot;Bucket found&quot;</span>)
+  b &lt;-<span class="st"> </span>bucket_name
+} else {
+  b &lt;-<span class="st"> </span><span class="kw">gcs_create_bucket</span>(bucket_name, 
+                         projectId, 
+                         <span class="dt">location =</span> <span class="st">&quot;europe-west2&quot;</span>, 
+                         <span class="dt">storageClass =</span> <span class="st">&quot;REGIONAL&quot;</span>)
+}
+<span class="kw">gcs_global_bucket</span>(b)</code></pre></div>
+<p>Choose a bucket region that is closest to you and your VM for best performance</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Add that bucket to your <code>.Renviron</code> as the <code>GCS_SESSION_BUCKET</code> argument:</p>
+<pre><code>GCS_SESSION_BUCKET=gcer-bucket-name</code></pre></li>
+<li>Add <code>gcs_first</code> and <code>gcs_last</code> to your <code>.RProfile</code> file.</li>
+<li>Create RStudio Project</li>
+<li>Make R stuff</li>
+<li>Add a <code>_gcssave.yaml</code> file specifying GCS bucket to save to.</li>
+<li><p>Exit RStudio project. You should see a message similar to:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Saving data to Google Cloud Storage:
+your-gcs-bucket
+<span class="dv">2017-08-18</span> <span class="dv">23</span>:<span class="dv">25</span>:<span class="dv">43</span> --<span class="st"> </span>File size detected as <span class="fl">1.3</span> Mb</code></pre></div></li>
+</ol>
+<p>When you startup that project again you should see:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[Workspace loaded from:<span class="st"> </span>
+gs:<span class="er">//</span>your-gcs-bucket/Users/the-rproject-folder]</code></pre></div>
+</div>
+<div id="on-cloud-rstudio-server" class="section level3">
+<h3>On cloud RStudio server</h3>
+<p>Now the R data is saved to GCS under the local folder name. We can load this data in an RStudio server cloud instance via:</p>
+<ol style="list-style-type: decimal">
+<li>Launch the RStudio Server image <code>gcr.io/gcer-public/persistent-rstudio</code> that has appropriate libraries loaded.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;mark-rstudio&quot;</span>,
+             <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>,
+             <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>,
+             <span class="dt">dynamic_image =</span> <span class="st">&quot;gcr.io/gcer-public/persistent-rstudio&quot;</span>)</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Add a GCS_SESSION_BUCKET metadata, either via webUI or via:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_set_metadata</span>(<span class="kw">list</span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">&quot;your-session-bucket&quot;</span>), vm)</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>Login to RStudio server and create an RStudio project</li>
+<li>Transfer the local RStudio project to this cloud VM by creating a <code>_gcssave.yaml</code> file at the root of the project with these entries:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">bucket:</span> your-gcs-bucket
+<span class="fu">loaddir:</span> your-local-directory-name</code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Close and re-open the RStudio project. Your local files should now load from GCS</li>
+<li>Do work, then exit the project. It will be saved to a new folder on GCS</li>
+</ol>
+</div>
+<div id="persisting-github-with-googlecloudstorager" class="section level3">
+<h3>Persisting GitHub with googleCloudStorageR</h3>
+<p>You can also use the above in conjunction with the GitHub setup to persist over VMs.</p>
+<p>To do so, you need to :</p>
+<ol style="list-style-type: decimal">
+<li>Keep the same RStudio login username,</li>
+<li>Use the same bucket for <code>GCS_SESSION_BUCKET</code> or in the <code>_gcssave.yaml</code></li>
+<li>Use this Dockerfile’s image - <code>gcr.io/gcer-public/persistent-rstudio</code></li>
+</ol>
+<p>The configurations of GitHub that are saved in <code>.ssh</code> and <code>.gitconfig</code> folders in your home directory will be backed up to Google Cloud Storage.</p>
+<div id="saving-github-configurations" class="section level4">
+<h4>Saving GitHub configurations</h4>
+<ol style="list-style-type: decimal">
+<li>Add a <code>_gcssave.yaml</code> file to your home folder that will download/upload the configurations.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">## The GCS bucket to save/load R workspace from</span>
+<span class="fu">bucket:</span> gcer-store-my-rstudio-files
+
+<span class="co">## regex to only save these files to GCS</span>
+<span class="fu">pattern:</span> <span class="st">&quot;id_rsa|.gitconfig&quot;</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>With no project open and your working directory the base (e.g. <code>getwd()</code> is <code>/home/you</code>) save the yaml file and quit the R session:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">q</span>(<span class="dt">save =</span> <span class="st">&quot;no&quot;</span>)</code></pre></div>
+<p>You should see a message saying its saving the home folder. Upon restart, that folder will load from the bucket.</p>
+</div>
+<div id="loading-github-configurations" class="section level4">
+<h4>Loading GitHub configurations</h4>
+<ol style="list-style-type: decimal">
+<li>Start another VM, with the same details as before:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="st">&quot;mark-rstudio&quot;</span>,
+             <span class="dt">template =</span> <span class="st">&quot;rstudio&quot;</span>,
+             <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,
+             <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-2&quot;</span>,
+             <span class="dt">dynamic_image =</span> <span class="st">&quot;gcr.io/gcer-public/persistent-rstudio&quot;</span>)
+
+<span class="kw">gce_set_metadata</span>(<span class="kw">list</span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">&quot;your-session-bucket&quot;</span>), vm2)</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Upon logging in, you should see a message saying its loading data from GCS:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[Workspace loaded from:<span class="st"> </span>
+gs:<span class="er">//</span>your-session-bucket/home/you]</code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>You should now be able to run <code>ssh -T git@github.com</code> successfully</li>
+<li>Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.</li>
+</ol>
+<p>You can now delete VMs and start up new ones using RStudio Docker, and the GitHub configurations will persist so long as you follow the steps above.</p>
+</div>
+</div>
+<div id="running-rstudio-server-on-app-engine" class="section level3">
+<h3>Running RStudio Server on App Engine</h3>
+<p>Since the compute and the data are now separated, you can now become fully cloud native by running RStudio Server on App Engine. This means you don’t need to worry about servers at all. Each time you visit your RStudio Server App Engine URL, a new instance will start, loading your data from your last session. When you finish, close the browser and the VM will tear down itself.</p>
+<p>See more at GitHub: <a href="https://github.com/MarkEdmondson1234/appengine-rstudio">RStudio on App Engine</a>.</p>
+<p>Running on App Engine has many advantages, including:</p>
+<ul>
+<li>No servers to setup, stop/start</li>
+<li>Only pay for when you are on the VM</li>
+<li>Auto auth via the app engine service account</li>
+<li>Load balancing and OAuth2 login options</li>
+</ul>
+</div>
+<div id="details-on-how-the-above-is-working" class="section level3">
+<h3>Details on how the above is working</h3>
+<p>This build includes the newest version of <code>googleCloudStorageR</code> and <code>googleComputeEngineR</code> which have had functions added to help with the workflow above.</p>
+<p>The functions can store data to Google’s dedicated store via <code>googleCloudStorageR</code>s <code>gcs_first</code> and <code>gcs_last</code> functions. This Dockerbuild puts the functions into a custom <code>.Rprofile</code> file that will save the projects workspace data to its own bucket, if they have a <code>_gcssave.yaml</code> file in the folder, or if the directory matches one already saved.</p>
+<p>The <code>.yaml</code> tells <code>googleCloudStorageR</code> which bucket to save the folder to, or if not present an environment argument <code>GCS_SESSION_BUCKET</code> - this is used on first load when no <code>.yaml</code> file is present.</p>
+<p>Thus, you can save an RStudio project via your local computer, then launch an RStudio server in the cloud with the <code>loaddir:</code> argument set to that directory name to load the files onto your cloud server. Once done, when you quit the R session it will save your work to its own new folder, that when you stop/start a Docker container with RStudio within and create a project with the same name, will automatically load.</p>
+<p>It will only download files to your folder that don’t exist, so local changes won’t be overwritten if they already exist. It is not git, treat it more as a backup that will load if the files are not already present (such as when you relaunch a Docker container)</p>
+<p>If you upload to GCS, make sure to load the directory and files you want - delete the GCS folder if you want to stop backups via <code>gcs_delete_all()</code></p>
+<p>Example <code>_gcssave.yaml</code>:</p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">## The GCS bucket to save/load R workspace from</span>
+<span class="fu">bucket:</span> gcer-store-my-rstudio-files
+
+<span class="co">## set to FALSE if you dont want to load on R session startup</span>
+<span class="fu">load_on_startup:</span> TRUE
+
+<span class="co">## on first load and init, whether to look for a different directory on GCS than present getwd()</span>
+<span class="fu">loaddir:</span> /Users/mark/the/folder/on/local
+
+<span class="co">## regex to only save these files to GCS</span>
+<span class="fu">pattern:</span></code></pre></div>
+<p>An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via <code>googleAuthR::gar_gce_auth()</code> so you don’t need to supply your own auth file.</p>
+<p>To use, the VM needs to be supplied with a bucket name environment. Using a separate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs. This is set in the instance running the Docker’s metadata, that will get copied over to an environment argument R can see.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

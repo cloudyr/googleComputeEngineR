@@ -77,8 +77,7 @@
 #' @export
 gce_schedule_docker <- function(docker_image, 
                                 schedule = "53 4 * * *", 
-                                vm = gce_vm_scheduler(),
-                                cronfile = "crontab.out"){
+                                vm = gce_vm_scheduler()){
   
   assertthat::assert_that(
     assertthat::is.string(docker_image)

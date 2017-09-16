@@ -70,7 +70,8 @@ gce_list_gpus <- function(filter = NULL,
 #'   \item \code{image_project: "centos-cloud"}
 #'   \item \code{image_family: "centos-7"}
 #'   \item \code{predefined_type: "n1-standard-1"}
-#'   \item \code{metadata: the contents of the the startup script in \code{system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}}
+#'   \item \code{metadata: the contents of the the startup script in 
+#'     system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}
 #'  }
 #' 
 #' @family GPU instances

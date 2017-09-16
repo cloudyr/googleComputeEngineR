@@ -9,10 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Dockerfiles
 
 `googleComputeEngineR` has a lot of integration with [`Docker`](https://www.docker.com/), using it to launch custom pre-made images via the `gce_vm_container` and `gce_vm_template` commands. 
@@ -70,7 +66,7 @@ The `FROM` field could be a previously made image you or someone else has alread
 
 The `shiny-googleauthrdemo` is the Dockerfile above - the name for this can be created via the `gce_tag_container()` function:
 
-```{r, message=FALSE, warning=FALSE}
+```r
 library(googleComputeEngineR)
 gce_tag_container("shiny-googleauthrdemo", project = "gcer-public")
 ```
@@ -123,7 +119,7 @@ If you want to customise further, the docker commands are triggered upon start u
 
 These can be used to configured to do more system level commands such as starting the docker service, create users and running start up scripts.  These are accessible via the `gce_vm_container` function when you supply the `cloud_init` file. You can examine the `cloud-config` files used in `googleComputeEngineR` in this folder: 
 
-```
+```r
 system.file("cloudconfig", package = "googleComputeEngineR")
 ```
 
