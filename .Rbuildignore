@@ -22,3 +22,4 @@ _pkgdown\.yml
 ^pkgdown$
 ^index\.Rmd$
 ^index\.html$
+^cran-comments\.md$
