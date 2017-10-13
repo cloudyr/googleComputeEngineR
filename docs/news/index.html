@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47480439-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -152,52 +164,6 @@
     </div>
 
     <div class="contents">
-    <div id="googlecomputeenginer-0-1-0-9000" class="section level1">
-<h1 class="hasAnchor">
-<a href="#googlecomputeenginer-0-1-0-9000" class="anchor"></a>googleComputeEngineR 0.1.0.9000</h1>
-<div id="changes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#changes" class="anchor"></a>Changes</h2>
-<ul>
-<li>Update website</li>
-<li>Add R-Datalab Dockerfile example</li>
-<li>Let Rstudio users be added with staff rights so they can install packages etc.</li>
-<li>Add ability to specify disk size when creating a VM (#38) - thanks @jburos</li>
-<li>Add firewall functions (#34)</li>
-<li>Add a builder template to build docker images on a dedicated VM (#32)</li>
-<li>Add global operation class</li>
-<li>Add <code>open_webports</code> argument to <code>gce_vm</code> that will open web ports 80 and 443 if necessary</li>
-<li>Add GPU functions</li>
-<li>Migrate to use <code>system2</code> instead of <code>system</code> for cross-platform SSH (#35)</li>
-<li>
-<code>gce_shiny_addapp</code> is now much more useful</li>
-<li>Add <code>gce_schedule_docker</code> and <code>gce_vm_scheduler</code> for easy Dockerfile scheduling</li>
-<li>Add <code>gce_vm_logs</code> to quickly browse to an instance logs online</li>
-<li>Fix custom machine types creation (#63) - thanks @Blaza</li>
-<li>Set environment vars on VMs from metadata via <code>gce_metadata_env</code>
-</li>
-</ul>
-</div>
-</div>
-    <div id="googlecomputeenginer-0-1-0" class="section level1">
-<h1 class="hasAnchor">
-<a href="#googlecomputeenginer-0-1-0" class="anchor"></a>googleComputeEngineR 0.1.0</h1>
-<div id="major-changes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
-<ul>
-<li>Start, stop and restart VMs</li>
-<li>Create instances using cloudinit</li>
-<li>Browser based SSH</li>
-<li>SSH from R</li>
-<li>Metadata</li>
-<li>Docker</li>
-<li>Google container registry</li>
-<li>VM templates</li>
-<li>Future asynch cluster computing</li>
-</ul>
-</div>
-</div>
     </div>
   </div>
 
@@ -205,8 +171,6 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#googlecomputeenginer-0-1-0-9000">0.1.0.9000</a></li>
-        <li><a href="#googlecomputeenginer-0-1-0">0.1.0</a></li>
       </ul>
     </div>
   </div>

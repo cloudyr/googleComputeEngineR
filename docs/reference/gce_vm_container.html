@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47480439-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -151,7 +163,7 @@
     </div>
 
     
-    <p>This lets you specify docker images when creating the VM.  These are a speical class of Google instances that are setup for running Docker containers.</p>
+    <p>This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers.</p>
     
 
     <pre class="usage"><span class='fu'>gce_vm_container</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,

@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47480439-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -154,12 +166,20 @@
     <p>Saves a few clicks</p>
     
 
-    <pre class="usage"><span class='fu'>gce_vm_logs</span>(<span class='no'>instance</span>, <span class='kw'>open_brower</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>gce_vm_logs</span>(<span class='no'>instance</span>, <span class='kw'>open_browser</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>instance</th>
+      <td><p>The VM to see serial console output for</p></td>
+    </tr>
+    <tr>
+      <th>open_browser</th>
+      <td><p>Whether to return a URL or open the browser</p></td>
+    </tr>
     <tr>
       <th>project</th>
       <td><p>Project ID for this request, default as set by <a href='gce_get_global_project.html'>gce_get_global_project</a></p></td>
@@ -167,14 +187,6 @@
     <tr>
       <th>zone</th>
       <td><p>The name of the zone for this request, default as set by <a href='gce_get_global_zone.html'>gce_get_global_zone</a></p></td>
-    </tr>
-    <tr>
-      <th>vm</th>
-      <td><p>The VM to see serial console output for</p></td>
-    </tr>
-    <tr>
-      <th>open_browser</th>
-      <td><p>Whether to return a URL or open the browser</p></td>
     </tr>
     </table>
     

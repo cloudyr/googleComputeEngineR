@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47480439-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -156,7 +168,7 @@ You will need to create and build the Dockerfile first.</p>
     
 
     <pre class="usage"><span class='fu'>gce_schedule_docker</span>(<span class='no'>docker_image</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='st'>"53 4 * * *"</span>,
-  <span class='kw'>vm</span> <span class='kw'>=</span> <span class='fu'><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></span>(), <span class='kw'>cronfile</span> <span class='kw'>=</span> <span class='st'>"crontab.out"</span>)</pre>
+  <span class='kw'>vm</span> <span class='kw'>=</span> <span class='fu'><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -187,7 +199,7 @@ You will need to create and build the Dockerfile first.</p>
   running it through <code>containeRit::dockerfile</code>.  It also takes care of any dependencies.</p>  
 <p>It is recommended to create a script that is self contained in output and input, 
 e.g. don't save files to the VM, instead upload or download any files 
-from Google Cloud Storage via authentication via <code><a href='http://www.rdocumentation.org/packages/googleAuthR/topics/gar_gce_auth'>googleAuthR::gar_gce_auth()</a></code> 
+from Google Cloud Storage via authentication via <code><a href='https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html'>googleAuthR::gar_gce_auth()</a></code> 
 then downloading and uploading data using <code>library(googleCloudStorageR)</code> or similar.</p>
 <p>Once the script is working locally, build it and upload to a repository 
   so it can be reached via argument <code>docker_image</code></p>
@@ -195,7 +207,7 @@ then downloading and uploading data using <code>library(googleCloudStorageR)</co
   in which case the name can be created via <a href='gce_tag_container.html'>gce_tag_container</a>
 or build via <a href='docker_build.html'>docker_build</a> to build on another VM or locally, 
 then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</a></p>  
-<p>Any Docker image can be run, it doesn't have to be an R one.</p>
+<p>Any Docker image can be run, it does not have to be an R one.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

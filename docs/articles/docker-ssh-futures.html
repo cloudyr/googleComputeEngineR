@@ -12,7 +12,16 @@
 <script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<![endif]--><!-- Google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-47480439-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </head>
 <body>
     <div class="container template-vignette">
@@ -127,7 +136,7 @@
       <h1>SSH, Docker, Container Registry and Futures</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-09-02</h4>
+            <h4 class="date">2017-10-13</h4>
           </div>
 
     
@@ -140,7 +149,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 <span class="kw"><a href="../reference/gce_ssh_browser.html">gce_ssh_browser</a></span>(<span class="st">"my-server"</span>)</code></pre></div>
 <div class="figure">
-<img src="http://g.recordit.co/TpM4IfRLgf.gif">
+<img src="ssh-login.gif">
 </div>
 </div>
 <div id="ssh-commands" class="section level2">
@@ -314,30 +323,30 @@ cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/contai
 <span class="st">"rstudio"</span>
 
 ## see if its running
-<span class="kw"><a href="../reference/container_running.html">container_running</a></span>(con$rstudio)
+<span class="kw"><a href="../reference/container_running.html">container_running</a></span>(con<span class="op">$</span>rstudio)
 [<span class="dv">1</span>] <span class="ot">TRUE</span>
 
 ## get logs from container
-<span class="kw"><a href="../reference/container_logs.html">container_logs</a></span>(con$rstudio)
+<span class="kw"><a href="../reference/container_logs.html">container_logs</a></span>(con<span class="op">$</span>rstudio)
 
 ## get metadata
-<span class="kw"><a href="../reference/container_update_info.html">container_update_info</a></span>(con$rstudio)
-&lt;container&gt;
-<span class="st">  </span>ID:<span class="st">       </span>05c5437ac968 
-  Name:<span class="st">     </span>rstudio 
-  Image:<span class="st">    </span>rocker/rstudio 
-  Command:<span class="st">  </span><span class="er">/</span>init 
-  Host:<span class="st">     </span><span class="er">==</span>Google Compute Engine Instance==
+<span class="kw"><a href="../reference/container_update_info.html">container_update_info</a></span>(con<span class="op">$</span>rstudio)
+<span class="op">&lt;</span>container<span class="op">&gt;</span>
+<span class="st">  </span>ID<span class="op">:</span><span class="st">       </span>05c5437ac968 
+  Name<span class="op">:</span><span class="st">     </span>rstudio 
+  Image<span class="op">:</span><span class="st">    </span>rocker<span class="op">/</span>rstudio 
+  Command<span class="op">:</span><span class="st">  </span><span class="er">/</span>init 
+  Host<span class="op">:</span><span class="st">     </span><span class="er">==</span>Google Compute Engine Instance<span class="op">==</span>
 <span class="st">  </span>
-<span class="st">  </span>Name:<span class="st">                </span>rstudio-dev
-  Created:<span class="st">             </span><span class="dv">2016-10-07</span> <span class="dv">03</span>:<span class="dv">30</span>:<span class="dv">24</span>
-  Machine Type:<span class="st">        </span>f1-micro
-  Status:<span class="st">              </span>RUNNING
-  Zone:<span class="st">                </span>europe-west1-b
-  External IP:<span class="st">         </span><span class="fl">104.199.19.222</span>
-  Disks:<span class="st"> </span>
+<span class="st">  </span>Name<span class="op">:</span><span class="st">                </span>rstudio<span class="op">-</span>dev
+  Created<span class="op">:</span><span class="st">             </span><span class="dv">2016</span><span class="op">-</span><span class="dv">10</span><span class="op">-</span><span class="dv">07</span> <span class="dv">03</span><span class="op">:</span><span class="dv">30</span><span class="op">:</span><span class="dv">24</span>
+  Machine Type<span class="op">:</span><span class="st">        </span>f1<span class="op">-</span>micro
+  Status<span class="op">:</span><span class="st">              </span>RUNNING
+  Zone<span class="op">:</span><span class="st">                </span>europe<span class="op">-</span>west1<span class="op">-</span>b
+  External IP<span class="op">:</span><span class="st">         </span><span class="fl">104.199</span>.<span class="fl">19.222</span>
+  Disks<span class="op">:</span><span class="st"> </span>
 <span class="st">               </span>deviceName       type       mode boot autoDelete
-  <span class="dv">1</span> rstudio-dev-boot-disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></code></pre></div>
+  <span class="dv">1</span> rstudio<span class="op">-</span>dev<span class="op">-</span>boot<span class="op">-</span>disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></code></pre></div>
 </div>
 <div id="futures" class="section level2">
 <h2 class="hasAnchor">
@@ -355,7 +364,7 @@ vms &lt;-<span class="st"> </span><span class="kw">list</span>(vm1, vm2, vm3)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)
 
 ## use futures %&lt;-% to send a function to the cluster
-si %&lt;-%<span class="st"> </span><span class="kw">Sys.info</span>()
+si <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">Sys.info</span>()
 <span class="kw">print</span>(si)
 
 ## tidy up
