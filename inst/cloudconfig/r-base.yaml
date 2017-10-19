@@ -19,8 +19,6 @@ write_files:
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/share/google/dockercfg_update.sh
     ExecStart=/usr/bin/docker run --name=r-base \
-                                  -e "R_LIBS_USER=/library/" \
-                                  -v /home/gcer/library/:/library/ \
                                   --net=host \
                                   %s
     ExecStop=/usr/bin/docker stop r-base
