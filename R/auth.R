@@ -25,6 +25,14 @@ gce_auth <- function(new_user = FALSE, no_auto = FALSE){
   required_scopes <- c("https://www.googleapis.com/auth/cloud-platform",
                        "https://www.googleapis.com/auth/compute")
   
+  op <- getOption("googleAuthR.scopes.selected")
+  if(is.null(op)){
+    options(googleAuthR.scopes.selected = "https://www.googleapis.com/auth/cloud-platform")
+  } else if(!any(required_scopes %in% op)){
+    options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/cloud-platform",
+                                            op))
+  }
+  
   googleAuthR::gar_auto_auth(required_scopes,
                              new_user = new_user,
                              no_auto = no_auto,

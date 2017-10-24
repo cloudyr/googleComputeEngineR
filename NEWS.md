@@ -1,6 +1,6 @@
 # 0.2.0.9000
 
-* ...
+* set scopes if necessary with gce_auth() (#97)
 
 # 0.2.0
 
