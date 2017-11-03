@@ -1,6 +1,7 @@
 # 0.2.0.9000
 
-* set scopes if necessary with gce_auth() (#97)
+* remove `gce_auth()` to favour auth with JSON key (#79)
+* Fix project-id error if numbers in project (#72)
 
 # 0.2.0
 

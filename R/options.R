@@ -17,21 +17,6 @@
   #   out
   # })
   
-  options(googleAuthR.cache_function = function(req){
-    if(req$status_code != 200){
-      return(FALSE)
-    } else {
-      if(req$content$kind == "compute#operation"){
-        if(req$content$status != "DONE"){
-          return(FALSE)
-        }
-      } else if (req$content$operationType == "delete"){
-        return(FALSE)
-      }
-    }
-    TRUE
-  }) 
-  
   attempt <- try(googleAuthR::gar_attach_auto_auth("https://www.googleapis.com/auth/cloud-platform",
                                     environment_var = "GCE_AUTH_FILE"))
   if(inherits(attempt, "try-error")){

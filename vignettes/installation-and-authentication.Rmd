@@ -24,7 +24,6 @@ For `googleComputeEngineR` you will need:
 * Your project ID e.g. `my-project-name`
 * Your preferred geographical zone to launch VMs e.g. `europe-west1-a`
 * [Recommended] A `Service account key` json file, downloaded from the API Manager > Credentials > Create credentials > Service account key > Key type = JSON
-* [Optional] If not using service account key, you will need the `client-id` and `client-secret` for your project.
 
 ## Setup video guide
 
@@ -39,7 +38,7 @@ knitr::include_url("https://www.youtube.com/embed/1oM0NZbRhSI?rel=0")
 
 ## Auto-authentication via .Renviron
 
-The best way to handle authentication is to set environment arguments with your setup details.
+Authentication requires you to set environment arguments with your setup details.
 
 These can be set in an `.Renviron` file located on your computer home directory - R will look in this file upon startup.  Read more via `?Startup`
 
@@ -64,7 +63,6 @@ Successfully authenticated via /Users/mark/auth.json
 Set default project name to 'mark-xxxxx'
 Set default zone to 'europe-west1-a'
 
-## no need for gce_auth() and will call default project
 > gce_get_project()
 $kind
 [1] "compute#project"
