@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a future cluster for GCE objects — as.cluster.gce_instance • googleComputeEngineR</title>
+<title>Working with Google Compute Engine from R — googleComputeEngineR • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -159,72 +159,20 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a future cluster for GCE objects</h1>
+    <h1>Working with Google Compute Engine from R</h1>
     </div>
 
     
-    <p>S3 method for <code><a href='http://www.rdocumentation.org/packages/future/topics/as.cluster'>as.cluster</a>()</code> in the <span class="pkg">future</span> package.</p>
+    <p>See demos and examples at the <a href='googleComputeEngineR website'>https://cloudyr.github.io/googleComputeEngineR/</a>.</p>
     
 
-    <pre class="usage"><span class='co'># S3 method for gce_instance</span>
-<span class='fu'>as.cluster</span>(<span class='no'>x</span>, <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(),
-  <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>(), <span class='kw'>rshopts</span> <span class='kw'>=</span> <span class='fu'>ssh_options</span>(<span class='no'>x</span>), <span class='no'>...</span>,
-  <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>The instance to make a future cluster</p></td>
-    </tr>
-    <tr>
-      <th>project</th>
-      <td><p>The GCE project</p></td>
-    </tr>
-    <tr>
-      <th>zone</th>
-      <td><p>The GCE zone</p></td>
-    </tr>
-    <tr>
-      <th>rshopts</th>
-      <td><p>Options for the SSH</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Other arguments passed to makeDockerClusterPSOCK</p></td>
-    </tr>
-    <tr>
-      <th>recursive</th>
-      <td><p>Not used.</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+        
 
-    <p>A <code>cluster</code> object.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Only works for r-base containers created via <code><a href='gce_vm_template.html'>gce_vm_template("r-base")</a></code> or for 
-  docker containers created using the <code>--net=host</code> argument flag</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"r-base"</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"future"</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>)</div><div class='output co'>#&gt; <span class='message'>2017-11-09 16:05:11&gt; Creating standard VM</span></div><div class='output co'>#&gt; <span class='message'>Request failed [404]. Retrying in 1.2 seconds...</span></div><div class='output co'>#&gt; <span class='message'>Request failed [404]. Retrying in 1 seconds...</span></div><div class='output co'>#&gt; <span class='message'>2017-11-09 16:05:13&gt; Request Status Code: 404</span></div><div class='output co'>#&gt; <span class='message'>Scopes: https://www.googleapis.com/auth/cloud-platform</span></div><div class='output co'>#&gt; <span class='message'>Method: service_json</span></div><div class='output co'>#&gt; <span class='error'>Error: API returned: Failed to find project r-base</span></div><div class='input'><span class='fu'>plan</span>(<span class='no'>cluster</span>, <span class='kw'>workers</span> <span class='kw'>=</span> <span class='no'>vm</span>)  <span class='co'>## equivalent to workers = as.cluster(vm)</span></div><div class='output co'>#&gt; <span class='error'>Error: check_ssh_set(x) is not TRUE</span></div><div class='input'><span class='no'>x</span> <span class='kw'>%&lt;-%</span> { <span class='fu'>Sys.getinfo</span>() }</div><div class='output co'>#&gt; <span class='error'>Error: check_ssh_set(x) is not TRUE</span></div><div class='input'><span class='fu'>print</span>(<span class='no'>x</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(x): object 'x' not found</span></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

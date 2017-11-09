@@ -10,7 +10,8 @@ get_cloud_init_file <- function(template,
   if(template == "rstudio"){
     assert_that(
       is.string(username),
-      is.string(password)
+      is.string(password),
+      username != "rstudio"
     )
     
   } else if(template == "dynamic"){

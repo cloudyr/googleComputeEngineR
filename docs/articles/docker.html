@@ -136,7 +136,7 @@
       <h1>Docker</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-10-13</h4>
+            <h4 class="date">2017-11-09</h4>
           </div>
 
     
@@ -184,6 +184,57 @@
 <p>You can use build triggers from <a href="https://cloud.google.com/container-registry/">Google Container Registry</a> to build the docker image when you push to a public or private repository.</p>
 <p>This is typically done by pushing up to a GitHub repository with your Dockerfile, which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>.</p>
 <p>You can then construct the name of this docker image directly using <code>gce_tag_container</code>, for use in a Shiny templated <code>gce_vm</code> call.</p>
+<div id="build-trigger-setup-example" class="section level3">
+<h3 class="hasAnchor">
+<a href="#build-trigger-setup-example" class="anchor"></a>Build Trigger Setup example</h3>
+<ol style="list-style-type: decimal">
+<li>The example Dockerfile is a simple one that uses a Tidyverse Docker image (this has RStudio as well) and installs <code>secret</code>. Customise this to your needs, perhaps by creating it with <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a>
+</li>
+</ol>
+<pre><code>FROM rocker/tidyverse
+
+# Install secret
+RUN install2.r --error \
+        secret </code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>The Dockerfile is pushed to GitHub (this example is in the googleComputeEngineR GitHub <a href="https://github.com/cloudyr/googleComputeEngineR/tree/master/inst/dockerfiles/testTrigger">here</a>)</li>
+<li>Login to the Google Cloud console and visit <a href="https://console.cloud.google.com/gcr/triggers">Build triggers</a>, and make a trigger with these settings:</li>
+</ol>
+<div class="figure">
+<img src="build-trigger-settings.png">
+</div>
+<p>Note the image name, folder to build from and that the tag is set to latest.</p>
+<p>This should then shown in the build trigger console like this:</p>
+<div class="figure">
+<img src="build-trigger-menu.png">
+</div>
+<p>This is in the public googleComputeEngineR image project, but should look similar for your own.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>We now launch the VM with the custom image. Since it is an RStudio based template, we define template to be “rstudio” and supply a username and password.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
+## auto auth messages
+## set default project ID to xxxxxx
+## set default zone to xxxxx
+
+vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"im-rstudio"</span>, 
+              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
+              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
+              <span class="dt">username =</span> <span class="st">"test"</span>, 
+              <span class="dt">password =</span> <span class="st">"test1234"</span>, 
+              <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>))</code></pre></div>
+<p>Note I change the project to the public one of the image, as its different from the paid project I put the VM into, but in your case it may be the same.</p>
+<p>The Dockerfile name is given by the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
+<span class="co"># [1] "gcr.io/gcer-public/test-trigger"</span></code></pre></div>
+<p>You can use this function or pass in the image name directly as listed in the Build trigger console.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>After a few mins visit the I.P. of the instance which should have RStudio running with the secret library installed:</li>
+</ol>
+<div class="figure">
+<img src="build-trigger-running.png">
+</div>
+</div>
 </div>
 <div id="public-docker-images" class="section level2">
 <h2 class="hasAnchor">
