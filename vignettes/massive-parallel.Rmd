@@ -148,7 +148,7 @@ resolved(result)
 
 ## Example - forcasting a large data set
 
-The below splits a dataset into chunks that are each run on a seperate VMs that are preemtible, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package future in these Docker images. 
+The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package `future` in these Docker images. 
 
 ```r
 library(future)

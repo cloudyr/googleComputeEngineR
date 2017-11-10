@@ -265,7 +265,7 @@ resolved(result)
 <div id="example---forcasting-a-large-data-set" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example---forcasting-a-large-data-set" class="anchor"></a>Example - forcasting a large data set</h2>
-<p>The below splits a dataset into chunks that are each run on a seperate VMs that are preemtible, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package future in these Docker images.</p>
+<p>The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package <code>future</code> in these Docker images.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(googleComputeEngineR)
 
