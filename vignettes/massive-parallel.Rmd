@@ -19,7 +19,7 @@ On other platforms, see also an [Azure example here on Revolution Analytics](htt
 
 # Remote R cluster
 
-This workflow takes advatage of the [`future`](https://CRAN.R-project.org/package=future) integration to run your local R-functions within a cluster of GCE machines.  
+This workflow takes advantage of the [`future`](https://CRAN.R-project.org/package=future) integration to run your local R-functions within a cluster of GCE machines.  
 You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.
 
 In summary, this workflow:
@@ -146,7 +146,7 @@ resolved(result)
 [1] TRUE
 ```
 
-## Example - forcasting a large data set
+## Example - forecasting a large data set
 
 The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package `future` in these Docker images. 
 
