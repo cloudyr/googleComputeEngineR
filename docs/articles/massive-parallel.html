@@ -311,14 +311,14 @@ my_files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span 
 my_data &lt;-<span class="st"> </span><span class="kw">lapply</span>(my_files, read.csv)
 
 ## make a big function to run asynchronously
-cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, args){
+cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, <span class="dt">args =</span> <span class="dv">4</span>){
    
-   forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/forecast">forecast</a></span>(forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/auto.arima">auto.arima</a></span>(<span class="kw">ts</span>(my_data, <span class="dt">frequency =</span> <span class="dv">4</span>)))
+   forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/forecast">forecast</a></span>(forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/auto.arima">auto.arima</a></span>(<span class="kw">ts</span>(my_data, <span class="dt">frequency =</span> args)))
    
 }
 
 ## send to cluster
-result <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">cluster_f</span>(my_data) 
+result &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(my_data, cluster_f, <span class="dt">args =</span> <span class="dv">4</span>) 
 
 ## once done this will be TRUE
 <span class="kw">resolved</span>(result)

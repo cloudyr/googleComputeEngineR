@@ -196,14 +196,14 @@ my_files <- list.files("myfolder")
 my_data <- lapply(my_files, read.csv)
 
 ## make a big function to run asynchronously
-cluster_f <- function(my_data, args){
+cluster_f <- function(my_data, args = 4){
    
-   forecast::forecast(forecast::auto.arima(ts(my_data, frequency = 4)))
+   forecast::forecast(forecast::auto.arima(ts(my_data, frequency = args)))
    
 }
 
 ## send to cluster
-result %<-% cluster_f(my_data) 
+result <- future::future_lapply(my_data, cluster_f, args = 4) 
 
 ## once done this will be TRUE
 resolved(result)
