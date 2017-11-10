@@ -120,7 +120,7 @@ plan(cluster, workers = as.cluster(
 
 ### Using the cluster
 
-The cluster is now ready to recieve jobs.  You can send them by simply using `%<-%` instead of `<-`.
+The cluster is now ready to recieve jobs.  You can send them by simply using `%<-%` instead of `<-`.  Another useful function is `future::future_lapply` that lets you loop over a cluster.  Consult the [`future` documentation](https://github.com/HenrikBengtsson/future) for details. 
 
 ```r
 ## use %<-% to send functions to work on cluster

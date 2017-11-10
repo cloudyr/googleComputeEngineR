@@ -243,7 +243,7 @@ vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_se
 <div id="using-the-cluster" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-the-cluster" class="anchor"></a>Using the cluster</h3>
-<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>.</p>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code><a href="http://www.rdocumentation.org/packages/future/topics/future_lapply">future::future_lapply</a></code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future"><code>future</code> documentation</a> for details.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## use %&lt;-% to send functions to work on cluster
 ## See future README for details: https://github.com/HenrikBengtsson/future
 a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">Sys.getpid</span>()
