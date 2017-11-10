@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Shiny app to a Shiny template instance — gce_shiny_addapp • googleComputeEngineR</title>
+<title>Make the Docker cluster on Google Compute Engine — makeDockerClusterPSOCK • googleComputeEngineR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -162,99 +162,61 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add Shiny app to a Shiny template instance</h1>
+    <h1>Make the Docker cluster on Google Compute Engine</h1>
     </div>
 
     
-    <p>Add a local shiny app to a running Shiny VM installed via <a href='gce_vm_template.html'>gce_vm_template</a> 
-  via <a href='docker_build.html'>docker_build</a> and <a href='gce_push_registry.html'>gce_push_registry</a> / <a href='gce_pull_registry.html'>gce_pull_registry</a>.</p>
+    <p>Called by as.cluster</p>
     
 
-    <pre class="usage"><span class='fu'>gce_shiny_addapp</span>(<span class='no'>instance</span>, <span class='no'>app_image</span>, <span class='kw'>dockerfolder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>makeDockerClusterPSOCK</span>(<span class='no'>workers</span>, <span class='kw'>docker_image</span> <span class='kw'>=</span> <span class='st'>"rocker/r-base"</span>,
+  <span class='kw'>rscript</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"docker"</span>, <span class='st'>"run"</span>, <span class='st'>"--net=host"</span>, <span class='no'>docker_image</span>, <span class='st'>"Rscript"</span>),
+  <span class='kw'>rscript_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>install_future</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>instance</th>
-      <td><p>The instance running Shiny</p></td>
+      <th>workers</th>
+      <td><p>The VMs being called upon</p></td>
     </tr>
     <tr>
-      <th>app_image</th>
-      <td><p>The name of the Docker image to create or use existing from Google Container Registry. Must be numbers, dashes or lowercase letters only.</p></td>
+      <th>docker_image</th>
+      <td><p>The docker image to use on the cluster</p></td>
     </tr>
     <tr>
-      <th>dockerfolder</th>
-      <td><p>The folder location containing the <code>Dockerfile</code> and app dependencies</p></td>
+      <th>rscript</th>
+      <td><p>The Rscript command to run on the cluster</p></td>
+    </tr>
+    <tr>
+      <th>rscript_args</th>
+      <td><p>Arguments to the RScript</p></td>
+    </tr>
+    <tr>
+      <th>install_future</th>
+      <td><p>Whether to check if future is installed first</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to <a href='http://www.rdocumentation.org/packages/future/topics/makeClusterPSOCK'>makeClusterPSOCK</a></p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>How much feedback to show</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The instance</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>To deploy a Shiny app, you first need to construct a <code>Dockerfile</code> which load the R packages and
-  dependencies, as well as copying over the Shiny app in the same folder.</p>
-<p>This function will take the Dockerfile, build it into a Docker image and 
-  upload it to Google Container Registry for use later.</p>
-<p>If already created, then the function will download the <code>app_image</code> from Google Container Registry 
-  and start it on the instance provided.</p>
-<p>Any existing Shiny Docker containers are stopped and removed, 
-  so if you want multiple apps put them in the same <code>Dockerfile</code>.</p>
-    
-    <h2 class="hasAnchor" id="dockerfile"><a class="anchor" href="#dockerfile"></a>Dockerfile</h2>
-
-    
-    <p>Example <code>Dockerfile</code>'s are found in 
-<code>system.file("dockerfiles",package = "googleComputeEngineR")</code></p>
-<p>The Dockerfile is in the same folder as your shiny app, 
-which consists of a <code>ui.R</code> and <code>server.R</code> in a shiny subfolder.  
-This is copied into the Dockerfile in the last line.  
-Change the name of the subfolder to have that name appear 
-in the final URL of the Shinyapp.</p>
-<p>This is then run using the R commands below:</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p>The vignette entry called <code>Shiny App</code> has examples and a walk through.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gce_vm.html'>gce_vm</a></span>(<span class='st'>"shiny-test"</span>,
-             <span class='kw'>template</span> <span class='kw'>=</span> <span class='st'>"shiny"</span>,
-             <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"n1-standard-1"</span>)
-
-<span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>vm_ssh_setup</span>(<span class='no'>vm</span>)
-
-<span class='no'>app_dir</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"dockerfiles"</span>,<span class='st'>"shiny-googleAuthRdemo"</span>,
-                       <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleComputeEngineR"</span>)
-
-<span class='fu'>gce_shiny_addapp</span>(<span class='no'>vm</span>, <span class='kw'>app_image</span> <span class='kw'>=</span> <span class='st'>"gceshinydemo"</span>, <span class='kw'>dockerfolder</span> <span class='kw'>=</span> <span class='no'>app_dir</span>)
-
-<span class='co'># a new VM, it loads the Shiny docker image from before</span>
-<span class='fu'>gce_shiny_addapp</span>(<span class='no'>vm2</span>, <span class='kw'>app_image</span> <span class='kw'>=</span> <span class='st'>"gceshinydemo"</span>)
-
-<span class='co'># }</span><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
+                </ul>
 
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#dockerfile">Dockerfile</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+    <h2>Author</h2>
+    
+Henrik Bengtsson <a href='mailto:henrikb@braju.com'>henrikb@braju.com</a>
 
   </div>
 </div>

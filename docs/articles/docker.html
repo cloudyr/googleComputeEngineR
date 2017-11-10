@@ -99,6 +99,9 @@
     <li>
       <a href="../news/index.html">News</a>
     </li>
+    <li>
+      <a href="../articles/troubleshooting.html">Troubleshooting</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -136,7 +139,7 @@
       <h1>Docker</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-11-09</h4>
+            <h4 class="date">2017-11-10</h4>
           </div>
 
     
@@ -174,21 +177,23 @@
 <div id="google-container-registry" class="section level2">
 <h2 class="hasAnchor">
 <a href="#google-container-registry" class="anchor"></a>Google Container Registry</h2>
-<p>Google Cloud comes with a <a href="https://cloud.google.com/container-registry/">private container registry</a> that is available to all VMs created in the that project, where you can store docker containers. It is distinct from the more usual Docker hosted hub, where most public Docker images sit.</p>
-<p>You can create the correct name for a hosted image via <code>gce_tag_container</code> - by default it uses the project you are in, but change the project name if necessary, for example for the public images available:</p>
-<p>You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.</p>
+<p>Google Cloud comes with a <a href="https://cloud.google.com/container-registry/">private container registry</a> where you can store public or private docker containers. It is distinct from the more usual Docker hosted hub, where most public Docker images sit.</p>
+<p>Container names usually come in the format <code>gcr.io/your-project-id/your-image-id</code></p>
+<p>You can use this directly or create the correct name for a hosted image via <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> - by default it uses the project you are in, but change the project name if necessary, for example for the public images available in <code>gcer-public</code> at this URL: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
+<p>Access and push to your registry via the <code><a href="../reference/gce_pull_registry.html">gce_pull_registry()</a></code> and <code><a href="../reference/gce_push_registry.html">gce_push_registry()</a></code> functions.</p>
+<p>You can use this to save a custom image with your specific dependencies, which can then also be used as a base for other custom images.</p>
 </div>
 <div id="build-triggers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-triggers" class="anchor"></a>Build Triggers</h2>
-<p>You can use build triggers from <a href="https://cloud.google.com/container-registry/">Google Container Registry</a> to build the docker image when you push to a public or private repository.</p>
-<p>This is typically done by pushing up to a GitHub repository with your Dockerfile, which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>.</p>
-<p>You can then construct the name of this docker image directly using <code>gce_tag_container</code>, for use in a Shiny templated <code>gce_vm</code> call.</p>
+<p>Build triggers are a feature of the <a href="https://cloud.google.com/container-registry/">Google Container Registry</a>, which lets you build the docker image when you push to a public or private Git repository such as GitHub or Bitbucket.</p>
+<p>A typical workflow is to construct your Dockerfile locally, push to say GitHub which <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">triggers a build</a>, then use that build when launching a VM via the <code>dynamic_image</code> argument in <code><a href="../reference/gce_vm.html">gce_vm()</a></code>.</p>
+<p>This lets you use version control on your R environments, and provides a useful way to always know exactly what dependencies are running. The VMs built using your dynamic image can be stopped with their Docker versions intact, and you can try out new development versions by launching another VM.</p>
 <div id="build-trigger-setup-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#build-trigger-setup-example" class="anchor"></a>Build Trigger Setup example</h3>
 <ol style="list-style-type: decimal">
-<li>The example Dockerfile is a simple one that uses a Tidyverse Docker image (this has RStudio as well) and installs <code>secret</code>. Customise this to your needs, perhaps by creating it with <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a>
+<li>The example Dockerfile is a simple one that uses a Tidyverse Docker image (this has RStudio as well) and installs <code>secret</code>. Customise this to your needs, perhaps by creating your own Dockerfile with help from <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a>
 </li>
 </ol>
 <pre><code>FROM rocker/tidyverse
@@ -210,7 +215,7 @@ RUN install2.r --error \
 </div>
 <p>This is in the public googleComputeEngineR image project, but should look similar for your own.</p>
 <ol start="4" style="list-style-type: decimal">
-<li>We now launch the VM with the custom image. Since it is an RStudio based template, we define template to be “rstudio” and supply a username and password.</li>
+<li>We now launch the VM with the custom image. Since it is an RStudio based template, we define template to be “rstudio” and supply a username and password. If it was a Shiny based Dockerfile, the template would be changed to “shiny”, etc.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
 ## auto auth messages
@@ -239,11 +244,15 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <div id="public-docker-images" class="section level2">
 <h2 class="hasAnchor">
 <a href="#public-docker-images" class="anchor"></a>Public Docker images</h2>
-<p>The <code>FROM</code> field could be a previously made image you or someone else has already created, allowing you to layer on top. The above example is available via a public Google Continer Registry window, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
-<p>The <code>shiny-googleauthrdemo</code> is the Dockerfile above - the name for this can be created via the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
+<p>The <code>FROM</code> field in the <code>Dockerfile</code> could be a previously made image you or someone else has already created, allowing you to layer on top. The first example above is available via a public Google Continer Registry called <code>gcer-public</code>, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
+<div class="figure">
+<img src="build-trigger-menu.png">
+</div>
+<p>One example is <code>shiny-googleauthrdemo</code> - to construct the correct name we need this and the <code>gcer-public</code>project Id to use within the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-<span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</code></pre></div>
-<p>This can then be added to your Dockerfile:</p>
+<span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
+<span class="co"># gcr.io/gcer-public/shiny-googleauthrdemo</span></code></pre></div>
+<p>This can then be added to to top of your <code>Dockerfile</code>, and built upon with custom packages:</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo
 <span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
 
@@ -270,8 +279,8 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <div id="saving-a-running-container-to-the-container-registry" class="section level2">
 <h2 class="hasAnchor">
 <a href="#saving-a-running-container-to-the-container-registry" class="anchor"></a>Saving a running container to the container registry</h2>
-<p>If not building via Dockerfiles (preferred), you can save the state of a running container.</p>
-<p>For example, you may wish to install some R packages manually to an RStudio instance. Once done, then on your local machine you can save the running container to a new image on Google container registry via <code>gce_save_container</code>.</p>
+<p>If not building via <code>Dockerfile</code> (which is preferred), you can save the state of a running container.</p>
+<p>For example, you may wish to install some R packages manually to an RStudio instance via its terminal window. Once done, then on your local machine you can save the running container to a new image on Google container registry via <code>gce_save_container</code>.</p>
 <p>This can take some time (10mins +) if its a new image. You should be able to see the image in the web UI when it is done.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_save_container</span>(vm, <span class="st">"my-rstudio"</span>)</code></pre></div>
 <p>Once saved, the new image can be used to launch new containers just like any other image.</p>

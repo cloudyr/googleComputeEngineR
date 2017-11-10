@@ -1,0 +1,51 @@
+---
+title: "Troubleshooting"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{troubleshooting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Troubleshooting
+
+Some common start up issues are shown below, if you want anything added please make a request on [GitHub issues](https://github.com/cloudyr/googleComputeEngineR/issues).
+
+### I can't use apt-get/sudo/etc. when I SSH into an instance
+
+If you are using one of the templates (e.g. RStudio) then they are launched within Docker.  A guide on how it uses them are in [this article](articles/docker.html).
+
+The base VM that launches the Docker container is a custom Google stripped down version that only runs Docker and not other common linux commands such as `apt-get`, since their intention is you use those commands within the Docker containers running.
+
+This means if you want to install dependencies, you should either:
+
+1. (preferred) Use your own custom `Dockerfile` to install the dependencies. 
+2. Run your commands from within the Docker container.  In RStudio, this is easiest via RStudio's terminal window available in the menu
+3. Alternatively, when you SSH into the VM running docker, issue `docker exec -it {container name} bash` to drop into bash running within the container.  For RStudio, this would be `docker exec -it rstudio bash`
+
+### I can't use SSH commands
+
+* Make sure SSH authentication has been performed.  By default the SSH looks within the location set up when using the `gcloud SDK` so a quick way to ensure this is to install the gcloud SDK and authenticate through there.
+* Sometimes your local username is not suitable (say it has spaces) - set a more linux friendly username in your SSH setup settings. `gce_ssh(vm, username = "goodusername")`
+
+### The docker_* commands do not work
+
+* The `docker_*` commands such as `docker_cmd()` rely on SSH, so make sure SSH is working correctly (see above) and you can run `gce_ssh()` correctly.  
+
+### My custom Docker image isn't used
+
+A guide on using [build triggers is here](articles/docker.html), that may help.  Common issues include:
+
+1. The name of the custom image is not correct - check you can pull the image correctly
+2. Check to see if the `docker ps -a` command (or `docker_cmd(vm, "ps -a")`) returns your Docker image name.  If it doesn't it has not downloaded or found your image
+
+### I try to create an RStudio instance but I can't connect to the I.P.
+
+* Make sure your username is not `rstudio` as that username is reserved
+* Make sure you are running on version `0.2.0` or greater, that ensure ports 80/443 are open in your default network.  (port 8787 is not required)
+* Check to see if the Docker container is running by SSH into the instance and running `docker ps`
+* If it is not, try running `container_logs()` to see if there was an issue on start up.
+
+

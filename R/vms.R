@@ -59,6 +59,7 @@
 #' }
 #' 
 #' @export
+#' @import assertthat
 gce_vm <- function(name, 
                    ...,                           
                    project = gce_get_global_project(), 
@@ -70,11 +71,11 @@ gce_vm <- function(name,
     name <- name$name
   }
   
-  assertthat::assert_that(
-    assertthat::is.string(name),
-    assertthat::is.string(project),
-    assertthat::is.string(zone),
-    is.logical(open_webports)
+  assert_that(
+    is.string(name),
+    is.string(project),
+    is.string(zone),
+    is.flag(open_webports)
   )
   
   stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)

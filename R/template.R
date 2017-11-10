@@ -75,6 +75,7 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
 #' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{cos-cloud} family.
 #' @param dynamic_image Supply an alternative to the default Docker image here to download
+#' @param wait Whether to wait for the VM to launch before returning. Default \code{TRUE}.
 #' @inheritDotParams gce_vm_container
 #' 
 #' @details 
@@ -96,7 +97,7 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
 #' 
 #' Use \code{dynamic_image} to override the default rocker images e.g. \code{rocker/shiny} for shiny, etc. 
 #'  
-#' @return The VM object
+#' @return The VM object, or the VM startup operation if \code{wait=FALSE}
 #' 
 #' @examples 
 #' 
@@ -115,7 +116,8 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
 #' }
 #' 
 #' 
-#' @export  
+#' @export
+#' @import assertthat
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          "r-base", "example",
                                          "dynamic", "ropensci"),
@@ -123,6 +125,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                             password=NULL,
                             dynamic_image=NULL,
                             image_family = "cos-stable",
+                            wait = TRUE,
                             ...){
   
   dots <- list(...)
@@ -133,6 +136,9 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   }
   
   template <- match.arg(template)
+  
+  assert_that(is.flag(wait),
+              is.string(image_family))
 
   cloud_init_file <- get_cloud_init_file(template,
                                          username = username, 
@@ -154,8 +160,13 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                    metadata = upload_meta
                  )))
   
-  gce_wait(job, wait = 10)
-  
+  if(wait){
+    gce_wait(job, wait = 10)
+  } else {
+    myMessage("Returning the startup job, not the VM instance.", level = 3)
+    return(job)
+  }
+
   ins <- gce_get_instance(dots$name)
   ip <- gce_get_external_ip(dots$name)
   

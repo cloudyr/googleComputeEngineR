@@ -17,54 +17,219 @@ Some [more examples of using future](http://www.jottr.org/2017/06/the-many-faced
 
 On other platforms, see also an [Azure example here on Revolution Analytics](http://blog.revolutionanalytics.com/2017/06/doazureparallel-updated.html). 
 
-## Example code
+# Remote R cluster
+
+This workflow takes advatage of the [`future`](https://CRAN.R-project.org/package=future) integration to run your local R-functions within a cluster of GCE machines.  
+You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.
+
+In summary, this workflow:
+
+1. Creates a GCE cluster
+2. Lets you perform computations
+3. Stops the VMs
+
+### Create the cluster
+
+The example below uses a default `r-base` template, but you can also create a `dynamic_template` pulled from the Container Registry if required.
+
+Instead of the more generic `gce_vm()` that is used for more interactive use, we create the instances directly using `gce_vm_template()` so it doesn't wait for the job to complete before starting the next (not useful if you have a lot of VMs). You can then use `gce_get_zone_op()` to get the job status, and use `gce_wait()` to return when they are done.
 
 ```r
-library(googleComputeEngineR)
 library(future)
+library(googleComputeEngineR)
 
-## auto auth to GCE via environment file arguments
+## names for your cluster
+vm_names <- c("vm1","vm2","vm3")
 
-## create 50 CPUs names
-vm_names <- paste0("cpu",1:50)
+## create the cluster using default template for r-base
+## creates jobs that are creating VMs in background
+jobs <- lapply(vm_names, function(x) {
+    gce_vm_template(template = "r-base",
+                    predefined_type = "n1-highmem-2",
+                    name = x,
+                    dynamic_image = my_docker),
+                    wait = FALSE
+                    })
+jobs
+# [[1]]
+# ==Operation insert :  PENDING
+# Started:  2016-11-16 06:52:58
+# [[2]]
+# ==Operation insert :  PENDING
+# Started:  2016-11-16 06:53:04
+# [[3]]
+# ==Operation insert :  PENDING
+# Started:  2016-11-16 06:53:09
 
-## specify the cheapest VMs that may get turned off
-preemptible = list(preemptible = TRUE)
+## check status of jobs
+lapply(jobs, gce_get_zone_op)
+# [[1]]
+# ==Operation insert :  DONE
+# Started:  2016-11-16 06:52:58
+# Ended: 2016-11-16 06:53:14 
+# Operation complete in 16 secs 
 
-## start up 50 VMs with R base on them (can also customise via Dockerfiles using gce_vm_template instead)
-fiftyvms <- lapply(vm_names, gce_vm, predefined_type = "n1-standard-1", template = "r-base", scheduling = preemptible)
+# [[2]]
+# ==Operation insert :  DONE
+# Started:  2016-11-16 06:53:04
+# Ended: 2016-11-16 06:53:20 
+# Operation complete in 16 secs 
 
-## add any ssh details, username etc.
-fiftyvms <- lapply(fiftyvms, gce_ssh_setup)
+# [[3]]
+# ==Operation insert :  DONE
+# Started:  2016-11-16 06:53:09
+# Ended: 2016-11-16 06:53:30 
+# Operation complete in 21 secs
 
-## once all launched, add to cluster
-plan(cluster, workers = as.cluster(fiftyvms))
 
-## the action you want to perform via cluster
-my_single_function <- function(x){
-  an_expensive_function(x)
-}
+## wait for all the jobs to complete and VMs are ready
+vms <- lapply(vm_names, gce_wait)
 
-## use future::future_lapply to send each call to the cluster
-all_results <- future_lapply(1:50, my_single_function)
 
-## tidy up
-lapply(fiftyvms, FUN = gce_vm_stop)
+## get the VM objects
+vms <- lapply(vm_names, gce_vm)
 ```
 
-## Pre-emptible VMs
+It is safest to setup the SSH keys seperately for multiple instances, using `gce_ssh_setup()` - this is normally called for you when you first connect to a VM.
+
+```r
+## set up SSH for the VMs
+vms <- lapply(vms, gce_ssh_setup)
+```
+
+We now make the VM cluster as per details given in the [future README](https://github.com/HenrikBengtsson/future)
+```r
+## make a future cluster
+plan(cluster, workers = vms)
+```
+
+### Using your own Docker image
+
+The default uses `rocker/r-base` as its image, but if you want your own custom image then create your own Docker image, for example via [this tutorial using Google Build Triggers](articles/docker.html#build-triggers).
+
+This will give you a docker image name such as `gcr.io/my-project/my-r` - use a version of the code below to use this in your cluster:
+
+```r
+plan(cluster, workers = as.cluster(
+  vms, 
+  docker_image="gcr.io/my-project/my-r",
+  rscript=c("docker", "run", c("--net=host","--shm-size=13G"),
+			"gcr.io/my-rstudio", 
+			"Rscript")))
+```
+
+### Using the cluster
+
+The cluster is now ready to recieve jobs.  You can send them by simply using `%<-%` instead of `<-`.
+
+```r
+## use %<-% to send functions to work on cluster
+## See future README for details: https://github.com/HenrikBengtsson/future
+a %<-% Sys.getpid()
+
+## make a big function to run asynchronously
+f <- function(my_data, args){
+   ## ....expensive...computations
+   
+   result
+}
+
+## send to cluster
+result %<-% f(my_data) 
+```
+
+For long running jobs you can use `future::resolved` to check on its progress.
+
+```
+## check if resolved
+resolved(result)
+[1] TRUE
+```
+
+## Example - forcasting a large data set
+
+The below splits a dataset into chunks that are each run on a seperate VMs that are preemtible, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package future in these Docker images. 
+
+```r
+library(future)
+library(googleComputeEngineR)
+
+## names for your cluster - just three for this example
+vm_names <- c("vm1","vm2","vm3")
+
+my_docker <- gce_tag_container("custom-image", project = "my-project")
+
+## create the cluster using custom docker image
+## creates jobs that are creating VMs in background
+jobs <- lapply(vm_names, function(x) {
+    gce_vm_template(template = "r-base",
+                    predefined_type = "n1-highmem-2",
+                    name = x,
+                    dynamic_image = my_docker),
+                    wait = FALSE
+                    })
+                     
+## wait for all the jobs to complete and VMs are ready
+vms <- lapply(vm_names, gce_wait)
+                     
+## set up SSH for the VMs
+vms <- lapply(vms, gce_ssh_setup)  # set any settings necessary here for SSH                    
+
+## the Rscript command that will run in the cluster
+## customise as needed, this for example sets shared RAM to 13GB
+my_rscript <- c("docker", 
+                "run", c("--net=host","--shm-size=13G"),
+                docker_image, 
+                "Rscript")
+                
+## create the future cluster
+plan(cluster, 
+     workers = as.cluster(vms, 
+                          docker_image=my_docker,
+                          rscript=my_rscript),
+                          
+## create the list of data to run on the cluster
+## here we assume they are in a folder of CSVs
+## and there are as many files as VMs to run it upon
+my_files <- list.files("myfolder")
+
+my_data <- lapply(my_files, read.csv)
+
+## make a big function to run asynchronously
+cluster_f <- function(my_data, args){
+   
+   forecast::forecast(forecast::auto.arima(ts(my_data, frequency = 4)))
+   
+}
+
+## send to cluster
+result %<-% cluster_f(my_data) 
+
+## once done this will be TRUE
+resolved(result)
+
+## Your list of forecasts are now available
+result
+```
+
+### Cleanup 
+
+Remember to shut down your cluster.  You are charged per second, per instance of uptime. 
+
+```r
+## shutdown instances when finished
+lapply(vms, gce_vm_stop)
+
+```
+
+### Pre-emptible VMs
 
 [Preemptible VMs](https://cloud.google.com/preemptible-vms/) are a lot cheaper (80%) than normal instances, but Google reserves the right to stop them at any time.  They are intended to be used in non-critical jobs where if they shutdown you can account for it and launch another.
 
-To create them, you need to pass `preemptible = list(preemptible = TRUE)` to the `scheduling`argument of the `gce_vm()` creation family of functions. 
+To create them, you need to pass `scheduling = list(preemptible = TRUE)` to `gce_vm_create()` creation family of functions. 
 
-## Customising the VMs launched
+Make sure you can cope with the result may not be returned, so over provision the VMs and ensure your script can deal with redoing jobs if they didn't complete.
 
-Using `Dockerfiles` and `gce_vm_template` or `gce_vm_container` you can customise the VMs launched.  This can include shutdown scripts that fire if Google shuts down your preemptible instance early, allowing you to save results so far to Cloud storage or similar. 
-
-## Authentication upon the VMs
-
-Since they are also running on Google Compute, you can authenticate with other cloud services such as BigQuery or Cloud Storage simply by using the `googleAuthR::gar_gce_auth()` function, which reuses the authentication that launched the VM. 
 
 ## Quotas
 

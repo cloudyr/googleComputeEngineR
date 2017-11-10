@@ -6,7 +6,7 @@
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
   "example", "dynamic", "ropensci"), username = NULL, password = NULL,
-  dynamic_image = NULL, image_family = "cos-stable", ...)
+  dynamic_image = NULL, image_family = "cos-stable", wait = TRUE, ...)
 }
 \arguments{
 \item{template}{The template available}
@@ -19,6 +19,8 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{image_family}{An image-family.  It must come from the \code{cos-cloud} family.}
 
+\item{wait}{Whether to wait for the VM to launch before returning. Default \code{TRUE}.}
+
 \item{...}{Arguments passed on to \code{gce_vm_container}
 \describe{
   \item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}
@@ -27,7 +29,7 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 }}
 }
 \value{
-The VM object
+The VM object, or the VM startup operation if \code{wait=FALSE}
 }
 \description{
 This lets you specify templates for the VM you want to launch

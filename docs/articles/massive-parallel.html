@@ -99,6 +99,9 @@
     <li>
       <a href="../news/index.html">News</a>
     </li>
+    <li>
+      <a href="../articles/troubleshooting.html">Troubleshooting</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -136,7 +139,7 @@
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-11-09</h4>
+            <h4 class="date">2017-11-10</h4>
           </div>
 
     
@@ -148,55 +151,194 @@
 <p>Due to its integration with <a href="https://CRAN.R-project.org/package=future"><code>future</code></a> you can run massive computing tasks using a Google Compute Engine cluster with just a few lines of code.</p>
 <p>Some <a href="http://www.jottr.org/2017/06/the-many-faced-future.html">more examples of using future</a> can be found here, using fractals as an example.</p>
 <p>On other platforms, see also an <a href="http://blog.revolutionanalytics.com/2017/06/doazureparallel-updated.html">Azure example here on Revolution Analytics</a>.</p>
-<div id="example-code" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-code" class="anchor"></a>Example code</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-<span class="kw">library</span>(future)
+</div>
+<div id="remote-r-cluster" class="section level1">
+<h1 class="hasAnchor">
+<a href="#remote-r-cluster" class="anchor"></a>Remote R cluster</h1>
+<p>This workflow takes advatage of the <a href="https://CRAN.R-project.org/package=future"><code>future</code></a> integration to run your local R-functions within a cluster of GCE machines.<br>
+You can do this to throw up expensive computations by spinning up a cluster and tearing it down again once you are done.</p>
+<p>In summary, this workflow:</p>
+<ol style="list-style-type: decimal">
+<li>Creates a GCE cluster</li>
+<li>Lets you perform computations</li>
+<li>Stops the VMs</li>
+</ol>
+<div id="create-the-cluster" class="section level3">
+<h3 class="hasAnchor">
+<a href="#create-the-cluster" class="anchor"></a>Create the cluster</h3>
+<p>The example below uses a default <code>r-base</code> template, but you can also create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
+<p>Instead of the more generic <code><a href="../reference/gce_vm.html">gce_vm()</a></code> that is used for more interactive use, we create the instances directly using <code><a href="../reference/gce_vm_template.html">gce_vm_template()</a></code> so it doesn’t wait for the job to complete before starting the next (not useful if you have a lot of VMs). You can then use <code><a href="../reference/gce_get_zone_op.html">gce_get_zone_op()</a></code> to get the job status, and use <code><a href="../reference/gce_wait.html">gce_wait()</a></code> to return when they are done.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
+<span class="kw">library</span>(googleComputeEngineR)
 
-## auto auth to GCE via environment file arguments
+## names for your cluster
+vm_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"vm1"</span>,<span class="st">"vm2"</span>,<span class="st">"vm3"</span>)
 
-## create 50 CPUs names
-vm_names &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"cpu"</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>)
+## create the cluster using default template for r-base
+## creates jobs that are creating VMs in background
+jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <span class="cf">function</span>(x) {
+    <span class="kw"><a href="../reference/gce_vm_template.html">gce_vm_template</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>,
+                    <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>,
+                    <span class="dt">name =</span> x,
+                    <span class="dt">dynamic_image =</span> my_docker),
+                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    })
+jobs
+<span class="co"># [[1]]</span>
+<span class="co"># ==Operation insert :  PENDING</span>
+<span class="co"># Started:  2016-11-16 06:52:58</span>
+<span class="co"># [[2]]</span>
+<span class="co"># ==Operation insert :  PENDING</span>
+<span class="co"># Started:  2016-11-16 06:53:04</span>
+<span class="co"># [[3]]</span>
+<span class="co"># ==Operation insert :  PENDING</span>
+<span class="co"># Started:  2016-11-16 06:53:09</span>
 
-## specify the cheapest VMs that may get turned off
-preemptible =<span class="st"> </span><span class="kw">list</span>(<span class="dt">preemptible =</span> <span class="ot">TRUE</span>)
+## check status of jobs
+<span class="kw">lapply</span>(jobs, gce_get_zone_op)
+<span class="co"># [[1]]</span>
+<span class="co"># ==Operation insert :  DONE</span>
+<span class="co"># Started:  2016-11-16 06:52:58</span>
+<span class="co"># Ended: 2016-11-16 06:53:14 </span>
+<span class="co"># Operation complete in 16 secs </span>
 
-## start up 50 VMs with R base on them (can also customise via Dockerfiles using gce_vm_template instead)
-fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>, <span class="dt">scheduling =</span> preemptible)
+<span class="co"># [[2]]</span>
+<span class="co"># ==Operation insert :  DONE</span>
+<span class="co"># Started:  2016-11-16 06:53:04</span>
+<span class="co"># Ended: 2016-11-16 06:53:20 </span>
+<span class="co"># Operation complete in 16 secs </span>
 
-## add any ssh details, username etc.
-fiftyvms &lt;-<span class="st"> </span><span class="kw">lapply</span>(fiftyvms, gce_ssh_setup)
+<span class="co"># [[3]]</span>
+<span class="co"># ==Operation insert :  DONE</span>
+<span class="co"># Started:  2016-11-16 06:53:09</span>
+<span class="co"># Ended: 2016-11-16 06:53:30 </span>
+<span class="co"># Operation complete in 21 secs</span>
 
-## once all launched, add to cluster
-<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(fiftyvms))
 
-## the action you want to perform via cluster
-my_single_function &lt;-<span class="st"> </span><span class="cf">function</span>(x){
-  <span class="kw">an_expensive_function</span>(x)
+## wait for all the jobs to complete and VMs are ready
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_wait)
+
+
+## get the VM objects
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm)</code></pre></div>
+<p>It is safest to setup the SSH keys seperately for multiple instances, using <code><a href="../reference/gce_ssh_setup.html">gce_ssh_setup()</a></code> - this is normally called for you when you first connect to a VM.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set up SSH for the VMs
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)</code></pre></div>
+<p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
+<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
+</div>
+<div id="using-your-own-docker-image" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-your-own-docker-image" class="anchor"></a>Using your own Docker image</h3>
+<p>The default uses <code>rocker/r-base</code> as its image, but if you want your own custom image then create your own Docker image, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
+<p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(
+  vms, 
+  <span class="dt">docker_image=</span><span class="st">"gcr.io/my-project/my-r"</span>,
+  <span class="dt">rscript=</span><span class="kw">c</span>(<span class="st">"docker"</span>, <span class="st">"run"</span>, <span class="kw">c</span>(<span class="st">"--net=host"</span>,<span class="st">"--shm-size=13G"</span>),
+            <span class="st">"gcr.io/my-rstudio"</span>, 
+            <span class="st">"Rscript"</span>)))</code></pre></div>
+</div>
+<div id="using-the-cluster" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using-the-cluster" class="anchor"></a>Using the cluster</h3>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## use %&lt;-% to send functions to work on cluster
+## See future README for details: https://github.com/HenrikBengtsson/future
+a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">Sys.getpid</span>()
+
+## make a big function to run asynchronously
+f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, args){
+   ## ....expensive...computations
+   
+   result
 }
 
-## use future::future_lapply to send each call to the cluster
-all_results &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, my_single_function)
+## send to cluster
+result <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">f</span>(my_data) </code></pre></div>
+<p>For long running jobs you can use <code><a href="http://www.rdocumentation.org/packages/future/topics/resolved">future::resolved</a></code> to check on its progress.</p>
+<pre><code>## check if resolved
+resolved(result)
+[1] TRUE</code></pre>
+</div>
+<div id="example---forcasting-a-large-data-set" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example---forcasting-a-large-data-set" class="anchor"></a>Example - forcasting a large data set</h2>
+<p>The below splits a dataset into chunks that are each run on a seperate VMs that are preemtible, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package future in these Docker images.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
+<span class="kw">library</span>(googleComputeEngineR)
 
-## tidy up
-<span class="kw">lapply</span>(fiftyvms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
+## names for your cluster - just three for this example
+vm_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"vm1"</span>,<span class="st">"vm2"</span>,<span class="st">"vm3"</span>)
+
+my_docker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"custom-image"</span>, <span class="dt">project =</span> <span class="st">"my-project"</span>)
+
+## create the cluster using custom docker image
+## creates jobs that are creating VMs in background
+jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <span class="cf">function</span>(x) {
+    <span class="kw"><a href="../reference/gce_vm_template.html">gce_vm_template</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>,
+                    <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>,
+                    <span class="dt">name =</span> x,
+                    <span class="dt">dynamic_image =</span> my_docker),
+                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    })
+                     
+## wait for all the jobs to complete and VMs are ready
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_wait)
+                     
+## set up SSH for the VMs
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)  <span class="co"># set any settings necessary here for SSH                    </span>
+
+## the Rscript command that will run in the cluster
+## customise as needed, this for example sets shared RAM to 13GB
+my_rscript &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"docker"</span>, 
+                <span class="st">"run"</span>, <span class="kw">c</span>(<span class="st">"--net=host"</span>,<span class="st">"--shm-size=13G"</span>),
+                docker_image, 
+                <span class="st">"Rscript"</span>)
+                
+## create the future cluster
+<span class="kw">plan</span>(cluster, 
+     <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, 
+                          <span class="dt">docker_image=</span>my_docker,
+                          <span class="dt">rscript=</span>my_rscript),
+                          
+## create the list of data to run on the cluster
+## here we assume they are in a folder of CSVs
+## and there are as many files as VMs to run it upon
+my_files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">"myfolder"</span>)
+
+my_data &lt;-<span class="st"> </span><span class="kw">lapply</span>(my_files, read.csv)
+
+## make a big function to run asynchronously
+cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, args){
+   
+   forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/forecast">forecast</a></span>(forecast<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/forecast/topics/auto.arima">auto.arima</a></span>(<span class="kw">ts</span>(my_data, <span class="dt">frequency =</span> <span class="dv">4</span>)))
+   
+}
+
+## send to cluster
+result <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">cluster_f</span>(my_data) 
+
+## once done this will be TRUE
+<span class="kw">resolved</span>(result)
+
+## Your list of forecasts are now available
+result</code></pre></div>
+<div id="cleanup" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cleanup" class="anchor"></a>Cleanup</h3>
+<p>Remember to shut down your cluster. You are charged per second, per instance of uptime.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## shutdown instances when finished
+<span class="kw">lapply</span>(vms, gce_vm_stop)</code></pre></div>
 </div>
-<div id="pre-emptible-vms" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pre-emptible-vms" class="anchor"></a>Pre-emptible VMs</h2>
+<div id="pre-emptible-vms" class="section level3">
+<h3 class="hasAnchor">
+<a href="#pre-emptible-vms" class="anchor"></a>Pre-emptible VMs</h3>
 <p><a href="https://cloud.google.com/preemptible-vms/">Preemptible VMs</a> are a lot cheaper (80%) than normal instances, but Google reserves the right to stop them at any time. They are intended to be used in non-critical jobs where if they shutdown you can account for it and launch another.</p>
-<p>To create them, you need to pass <code>preemptible = list(preemptible = TRUE)</code> to the <code>scheduling</code>argument of the <code><a href="../reference/gce_vm.html">gce_vm()</a></code> creation family of functions.</p>
+<p>To create them, you need to pass <code>scheduling = list(preemptible = TRUE)</code> to <code><a href="../reference/gce_vm_create.html">gce_vm_create()</a></code> creation family of functions.</p>
+<p>Make sure you can cope with the result may not be returned, so over provision the VMs and ensure your script can deal with redoing jobs if they didn’t complete.</p>
 </div>
-<div id="customising-the-vms-launched" class="section level2">
-<h2 class="hasAnchor">
-<a href="#customising-the-vms-launched" class="anchor"></a>Customising the VMs launched</h2>
-<p>Using <code>Dockerfiles</code> and <code>gce_vm_template</code> or <code>gce_vm_container</code> you can customise the VMs launched. This can include shutdown scripts that fire if Google shuts down your preemptible instance early, allowing you to save results so far to Cloud storage or similar.</p>
-</div>
-<div id="authentication-upon-the-vms" class="section level2">
-<h2 class="hasAnchor">
-<a href="#authentication-upon-the-vms" class="anchor"></a>Authentication upon the VMs</h2>
-<p>Since they are also running on Google Compute, you can authenticate with other cloud services such as BigQuery or Cloud Storage simply by using the <code><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">googleAuthR::gar_gce_auth()</a></code> function, which reuses the authentication that launched the VM.</p>
 </div>
 <div id="quotas" class="section level2">
 <h2 class="hasAnchor">
@@ -212,12 +354,10 @@ all_results &lt;-<span class="st"> </span><span class="kw"><a href="http://www.r
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#run-massive-parallel-r-jobs-cheaply">Run massive parallel R jobs cheaply</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#example-code">Example code</a></li>
-      <li><a href="#pre-emptible-vms">Pre-emptible VMs</a></li>
-      <li><a href="#customising-the-vms-launched">Customising the VMs launched</a></li>
-      <li><a href="#authentication-upon-the-vms">Authentication upon the VMs</a></li>
+<li><a href="#run-massive-parallel-r-jobs-cheaply">Run massive parallel R jobs cheaply</a></li>
+      <li>
+<a href="#remote-r-cluster">Remote R cluster</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#example---forcasting-a-large-data-set">Example - forcasting a large data set</a></li>
       <li><a href="#quotas">Quotas</a></li>
       </ul>
 </li>

@@ -125,6 +125,9 @@
     <li>
       <a href="../news/index.html">News</a>
     </li>
+    <li>
+      <a href="../articles/troubleshooting.html">Troubleshooting</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -169,7 +172,7 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
 
     <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
   <span class='st'>"example"</span>, <span class='st'>"dynamic"</span>, <span class='st'>"ropensci"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -195,6 +198,10 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
       <td><p>An image-family.  It must come from the <code>cos-cloud</code> family.</p></td>
     </tr>
     <tr>
+      <th>wait</th>
+      <td><p>Whether to wait for the VM to launch before returning. Default <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code>gce_vm_container</code></p><dl class='dl-horizontal'>
   <dt>file</dt><dd><p>file location of a cloud-init file. One of <code>file</code> or <code>cloud_init</code> must be supplied</p></dd>
@@ -206,7 +213,7 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The VM object</p>
+    <p>The VM object, or the VM startup operation if <code>wait=FALSE</code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

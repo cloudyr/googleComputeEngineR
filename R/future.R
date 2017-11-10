@@ -1,6 +1,18 @@
-# from https://github.com/HenrikBengtsson/future/issues/101#issuecomment-253725603
+#' Make the Docker cluster on Google Compute Engine
+#' 
+#' Called by \link{as.cluster}
+#' 
+#' @param workers The VMs being called upon
+#' @param docker_image The docker image to use on the cluster
+#' @param rscript The Rscript command to run on the cluster
+#' @param rscript_args Arguments to the RScript
+#' @param install_future Whether to check if future is installed first 
+#' @param ... Other arguments passed to \link[future]{makeClusterPSOCK}
+#' @param verbose How much feedback to show
+#' 
 #' @importFrom future makeClusterPSOCK
 #' @author Henrik Bengtsson \email{henrikb@@braju.com}
+#' @export
 makeDockerClusterPSOCK <- function(workers, 
                                    docker_image = "rocker/r-base", 
                                    rscript = c("docker", "run", "--net=host", docker_image, "Rscript"), 
@@ -13,7 +25,11 @@ makeDockerClusterPSOCK <- function(workers,
                       rscript_args)
   }
   
-  future::makeClusterPSOCK(workers, rscript = rscript, rscript_args = rscript_args, ..., verbose = verbose)
+  makeClusterPSOCK(workers, 
+                   rscript = rscript, 
+                   rscript_args = rscript_args, 
+                   ..., 
+                   verbose = verbose)
 }
 
 

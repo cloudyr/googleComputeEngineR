@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenCPU Server • googleComputeEngineR</title>
+<title>Troubleshooting • googleComputeEngineR</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
@@ -136,7 +136,7 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>OpenCPU Server</h1>
+      <h1>Troubleshooting</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
             <h4 class="date">2017-11-10</h4>
@@ -145,74 +145,58 @@
     
     
 <div class="contents">
-<div id="setting-up-a-custom-opencpu-server" class="section level1">
-<h1 class="hasAnchor">
-<a href="#setting-up-a-custom-opencpu-server" class="anchor"></a>Setting up a custom OpenCPU server</h1>
-<p>The below installs your Github repo into the Docker container using a small <code>Dockerfile</code>.</p>
-<p>In summary:</p>
+<div id="troubleshooting" class="section level2">
+<h2 class="hasAnchor">
+<a href="#troubleshooting" class="anchor"></a>Troubleshooting</h2>
+<p>Some common start up issues are shown below, if you want anything added please make a request on <a href="https://github.com/cloudyr/googleComputeEngineR/issues">GitHub issues</a>.</p>
+<div id="i-cant-use-apt-getsudoetc--when-i-ssh-into-an-instance" class="section level3">
+<h3 class="hasAnchor">
+<a href="#i-cant-use-apt-getsudoetc--when-i-ssh-into-an-instance" class="anchor"></a>I can’t use apt-get/sudo/etc. when I SSH into an instance</h3>
+<p>If you are using one of the templates (e.g. RStudio) then they are launched within Docker. A guide on how it uses them are in <a href="articles/docker.html">this article</a>.</p>
+<p>The base VM that launches the Docker container is a custom Google stripped down version that only runs Docker and not other common linux commands such as <code>apt-get</code>, since their intention is you use those commands within the Docker containers running.</p>
+<p>This means if you want to install dependencies, you should either:</p>
 <ol style="list-style-type: decimal">
-<li>Launch an OpenCPU instance</li>
-<li>Build a new OpenCPU image with your Github custom package</li>
-<li>Push the image to the Container Registry for safe-keeping</li>
-<li>Stop the default OpenCPU docker container and launch your own</li>
+<li>(preferred) Use your own custom <code>Dockerfile</code> to install the dependencies.</li>
+<li>Run your commands from within the Docker container. In RStudio, this is easiest via RStudio’s terminal window available in the menu</li>
+<li>Alternatively, when you SSH into the VM running docker, issue <code>docker exec -it {container name} bash</code> to drop into bash running within the container. For RStudio, this would be <code>docker exec -it rstudio bash</code>
+</li>
 </ol>
-<div id="launch-an-opencpu-instance" class="section level3">
-<h3 class="hasAnchor">
-<a href="#launch-an-opencpu-instance" class="anchor"></a>Launch an OpenCPU Instance</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googleComputeEngineR)
-
-## start an opencpu template
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"opencpu"</span>, <span class="dt">template =</span> <span class="st">"opencpu"</span>, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)
-
-## wait for opencpu image to load
-<span class="kw"><a href="../reference/gce_check_container.html">gce_check_container</a></span>(vm, <span class="st">"opencpu"</span>)</code></pre></div>
 </div>
-<div id="build-a-new-opencpu-image" class="section level3">
+<div id="i-cant-use-ssh-commands" class="section level3">
 <h3 class="hasAnchor">
-<a href="#build-a-new-opencpu-image" class="anchor"></a>Build a new OpenCPU image</h3>
-<p>This Dockerfile is available via <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("opencpu-installgithub")</a></code> and below. It installs an OpenCPU package from my <a href="code.markedmondson.me/predictClickOpenCPU/supercharge.html#1">prediction of user URLs for prefetching</a> application.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> opencpu/base
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install any package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> install -y \
-    nano \
-    ## clean up
-    <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw">&amp;&amp;</span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw">&amp;&amp;</span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install your custom package from Github</span>
-<span class="ex">RUN</span> Rscript -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/predictClickOpenCPU'))"</span></code></pre></div>
-<p>The Dockerfile is used to build the custom image below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## build a docker image with your package installed
-<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
-             <span class="dt">dockerfolder =</span> <span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"opencpu-installgithub"</span>),
-             <span class="dt">new_image =</span> <span class="st">"opencpu-predictclick"</span>)</code></pre></div>
+<a href="#i-cant-use-ssh-commands" class="anchor"></a>I can’t use SSH commands</h3>
+<ul>
+<li>Make sure SSH authentication has been performed. By default the SSH looks within the location set up when using the <code>gcloud SDK</code> so a quick way to ensure this is to install the gcloud SDK and authenticate through there.</li>
+<li>Sometimes your local username is not suitable (say it has spaces) - set a more linux friendly username in your SSH setup settings. <code><a href="../reference/gce_ssh.html">gce_ssh(vm, username = "goodusername")</a></code>
+</li>
+</ul>
 </div>
-<div id="push-the-image-to-the-container-registry" class="section level3">
+<div id="the-docker_-commands-do-not-work" class="section level3">
 <h3 class="hasAnchor">
-<a href="#push-the-image-to-the-container-registry" class="anchor"></a>Push the image to the Container Registry</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## push up to your private Google Container registry
-<span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, 
-                  <span class="dt">save_name =</span> <span class="st">"opencpu-predictclick"</span>, 
-                  <span class="dt">image_name =</span> <span class="st">"opencpu-predictclick"</span>)</code></pre></div>
+<a href="#the-docker_-commands-do-not-work" class="anchor"></a>The docker_* commands do not work</h3>
+<ul>
+<li>The <code>docker_*</code> commands such as <code><a href="../reference/docker_cmd.html">docker_cmd()</a></code> rely on SSH, so make sure SSH is working correctly (see above) and you can run <code><a href="../reference/gce_ssh.html">gce_ssh()</a></code> correctly.</li>
+</ul>
 </div>
-<div id="deploy" class="section level3">
+<div id="my-custom-docker-image-isnt-used" class="section level3">
 <h3 class="hasAnchor">
-<a href="#deploy" class="anchor"></a>Deploy</h3>
-<p>In this case we don’t start a new instance, just stop the running OpenCPU container and start our own. We need to stop the default container to free up the ports <code>80</code> and <code>8004</code> that are needed for OpenCPU to work.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## stop default opencpu container
-<span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, <span class="st">"stop opencpu-server"</span>)
-
-## run custom opencpu server
-<span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(vm, 
-           <span class="dt">image =</span> <span class="st">"opencpu-predictclick"</span>, 
-           <span class="dt">name =</span> <span class="st">"predictclick"</span>, 
-           <span class="dt">detach =</span> <span class="ot">TRUE</span>, 
-           <span class="dt">docker_opts =</span> <span class="st">"-p 80:80 -p 8004:8004"</span>)</code></pre></div>
-<p>Clean up when you are done to avoid charges.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</code></pre></div>
+<a href="#my-custom-docker-image-isnt-used" class="anchor"></a>My custom Docker image isn’t used</h3>
+<p>A guide on using <a href="articles/docker.html">build triggers is here</a>, that may help. Common issues include:</p>
+<ol style="list-style-type: decimal">
+<li>The name of the custom image is not correct - check you can pull the image correctly</li>
+<li>Check to see if the <code>docker ps -a</code> command (or <code><a href="../reference/docker_cmd.html">docker_cmd(vm, "ps -a")</a></code>) returns your Docker image name. If it doesn’t it has not downloaded or found your image</li>
+</ol>
+</div>
+<div id="i-try-to-create-an-rstudio-instance-but-i-cant-connect-to-the-i-p-" class="section level3">
+<h3 class="hasAnchor">
+<a href="#i-try-to-create-an-rstudio-instance-but-i-cant-connect-to-the-i-p-" class="anchor"></a>I try to create an RStudio instance but I can’t connect to the I.P.</h3>
+<ul>
+<li>Make sure your username is not <code>rstudio</code> as that username is reserved</li>
+<li>Make sure you are running on version <code>0.2.0</code> or greater, that ensure ports 80/443 are open in your default network. (port 8787 is not required)</li>
+<li>Check to see if the Docker container is running by SSH into the instance and running <code>docker ps</code>
+</li>
+<li>If it is not, try running <code><a href="../reference/container_logs.html">container_logs()</a></code> to see if there was an issue on start up.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -223,7 +207,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#setting-up-a-custom-opencpu-server">Setting up a custom OpenCPU server</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
       </ul>
 </div>
       </div>

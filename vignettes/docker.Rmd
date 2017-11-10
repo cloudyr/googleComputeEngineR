@@ -46,23 +46,27 @@ The example Dockerfile above installs `googleAuthR` from CRAN, `googleID` from G
 
 ## Google Container Registry
 
-Google Cloud comes with a [private container registry](https://cloud.google.com/container-registry/) that is available to all VMs created in the that project, where you can store docker containers.  It is distinct from the more usual Docker hosted hub, where most public Docker images sit. 
+Google Cloud comes with a [private container registry](https://cloud.google.com/container-registry/) where you can store public or private docker containers.  It is distinct from the more usual Docker hosted hub, where most public Docker images sit.
 
-You can create the correct name for a hosted image via `gce_tag_container` - by default it uses the project you are in, but change the project name if necessary, for example for the public images available:
+Container names usually come in the format `gcr.io/your-project-id/your-image-id`
 
-You can use this to save the state of the container VMs so you can redeploy them to other instances quickly, without needing to set them up again with packages or code.
+You can use this directly or create the correct name for a hosted image via `gce_tag_container()` - by default it uses the project you are in, but change the project name if necessary, for example for the public images available in `gcer-public` at this URL: `https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public`
+
+Access and push to your registry via the `gce_pull_registry()` and `gce_push_registry()` functions. 
+
+You can use this to save a custom image with your specific dependencies, which can then also be used as a base for other custom images. 
 
 ## Build Triggers
 
-You can use build triggers from [Google Container Registry](https://cloud.google.com/container-registry/) to build the docker image when you push to a public or private repository. 
+Build triggers are a feature of the [Google Container Registry](https://cloud.google.com/container-registry/), which lets you build the docker image when you push to a public or private Git repository such as GitHub or Bitbucket. 
 
-This is typically done by pushing up to a GitHub repository with your Dockerfile, which [triggers a build](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers).  
+A typical workflow is to construct your Dockerfile locally, push to say GitHub which [triggers a build](https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers), then use that build when launching a VM via the `dynamic_image` argument in `gce_vm()`.
 
-You can then construct the name of this docker image directly using `gce_tag_container`, for use in a Shiny templated `gce_vm` call.
+This lets you use version control on your R environments, and provides a useful way to always know exactly what dependencies are running.  The VMs built using your dynamic image can be stopped with their Docker versions intact, and you can try out new development versions by launching another VM. 
 
 ### Build Trigger Setup example
 
-1. The example Dockerfile is a simple one that uses a Tidyverse Docker image (this has RStudio as well) and installs `secret`.  Customise this to your needs, perhaps by creating it with [`containerit`](https://github.com/o2r-project/containerit)
+1. The example Dockerfile is a simple one that uses a Tidyverse Docker image (this has RStudio as well) and installs `secret`.  Customise this to your needs, perhaps by creating your own Dockerfile with help from [`containerit`](https://github.com/o2r-project/containerit)
 
 ```
 FROM rocker/tidyverse
@@ -85,7 +89,7 @@ This should then shown in the build trigger console like this:
 
 This is in the public googleComputeEngineR image project, but should look similar for your own.
 
-4. We now launch the VM with the custom image.  Since it is an RStudio based template, we define template to be "rstudio" and supply a username and password. 
+4. We now launch the VM with the custom image.  Since it is an RStudio based template, we define template to be "rstudio" and supply a username and password.  If it was a Shiny based Dockerfile, the template would be changed to "shiny", etc.
 
 ```r
 library(googleComputeEngineR)
@@ -118,16 +122,19 @@ You can use this function or pass in the image name directly as listed in the Bu
 
 ## Public Docker images
 
-The `FROM` field could be a previously made image you or someone else has already created, allowing you to layer on top.  The above example is available via a public Google Continer Registry window, made for this purpose, which you can see here: `https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public`
+The `FROM` field in the `Dockerfile` could be a previously made image you or someone else has already created, allowing you to layer on top.  The first example above is available via a public Google Continer Registry called `gcer-public`, made for this purpose, which you can see here: `https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public`
 
-The `shiny-googleauthrdemo` is the Dockerfile above - the name for this can be created via the `gce_tag_container()` function:
+![](build-trigger-menu.png)
+
+One example is `shiny-googleauthrdemo` - to construct the correct name we need this and the `gcer-public`project Id to use within the  `gce_tag_container()` function:
 
 ```r
 library(googleComputeEngineR)
 gce_tag_container("shiny-googleauthrdemo", project = "gcer-public")
+# gcr.io/gcer-public/shiny-googleauthrdemo
 ```
 
-This can then be added to your Dockerfile:
+This can then be added to to top of your `Dockerfile`, and built upon with custom packages:
 
 ```sh
 FROM gcr.io/gcer-public/shiny-googleauthrdemo
@@ -157,9 +164,9 @@ Hopefully more images can be added in the future, along with community contribut
 
 ## Saving a running container to the container registry
 
-If not building via Dockerfiles (preferred), you can save the state of a running container.
+If not building via `Dockerfile` (which is preferred), you can save the state of a running container.
 
-For example, you may wish to install some R packages manually to an RStudio instance. Once done, then on your local machine you can save the running container to a new image on Google container registry via `gce_save_container`.
+For example, you may wish to install some R packages manually to an RStudio instance via its terminal window. Once done, then on your local machine you can save the running container to a new image on Google container registry via `gce_save_container`.
 
 This can take some time (10mins +) if its a new image. You should be able to see the image in the web UI when it is done.
  
