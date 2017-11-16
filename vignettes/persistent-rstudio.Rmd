@@ -94,27 +94,7 @@ It is not intended as a replacement for Git - it only adds files if they are not
 
 ### On local computer
 
-1. Create Google Cloud Bucket to save your R sessions to - you can do this via the web UI or similar to below:
-
-```r
-library(googleCloudStorageR)
-
-## make the bucket to save to
-projectId = "your-project"
-bucket_name <- paste("gcer", projectId, Sys.Date(), sep ="-")
-bs <- gcs_list_buckets(projectId)
-
-if(bucket_name %in% bs$name){
-  message("Bucket found")
-  b <- bucket_name
-} else {
-  b <- gcs_create_bucket(bucket_name, 
-                         projectId, 
-                         location = "europe-west2", 
-                         storageClass = "REGIONAL")
-}
-gcs_global_bucket(b)
-```
+1. Create a Google Cloud Bucket to save your R sessions to - you can do this via the web UI or using `googleCloudStorageR`s `gce_create_bucket()` function.
 
 Choose a bucket region that is closest to you and your VM for best performance
 
@@ -122,10 +102,50 @@ Choose a bucket region that is closest to you and your VM for best performance
 ```
 GCS_SESSION_BUCKET=gcer-bucket-name
 ```
-3. Add `gcs_first` and `gcs_last` to your `.RProfile` file. 
+
+The `.Renviron` usually sits in your computer home directory, see `?Startup` for details.
+
+3. Add the `gcs_first()` and `gcs_last()` functions to your `.RProfile` file like so:
+
+```r
+.First <- function(){
+
+  cat("\n# Welcome Mark! Today is ", date(), "\n")
+  cat("\n# Loading .Rprofile from", path.expand("~"))
+
+  googleCloudStorageR::gcs_first()
+}
+
+.Last <- function(){
+  # will only upload if a _gcssave.yaml in directory with bucketname
+  googleCloudStorageR::gcs_last()
+  message("\nGoodbye Mark at ", date(), "\n")
+}
+
+
+```
+
 4. Create RStudio Project
 5. Make R stuff
-6. Add a `_gcssave.yaml` file specifying GCS bucket to save to.
+6. Add a `_gcssave.yaml` file specifying the GCS bucket to save to.  
+
+It can carry various settings shown below:
+
+```yaml
+## The GCS bucket to save/load R workspace from step 1
+bucket: my-bucket
+
+## set to FALSE if you want to load on R session startup
+load_on_startup: FALSE
+
+## on first load, whether to look for a different directory on GCS than present getwd()
+loaddir:
+
+## regex to only save these files to GCS
+pattern:
+
+```
+
 7. Exit RStudio project.  You should see a message similar to: 
 ```r
 Saving data to Google Cloud Storage:
@@ -138,6 +158,15 @@ When you startup that project again you should see:
 [Workspace loaded from: 
 gs://your-gcs-bucket/Users/the-rproject-folder]
 ```
+
+#### Summary
+
+There are three files to configure:
+
+* `.Renviron` - environment arguments ìncluding `GCS_SESSION_BUCKET=gcer-bucket-name` that will be looked for as where your session files are
+* `.Rprofile`- general R startup behaviour that carry the `googleCloudStorageR::gcs_last()` and   `googleCloudStorageR::gcs_first()` functions
+* `_gcssave.yaml` - per folder settings for what to save that specifies which files to save in which folder
+
 
 ### On cloud RStudio server
 
