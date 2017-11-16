@@ -189,7 +189,29 @@ gce_set_metadata(list(GCS_SESSION_BUCKET = "your-session-bucket"), vm)
 ```
 
 3. Login to RStudio server and create an RStudio project
-4. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
+
+4. As you did on your local machine, you need to create an .Rprofile so `googleCloudStorageR` can load and save and load data. For example:
+
+```
+.First <- function(){
+  cat("\n# Welcome Ignacio! Today is ", date(), "\n")
+
+  ## will look for download if GCS_SESSION_BUCKET env arg set
+  googleCloudStorageR::gcs_first()
+}
+
+
+.Last <- function(){
+  # will only upload if a _gcssave.yaml in directory with bucketname
+  googleCloudStorageR::gcs_last()
+  message("\nGoodbye Ignacio at ", date(), "\n")
+}
+
+message("n*** Successfully loaded .Rprofile ***n")
+```
+
+
+5. Transfer the local RStudio project to this cloud VM by creating a `_gcssave.yaml` file at the root of the project with these entries:
 
 ```yaml
 bucket: your-gcs-bucket
