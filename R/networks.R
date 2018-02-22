@@ -38,27 +38,25 @@ gce_make_network <- function(name,
                              externalIP = NULL,
                              project = gce_get_global_project()){
   
-  net <- gce_get_network(network, project = project)
-  
-  if(!is.null(externalIP)){
-    if(externalIP == "none"){
-      ac <- NULL
-    }
-  } else {
-    ac <- list(
+  make_ac <- function(externalIP, name){
+    if(!is.null(externalIP) && externalIP == "none") return(NULL)
+    
+    list(
       list(
-      natIP = jsonlite::unbox(externalIP),
-      type = jsonlite::unbox("ONE_TO_ONE_NAT"),
-      name = jsonlite::unbox(name)
+        natIP = jsonlite::unbox(externalIP),
+        type = jsonlite::unbox("ONE_TO_ONE_NAT"),
+        name = jsonlite::unbox(name)
       )
     )
   }
+  
+  net <- gce_get_network(network, project = project)
   
   structure(
     list(
       list(
         network = jsonlite::unbox(net$selfLink),
-        accessConfigs = ac
+        accessConfigs = make_ac(externalIP, name)
       )
     ),
     class = c("gce_networkInterface", "list")
