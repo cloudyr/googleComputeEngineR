@@ -224,7 +224,7 @@ The custom Dockerfile was setup in this [GitHub repo](https://github.com/MarkEdm
 
 Make sure the VMs are created in the same project as the build triggers to ensure authentication is smooth.
 
-The example code is shown below:
+The example code is shown below, assuming your custom Docker image is available at `gcr.io/your-project/raster`
 
 ```r
 library(raster)
@@ -232,7 +232,7 @@ library(googleComputeEngineR)
 library(future)
 library(SpaDES.tools)
 
-gce_global_project("xxxx")
+gce_global_project("your-project")
 
 ## create raster
 row <- 8
@@ -255,7 +255,7 @@ mod <- glm(y~layer, data=df)
 vm_names <- paste0("my-server",1:2)
 
 ## made via build triggers, installed raster on custom Docker image
-my_image <- gce_tag_container("raster", project = "xxxx")
+my_image <- gce_tag_container("raster", project = "your-project")
 
 ## start up VMs with custom Dockerfile
 vms <- lapply(vm_names, gce_vm, 

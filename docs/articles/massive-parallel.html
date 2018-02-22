@@ -338,13 +338,13 @@ result</code></pre></div>
 <img src="https://user-images.githubusercontent.com/3155884/36549126-494a99ca-17f2-11e8-8338-f5769a629749.png">
 </div>
 <p>Make sure the VMs are created in the same project as the build triggers to ensure authentication is smooth.</p>
-<p>The example code is shown below:</p>
+<p>The example code is shown below, assuming your custom Docker image is available at <code>gcr.io/your-project/raster</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
 <span class="kw">library</span>(googleComputeEngineR)
 <span class="kw">library</span>(future)
 <span class="kw">library</span>(SpaDES.tools)
 
-<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"xxxx"</span>)
+<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"your-project"</span>)
 
 ## create raster
 row &lt;-<span class="st"> </span><span class="dv">8</span>
@@ -367,7 +367,7 @@ mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">
 vm_names &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"my-server"</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
 
 ## made via build triggers, installed raster on custom Docker image
-my_image &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"raster"</span>, <span class="dt">project =</span> <span class="st">"xxxx"</span>)
+my_image &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"raster"</span>, <span class="dt">project =</span> <span class="st">"your-project"</span>)
 
 ## start up VMs with custom Dockerfile
 vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm, 
