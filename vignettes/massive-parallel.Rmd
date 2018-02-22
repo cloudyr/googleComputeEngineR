@@ -146,7 +146,9 @@ resolved(result)
 [1] TRUE
 ```
 
-## Example - forecasting a large data set
+## Examples
+
+### Forecasting a large data set
 
 The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package `future` in these Docker images. 
 
@@ -210,6 +212,83 @@ resolved(result)
 
 ## Your list of forecasts are now available
 result
+```
+
+### Rasters in parallel
+
+This is from @ctlamb's [GitHub issue #93](https://github.com/cloudyr/googleComputeEngineR/issues/93) which uses a custom Dockerfile to install the raster package.
+
+The custom Dockerfile was setup in this [GitHub repo](https://github.com/MarkEdmondson1234/raster) then made into an image with these Build Trigger settings:
+
+![](https://user-images.githubusercontent.com/3155884/36549126-494a99ca-17f2-11e8-8338-f5769a629749.png)
+
+Make sure the VMs are created in the same project as the build triggers to ensure authentication is smooth.
+
+The example code is shown below:
+
+```r
+library(raster)
+library(googleComputeEngineR)
+library(future)
+library(SpaDES.tools)
+
+gce_global_project("xxxx")
+
+## create raster
+row <- 8
+col <- 8
+r <- raster(nrows=row, ncols=col,
+            xmn=0, xmx=row, 
+            ymn=0, ymx=col, 
+            vals=c(1:(row*col)))
+plot(r)
+
+## Split
+r_split <- splitRaster(r, nx=2, ny=2)
+
+## create model
+df <- data.frame(y=c(1:10),layer=c(1:5,7,6,8:10))
+mod <- glm(y~layer, data=df)
+
+
+## create CPUs names
+vm_names <- paste0("my-server",1:2)
+
+## made via build triggers, installed raster on custom Docker image
+my_image <- gce_tag_container("raster", project = "xxxx")
+
+## start up VMs with custom Dockerfile
+vms <- lapply(vm_names, gce_vm, 
+              predefined_type = "n1-standard-1", 
+              template = "r-base", 
+              dynamic_image = my_image)
+
+## add any ssh details, username etc.
+vms <- lapply(vms, gce_ssh_setup)
+
+## once all launched, add to cluster with custom Dockerfile
+## use plan(sequential) for local testing
+plan(cluster, workers = as.cluster(
+  vms, 
+  docker_image=my_image,
+  rscript=c("docker", "run", c("--net=host"),
+            my_image, 
+            "Rscript")))
+
+## make the vector of stuff to send to nodes
+o <- lapply(r_split, readAll)
+
+## the action you want to perform on the elements in the cluster
+my_single_function <- function(x){
+  raster::predict(x, mod)
+}
+
+#parallel - working!
+result <- future_lapply(o, my_single_function)
+
+## tidy up
+lapply(vms, FUN = gce_vm_stop)
+
 ```
 
 ### Cleanup 

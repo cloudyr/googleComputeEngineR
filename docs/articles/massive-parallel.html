@@ -139,7 +139,7 @@
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2017-11-16</h4>
+            <h4 class="date">2018-02-22</h4>
           </div>
 
     
@@ -262,9 +262,12 @@ result <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">
 resolved(result)
 [1] TRUE</code></pre>
 </div>
-<div id="example---forecasting-a-large-data-set" class="section level2">
+<div id="examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example---forecasting-a-large-data-set" class="anchor"></a>Example - forecasting a large data set</h2>
+<a href="#examples" class="anchor"></a>Examples</h2>
+<div id="forecasting-a-large-data-set" class="section level3">
+<h3 class="hasAnchor">
+<a href="#forecasting-a-large-data-set" class="anchor"></a>Forecasting a large data set</h3>
 <p>The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package <code>future</code> in these Docker images.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(googleComputeEngineR)
@@ -325,6 +328,79 @@ result &lt;-<span class="st"> </span>future<span class="op">::</span><span class
 
 ## Your list of forecasts are now available
 result</code></pre></div>
+</div>
+<div id="rasters-in-parallel" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rasters-in-parallel" class="anchor"></a>Rasters in parallel</h3>
+<p>This is from <span class="citation">@ctlamb</span>’s <a href="https://github.com/cloudyr/googleComputeEngineR/issues/93">GitHub issue #93</a> which uses a custom Dockerfile to install the raster package.</p>
+<p>The custom Dockerfile was setup in this <a href="https://github.com/MarkEdmondson1234/raster">GitHub repo</a> then made into an image with these Build Trigger settings:</p>
+<div class="figure">
+<img src="https://user-images.githubusercontent.com/3155884/36549126-494a99ca-17f2-11e8-8338-f5769a629749.png">
+</div>
+<p>Make sure the VMs are created in the same project as the build triggers to ensure authentication is smooth.</p>
+<p>The example code is shown below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
+<span class="kw">library</span>(googleComputeEngineR)
+<span class="kw">library</span>(future)
+<span class="kw">library</span>(SpaDES.tools)
+
+<span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"xxxx"</span>)
+
+## create raster
+row &lt;-<span class="st"> </span><span class="dv">8</span>
+col &lt;-<span class="st"> </span><span class="dv">8</span>
+r &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/raster">raster</a></span>(<span class="dt">nrows=</span>row, <span class="dt">ncols=</span>col,
+            <span class="dt">xmn=</span><span class="dv">0</span>, <span class="dt">xmx=</span>row, 
+            <span class="dt">ymn=</span><span class="dv">0</span>, <span class="dt">ymx=</span>col, 
+            <span class="dt">vals=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span>(row<span class="op">*</span>col)))
+<span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/plot">plot</a></span>(r)
+
+## Split
+r_split &lt;-<span class="st"> </span><span class="kw"><a href="http://spades-tools.predictiveecology.org/reference/splitRaster.html">splitRaster</a></span>(r, <span class="dt">nx=</span><span class="dv">2</span>, <span class="dt">ny=</span><span class="dv">2</span>)
+
+## create model
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),<span class="dt">layer=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">8</span><span class="op">:</span><span class="dv">10</span>))
+mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>layer, <span class="dt">data=</span>df)
+
+
+## create CPUs names
+vm_names &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"my-server"</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
+
+## made via build triggers, installed raster on custom Docker image
+my_image &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"raster"</span>, <span class="dt">project =</span> <span class="st">"xxxx"</span>)
+
+## start up VMs with custom Dockerfile
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm, 
+              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
+              <span class="dt">template =</span> <span class="st">"r-base"</span>, 
+              <span class="dt">dynamic_image =</span> my_image)
+
+## add any ssh details, username etc.
+vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)
+
+## once all launched, add to cluster with custom Dockerfile
+## use plan(sequential) for local testing
+<span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(
+  vms, 
+  <span class="dt">docker_image=</span>my_image,
+  <span class="dt">rscript=</span><span class="kw">c</span>(<span class="st">"docker"</span>, <span class="st">"run"</span>, <span class="kw">c</span>(<span class="st">"--net=host"</span>),
+            my_image, 
+            <span class="st">"Rscript"</span>)))
+
+## make the vector of stuff to send to nodes
+o &lt;-<span class="st"> </span><span class="kw">lapply</span>(r_split, readAll)
+
+## the action you want to perform on the elements in the cluster
+my_single_function &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+  raster<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/predict">predict</a></span>(x, mod)
+}
+
+<span class="co">#parallel - working!</span>
+result &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(o, my_single_function)
+
+## tidy up
+<span class="kw">lapply</span>(vms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
+</div>
 <div id="cleanup" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cleanup" class="anchor"></a>Cleanup</h3>
@@ -357,7 +433,7 @@ result</code></pre></div>
 <li><a href="#run-massive-parallel-r-jobs-cheaply">Run massive parallel R jobs cheaply</a></li>
       <li>
 <a href="#remote-r-cluster">Remote R cluster</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#example---forecasting-a-large-data-set">Example - forecasting a large data set</a></li>
+<li><a href="#examples">Examples</a></li>
       <li><a href="#quotas">Quotas</a></li>
       </ul>
 </li>

@@ -21,7 +21,7 @@ Pricing is [available here](https://cloud.google.com/compute/pricing).
 
 For `googleComputeEngineR` you will need:
 
-* Your project ID e.g. `my-project-name`
+* Your project ID e.g. `my-project-name` (NOT your project name)
 * Your preferred geographical zone to launch VMs e.g. `europe-west1-a`
 * [Recommended] A `Service account key` json file, downloaded from the API Manager > Credentials > Create credentials > Service account key > Key type = JSON
 
