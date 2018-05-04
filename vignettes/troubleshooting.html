@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-11-10" />
+<meta name="date" content="2018-03-03" />
 
 <title>Troubleshooting</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Troubleshooting</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-11-10</em></h4>
+<h4 class="date"><em>2018-03-03</em></h4>
 
 
 
@@ -66,10 +66,11 @@
 <div id="my-custom-docker-image-isnt-used" class="section level3">
 <h3>My custom Docker image isn’t used</h3>
 <p>A guide on using <a href="articles/docker.html">build triggers is here</a>, that may help. Common issues include:</p>
-<ol style="list-style-type: decimal">
+<ul>
 <li>The name of the custom image is not correct - check you can pull the image correctly</li>
 <li>Check to see if the <code>docker ps -a</code> command (or <code>docker_cmd(vm, &quot;ps -a&quot;)</code>) returns your Docker image name. If it doesn’t it has not downloaded or found your image</li>
-</ol>
+<li>The authentication to pull the custom image isn’t correct - make sure you either use the same Google project or add the service email you use for the VMs as a user to container registry</li>
+</ul>
 </div>
 <div id="i-try-to-create-an-rstudio-instance-but-i-cant-connect-to-the-i.p." class="section level3">
 <h3>I try to create an RStudio instance but I can’t connect to the I.P.</h3>
@@ -78,6 +79,19 @@
 <li>Make sure you are running on version <code>0.2.0</code> or greater, that ensure ports 80/443 are open in your default network. (port 8787 is not required)</li>
 <li>Check to see if the Docker container is running by SSH into the instance and running <code>docker ps</code></li>
 <li>If it is not, try running <code>container_logs()</code> to see if there was an issue on start up.</li>
+</ul>
+</div>
+<div id="my-project-id-isnt-recognised" class="section level3">
+<h3>My project ID isn’t recognised</h3>
+<ul>
+<li>Make sure you are using project-id and not Project name or number</li>
+<li>A bug in <code>v0.2.0</code> is it doesn’t allow project ids with numbers. Either use a project Id without numbers or load the GitHub version that fixes the bug</li>
+</ul>
+</div>
+<div id="my-changes-arent-saved-when-i-relaunch-my-rstudio-instance" class="section level3">
+<h3>My changes aren’t saved when I relaunch my RStudio instance</h3>
+<ul>
+<li>This is a feature not a bug :) The initial RStudio is based on a vanilla version of Docker, which will not save your changes by default. Customise your Dockerfile and/or save it to container registry to customise your RStudio environment. A workflow illustrating that is <a href="https://cloudyr.github.io/googleComputeEngineR/articles/rstudio-team.html">here</a> which saves your running RStudio to container builder for you. An alternative <a href="https://cloudyr.github.io/googleComputeEngineR/articles/single-scheduler.html">here</a> shows how to create and build your RStudio Dockerfile.</li>
 </ul>
 </div>
 </div>
