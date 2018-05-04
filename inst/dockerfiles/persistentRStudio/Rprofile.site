@@ -1,5 +1,5 @@
 .First <- function(){
-  cat("\n# Welcome to RStudio Server on Google Compute Engine! Today is ", date(), "\n")
+  message("\n# Welcome to RStudio Server on Google Compute Engine! Today is ", date(), "\n")
   
   googleCloudStorageR::gcs_first()
 }
