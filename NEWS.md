@@ -3,6 +3,7 @@
 * remove `gce_auth()` to favour auth with JSON key (#79)
 * Fix project-id error if numbers in project (#72)
 * Block users using "rstudio" as a login name
+* Remove defunct example from `gce_schedule_docker`
 
 # 0.2.0
 
