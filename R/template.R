@@ -134,6 +134,12 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
     message("No VM name specified, defaulting to ", template)
     dots$name <- template
   }
+  if(is.null(dots$zone)){
+    dots$zone <- gce_get_global_zone()
+  }
+  if(is.null(dots$project)){
+    dots$project <- gce_get_global_project()
+  }
   
   template <- match.arg(template)
   
@@ -167,8 +173,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
     return(job)
   }
 
-  ins <- gce_get_instance(dots$name)
-  ip <- gce_get_external_ip(dots$name)
+  ins <- gce_get_instance(dots$name, project = dots$project, zone = dots$zone)
+  ip <- gce_get_external_ip(dots$name, project = dots$project, zone = dots$zone)
   
   ## where to find application
   ip_suffix <- ""
