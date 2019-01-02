@@ -120,7 +120,7 @@ gce_set_metadata <- function(metadata,
                              zone = gce_get_global_zone()) {
 
   ## refetch to ensure latest version of metadata fingerprint
-  ins <- gce_get_instance(instance)
+  ins <- gce_get_instance(instance, project = project, zone = zone)
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMetadata", 
                  project, zone, as.gce_instance_name(ins))

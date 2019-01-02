@@ -11,7 +11,7 @@ gce_get_external_ip <- function(instance,
                                 verbose = TRUE,
                                 ...){
 
-  ins <- as.gce_instance(instance)
+  ins <- as.gce_instance(instance, ...)
 
   ip <- ins$networkInterfaces$accessConfigs[[1]]$natIP
   
