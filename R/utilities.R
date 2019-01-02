@@ -4,7 +4,7 @@ is.lower_hypen <- function(x){
     assertthat::is.string(x)
   )
   
-  grepl("^[a-z\\d\\-]+$", x)
+  grepl("^[a-z0-9-]+$", x)
   
 }
 assertthat::on_failure(is.lower_hypen) <- function(call, env){
