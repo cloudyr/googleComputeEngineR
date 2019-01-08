@@ -23,5 +23,13 @@ RUN install2.r --error \
 ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
+## install Github packages
+    && installGithub.r \
+    MarkEdmondson1234/gcloudR
+    
+## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+COPY rserver.conf /etc/rstudio/rserver.conf
 
 EXPOSE 80

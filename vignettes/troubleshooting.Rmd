@@ -38,8 +38,9 @@ This means if you want to install dependencies, you should either:
 
 A guide on using [build triggers is here](articles/docker.html), that may help.  Common issues include:
 
-1. The name of the custom image is not correct - check you can pull the image correctly
-2. Check to see if the `docker ps -a` command (or `docker_cmd(vm, "ps -a")`) returns your Docker image name.  If it doesn't it has not downloaded or found your image
+* The name of the custom image is not correct - check you can pull the image correctly
+* Check to see if the `docker ps -a` command (or `docker_cmd(vm, "ps -a")`) returns your Docker image name.  If it doesn't it has not downloaded or found your image
+* The authentication to pull the custom image isn't correct - make sure you either use the same Google project or add the service email you use for the VMs as a user to container registry
 
 ### I try to create an RStudio instance but I can't connect to the I.P.
 
@@ -47,5 +48,14 @@ A guide on using [build triggers is here](articles/docker.html), that may help. 
 * Make sure you are running on version `0.2.0` or greater, that ensure ports 80/443 are open in your default network.  (port 8787 is not required)
 * Check to see if the Docker container is running by SSH into the instance and running `docker ps`
 * If it is not, try running `container_logs()` to see if there was an issue on start up.
+
+### My project ID isn't recognised
+
+* Make sure you are using project-id and not Project name or number
+* A bug in `v0.2.0` is it doesn't allow project ids with numbers.  Either use a project Id without numbers or load the GitHub version that fixes the bug
+
+### My changes aren't saved when I relaunch my RStudio instance
+
+* This is a feature not a bug :)  The initial RStudio is based on a vanilla version of Docker, which will not save your changes by default.  Customise your Dockerfile and/or save it to container registry to customise your RStudio environment.  A workflow illustrating that is [here](https://cloudyr.github.io/googleComputeEngineR/articles/rstudio-team.html) which saves your running RStudio to container builder for you.  An alternative [here](https://cloudyr.github.io/googleComputeEngineR/articles/single-scheduler.html) shows how to create and build your RStudio Dockerfile.
 
 
