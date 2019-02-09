@@ -22,13 +22,11 @@ RUN git clone https://github.com/rstudio/keras.git && \
     cp -r keras/vignettes/examples /home/rstudio && \
     rm -r keras/
 
-RUN > rscript.R \
-    && echo 'tensorflow::install_tensorflow()' >> rscript.R \
-    && echo 'keras::install_keras()' >> rscript.R \
-    && echo 'reticulate::py_discover_config("keras")' >> rscript.R \
-    && echo 'reticulate::py_discover_config("tensorflow")' >> rscript.R \
-    && Rscript rscript.R \
-    && rm -rf /tmp/Rtmp*/downloaded_packages/* \
+COPY install.R ./install.R
+
+RUN Rscript install.R
+
+RUN rm -rf /tmp/Rtmp*/downloaded_packages/* \
     && rm -rf /tmp/downloaded_packages/* \
     && rm -rf /home/rstudio/.cache/pip \
-&& rm -rf /root/.cache/pip
+    && rm -rf /root/.cache/pip
