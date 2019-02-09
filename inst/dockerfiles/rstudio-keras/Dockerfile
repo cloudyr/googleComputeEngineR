@@ -74,7 +74,7 @@ RUN . /tensorflow/bin/activate
 
 RUN echo 'WORKON_HOME = "/tensorflow"' >> /usr/local/lib/R/etc/Renviron 
 
-RUN /usr/lib/R/site-library/littler/examples/install.r Rcpp gpuR reticulate keras
+RUN install2.r --error Rcpp gpuR reticulate keras
 
 COPY install.R ./install.R
 COPY hello-world.R /home/rstudio
