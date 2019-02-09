@@ -1,11 +1,10 @@
 FROM rocker/tidyverse
-
-LABEL maintainer="alperyilmaz@gmail.com"
+LABEL maintainer="r$markedmondson.me"
 
 ENV WORKON_HOME /tensorflow
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    && libpython2.7 python-pip virtualenv zlib1g-dev \
+    && python2.7 python-pip virtualenv zlib1g-dev \
     && rm /var/lib/dpkg/info/* \
     && rm /var/lib/apt/lists/*debian*
 
