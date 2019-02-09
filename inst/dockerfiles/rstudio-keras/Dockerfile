@@ -13,8 +13,6 @@ RUN apt-get update -y && \
           python-pip \
           virtualenv \
           zlib1g-dev \
-          libcublas8.0 \
-          libcusolver.so.8.0 \
           libopenmpi-dev libcurl4-openssl-dev \
           gnupg \
           cmake libncurses5-dev \
