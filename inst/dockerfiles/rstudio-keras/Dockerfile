@@ -15,7 +15,7 @@ RUN apt-get update -y && \
       && pip install --upgrade pip virtualenv \
       && apt-get clean \
       && rm /var/lib/dpkg/info/* \
-      && rm /var/lib/apt/lists/*
+      && rm /var/lib/apt/lists/*debian*
 
 RUN mkdir /tensorflow \
     && virtualenv --system-site-packages /tensorflow
