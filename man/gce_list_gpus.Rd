@@ -38,3 +38,4 @@ To filter you need a single string in the form \code{field_name eq|ne string}
 Other GPU instances: \code{\link{gce_check_gpu}},
   \code{\link{gce_vm_gpu}}
 }
+\concept{GPU instances}

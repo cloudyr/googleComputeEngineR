@@ -6,15 +6,16 @@
 \alias{gce_ssh_download}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., key.pub = NULL, key.private = NULL, wait = TRUE,
-  capture_text = "", username = Sys.info()[["user"]])
+gce_ssh(instance, ..., key.pub = NULL, key.private = NULL,
+  wait = TRUE, capture_text = "", username = Sys.info()[["user"]])
 
 gce_ssh_upload(instance, local, remote, username = Sys.info()[["user"]],
   key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE)
 
-gce_ssh_download(instance, remote, local, username = Sys.info()[["user"]],
-  key.pub = NULL, key.private = NULL, verbose = FALSE,
-  overwrite = FALSE, wait = TRUE)
+gce_ssh_download(instance, remote, local,
+  username = Sys.info()[["user"]], key.pub = NULL,
+  key.private = NULL, verbose = FALSE, overwrite = FALSE,
+  wait = TRUE)
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -97,3 +98,4 @@ Other ssh functions: \code{\link{gce_ssh_addkeys}},
   \code{\link{gce_ssh_browser}},
   \code{\link{gce_ssh_setup}}
 }
+\concept{ssh functions}

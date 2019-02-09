@@ -15,3 +15,4 @@ zone name set this session to use by default
 \details{
 Set the zone name via \link{gce_global_zone}
 }
+\concept{zone functions}

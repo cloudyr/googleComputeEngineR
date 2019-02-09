@@ -85,3 +85,4 @@ gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
 \seealso{
 Other scheduler functions: \code{\link{gce_vm_scheduler}}
 }
+\concept{scheduler functions}

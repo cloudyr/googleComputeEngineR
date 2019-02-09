@@ -201,6 +201,9 @@ gce_vm_delete <- function(instance,
 #'  
 #' This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper. 
 #' 
+#' @section GPUs
+#' 
+#' You can add GPUs to your instance, but they must be present in the zone you have specified.  Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
@@ -216,8 +219,8 @@ gce_vm_delete <- function(instance,
 #' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' @param disk_size_gb If not NULL, override default size of the boot disk (size in GB) 
 #' @param use_beta If set to TRUE will use the beta version of the API. Should not be used for production purposes.
-#' @param acceleratorCount \code{[BETA]} Number of GPUs to add to instance
-#' @param acceleratorType \code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}
+#' @param acceleratorCount Number of GPUs to add to instance
+#' @param acceleratorType Name of GPU to add, see \link{gce_list_gpus}
 #' 
 #' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 #' 
@@ -246,7 +249,7 @@ gce_vm_create <- function(name,
                           disk_size_gb = NULL,
                           use_beta = FALSE,
                           acceleratorCount = NULL,
-                          acceleratorType = "nvidia-tesla-k80") {
+                          acceleratorType = "nvidia-tesla-p100") {
   
   assertthat::assert_that(
     assertthat::is.string(name)
@@ -261,7 +264,7 @@ gce_vm_create <- function(name,
   guestAccelerators = NULL
   
   if(!is.null(acceleratorCount)){
-    acctype <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/acceleratorTypes/%s",
+    acctype <- sprintf("projects/%s/zones/%s/acceleratorTypes/%s",
                        project, zone, acceleratorType)
     
     guestAccelerators <- list(

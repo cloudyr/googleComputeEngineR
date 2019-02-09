@@ -76,3 +76,4 @@ These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"
 Other ssh functions: \code{\link{gce_ssh_addkeys}},
   \code{\link{gce_ssh_browser}}, \code{\link{gce_ssh}}
 }
+\concept{ssh functions}

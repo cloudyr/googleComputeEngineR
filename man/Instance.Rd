@@ -6,8 +6,8 @@
 \usage{
 Instance(name = NULL, machineType = NULL, canIpForward = NULL,
   description = NULL, disks = NULL, metadata = NULL,
-  networkInterfaces = NULL, scheduling = NULL, serviceAccounts = NULL,
-  tags = NULL, guestAccelerators = NULL)
+  networkInterfaces = NULL, scheduling = NULL,
+  serviceAccounts = NULL, tags = NULL, guestAccelerators = NULL)
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}
@@ -39,4 +39,5 @@ Instance Object
 \details{
 An Instance resource.
 }
+\concept{Instance functions}
 \keyword{internal}

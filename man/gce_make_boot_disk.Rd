@@ -4,8 +4,9 @@
 \alias{gce_make_boot_disk}
 \title{Make a boot disk for attachment to an instance}
 \usage{
-gce_make_boot_disk(diskName = NULL, diskSizeGb = NULL, diskType = NULL,
-  sourceImage = NULL, sourceImageEncryptionKey = NULL)
+gce_make_boot_disk(diskName = NULL, diskSizeGb = NULL,
+  diskType = NULL, sourceImage = NULL,
+  sourceImageEncryptionKey = NULL)
 }
 \arguments{
 \item{diskName}{Specifies the disk name}
@@ -31,3 +32,4 @@ Use initialization parameters to create boot disks or local SSDs attached to the
 
 This property is mutually exclusive with the source property; you can only define one or the other, but not both.
 }
+\concept{AttachedDiskInitializeParams functions}

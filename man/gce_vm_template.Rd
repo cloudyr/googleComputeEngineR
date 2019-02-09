@@ -6,7 +6,8 @@
 \usage{
 gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
   "example", "dynamic", "ropensci"), username = NULL, password = NULL,
-  dynamic_image = NULL, image_family = "cos-stable", wait = TRUE, ...)
+  dynamic_image = NULL, image_family = "cos-stable", wait = TRUE,
+  ...)
 }
 \arguments{
 \item{template}{The template available}

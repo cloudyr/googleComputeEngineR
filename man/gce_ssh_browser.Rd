@@ -24,3 +24,4 @@ You will need to login the first time with an email that has access to the insta
 Other ssh functions: \code{\link{gce_ssh_addkeys}},
   \code{\link{gce_ssh_setup}}, \code{\link{gce_ssh}}
 }
+\concept{ssh functions}

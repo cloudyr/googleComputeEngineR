@@ -40,3 +40,4 @@ Other container registry functions: \code{\link{gce_list_registry}},
   \code{\link{gce_pull_registry}},
   \code{\link{gce_tag_container}}
 }
+\concept{container registry functions}

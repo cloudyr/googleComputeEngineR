@@ -4,11 +4,11 @@
 \alias{gce_attach_disk}
 \title{Attaches a Disk resource to an instance.}
 \usage{
-gce_attach_disk(instance, source = NULL, autoDelete = NULL, boot = NULL,
-  deviceName = NULL, diskEncryptionKey = NULL, index = NULL,
-  initializeParams = NULL, interface = NULL, licenses = NULL,
-  mode = NULL, type = NULL, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_attach_disk(instance, source = NULL, autoDelete = NULL,
+  boot = NULL, deviceName = NULL, diskEncryptionKey = NULL,
+  index = NULL, initializeParams = NULL, interface = NULL,
+  licenses = NULL, mode = NULL, type = NULL,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{instance}{The instance name for this request}
@@ -54,3 +54,4 @@ Authentication scopes used by this function are:
 
 Other AttachedDisk functions: \code{\link{AttachedDisk}}
 }
+\concept{AttachedDisk functions}

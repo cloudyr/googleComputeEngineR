@@ -348,7 +348,7 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE, timeout_tries = 50){
     
   }
   
-  if(verbose) 
+  if(verbose && !is.null(check$endTime)) 
     myMessage("Operation complete in ", 
               format(timestamp_to_r(check$endTime) - timestamp_to_r(check$insertTime)), level = 3)
   

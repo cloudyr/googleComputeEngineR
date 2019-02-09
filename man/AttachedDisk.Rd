@@ -44,4 +44,5 @@ An instance-attached disk resource.
 \seealso{
 Other AttachedDisk functions: \code{\link{gce_attach_disk}}
 }
+\concept{AttachedDisk functions}
 \keyword{internal}

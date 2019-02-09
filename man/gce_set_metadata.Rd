@@ -37,3 +37,4 @@ To delete metadata pass an empty string \code{""} with the same key
 
 Other Metadata functions: \code{\link{Metadata}}
 }
+\concept{Metadata functions}

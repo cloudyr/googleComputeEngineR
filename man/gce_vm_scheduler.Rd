@@ -26,3 +26,4 @@ This starts up a VM with cron and docker installed that can be used to schedule 
 \seealso{
 Other scheduler functions: \code{\link{gce_schedule_docker}}
 }
+\concept{scheduler functions}

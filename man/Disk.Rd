@@ -4,8 +4,8 @@
 \alias{Disk}
 \title{Disk Object}
 \usage{
-Disk(name = NULL, sourceImage = NULL, sizeGb = NULL, description = NULL,
-  diskEncryptionKey = NULL, licenses = NULL,
+Disk(name = NULL, sourceImage = NULL, sizeGb = NULL,
+  description = NULL, diskEncryptionKey = NULL, licenses = NULL,
   sourceImageEncryptionKey = NULL, sourceSnapshot = NULL,
   sourceSnapshotEncryptionKey = NULL, type = NULL)
 }
@@ -39,4 +39,5 @@ Disk Object
 \details{
 A Disk resource.
 }
+\concept{Disk functions}
 \keyword{internal}

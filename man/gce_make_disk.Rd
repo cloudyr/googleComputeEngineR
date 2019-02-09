@@ -4,11 +4,11 @@
 \alias{gce_make_disk}
 \title{Creates a persistent disk in the specified project using the data in the request.}
 \usage{
-gce_make_disk(name, sourceImage = NULL, sizeGb = NULL, description = NULL,
-  diskEncryptionKey = NULL, licenses = NULL, sourceSnapshot = NULL,
-  sourceImageEncryptionKey = NULL, sourceSnapshotEncryptionKey = NULL,
-  type = NULL, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_make_disk(name, sourceImage = NULL, sizeGb = NULL,
+  description = NULL, diskEncryptionKey = NULL, licenses = NULL,
+  sourceSnapshot = NULL, sourceImageEncryptionKey = NULL,
+  sourceSnapshotEncryptionKey = NULL, type = NULL,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{name}{Name of the resource}
