@@ -1,129 +1,73 @@
-FROM nvidia/cuda:9.0-cudnn7-runtime
+FROM nvcr.io/nvidia/tensorflow:18.04-py3
 
-## This handle reaches Carl and Dirk
-MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
+LABEL maintainer="Kai Lichtenberg <kai@sentin.ai>"
 
-## Prepare R installation from 
-RUN sh -c 'echo "deb http://cloud.r-project.org/bin/linux/ubuntu xenial/" >> /etc/apt/sources.list' \
-    && gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 \
-    && gpg -a --export E084DAB9 | apt-key add -
+#Arguments
+ARG USER="docker"
+ARG myUID="1000"
+ARG myGID="1000"
 
-RUN apt-get update \
-    && apt-get upgrade -y -q \
-    && apt-get install -y --no-install-recommends \
-           r-base \
-           r-base-dev \
-           r-cran-littler \
-           libxml2-dev \
-           libxt-dev \
-           libssl-dev \
-           libcurl4-openssl-dev \
-           imagemagick \
-           python-pip \
-           libpython2.7 \
-    && python -m pip install --upgrade pip \
-    && pip install virtualenv \
-    && echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> /etc/R/Rprofile.site \
-    && /usr/lib/R/site-library/littler/examples/install.r tensorflow keras \
-    && r -e "keras::install_keras(tensorflow = '1.4.1-gpu')"
+#Specifiy R and Keras Version
+ENV R_BASE_VERSION=3.4.4
+ENV KERAS_VERSION=2.1.5
 
-# copied from rstudio dockerfile https://github.com/rocker-org/rocker-versioned/tree/master/rstudio/3.5.2
-ARG RSTUDIO_VERSION
-#ENV RSTUDIO_VERSION=${RSTUDIO_VERSION:0.1.463}
-ARG S6_VERSION
-ENV S6_VERSION=${S6_VERSION:-v1.21.7.0}
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
-ENV PATH=/usr/lib/rstudio-server/bin:$PATH
+#Set a user 
+RUN groupadd --gid "${myGID}" "${USER}" \
+  && useradd \
+    --uid ${myUID} \
+    --gid ${myGID} \
+    --create-home \
+    --shell /bin/bash \
+    ${USER}
 
-## Download and install RStudio server & dependencies
-## Attempts to get detect latest version, otherwise falls back to version given in $VER
-## Symlink pandoc, pandoc-citeproc so they are available system-wide
+#Install packages needed
+RUN apt-get update \ 
+  && apt-get install -y --no-install-recommends \
+    ed \
+    locales \
+    vim-tiny \
+    fonts-texgyre \
+    gnupg2 \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libssh2-1-dev \
+    sudo \
+    virtualenv \
+  && rm -rf /var/lib/apt/lists/*
+
+#Add mirror 
+RUN echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" >> /etc/apt/sources.list \
+  && gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9 \
+  && gpg -a --export E084DAB9 | apt-key add -
+
+# Install R-base (rocker/r-base with little modification)
+# Now install R and littler, and create a link for littler in /usr/local/bin
+# Also set a default CRAN repo, and make sure littler knows about it too
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    file \
-    git \
-    libapparmor1 \
-    libcurl4-openssl-dev \
-    libedit2 \
-    libssl-dev \
-    lsb-release \
-    psmisc \
-    procps \
-    python-setuptools \
-    sudo \
-    wget \
-  && wget -O libssl1.0.0.deb http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb \
-  && dpkg -i libssl1.0.0.deb \
-  && rm libssl1.0.0.deb \
-  && RSTUDIO_LATEST=$(wget --no-check-certificate -qO- https://s3.amazonaws.com/rstudio-server/current.ver) \
-  && [ -z "$RSTUDIO_VERSION" ] && RSTUDIO_VERSION=$RSTUDIO_LATEST || true \
-  && wget -q http://download2.rstudio.org/rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
-  && dpkg -i rstudio-server-${RSTUDIO_VERSION}-amd64.deb \
-  && rm rstudio-server-*-amd64.deb \
-  ## Symlink pandoc & standard pandoc templates for use system-wide
-  && ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin \
-  && ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc-citeproc /usr/local/bin \
-  && git clone https://github.com/jgm/pandoc-templates \
-  && mkdir -p /opt/pandoc/templates \
-  && cp -r pandoc-templates*/* /opt/pandoc/templates && rm -rf pandoc-templates* \
-  && mkdir /root/.pandoc && ln -s /opt/pandoc/templates /root/.pandoc/templates \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/ \
-  ## RStudio wants an /etc/R, will populate from $R_HOME/etc
-  && mkdir -p /etc/R \
-  ## Write config files in $R_HOME/etc
-  && echo '\n\
-    \n# Configure httr to perform out-of-band authentication if HTTR_LOCALHOST \
-    \n# is not set since a redirect to localhost may not work depending upon \
-    \n# where this Docker container is running. \
-    \nif(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) { \
-    \n  options(httr_oob_default = TRUE) \
-    \n}' >> /etc/R/Rprofile.site \
-  && echo "PATH=${PATH}" >> /etc/R/Renviron \
-  ## Need to configure non-root user for RStudio
-  && useradd rstudio \
-  && echo "rstudio:rstudio" | chpasswd \
-	&& mkdir /home/rstudio \
-	&& chown rstudio:rstudio /home/rstudio \
-	&& addgroup rstudio staff \
-  ## Prevent rstudio from deciding to use /usr/bin/R if a user apt-get installs a package
-  &&  echo 'rsession-which-r=/usr/local/bin/R' >> /etc/rstudio/rserver.conf \
-  ## use more robust file locking to avoid errors when using shared volumes:
-  && echo 'lock-type=advisory' >> /etc/rstudio/file-locks \
-  ## configure git not to request password each time
-  && git config --system credential.helper 'cache --timeout=3600' \
-  && git config --system push.default simple \
-  ## Set up S6 init system
-  && wget -P /tmp/ https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz \
-  && tar xzf /tmp/s6-overlay-amd64.tar.gz -C / \
-  && mkdir -p /etc/services.d/rstudio \
-  && echo '#!/usr/bin/with-contenv bash \
-          \n## load /etc/environment vars first: \
-  		  \n for line in $( cat /etc/environment ) ; do export $line ; done \
-          \n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0' \
-          > /etc/services.d/rstudio/run \
-  && echo '#!/bin/bash \
-          \n rstudio-server stop' \
-          > /etc/services.d/rstudio/finish \
-  && mkdir -p /home/rstudio/.rstudio/monitored/user-settings \
-  && echo 'alwaysSaveHistory="0" \
-          \nloadRData="0" \
-          \nsaveAction="0"' \
-          > /home/rstudio/.rstudio/monitored/user-settings/user-settings \
-  && chown -R rstudio:rstudio /home/rstudio/.rstudio \
-  && ln /usr/bin/R /usr/local/bin/R
+    littler \
+    r-cran-littler \
+    r-base=${R_BASE_VERSION}-* \
+    r-base-dev=${R_BASE_VERSION}-* \
+    r-recommended=${R_BASE_VERSION}-* \
+  && echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"), download.file.method = "libcurl")' >> /etc/R/Rprofile.site \
+  && echo 'source("/etc/R/Rprofile.site")' >> /etc/littler.r \
+  && ln -s /usr/share/doc/littler/examples/install.r /usr/local/bin/install.r \
+  && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -s /usr/share/doc/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -s /usr/share/doc/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
+  && install.r docopt \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+  && rm -rf /var/lib/apt/lists/* 
 
-COPY userconf.sh /etc/cont-init.d/userconf
+#Install tensorflow and keras
+ENV WORKON_HOME=/home/${USER}/.virtualenvs
 
-## running with "-e ADD=shiny" adds shiny server
-COPY add_shiny.sh /etc/cont-init.d/add
-COPY disable_auth_rserver.conf /etc/rstudio/disable_auth_rserver.conf
-COPY pam-helper.sh /usr/lib/rstudio-server/bin/pam-helper
-
-EXPOSE 8787
-
-## automatically link a shared volume for kitematic users
-VOLUME /home/rstudio/kitematic
-
-# https://community.rstudio.com/t/troubles-installing-rstudio-server/10651/4
-CMD ["/usr/lib/rstudio-server/bin/rserver", "--server-daemonize=0", "--server-app-armor-enabled=0"]
+RUN install2.r devtools remotes \
+  && installGithub.r rstudio/tensorflow \
+  && installGithub.r rstudio/keras \
+  && virtualenv --system-site-packages /home/${USER}/.virtualenvs/r-tensorflow --python=python3.5 \
+  && /bin/bash -c "cd /home/${USER}/.virtualenvs/r-tensorflow/bin/; \
+     source activate; \
+     pip3 --no-cache-dir install git+git://github.com/fchollet/keras.git@${KERAS_VERSION}"
+     
