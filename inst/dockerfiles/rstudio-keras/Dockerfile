@@ -24,11 +24,11 @@ RUN apt-get update \
            imagemagick \
            python-pip \
            libpython2.7 \
-    && pip install --upgrade pip \
+    && pip install --upgrade pip==9.0.3 \
     && pip install virtualenv \
     && echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> /etc/R/Rprofile.site \
     && /usr/lib/R/site-library/littler/examples/install.r tensorflow keras \
-&& r -e "keras::install_keras(tensorflow = '1.4.1-gpu')"
+    && r -e "keras::install_keras(tensorflow = '1.4.1-gpu')"
 
 # copied from rstudio dockerfile https://github.com/rocker-org/rocker-versioned/tree/master/rstudio/3.5.2
 ARG RSTUDIO_VERSION
