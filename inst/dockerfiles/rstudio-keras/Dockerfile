@@ -13,7 +13,6 @@ RUN apt-get update -y && \
           python-pip \
           virtualenv \
           zlib1g-dev \
-          linux-headers-$(uname -r) \
           gnupg \
       && pip install --upgrade pip virtualenv \
       && apt-get clean \
