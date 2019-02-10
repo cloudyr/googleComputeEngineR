@@ -3,6 +3,22 @@ FROM rocker/tidyverse
 LABEL maintainer="r$markedmondson.me"
 
 ENV WORKON_HOME /tensorflow
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive \
+      apt-get install --no-install-recommends -y -q \
+          build-essential \
+          python2.7 \
+          python2.7-dev \
+          python-pip \
+          virtualenv \
+          zlib1g-dev \
+          linux-headers-$(uname -r) \
+          gnupg \
+      && pip install --upgrade pip virtualenv \
+      && apt-get clean \
+      && rm /var/lib/dpkg/info/* \
+      && rm /var/lib/apt/lists/*debian*
     
 # from https://www.tensorflow.org/install/gpu
 # Add NVIDIA package repository
@@ -28,21 +44,7 @@ RUN apt install -y -q \
 RUN apt update -y \
     && apt install libnvinfer4=4.1.2-1+cuda9.0
 
-RUN apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive \
-      apt-get install --no-install-recommends -y -q \
-          build-essential \
-          python2.7 \
-          python2.7-dev \
-          python-pip \
-          virtualenv \
-          zlib1g-dev \
-          linux-headers-$(uname -r) \
-          cuda-9-0 \
-      && pip install --upgrade pip virtualenv \
-      && apt-get clean \
-      && rm /var/lib/dpkg/info/* \
-      && rm /var/lib/apt/lists/*debian*
+
 
 RUN mkdir /tensorflow \
     && virtualenv --system-site-packages /tensorflow
