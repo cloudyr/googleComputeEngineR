@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn6-runtime
+FROM nvidia/cuda:9.0-cudnn7-runtime
 
 ## This handle reaches Carl and Dirk
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
@@ -78,8 +78,8 @@ RUN apt-get update \
     \n# where this Docker container is running. \
     \nif(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) { \
     \n  options(httr_oob_default = TRUE) \
-    \n}' >> /usr/local/lib/etc/R/Rprofile.site \
-  && echo "PATH=${PATH}" >> /usr/local/lib/etc/R/Renviron \
+    \n}' >> /etc/R/Rprofile.site \
+  && echo "PATH=${PATH}" >> /etc/R/Renviron \
   ## Need to configure non-root user for RStudio
   && useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
