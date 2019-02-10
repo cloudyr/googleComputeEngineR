@@ -24,7 +24,7 @@ RUN apt-get update \
            imagemagick \
            python-pip \
            libpython2.7 \
-    && pip install --upgrade pip==9.0.3 \
+    && python -m pip install --upgrade pip \
     && pip install virtualenv \
     && echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> /etc/R/Rprofile.site \
     && /usr/lib/R/site-library/littler/examples/install.r tensorflow keras \
