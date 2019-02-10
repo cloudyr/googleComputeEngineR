@@ -78,7 +78,7 @@ RUN apt-get update \
     \n# where this Docker container is running. \
     \nif(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) { \
     \n  options(httr_oob_default = TRUE) \
-    \n}' >> /usr/local/lib/R/etc/Rprofile.site \
+    \n}' >> /usr/local/lib/etc/R/Rprofile.site \
   && echo "PATH=${PATH}" >> /usr/local/lib/etc/R/Renviron \
   ## Need to configure non-root user for RStudio
   && useradd rstudio \
