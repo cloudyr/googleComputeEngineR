@@ -59,9 +59,9 @@ gce_vm_create(name, predefined_type = "f1-micro",
 
 \item{use_beta}{If set to TRUE will use the beta version of the API. Should not be used for production purposes.}
 
-\item{acceleratorCount}{\code{[BETA]} Number of GPUs to add to instance}
+\item{acceleratorCount}{Number of GPUs to add to instance}
 
-\item{acceleratorType}{\code{[BETA]} Name of GPU to add, see \link{gce_list_gpus}}
+\item{acceleratorType}{Name of GPU to add, see \link{gce_list_gpus}}
 }
 \value{
 A zone operation, or if the name already exists the VM object from \link{gce_get_instance}

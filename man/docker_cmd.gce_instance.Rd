@@ -5,7 +5,7 @@
 \title{Docker S3 method for use with harbor package}
 \usage{
 \method{docker_cmd}{gce_instance}(host, cmd = NULL, args = NULL,
-  docker_opts = NULL, capture_text = FALSE, ...)
+  docker_opts = NULL, capture_text = FALSE, nvidia = FALSE, ...)
 }
 \arguments{
 \item{host}{The GCE instance}
@@ -17,6 +17,8 @@
 \item{docker_opts}{options for docker}
 
 \item{capture_text}{whether to return the output}
+
+\item{nvidia}{If true will use \code{nvidia-docker} instead of {docker}}
 
 \item{...}{other arguments passed to \link{gce_ssh}}
 }

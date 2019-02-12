@@ -5,6 +5,7 @@
 #' @param args arguments to the command
 #' @param docker_opts options for docker
 #' @param capture_text whether to return the output
+#' @param nvidia If true will use \code{nvidia-docker} instead of {docker}
 #' @param ... other arguments passed to \link{gce_ssh}
 #' 
 #' @details 
@@ -13,9 +14,12 @@
 #'   but for others you will need to run \code{sudo usermod -a -G docker ${USER}} and log out and back in. 
 #' @export
 docker_cmd.gce_instance <- function(host, cmd = NULL, args = NULL,
-                                    docker_opts = NULL, capture_text = FALSE, ...) {
+                                    docker_opts = NULL, capture_text = FALSE, 
+                                    nvidia = FALSE, ...) {
   
-  cmd_string <- paste(c("docker", cmd, docker_opts, args), collapse = " ")
+  dd <- if(nvidia) "nvidia-docker" else "docker"
+  
+  cmd_string <- paste(c(dd, cmd, docker_opts, args), collapse = " ")
   
   gce_ssh(host, ..., cmd_string, capture_text = capture_text)
   
