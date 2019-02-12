@@ -25,7 +25,7 @@ RUN apt-get update \
     && pip install virtualenv \
     && echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> /etc/R/Rprofile.site \
     && /usr/lib/R/site-library/littler/examples/install.r tensorflow keras \
-    && r -e "keras::install_keras(tensorflow = '1.4.1-gpu')"
+    && r -e "keras::install_keras(tensorflow = '1.10.0-gpu')"
 
 # copied from rstudio dockerfile https://github.com/rocker-org/rocker-versioned/tree/master/rstudio/3.5.2
 ARG RSTUDIO_VERSION
