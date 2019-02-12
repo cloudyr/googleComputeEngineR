@@ -18,10 +18,10 @@ RUN apt-get update && apt-get install -y \
   python-dev
 
 ## CUDA Version
-ENV CUDA_MAJOR_VERSION=9.2
-ENV CUDA_MAJOR_VERSION_HYP=9.2
-ENV CUDA_MINOR_VERSION=9.2.148-1
-ENV NVIDIA_REQUIRE_CUDA="cuda>=9.2"
+ENV CUDA_MAJOR_VERSION=9.0
+ENV CUDA_MAJOR_VERSION_HYP=9.0
+ENV CUDA_MINOR_VERSION=9.0.176-1
+ENV NVIDIA_REQUIRE_CUDA="cuda==9.0"
 
 ## CUDA Install
 RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
