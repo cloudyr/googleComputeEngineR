@@ -71,7 +71,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/ \
   ## RStudio wants an /etc/R, will populate from $R_HOME/etc
   && mkdir -p /etc/R \
-  && mkdir -p /usr/local/lib/etc/R/ \
+  && mkdir -p /usr/local/lib/R/etc/ \
   ## Write config files in $R_HOME/etc
   && echo '\n\
     \n# Configure httr to perform out-of-band authentication if HTTR_LOCALHOST \
@@ -79,8 +79,8 @@ RUN apt-get update \
     \n# where this Docker container is running. \
     \nif(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) { \
     \n  options(httr_oob_default = TRUE) \
-    \n}' >> /usr/local/lib/etc/R/Rprofile.site \
-  && echo "PATH=${PATH}" >> /usr/local/lib/etc/R/Renviron \
+    \n}' >> /usr/local/lib/R/etc/Rprofile.site \
+  && echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron \
   ## Need to configure non-root user for RStudio
   && useradd rstudio \
   && echo "rstudio:rstudio" | chpasswd \
