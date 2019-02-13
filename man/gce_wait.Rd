@@ -2,12 +2,9 @@
 % Please edit documentation in R/operations.R
 \name{gce_wait}
 \alias{gce_wait}
-\alias{gce_check_zone_op}
 \title{Wait for an operation to finish}
 \usage{
 gce_wait(operation, wait = 3, verbose = TRUE, timeout_tries = 50)
-
-gce_check_zone_op(operation, wait = 3, verbose = TRUE)
 }
 \arguments{
 \item{operation}{The operation object}

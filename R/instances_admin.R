@@ -142,6 +142,8 @@ as.gce_instance <- function(x,
   } else {
     stop("Unrecognised instance class - ", class(x))
   }
+  
+  ins
 }
 
 #' Check if is gce_instance
@@ -202,6 +204,7 @@ Instance <- function(name = NULL,
                      scheduling = NULL, 
                      serviceAccounts = NULL, 
                      tags = NULL,
+                     minCpuPlatform = NULL,
                      guestAccelerators = NULL) {
   
   structure(list(canIpForward = canIpForward,
@@ -210,6 +213,7 @@ Instance <- function(name = NULL,
                  metadata = Metadata(metadata), 
                  name = name, 
                  disks = disks,
+                 minCpuPlatform = minCpuPlatform,
                  networkInterfaces = networkInterfaces, 
                  scheduling = scheduling, 
                  serviceAccounts = serviceAccounts, 

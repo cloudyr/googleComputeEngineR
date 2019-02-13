@@ -4,7 +4,7 @@
 \alias{gce_get_op}
 \title{Retrieves the specified Operations resource.}
 \usage{
-gce_get_op(operation)
+gce_get_op(operation = .Last.value)
 }
 \arguments{
 \item{operation}{Name of the Operations resource to return}

@@ -32,6 +32,14 @@ To change existing metadata pass a named list with the same key and modified val
 
 To delete metadata pass an empty string \code{""} with the same key
 }
+\examples{
+
+\dontrun{
+ # Use "project-wide" to set "enable-oslogin" = "TRUE" to take advantage of OS Login.
+ gce_set_metadata(list("enable-oslogin" = "TRUE"), instance = "project-wide")
+}
+ 
+}
 \seealso{
 \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
 

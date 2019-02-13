@@ -18,6 +18,7 @@ gce_vm(name, ..., project = gce_get_global_project(),
   \item{disk_source}{Specifies a valid URL to an existing Persistent Disk resource.}
   \item{network}{The name of the network interface}
   \item{externalIP}{An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.}
+  \item{minCpuPlatform}{Specify a minimum CPU platform as per \href{these Google docs}{https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform}}
   \item{project}{Project ID for this request}
   \item{zone}{The name of the zone for this request}
   \item{dry_run}{whether to just create the request JSON}

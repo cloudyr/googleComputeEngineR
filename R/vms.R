@@ -218,6 +218,7 @@ gce_vm_delete <- function(instance,
 #' @param disk_source Specifies a valid URL to an existing Persistent Disk resource.
 #' @param network The name of the network interface
 #' @param externalIP An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.
+#' @param minCpuPlatform Specify a minimum CPU platform as per \href{these Google docs}{https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform}
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' @param dry_run whether to just create the request JSON
@@ -248,6 +249,7 @@ gce_vm_create <- function(name,
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
                           tags = NULL,
+                          minCpuPlatform = NULL,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone(),
                           dry_run = FALSE,
@@ -367,6 +369,10 @@ gce_vm_create <- function(name,
   if(is.null(serviceAccounts)){
     serviceAccounts = gce_make_serviceaccounts()
   }
+  
+  if(!is.null(minCpuPlatform)){
+     assert_that(is.string(minCpuPlatform))
+  }
 
   ## make instance object
   the_instance <- Instance(canIpForward = canIpForward, 
@@ -375,6 +381,7 @@ gce_vm_create <- function(name,
                            metadata = metadata, 
                            disks = init_disk,
                            name = name, 
+                           minCpuPlatform = minCpuPlatform,
                            networkInterfaces = networkInterfaces, 
                            scheduling = scheduling, 
                            serviceAccounts = serviceAccounts, 
