@@ -5,8 +5,9 @@
 * Fix project-id error if numbers in project (#72)
 * Block users using "rstudio" as a login name
 * Remove defunct example from `gce_schedule_docker`
-* Support GPU images for Tensorflow, keras etc. 
+* Support GPU images for Tensorflow, keras etc. (#101)
 * Support common instance metadata by supply `gce_set_metadata(instance = "project-wide")`
+* Support minCpuPlatform in instance creation and via  `gce_set_mincpuplatform()` (#112)
 
 # 0.2.0
 
