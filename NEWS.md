@@ -1,13 +1,11 @@
 # 0.2.0.9001
 
-- Fixed broken passing of `zone` and `project` arguments in `gce_vm`, `gce_vm_template`, `gce_get_external_ip`, and `gce_set_metadata`.
-
-# 0.2.0.9000
-
+* Fixed broken passing of `zone` and `project` arguments in `gce_vm`, `gce_vm_template`, `gce_get_external_ip`, and `gce_set_metadata`.
 * remove `gce_auth()` to favour auth with JSON key (#79)
 * Fix project-id error if numbers in project (#72)
 * Block users using "rstudio" as a login name
 * Remove defunct example from `gce_schedule_docker`
+* Support GPU images for Tensorflow, keras etc. 
 
 # 0.2.0
 

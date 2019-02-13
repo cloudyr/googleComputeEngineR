@@ -201,7 +201,7 @@ gce_vm_delete <- function(instance,
 #'  
 #' This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper. 
 #' 
-#' @section GPUs
+#' @section GPUs:
 #' 
 #' You can add GPUs to your instance, but they must be present in the zone you have specified.  Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
 #' 
@@ -225,6 +225,8 @@ gce_vm_delete <- function(instance,
 #' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}
 #' 
 #' @importFrom googleAuthR gar_api_generator
+#' @importFrom jsonlite unbox toJSON
+#' @import assertthat
 #' @export
 gce_vm_create <- function(name,
                           predefined_type = "f1-micro",
@@ -249,10 +251,10 @@ gce_vm_create <- function(name,
                           disk_size_gb = NULL,
                           use_beta = FALSE,
                           acceleratorCount = NULL,
-                          acceleratorType = "nvidia-tesla-p100") {
+                          acceleratorType = "nvidia-tesla-p4") {
   
-  assertthat::assert_that(
-    assertthat::is.string(name)
+  assert_that(
+    is.string(name)
   )
   
   ## missing only works within function its called from
@@ -339,10 +341,10 @@ gce_vm_create <- function(name,
       initializeParams = initializeParams,
       source = disk_source,
       ## not in docs apart from https://cloud.google.com/compute/docs/instances/create-start-instance
-      autoDelete = jsonlite::unbox(TRUE),
-      boot       = jsonlite::unbox(TRUE),
-      type       = jsonlite::unbox("PERSISTENT"),
-      deviceName = jsonlite::unbox(paste0(name,"-boot-disk"))
+      autoDelete = unbox(TRUE),
+      boot       = unbox(TRUE),
+      type       = unbox("PERSISTENT"),
+      deviceName = unbox(paste0(name,"-boot-disk"))
     )
   )
 
@@ -362,7 +364,7 @@ gce_vm_create <- function(name,
   if(is.null(serviceAccounts)){
     serviceAccounts = list(
       list(
-        email = jsonlite::unbox(auth_email(auth_email)),
+        email = unbox(auth_email(auth_email)),
         scopes = list("https://www.googleapis.com/auth/cloud-platform")
       )
     )
@@ -381,7 +383,7 @@ gce_vm_create <- function(name,
                            guestAccelerators = guestAccelerators,
                            tags = tags)
   if(dry_run){
-    return(jsonlite::toJSON(the_instance, pretty = TRUE))
+    return(toJSON(the_instance, pretty = TRUE))
   }
   
   # compute.instances.insert
@@ -389,7 +391,7 @@ gce_vm_create <- function(name,
                          "POST", 
                          data_parse_function = function(x) x)
   
-  assertthat::assert_that(
+  assert_that(
     inherits(the_instance, "gar_Instance")
   )
   

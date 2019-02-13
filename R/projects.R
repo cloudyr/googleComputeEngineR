@@ -52,7 +52,7 @@ gce_global_project <- function(project = gce_get_global_project()){
   )
   
   .gce_env$project <- project
-  message("Set default project name to '", project,"'")
+  myMessage("Set default project name to '", project,"'", level = 3)
   return(invisible(.gce_env$project))
   
 }
@@ -71,8 +71,7 @@ gce_global_project <- function(project = gce_get_global_project()){
 gce_get_global_project <- function(){
   
   if(!exists("project", envir = .gce_env)){
-    stop("Project is NULL and couldn't find global project name.
-         Set it via gce_global_project")
+    stop("Project is not set and couldn't find global project name. Set via gce_global_project()", call. = FALSE)
   }
   
   .gce_env$project

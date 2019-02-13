@@ -214,7 +214,8 @@ do_system <- function(instance,
     
     ## maybe a warning available in attr(status, "status) or attr(status, "errmsg)
     if(!is.null(attr(status, "status"))){
-      myMessage("Remote error: ", attr(status, "status"), attr(status, "errmsg"), level = 3)
+      myMessage("Remote error: ", 
+                attr(status, "status"), attr(status, "errmsg"), level = 3)
     }
 
     ## status is the output text

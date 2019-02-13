@@ -6,22 +6,22 @@ get_cloud_init_file <- function(template,
                                 password = NULL, 
                                 dynamic_image = NULL) {
   
-  
-  if(template == "rstudio"){
-    assert_that(
-      is.string(username),
-      is.string(password),
-      username != "rstudio"
-    )
-    
-  } else if(template == "dynamic"){
-    assert_that(
-      is.string(dynamic_image)
-    )
+  if(!is.null(dynamic_image)){
+    assert_that(is.string(dynamic_image))
   }
   
   switch(template,
-         rstudio = build_cloud_init_file_rstudio(template_file = template, 
+         rstudio = build_cloud_init_file(template_file = template, 
+                                         docker_image = "rocker/tidyverse", 
+                                         dynamic_image = dynamic_image,
+                                         username = username, 
+                                         password = password),
+         "rstudio-gpu" = build_cloud_init_file(template_file = template, 
+                                               docker_image = "rocker/ml", 
+                                               dynamic_image = dynamic_image,
+                                               username = username, 
+                                               password = password),
+         "rstudio-shiny" = build_cloud_init_file(template_file = template, 
                                                  docker_image = "rocker/tidyverse", 
                                                  dynamic_image = dynamic_image,
                                                  username = username, 
@@ -38,27 +38,30 @@ get_cloud_init_file <- function(template,
          "r-base" = build_cloud_init_file(template_file = template, 
                                           docker_image = "rocker/r-base", 
                                           dynamic_image = dynamic_image),
-         ropensci = build_cloud_init_file_rstudio(template_file = template, 
-                                                  docker_image = "rocker/ropensci:dev", 
-                                                  dynamic_image = dynamic_image,
-                                                  username = username,
-                                                  password = password))
+         ropensci = build_cloud_init_file(template_file = template, 
+                                          docker_image = "rocker/ropensci:dev", 
+                                          dynamic_image = dynamic_image,
+                                          username = username,
+                                          password = password))
 }
 
-# build a cloud init file for all non-rstudio 
-build_cloud_init_file <- function(template_file, docker_image, dynamic_image){
+# build the cloud-init file
+build_cloud_init_file <- function(template_file, docker_image, dynamic_image, username=NULL, password=NULL){
   cloud_init <- get_template_file(template_file)
   cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
   image <- get_image(docker_image, dynamic_image = dynamic_image)
+  
+  if(!is.null(username)){
+      assert_that(
+        is.string(username),
+        is.string(password),
+        username != "rstudio"
+      )
+    return(sprintf(cloud_init_file, username, password, image))
+  }
+  
   sprintf(cloud_init_file, image)
-}
 
-# build the cloud-init file with a username and password
-build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_image, username, password){
-  cloud_init <- get_template_file(template_file)
-  cloud_init_file <- readChar(cloud_init, nchars = file.info(cloud_init)$size)
-  image <- get_image(docker_image, dynamic_image = dynamic_image)
-  sprintf(cloud_init_file, username, password, username, image)
 }
 
 
@@ -120,7 +123,8 @@ build_cloud_init_file_rstudio <- function(template_file, docker_image, dynamic_i
 #' @import assertthat
 gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          "r-base", "example",
-                                         "dynamic", "ropensci"),
+                                         "dynamic", "ropensci",
+                                         "rstudio-gpu", "rstudio-shiny"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
