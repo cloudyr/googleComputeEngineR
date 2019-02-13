@@ -21,7 +21,6 @@ gce_vm(name, ..., project = gce_get_global_project(),
   \item{project}{Project ID for this request}
   \item{zone}{The name of the zone for this request}
   \item{dry_run}{whether to just create the request JSON}
-  \item{auth_email}{If it includes '@' then assume the email, otherwise an environment file var that includes the email}
   \item{disk_size_gb}{If not NULL, override default size of the boot disk (size in GB)}
   \item{use_beta}{If set to TRUE will use the beta version of the API. Should not be used for production purposes.}
   \item{acceleratorCount}{Number of GPUs to add to instance}

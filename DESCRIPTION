@@ -22,10 +22,10 @@ Imports:
     googleAuthR (>= 0.6.0),
     httr (>= 1.3.1),
     jsonlite (>= 1.1),
+    remotes,
     utils
 Suggests:
     covr,
-    devtools (>= 1.12.0),
     googleCloudStorageR,
     knitr,
     rmarkdown,

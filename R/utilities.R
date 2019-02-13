@@ -48,26 +48,6 @@ indent <- function(str, indent = 0) {
   )
 }
 
-#' Get auth email
-#' If it includes '@' then assume the email, otherwise an environment file
-#' @param source where the email comes from
-#' @keywords internal
-auth_email <- function(source){
-  
-  if(Sys.getenv(source) == ""){
-    stop("No email found in the authentication file at Sys.getenv(", source, "). \nSet argument auth_email to the environment file containing your service account authentication JSON file e.g. 'GCE_AUTH_FILE', or supply the authentication email directly. e.g. 'example@blah.com'")
-  }
-  
-  if(!grepl("@", source)){
-    out <- jsonlite::fromJSON(Sys.getenv(source))$client_email
-  } else {
-    out <- source
-  }
-  
-  out
-  
-}
-
 #' Timestamp to R date
 #' @keywords internal
 timestamp_to_r <- function(t){

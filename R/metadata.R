@@ -73,11 +73,12 @@ gce_get_metadata <- function(instance, key = NULL){
 #' 
 #' @family Metadata functions
 #' @keywords internal
+#' @import assertthat
 Metadata <- function(items) {
   
   if(is.null(items)) return(NULL)
   
-  testthat::expect_named(items)
+  assert_that(!is.null(names(items)))
   
   key_values <- lapply(names(items), function(x) list(key = jsonlite::unbox(x), 
                                                       value = jsonlite::unbox(items[[x]])))
@@ -86,7 +87,7 @@ Metadata <- function(items) {
             class = c("gar_Metadata", "list"))
 }
 
-#' Sets metadata for the specified instance to the data included in the request.
+#' Sets metadata for the specified instance or projectwise to the data included in the request.
 #' 
 #' Set, change and append metadata for an instance.
 #' 
@@ -106,7 +107,7 @@ Metadata <- function(items) {
 #' To delete metadata pass an empty string \code{""} with the same key
 #' 
 #' @param metadata A named list of metadata key/value pairs to assign to this instance
-#' @param instance Name of the instance scoping this request
+#' @param instance Name of the instance scoping this request. If "project-wide" will set the metadata project wide, available to all instances
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' @importFrom googleAuthR gar_api_generator
@@ -114,25 +115,40 @@ Metadata <- function(items) {
 #' @importFrom stats setNames
 #' @family Metadata functions
 #' @export
+#' @examples 
+#' 
+#' \dontrun{
+#'  # Use "project-wide" to set "enable-oslogin" = "TRUE" to take advantage of OS Login.
+#'  gce_set_metadata(list("enable-oslogin" = "TRUE"), instance = "project-wide")
+#' }
+#'  
 gce_set_metadata <- function(metadata, 
-                             instance, 
+                             instance = NULL, 
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
+  
+  if(instance == "project-wide"){
+    pw_obj <- gce_get_metadata_project(project)
+    meta_now <- pw_obj$commonInstanceMetadata$items
+    fingerprint <- pw_obj$commonInstanceMetadata$fingerprint
+    url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/setCommonInstanceMetadata",
+                   project)
+  } else {
+    ## refetch to ensure latest version of metadata fingerprint
+    ins <- gce_get_instance(instance, project = project, zone = zone)
+    meta_now <- ins$metadata$items
+    fingerprint <- ins$metadata$fingerprint
+    url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMetadata", 
+                   project, zone, as.gce_instance_name(ins))
 
-  ## refetch to ensure latest version of metadata fingerprint
-  ins <- gce_get_instance(instance, project = project, zone = zone)
-  
-  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/setMetadata", 
-                 project, zone, as.gce_instance_name(ins))
-  
-  meta_now <- ins$metadata$items
+  }
+
   ## turn data.frame back into named list
-  meta_now_nl <- setNames(lapply(meta_now$key, function(x) meta_now[meta_now$key == x, "value"]), 
-                          meta_now$key)
+  meta_now_nl <- meta_df_to_list(meta_now)
   
   meta <- Metadata(modifyList(meta_now_nl, metadata))
   ## need current fingerprint to allow modification
-  meta$fingerprint <- ins$metadata$fingerprint
+  meta$fingerprint <- fingerprint
   
   stopifnot(inherits(meta, "gar_Metadata"))
   # compute.instances.setMetadata  
@@ -141,4 +157,20 @@ gce_set_metadata <- function(metadata,
   out <- f(the_body = meta)
   as.zone_operation(out)
   
+}
+
+meta_df_to_list <- function(meta_df){
+  setNames(lapply(meta_df$key, function(x) meta_df[meta_df$key == x, "value"]), 
+           meta_df$key)
+}
+
+#' Get project wide metadata
+#' 
+#' @param project The project to get the project-wide metadata from
+#' 
+#' @export
+gce_get_metadata_project <- function(project = gce_global_project()){
+  pw_url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s", project)
+  pw <- gar_api_generator(pw_url, "GET", data_parse_function = function(x) x)
+  pw()
 }

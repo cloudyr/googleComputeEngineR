@@ -48,7 +48,7 @@ Any Docker image can be run, it does not have to be an R one.
 \dontrun{
 # create a Dockerfile of your script
 if(!require(containeRit)){
-  devtools::install_github("o2r-project/containerit")
+  remotes::install_github("o2r-project/containerit")
   library(containeRit)
 }
 

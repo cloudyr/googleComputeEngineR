@@ -6,6 +6,7 @@
 * Block users using "rstudio" as a login name
 * Remove defunct example from `gce_schedule_docker`
 * Support GPU images for Tensorflow, keras etc. 
+* Support common instance metadata by supply `gce_set_metadata(instance = "project-wide")`
 
 # 0.2.0
 

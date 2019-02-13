@@ -2,15 +2,15 @@
 % Please edit documentation in R/metadata.R
 \name{gce_set_metadata}
 \alias{gce_set_metadata}
-\title{Sets metadata for the specified instance to the data included in the request.}
+\title{Sets metadata for the specified instance or projectwise to the data included in the request.}
 \usage{
-gce_set_metadata(metadata, instance, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_set_metadata(metadata, instance = NULL,
+  project = gce_get_global_project(), zone = gce_get_global_zone())
 }
 \arguments{
 \item{metadata}{A named list of metadata key/value pairs to assign to this instance}
 
-\item{instance}{Name of the instance scoping this request}
+\item{instance}{Name of the instance scoping this request. If "project-wide" will set the metadata project wide, available to all instances}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 

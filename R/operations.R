@@ -114,62 +114,6 @@ gce_delete_op.gce_global_operation <- function(operation) {
   
 }
 
-#' Deletes the specified zone-specific Operations resource.
-#' 
-#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
-#' 
-#' @details 
-#' Authentication scopes used by this function are:
-#' \itemize{
-#'   \item https://www.googleapis.com/auth/cloud-platform
-#' \item https://www.googleapis.com/auth/compute
-#' }
-#' 
-#' @param operation Name of the Operations resource to delete
-#' @param project Project ID for this request
-#' @param zone Name of the zone for this request
-#' 
-#' @return TRUE if successful
-#' 
-#' @importFrom googleAuthR gar_api_generator
-#' @export
-gce_delete_zone_op <- function(operation,
-                               project = gce_get_global_project(), 
-                               zone = gce_get_global_zone() ) {
-  
-  .Deprecated("gce_delete_op", package = "googleComputeEngineR")
-  gce_delete_op(operation)
-  
-}
-
-#' Retrieves the specified zone-specific Operations resource.
-#' 
-#' 
-#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
-#' 
-#' @details 
-#' Authentication scopes used by this function are:
-#' \itemize{
-#'   \item https://www.googleapis.com/auth/cloud-platform
-#' \item https://www.googleapis.com/auth/compute
-#' \item https://www.googleapis.com/auth/compute.readonly
-#' }
-#' 
-#' 
-#' @param operation Name of the Operations resource to return
-#' @param project Project ID for this request
-#' @param zone Name of the zone for this request
-#' 
-#' @importFrom googleAuthR gar_api_generator
-#' @export
-gce_get_zone_op <- function(operation,
-                            project = gce_get_global_project(), 
-                            zone = gce_get_global_zone()) {
-  
-  .Deprecated("gce_get_op", package = "googleComputeEngineR")
-  gce_get_op(operation)
-}
-
 #' Retrieves the specified Operations resource.
 #' 
 #' s3 method dispatcher
@@ -189,7 +133,7 @@ gce_get_zone_op <- function(operation,
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-gce_get_op <- function(operation){
+gce_get_op <- function(operation = .Last.value){
   
   if(inherits(operation, c("gce_global_operation", "gce_zone_operation","gce_region_operation"))){
     UseMethod("gce_get_op", operation)
@@ -360,16 +304,4 @@ gce_wait <- function(operation, wait = 3, verbose = TRUE, timeout_tries = 50){
   }
   
   check
-}
-
-#' @rdname gce_wait
-#' @export
-gce_check_zone_op <- function(operation, wait = 3, verbose = TRUE){
-  
-  .Deprecated("gce_wait", package = "googleComputeEngineR")
-  gce_wait(operation = operation, 
-                    wait = wait, 
-                    verbose = verbose)
-  
-
 }

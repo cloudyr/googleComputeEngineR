@@ -87,7 +87,11 @@ gce_vm <- function(name,
   }
   
   vm <- tryCatch({
-    suppressMessages(suppressWarnings(gce_get_instance(name, zone = zone, project = project)))
+    suppressMessages(
+      suppressWarnings(
+        gce_get_instance(name, zone = zone, project = project)
+        )
+      )
   }, error = function(ex) {
     dots <- list(...)
     if(!is.null(dots[["template"]])){
@@ -140,15 +144,16 @@ gce_vm <- function(name,
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
 #' @importFrom googleAuthR gar_api_generator
+#' @import assertthat
 #' @export
 gce_vm_delete <- function(instance,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone() 
                           ) {
 
-  assertthat::assert_that(
-    assertthat::is.string(project),
-    assertthat::is.string(zone)
+  assert_that(
+    is.string(project),
+    is.string(zone)
   )
   
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
@@ -216,7 +221,6 @@ gce_vm_delete <- function(instance,
 #' @param project Project ID for this request
 #' @param zone The name of the zone for this request
 #' @param dry_run whether to just create the request JSON
-#' @param auth_email If it includes '@' then assume the email, otherwise an environment file var that includes the email
 #' @param disk_size_gb If not NULL, override default size of the boot disk (size in GB) 
 #' @param use_beta If set to TRUE will use the beta version of the API. Should not be used for production purposes.
 #' @param acceleratorCount Number of GPUs to add to instance
@@ -244,7 +248,6 @@ gce_vm_create <- function(name,
                           scheduling = NULL, 
                           serviceAccounts = NULL, 
                           tags = NULL,
-                          auth_email = "GCE_AUTH_FILE",
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone(),
                           dry_run = FALSE,
@@ -362,12 +365,7 @@ gce_vm_create <- function(name,
   
   ## make serviceAccounts
   if(is.null(serviceAccounts)){
-    serviceAccounts = list(
-      list(
-        email = unbox(auth_email(auth_email)),
-        scopes = list("https://www.googleapis.com/auth/cloud-platform")
-      )
-    )
+    serviceAccounts = gce_make_serviceaccounts()
   }
 
   ## make instance object

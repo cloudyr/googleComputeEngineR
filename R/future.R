@@ -123,7 +123,7 @@ gce_future_install_packages <- function(instance,
   
   if(!is.null(github_packages)){
     devt <- NULL
-    devt %<-% devtools::install_github(github_packages, auth_token = devtools::github_pat())
+    devt %<-% remotes::install_github(github_packages, auth_token = remotes::github_pat())
     devt
   }
   

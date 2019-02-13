@@ -9,7 +9,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
   cpus = NULL, memory = NULL, image = "", disk_source = NULL,
   network = "default", externalIP = NULL, canIpForward = NULL,
   description = NULL, metadata = NULL, scheduling = NULL,
-  serviceAccounts = NULL, tags = NULL, auth_email = "GCE_AUTH_FILE",
+  serviceAccounts = NULL, tags = NULL,
   project = gce_get_global_project(), zone = gce_get_global_zone(),
   dry_run = FALSE, disk_size_gb = NULL, use_beta = FALSE,
   acceleratorCount = NULL, acceleratorType = "nvidia-tesla-p4")
@@ -46,8 +46,6 @@ gce_vm_create(name, predefined_type = "f1-micro",
 \item{serviceAccounts}{A list of service accounts, with their specified scopes, authorized for this instance}
 
 \item{tags}{A list of tags to apply to this instance}
-
-\item{auth_email}{If it includes '@' then assume the email, otherwise an environment file var that includes the email}
 
 \item{project}{Project ID for this request}
 
