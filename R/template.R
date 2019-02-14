@@ -146,7 +146,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   }
   
   template <- match.arg(template)
-  
+
   assert_that(is.flag(wait),
               is.string(image_family))
 

@@ -123,9 +123,11 @@ Metadata <- function(items) {
 #' }
 #'  
 gce_set_metadata <- function(metadata, 
-                             instance = NULL, 
+                             instance, 
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
+  
+  instance <- if(is.gce_instance(instance)) instance$name else instance
   
   if(instance == "project-wide"){
     pw_obj <- gce_get_metadata_project(project)

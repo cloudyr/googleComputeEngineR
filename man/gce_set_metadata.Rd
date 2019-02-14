@@ -4,8 +4,8 @@
 \alias{gce_set_metadata}
 \title{Sets metadata for the specified instance or projectwise to the data included in the request.}
 \usage{
-gce_set_metadata(metadata, instance = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_set_metadata(metadata, instance, project = gce_get_global_project(),
+  zone = gce_get_global_zone())
 }
 \arguments{
 \item{metadata}{A named list of metadata key/value pairs to assign to this instance}

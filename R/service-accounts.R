@@ -2,7 +2,7 @@
 #' @noRd
 gce_make_serviceaccounts <- function(){
   
-  if(Sys.getenv(source) == ""){
+  if(Sys.getenv("GCE_AUTH_FILE") == ""){
     stop("No email found in the authentication file at Sys.getenv('GCE_AUTH_FILE')", call.=FALSE)
   }
   

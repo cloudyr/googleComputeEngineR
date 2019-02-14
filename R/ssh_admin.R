@@ -251,8 +251,10 @@ gce_ssh_setup <- function(instance,
 #' 
 #' @export
 gce_check_ssh <- function(instance){
+  stopifnot(is.gce_instance(instance))
+  pz <- gce_extract_projectzone(instance)
   
-  instance <- gce_get_instance(instance)
+  instance <- gce_get_instance(instance, project = pz$project, zone = pz$zone)
   
   ssh_keys <- gce_get_metadata(instance, "ssh-keys")$value
   
