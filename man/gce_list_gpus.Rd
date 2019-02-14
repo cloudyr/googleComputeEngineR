@@ -22,18 +22,11 @@ gce_list_gpus(filter = NULL, maxResults = NULL, pageToken = NULL,
 Retrieves a list GPUs you can attach to an instance
 }
 \details{
-Authentication scopes used by this function are:
-\itemize{
-  \item https://www.googleapis.com/auth/cloud-platform
-\item https://www.googleapis.com/auth/compute
-\item https://www.googleapis.com/auth/compute.readonly
-}
-
 To filter you need a single string in the form \code{field_name eq|ne string} 
   e.g. \code{gce_list_instances("status eq RUNNING")} where \code{eq} is 'equals' and \code{ne} is 'not-equals'.
 }
 \seealso{
-\href{https://cloud.google.com/compute/docs/gpus/add-gpus#create-new-gpu-instance}{Google Documentation}
+\href{https://cloud.google.com/compute/docs/gpus/#introduction}{GPUs on Compute Engine}
 
 Other GPU instances: \code{\link{gce_check_gpu}},
   \code{\link{gce_vm_gpu}}

@@ -1,15 +1,15 @@
+#' A deeplearning templated VM for use with gce_vm_template
+#' @noRd
+set_gpu_template <- function(dots){
+  dots$return_dots <- TRUE
+  do.call(gce_vm_gpu, args = dots)
+}
+
+
 #' Retrieves a list GPUs you can attach to an instance
 #' 
-#' @seealso \href{https://cloud.google.com/compute/docs/gpus/add-gpus#create-new-gpu-instance}{Google Documentation}
+#' @seealso \href{https://cloud.google.com/compute/docs/gpus/#introduction}{GPUs on Compute Engine}
 #' 
-#' 
-#' @details 
-#' Authentication scopes used by this function are:
-#' \itemize{
-#'   \item https://www.googleapis.com/auth/cloud-platform
-#' \item https://www.googleapis.com/auth/compute
-#' \item https://www.googleapis.com/auth/compute.readonly
-#' }
 #' 
 #' @details 
 #' 
@@ -31,8 +31,7 @@ gce_list_gpus <- function(filter = NULL,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone()) {
   
-  warning("This is using the beta version of the Google Compute Engine API and may not work in the future.")
-  url <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/acceleratorTypes", 
+  url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/acceleratorTypes", 
                  project, zone)
   pars <- list(filter = filter, 
                maxResults = maxResults, 
@@ -57,34 +56,35 @@ gce_list_gpus <- function(filter = NULL,
 #' Helper function that fills in some defaults passed to \link{gce_vm}
 #' 
 #' @param ... arguments passed to \link{gce_vm}
+#' @param return_dots If TRUE will only return default options in a list, not launch the VM
 #' 
 #' @details 
 #' 
 #' If not specified, this function will enter defaults to get a GPU instance up and running.
 #' 
 #' \itemize{
-#'   \item \code{use_beta: TRUE}
 #'   \item \code{acceleratorCount: 1}
-#'   \item \code{acceleratorType: "nvidia-tesla-k80"}
-#'   \item \code{scheduling: list(onHostMaintenance = "terminate", automaticRestart = TRUE)}
-#'   \item \code{image_project: "centos-cloud"}
-#'   \item \code{image_family: "centos-7"}
-#'   \item \code{predefined_type: "n1-standard-1"}
-#'   \item \code{metadata: the contents of the the startup script in 
-#'     system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}
+#'   \item \code{acceleratorType: "nvidia-tesla-p4"}
+#'   \item \code{scheduling: list(onHostMaintenance = "TERMINATE", automaticRestart = TRUE)}
+#'   \item \code{image_project: "deeplearning-platform-release"}
+#'   \item \code{image_family: "tf-latest-cu92"}
+#'   \item \code{predefined_type: "n1-standard-8"}
+#'   \item \code{metadata: "install-nvidia-driver" = "True"}
 #'  }
 #' 
 #' @family GPU instances
 #' @export
 #' 
+#' @seealso \href{Deep Learning VM}{https://cloud.google.com/deep-learning-vm/docs/quickstart-cli}
+#' 
 #' @return A VM object
-gce_vm_gpu <- function(...){
+gce_vm_gpu <- function(..., return_dots = FALSE){
   
   dots <- list(...)
   
   if(is.null(dots$scheduling)){
     dots$scheduling <- list(
-      onHostMaintenance = "terminate",
+      onHostMaintenance = "TERMINATE",
       automaticRestart = TRUE
     )
   }
@@ -92,28 +92,28 @@ gce_vm_gpu <- function(...){
   if(is.null(dots$acceleratorCount)){
     
     dots$acceleratorCount <- 1
-    dots$acceleratorType <- "nvidia-tesla-k80"
+    dots$acceleratorType <- "nvidia-tesla-p4"
   }
   
   if(is.null(dots$image_project)){
-    dots$image_project <- "centos-cloud"
+    dots$image_project <- "deeplearning-platform-release"
   }
   
   if(is.null(dots$image_family)){
-    dots$image_family <- "centos-7"
+    dots$image_family <- "tf-latest-cu92"
   }
   
   if(is.null(dots$predefined_type)){
-    dots$predefined_type <- "n1-standard-1"
+    dots$predefined_type <- "n1-standard-8"
   }
-  
-  dots$use_beta <- TRUE
   
   if(is.null(dots$metadata)){
-    startup_file <- system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")
-    dots$metadata <- list("startup-script" = readChar(startup_file, 
-                                                      nchars = file.info(startup_file)$size))
+    dots$metadata <- list("install-nvidia-driver" = "True")
+  } else {
+    dots$metadata <- c(list("install-nvidia-driver" = "True"), dots$metadata)
   }
+  
+  myMessage("Launching VM with GPU support. If using docker_cmd() functions make sure to include nvidia=TRUE parameter", level = 3)
   
   do.call(gce_vm,
           args = dots)

@@ -59,7 +59,7 @@ gce_vm_create(name, predefined_type = "f1-micro",
 
 \item{use_beta}{If set to TRUE will use the beta version of the API. Should not be used for production purposes.}
 
-\item{acceleratorCount}{Number of GPUs to add to instance}
+\item{acceleratorCount}{Number of GPUs to add to instance.  If using this, you may want to instead use \link{gce_vm_gpu} which sets some defaults for GPU instances.}
 
 \item{acceleratorType}{Name of GPU to add, see \link{gce_list_gpus}}
 }
@@ -107,7 +107,9 @@ This creates a VM that may be shut down prematurely by Google - you will need to
 \section{GPUs}{
 
 
-You can add GPUs to your instance, but they must be present in the zone you have specified.  Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
+Some defaults for launching GPU enabled VMs are available at \link{gce_vm_gpu}
+
+You can add GPUs to your instance, but they must be present in the zone you have specified - use \link{gce_list_gpus} to see which are available. Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
 }
 
 \seealso{

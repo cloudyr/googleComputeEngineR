@@ -4,10 +4,12 @@
 \alias{gce_vm_gpu}
 \title{Launch a GPU enabled instance}
 \usage{
-gce_vm_gpu(...)
+gce_vm_gpu(..., return_dots = FALSE)
 }
 \arguments{
 \item{...}{arguments passed to \link{gce_vm}}
+
+\item{return_dots}{If TRUE will only return default options in a list, not launch the VM}
 }
 \value{
 A VM object
@@ -19,18 +21,18 @@ Helper function that fills in some defaults passed to \link{gce_vm}
 If not specified, this function will enter defaults to get a GPU instance up and running.
 
 \itemize{
-  \item \code{use_beta: TRUE}
   \item \code{acceleratorCount: 1}
-  \item \code{acceleratorType: "nvidia-tesla-k80"}
-  \item \code{scheduling: list(onHostMaintenance = "terminate", automaticRestart = TRUE)}
-  \item \code{image_project: "centos-cloud"}
-  \item \code{image_family: "centos-7"}
-  \item \code{predefined_type: "n1-standard-1"}
-  \item \code{metadata: the contents of the the startup script in 
-    system.file("startupscripts", "centos7cuda8.sh", package = "googleComputeEngineR")}
+  \item \code{acceleratorType: "nvidia-tesla-p4"}
+  \item \code{scheduling: list(onHostMaintenance = "TERMINATE", automaticRestart = TRUE)}
+  \item \code{image_project: "deeplearning-platform-release"}
+  \item \code{image_family: "tf-latest-cu92"}
+  \item \code{predefined_type: "n1-standard-8"}
+  \item \code{metadata: "install-nvidia-driver" = "True"}
  }
 }
 \seealso{
+\href{Deep Learning VM}{https://cloud.google.com/deep-learning-vm/docs/quickstart-cli}
+
 Other GPU instances: \code{\link{gce_check_gpu}},
   \code{\link{gce_list_gpus}}
 }

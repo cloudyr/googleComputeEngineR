@@ -24,7 +24,7 @@ gce_vm(name, ..., project = gce_get_global_project(),
   \item{dry_run}{whether to just create the request JSON}
   \item{disk_size_gb}{If not NULL, override default size of the boot disk (size in GB)}
   \item{use_beta}{If set to TRUE will use the beta version of the API. Should not be used for production purposes.}
-  \item{acceleratorCount}{Number of GPUs to add to instance}
+  \item{acceleratorCount}{Number of GPUs to add to instance.  If using this, you may want to instead use \link{gce_vm_gpu} which sets some defaults for GPU instances.}
   \item{acceleratorType}{Name of GPU to add, see \link{gce_list_gpus}}
   \item{name}{The name of the resource, provided by the client when initially creating the resource}
   \item{canIpForward}{Allows this instance to send and receive packets with non-matching destination or source IPs}

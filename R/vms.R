@@ -208,7 +208,9 @@ gce_vm_delete <- function(instance,
 #' 
 #' @section GPUs:
 #' 
-#' You can add GPUs to your instance, but they must be present in the zone you have specified.  Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
+#' Some defaults for launching GPU enabled VMs are available at \link{gce_vm_gpu}
+#' 
+#' You can add GPUs to your instance, but they must be present in the zone you have specified - use \link{gce_list_gpus} to see which are available. Refer to \href{https://cloud.google.com/compute/docs/gpus/#introduction}{this} link for a list of current GPUs per zone.
 #' 
 #' @inheritParams Instance
 #' @inheritParams gce_make_machinetype_url
@@ -224,7 +226,7 @@ gce_vm_delete <- function(instance,
 #' @param dry_run whether to just create the request JSON
 #' @param disk_size_gb If not NULL, override default size of the boot disk (size in GB) 
 #' @param use_beta If set to TRUE will use the beta version of the API. Should not be used for production purposes.
-#' @param acceleratorCount Number of GPUs to add to instance
+#' @param acceleratorCount Number of GPUs to add to instance.  If using this, you may want to instead use \link{gce_vm_gpu} which sets some defaults for GPU instances.
 #' @param acceleratorType Name of GPU to add, see \link{gce_list_gpus}
 #' 
 #' @return A zone operation, or if the name already exists the VM object from \link{gce_get_instance}

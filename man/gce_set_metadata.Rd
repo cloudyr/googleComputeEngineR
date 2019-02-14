@@ -36,6 +36,7 @@ To delete metadata pass an empty string \code{""} with the same key
 
 \dontrun{
  # Use "project-wide" to set "enable-oslogin" = "TRUE" to take advantage of OS Login.
+ # But you won't be able to login via SSH if you do
  gce_set_metadata(list("enable-oslogin" = "TRUE"), instance = "project-wide")
 }
  

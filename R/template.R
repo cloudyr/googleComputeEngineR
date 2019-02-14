@@ -155,10 +155,21 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                                          password = password, 
                                          dynamic_image = dynamic_image)
   
+  if(grepl("gpu$", template)){
+    # setup GPU specific options
+    dots <- set_gpu_template(dots)
+  }
+  
   ## metadata
   upload_meta <- list(template = template)
   if(grepl("rstudio", template)){
     upload_meta$rstudio_users <- username
+  }
+  
+  if(is.null(dots$metadata)){
+    metadata <- upload_meta
+  } else {
+    metadata <- c(upload_meta, dots$metadata)
   }
   
   ## build VM
@@ -167,7 +178,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                    cloud_init = cloud_init_file,
                    image_family = image_family,
                    tags = list(items = list("http-server")), # no use now
-                   metadata = upload_meta
+                   metadata = metadata
                  )))
   
   if(wait){
