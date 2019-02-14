@@ -29,5 +29,5 @@ This lets you specify docker images when creating the VM.  These are a special c
 If you want to set it then use the \link{gce_vm_create} function directly that this function wraps with some defaults.
 }
 \seealso{
-\url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
+\url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance} - \href{https://www.freedesktop.org/software/systemd/man/systemd.service.html}{help using cloud-init files}
 }

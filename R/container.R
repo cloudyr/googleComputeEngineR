@@ -31,7 +31,7 @@ gce_check_container <- function(instance, container){
 #' \code{image_project} will be ignored if set, overriden to \code{cos-cloud}.  
 #' If you want to set it then use the \link{gce_vm_create} function directly that this function wraps with some defaults.
 #' 
-#' @seealso \url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance}
+#' @seealso \url{https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance} - \href{https://www.freedesktop.org/software/systemd/man/systemd.service.html}{help using cloud-init files}
 #' 
 #' @return A zone operation
 #' @export

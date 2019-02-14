@@ -121,6 +121,9 @@ Metadata <- function(items) {
 #'  # Use "project-wide" to set "enable-oslogin" = "TRUE" to take advantage of OS Login.
 #'  # But you won't be able to login via SSH if you do
 #'  gce_set_metadata(list("enable-oslogin" = "TRUE"), instance = "project-wide")
+#'  
+#'  # enable google logging
+#'  gce_set_metadata(list("google-logging-enabled"="True"), instance = "project-wide")
 #' }
 #'  
 gce_set_metadata <- function(metadata, 

@@ -161,7 +161,8 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   }
   
   ## metadata
-  upload_meta <- list(template = template)
+  upload_meta <- list(template = template,
+                      "google-logging-enabled" = "true")
   if(grepl("rstudio", template)){
     upload_meta$rstudio_users <- username
   }

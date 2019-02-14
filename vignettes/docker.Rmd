@@ -13,6 +13,8 @@ vignette: >
 
 `googleComputeEngineR` has a lot of integration with [`Docker`](https://www.docker.com/), using it to launch custom pre-made images via the `gce_vm_container` and `gce_vm_template` commands. 
 
+Get an overview on how to [install containers on Google Compute Engine here](https://cloud.google.com/compute/docs/containers/deploying-containers).
+
 Use `Dockerfiles` to create the VM you want to run within, including R packages you want to install.  As an example, this is a Dockerfile designed to install R packages for a Shiny app:
 
 ```sh

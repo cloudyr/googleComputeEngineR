@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2017-11-10" />
+<meta name="date" content="2019-02-14" />
 
 <title>Docker</title>
 
@@ -70,13 +70,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Docker</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2017-11-10</em></h4>
+<h4 class="date"><em>2019-02-14</em></h4>
 
 
 
 <div id="dockerfiles" class="section level2">
 <h2>Dockerfiles</h2>
 <p><code>googleComputeEngineR</code> has a lot of integration with <a href="https://www.docker.com/"><code>Docker</code></a>, using it to launch custom pre-made images via the <code>gce_vm_container</code> and <code>gce_vm_template</code> commands.</p>
+<p>Get an overview on how to <a href="https://cloud.google.com/compute/docs/containers/deploying-containers">install containers on Google Compute Engine here</a>.</p>
 <p>Use <code>Dockerfiles</code> to create the VM you want to run within, including R packages you want to install. As an example, this is a Dockerfile designed to install R packages for a Shiny app:</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> rocker/shiny
 <span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
