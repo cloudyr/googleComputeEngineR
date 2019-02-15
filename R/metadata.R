@@ -35,6 +35,23 @@ gce_metadata_env <- function(key){
   
 }
 
+#' Return dots$metadata modified if needed
+#' @noRd
+#' @import assertthat
+modify_metadata <- function(dots, new_metadata){
+  assert_that(is.list(new_metadata),
+              !is.null(names(new_metadata)))
+  
+  if(!is.null(dots$metadata)){
+    dots$metadata <- c(new_metadata,
+                       dots$metadata)
+  } else {
+    dots$metadata <- new_metadata
+  }
+  
+  dots
+}
+
 
 #' Extract metadata from an instance object
 #' 

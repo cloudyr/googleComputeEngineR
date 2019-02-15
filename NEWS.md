@@ -8,6 +8,7 @@
 * Support GPU images for Tensorflow, keras etc. (#101) via `gce_vm_gpu()` and `gce_vm(template = "rstudio-gpu")` (#101)
 * Support common instance metadata by supply `gce_set_metadata(instance = "project-wide")`
 * Support minCpuPlatform in instance creation and via  `gce_set_mincpuplatform()` (#112)
+* Add ability to specify a startup-script in `gce_vm_container()`
 
 # 0.2.0
 

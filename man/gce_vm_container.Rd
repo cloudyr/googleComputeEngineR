@@ -4,13 +4,16 @@
 \alias{gce_vm_container}
 \title{Launch a container-VM image}
 \usage{
-gce_vm_container(file = NULL, cloud_init = NULL,
+gce_vm_container(file = NULL, cloud_init = NULL, shell_script = NULL,
   image_family = "cos-stable", ...)
 }
 \arguments{
-\item{file}{file location of a cloud-init file. One of \code{file} or \code{cloud_init} must be supplied}
+\item{file}{file location of a valid cloud-init or shell_script file. 
+One of \code{file} or \code{cloud_init} or \code{shell_script} must be supplied}
 
 \item{cloud_init}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
+
+\item{shell_script}{contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}}
 
 \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
 
@@ -23,7 +26,7 @@ A zone operation
 This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers.
 }
 \details{
-\code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file. 
+\code{file} expects a filepath to a \href{cloud-init}{https://cloudinit.readthedocs.io/en/latest/topics/format.html} configuration file or a valid bash script e.g. has \code{!#/bin/} or \code{#cloud-config} at top of file.
 
 \code{image_project} will be ignored if set, overriden to \code{cos-cloud}.  
 If you want to set it then use the \link{gce_vm_create} function directly that this function wraps with some defaults.

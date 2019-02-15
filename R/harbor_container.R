@@ -9,16 +9,16 @@ localhost <- structure(list(), class = c("localhost", "host"))
 #'
 #' A container object represents a Docker container on a host.
 #' @author Winston Change \email{winston@@stdout.org}
-#' @export
+#' @noRd
 as.container <- function(x, host = localhost) UseMethod("as.container")
 
-#' @export
+#' @noRd
 as.container.character <- function(x, host = localhost) {
   info <- docker_inspect(host, x)[[1]]
   as.container(info, host)
 }
 
-#' @export
+#' @noRd
 #' @author Winston Change \email{winston@@stdout.org}
 as.container.list <- function(x, host = localhost) {
   # x should be the output of docker_inspect()
@@ -38,7 +38,7 @@ as.container.list <- function(x, host = localhost) {
   )
 }
 
-#' @export
+#' @noRd
 #' @author Winston Change \email{winston@@stdout.org}
 as.container.container <- function(x, host = localhost) {
   x

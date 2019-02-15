@@ -107,11 +107,7 @@ gce_vm_gpu <- function(..., return_dots = FALSE){
     dots$predefined_type <- "n1-standard-8"
   }
   
-  if(is.null(dots$metadata)){
-    dots$metadata <- list("install-nvidia-driver" = "True")
-  } else {
-    dots$metadata <- c(list("install-nvidia-driver" = "True"), dots$metadata)
-  }
+  dots <- modify_metadata(dots, list("install-nvidia-driver" = "True"))
   
   myMessage("Launching VM with GPU support. If using docker_cmd() functions make sure to include nvidia=TRUE parameter", level = 3)
   
