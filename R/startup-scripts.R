@@ -22,7 +22,10 @@ setup_shell_metadata <- function(dots,
     the_image <- switch(template,
       "rstudio" = "rocker/tidyverse",
       "rstudio-gpu" = "rocker/ml-gpu",
-      "rstudio-shiny" = "rocker/tidyverse"
+      "rstudio-shiny" = "rocker/tidyverse",
+      "shiny" = "rocker/shiny",
+      "opencpu" = "opencpu/base",
+      "r-base" = "rocker/r-base"
     )
   }
   
@@ -31,7 +34,7 @@ setup_shell_metadata <- function(dots,
   modify_metadata(dots,
                   list(rstudio_user = username,
                        rstudio_pw   = password,
-                       rstudio_docker_image = the_image))
+                       gcer_docker_image = the_image))
   
 }
 

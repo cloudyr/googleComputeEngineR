@@ -16,10 +16,11 @@ write_files:
     Restart=always
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
-    ExecStart=/usr/bin/docker run --name=%s \
+    ExecStart=/usr/bin/docker run --name=dynamic \
                                   %s
-    ExecStop=/usr/bin/docker stop %s
-
+    ExecStop=/usr/bin/docker stop dynamic
+    ExecStopPost=/usr/bin/docker rm dynamic
+    
 runcmd:
 - systemctl daemon-reload
 - systemctl start custom-docker.service

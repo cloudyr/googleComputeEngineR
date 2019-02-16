@@ -10,7 +10,7 @@
 #' @param username username if needed (RStudio)
 #' @param password password if needed (RStudio)
 #' @param image_family An image-family.  It must come from the \code{cos-cloud} family.
-#' @param dynamic_image Supply an alternative to the default Docker image here to download
+#' @param dynamic_image Supply an alternative to the default Docker image for the template
 #' @param wait Whether to wait for the VM to launch before returning. Default \code{TRUE}.
 #' @inheritDotParams gce_vm_container
 #' 
@@ -25,7 +25,7 @@
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
-#'   \item dynamic Supply your own docker image to download such as \code{rocker/verse}
+#'   \item dynamic Supply your own docker image within dynamic_image
 #'  }
 #'  
 #' For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 
@@ -54,10 +54,13 @@
 #' 
 #' @export
 #' @import assertthat
-gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
+gce_vm_template <- function(template = c("rstudio",
+                                         "shiny",
+                                         "opencpu",
                                          "r-base",
                                          "dynamic",
-                                         "rstudio-gpu", "rstudio-shiny"),
+                                         "rstudio-gpu", 
+                                         "rstudio-shiny"),
                             username=NULL,
                             password=NULL,
                             dynamic_image=NULL,
@@ -65,6 +68,9 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
                             wait = TRUE,
                             ...){
   
+  template <- match.arg(template)
+  assert_that(is.flag(wait),
+              is.string(image_family))
   dots <- list(...)
   
   if(is.null(dots$name)){
@@ -77,34 +83,17 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   if(is.null(dots$project)){
     dots$project <- gce_get_global_project()
   }
+
+  # creates cloud-config file that will call the startup script
+  cloud_init_file <- read_cloud_init_file(template)
   
-  template <- match.arg(template)
+  # adds metadata startup script will read
+  dots <- setup_shell_metadata(dots,
+                               template = template,
+                               username = username, 
+                               password = password, 
+                               dynamic_image = dynamic_image)
 
-  assert_that(is.flag(wait),
-              is.string(image_family))
-
-  if(template %in% c("shiny", "opencpu","r-base","dynamic")){
-    # old method using cloud-init files and string substitution
-    
-    cloud_init_file <- read_cloud_init_file(template,
-                                            dynamic_image = dynamic_image)
-    shell_script_file <- NULL
-    
-  } else if(template %in% c("rstudio","rstudio-gpu","rstudio-shiny")){
-    # shell-script method uses GCE metadata for dynamic values
-    
-    shell_script_file <- read_shell_startup_file(template)
-    dots <- setup_shell_metadata(dots,
-                                 template = template,
-                                 username = username, 
-                                 password = password, 
-                                 dynamic_image = dynamic_image)
-    cloud_init_file <- NULL
-  } else {
-    stop("Unsupported template type", call. = FALSE)
-  }
-
-  
   if(grepl("gpu$", template)){
     # setup GPU specific options
     dots <- set_gpu_template(dots)
@@ -119,8 +108,7 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
   ## build VM
   job <- do.call(gce_vm_container,
                  args = c(list(
-                     cloud_init = cloud_init_file, # is NULL if shell_script isn't
-                     shell_script = shell_script_file, # is NULL if cloud_init isn't
+                     cloud_init = cloud_init_file,
                      image_family = image_family
                    ), 
                    dots)
@@ -173,8 +161,9 @@ gce_vm_template <- function(template = c("rstudio","shiny","opencpu",
 #' @return file location
 #' @noRd
 get_template_file <- function(template, type = c("cloudconfig", "startupscripts")){
-  
+  type <- match.arg(type)
   ext <- if(type == "cloudconfig") ".yaml" else ".sh"
+  
   system.file(type, paste0(template, ext), package = "googleComputeEngineR")
   
 }

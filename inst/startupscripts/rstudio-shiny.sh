@@ -3,23 +3,17 @@ echo "Docker RStudio Shiny launch script"
 
 RSTUDIO_USER=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/rstudio_user -H "Metadata-Flavor: Google")
 RSTUDIO_PW=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/rstudio_pw -H "Metadata-Flavor: Google")
-RSTUDIO_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/rstudio_docker_image -H "Metadata-Flavor: Google")
+GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/gcer_docker_image -H "Metadata-Flavor: Google")
 
-echo "Docker image: $RSTUDIO_DOCKER_IMAGE"
-
-echo "Authenticate Docker"
-# auth for private docker images
-docker-credential-gcr configure-docker
+echo "Docker image: $GCER_DOCKER_IMAGE"
 
 echo "Start Rstudio and Shiny image"
 docker run -p 3838:3838 -p 8787:8787 \
            -e ADD=shiny \
            -e ROOT=TRUE \
            -e USER=$RSTUDIO_USER -e PASSWORD=$RSTUDIO_PW \
-           --detach \
-           --restart=always \
-           --name=rstudio \
-           $RSTUDIO_DOCKER_IMAGE 
+           --name=rstudio-shiny \
+           $GCER_DOCKER_IMAGE
 
 echo "http {
 
@@ -54,13 +48,13 @@ echo "http {
     }
     
   }
-}" > /opt/nginx.conf
+}" > /etc/nginx.conf
 
 echo "Start nginx image"
 # use nginx to map shiny (:3838) to /shiny and rstudio (:8787) to /
 docker run --name docker-nginx \
            --detach \
            -p 80:80 \
-           -v /opt/nginx.conf:/etc/nginx/nginx.conf \
+           -v /etc/nginx.conf:/etc/nginx/nginx.conf \
            nginx
            

@@ -18,13 +18,8 @@ write_files:
     Restart=always
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
-    ExecStart=/usr/bin/docker run -e "R_LIBS_USER=/library/" \
-                                  -v /home/gcer/library/:/library/ \
-                                  --name=shinyserver \
+    ExecStart=/usr/bin/docker run --name=shinyserver \
                                   -p 80:3838 \
-                                  -v /home/gcer/shinyapps/:/srv/shiny-server/gcer/ \
-                                  -v /home/gcer/shinylog/:/var/log/ \
-                                  -v /home/gcer/library/:/library/ \
                                   %s
     ExecStop=/usr/bin/docker stop shinyserver
     ExecStopPost=/usr/bin/docker rm shinyserver
