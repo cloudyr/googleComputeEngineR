@@ -41,7 +41,8 @@ If both properties are set,
 
   gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80)
   gce_make_firewall_rule("allow-https", protocol = "tcp", ports = 443)
-  
+  gce_make_firewall_rule("shiny", protocol = "tcp", ports = 3838)
+  gce_make_firewall_rule("rstudio", protocol = "tcp", ports = 8787)
 }
 
 }

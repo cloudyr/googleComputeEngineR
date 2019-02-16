@@ -1,12 +1,19 @@
 #' create the shell file to upload
 #' @keywords internal
 #' @import assertthat
-read_shell_startup_file <- function(template){
+read_shell_startup_file <- function(template, indent = 0){
   
   the_file <- get_template_file(template, "startupscripts")
 
-  readChar(the_file, nchars = file.info(the_file)$size)
-   
+  # indent by 4 to fit in cloud-init.yaml
+  paste(strwrap(readChar(the_file, nchars = file.info(the_file)$size), 
+                     width = 16000, 
+                     indent = indent),
+             collapse = "\n")
+  
+  tt <- readLines(the_file, warn = FALSE)
+  # indent and make one string again
+  paste(paste(rep(" ", indent - 1), collapse =""), tt, collapse = "\n")
 }
 
 setup_shell_metadata <- function(dots,
@@ -29,8 +36,6 @@ setup_shell_metadata <- function(dots,
     )
   }
   
-  myMessage("Run gce_startup_logs(your-instance) to track startup script logs", level = 3)
-  
   modify_metadata(dots,
                   list(rstudio_user = username,
                        rstudio_pw   = password,
@@ -38,12 +43,4 @@ setup_shell_metadata <- function(dots,
   
 }
 
-#' Get startup script logs
-#' 
-#' @param instance The instance to get startup script logs from
-#' 
-#' Will use SSH so that needs to be setup
-#' @export
-gce_startup_logs <- function(instance){
-  gce_ssh(instance, "sudo journalctl -u google-startup-scripts.service")
-}
+

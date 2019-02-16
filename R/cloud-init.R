@@ -9,7 +9,7 @@ read_cloud_init_file <- function(template) {
   cloud_init_file   <- readChar(the_file, nchars = file.info(the_file)$size)
   
   # gets put into /etc/gcer/startup.sh
-  shell_script_file <- read_shell_startup_file(template)
+  shell_script_file <- read_shell_startup_file(template, indent = 4)
   
   # make substitution for docker image
   sprintf(cloud_init_file, 
@@ -18,3 +18,4 @@ read_cloud_init_file <- function(template) {
           template)
   
 }
+

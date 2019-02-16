@@ -5,10 +5,16 @@
 #' 
 #' @return logs
 #' @export
-gce_check_container <- function(instance, container){
-  
+gce_container_logs <- function(instance, container){
   gce_ssh(instance, paste0("sudo journalctl -u ", container))
-  
+}
+
+#' @rdname gce_container_logs
+#' @param ... Arguments passed to \link{gce_container_logs}
+#' @export
+gce_check_container <- function(...){
+  .Deprecated("gce_container_logs", package = "googleComputeEngineR")
+  gce_container_logs(...)
 }
 
 
@@ -58,16 +64,38 @@ gce_vm_container <- function(file = NULL,
   } else if(file_type == "shell"){
     
     dots <- modify_metadata(dots, list(`startup-script` = file_contents))
-    
+
   } else {
     stop("Unknown file_type", call. = FALSE)
   }
 
+  myMessage(sprintf("Run gce_startup_logs(your-instance, '%s') to track startup script logs", 
+                    file_type), 
+            level = 3)
+  
   do.call(gce_vm_create, c(list(image_family = image_family,
                                 image_project = "cos-cloud"), 
                            dots)
           )
   
+}
+
+#' Get startup script logs
+#' 
+#' @param instance The instance to get startup script logs from
+#' 
+#' Will use SSH so that needs to be setup
+#' @export
+gce_startup_logs <- function(instance, type = c("shell","cloud-config")){
+  type <- match.arg(type)
+  if(type == "shell"){
+    gce_ssh(instance, "sudo journalctl -u google-startup-scripts.service")
+  } else if(type == "cloud-config"){
+    gce_ssh(instance, "sudo journalctl -u gcer.service")
+  } else {
+    stop("Unknown startup log type", call. = FALSE)
+  }
+
 }
 
 discern_startup_type <- function(file, cloud_init, shell_script){

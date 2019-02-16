@@ -16,7 +16,7 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{password}{password if needed (RStudio)}
 
-\item{dynamic_image}{Supply an alternative to the default Docker image here to download}
+\item{dynamic_image}{Supply an alternative to the default Docker image for the template}
 
 \item{image_family}{An image-family.  It must come from the \code{cos-cloud} family.}
 
@@ -48,7 +48,7 @@ Templates available are:
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
   \item r_base Latest version of R stable
-  \item dynamic Supply your own docker image to download such as \code{rocker/verse}
+  \item dynamic Supply your own docker image within dynamic_image
  }
  
 For \code{dynamic} templates you will need to launch the docker image with any ports you want opened, 

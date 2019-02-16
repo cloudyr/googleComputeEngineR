@@ -104,6 +104,9 @@ gce_vm_template <- function(template = c("rstudio",
                       "google-logging-enabled" = "true")
   
   dots <- modify_metadata(dots, upload_meta)
+  
+  ## tag for http
+  dots$tags <- list(items = list("http-server"))
 
   ## build VM
   job <- do.call(gce_vm_container,

@@ -7,20 +7,47 @@ GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/inst
 
 echo "Docker image: $GCER_DOCKER_IMAGE"
 
+echo "Create network bridge for RStudio and Shiny"
+# https://kgrz.io/simple-multiple-container-deployment-without-docker-compose.html
+
+docker network create --driver=bridge r-net
+
 echo "Start Rstudio and Shiny image"
+
 docker run -p 3838:3838 -p 8787:8787 \
            -e ADD=shiny \
            -e ROOT=TRUE \
+           -d \
            -e USER=$RSTUDIO_USER -e PASSWORD=$RSTUDIO_PW \
            --name=rstudio-shiny \
+           --network=r-net \
            $GCER_DOCKER_IMAGE
 
-echo "http {
+echo "
+user nginx;
+
+events {
+  worker_connections  1024;
+}
+
+http {
 
   map \$http_upgrade \$connection_upgrade {
       default upgrade;
       ''      close;
     }
+    
+
+    
+  upstream shinyhost {
+    server localhost:3838;
+  }
+  
+  upstream rstudiohost {
+    server localhost:8787;
+  }
+  
+  access_log  /var/log/nginx/access.log;
 
   server {
     listen 80;
@@ -28,8 +55,8 @@ echo "http {
     rewrite ^/shiny$ \$scheme://\$http_host/shiny/ permanent;
     
     location / {
-      proxy_pass http://localhost:8787;
-      proxy_redirect http://localhost:8787/ \$scheme://\$http_host/;
+      proxy_pass http://rstudiohost;
+      proxy_redirect http://rstudiohost/ \$scheme://\$http_host/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade \$http_upgrade;
       proxy_set_header Connection \$connection_upgrade;
@@ -38,7 +65,7 @@ echo "http {
     
     location /shiny/ {
       rewrite ^/shiny/(.*)$ /\$1 break;
-      proxy_pass http://localhost:3838;
+      proxy_pass http://shinyhost;
       proxy_redirect / \$scheme://\$http_host/shiny/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade \$http_upgrade;
@@ -51,10 +78,14 @@ echo "http {
 }" > /etc/nginx.conf
 
 echo "Start nginx image"
+
 # use nginx to map shiny (:3838) to /shiny and rstudio (:8787) to /
-docker run --name docker-nginx \
-           --detach \
+docker run --name r-nginx \
+           -d \
            -p 80:80 \
-           -v /etc/nginx.conf:/etc/nginx/nginx.conf \
+           -v /etc/nginx.conf:/etc/nginx/nginx.conf:ro \
+           --network=r-net \
            nginx
-           
+
+
+ 

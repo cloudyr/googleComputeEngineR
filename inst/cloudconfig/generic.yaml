@@ -9,7 +9,7 @@ write_files:
   permissions: 0755
   owner: root
   content: |
-    %
+%s
                   
 - path: /etc/systemd/system/gcer.service
   permissions: 0644
@@ -20,6 +20,7 @@ write_files:
 
     [Service]
     Restart=always
+    RestartSec=5min
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/etc/gcer/startup.sh

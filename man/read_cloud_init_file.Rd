@@ -4,7 +4,7 @@
 \alias{read_cloud_init_file}
 \title{create the cloud_init file to upload}
 \usage{
-read_cloud_init_file(template, dynamic_image = NULL)
+read_cloud_init_file(template)
 }
 \description{
 create the cloud_init file to upload
