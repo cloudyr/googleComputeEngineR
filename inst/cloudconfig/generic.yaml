@@ -10,7 +10,6 @@ write_files:
   owner: root
   content: |
 %s
-                  
 - path: /etc/systemd/system/gcer.service
   permissions: 0644
   owner: root
@@ -19,8 +18,8 @@ write_files:
     Description=googleComputeEngineR generic Docker startup
 
     [Service]
-    Restart=always
-    RestartSec=5min
+    Restart=on-failure
+    RestartSec=10min
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/etc/gcer/startup.sh

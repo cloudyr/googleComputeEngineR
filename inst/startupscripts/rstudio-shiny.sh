@@ -14,8 +14,7 @@ docker network create --driver=bridge r-net
 
 echo "Start Rstudio and Shiny image"
 
-docker run -p 3838:3838 -p 8787:8787 \
-           -e ADD=shiny \
+docker run -e ADD=shiny \
            -e ROOT=TRUE \
            -d \
            -e USER=$RSTUDIO_USER -e PASSWORD=$RSTUDIO_PW \
@@ -36,16 +35,6 @@ http {
       default upgrade;
       ''      close;
     }
-    
-
-    
-  upstream shinyhost {
-    server localhost:3838;
-  }
-  
-  upstream rstudiohost {
-    server localhost:8787;
-  }
   
   access_log  /var/log/nginx/access.log;
 
@@ -55,8 +44,8 @@ http {
     rewrite ^/shiny$ \$scheme://\$http_host/shiny/ permanent;
     
     location / {
-      proxy_pass http://rstudiohost;
-      proxy_redirect http://rstudiohost/ \$scheme://\$http_host/;
+      proxy_pass http://rstudio-shiny:8787;
+      proxy_redirect http://rstudio-shiny:8787/ \$scheme://\$http_host/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade \$http_upgrade;
       proxy_set_header Connection \$connection_upgrade;
@@ -65,7 +54,7 @@ http {
     
     location /shiny/ {
       rewrite ^/shiny/(.*)$ /\$1 break;
-      proxy_pass http://shinyhost;
+      proxy_pass http://rstudio-shiny:3838;
       proxy_redirect / \$scheme://\$http_host/shiny/;
       proxy_http_version 1.1;
       proxy_set_header Upgrade \$http_upgrade;
@@ -86,6 +75,3 @@ docker run --name r-nginx \
            -v /etc/nginx.conf:/etc/nginx/nginx.conf:ro \
            --network=r-net \
            nginx
-
-
- 
