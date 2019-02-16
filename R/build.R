@@ -74,8 +74,7 @@ gce_push_registry <- function(instance,
 #' @family container registry functions
 gce_tag_container <- function(container_name,
                               project = gce_get_global_project(),
-                              container_url = "gcr.io"
-){
+                              container_url = "gcr.io"){
   
   paste0(container_url, "/", project, "/", container_name)
   

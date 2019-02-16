@@ -7,10 +7,13 @@ RSTUDIO_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/i
 
 echo "Docker image: $RSTUDIO_DOCKER_IMAGE"
 
+# auth for private docker images
+docker-credential-gcr configure-docker
+
 docker run -p 80:8787 \
            -e ROOT=TRUE \
            -e USER=$RSTUDIO_USER -e PASSWORD=$RSTUDIO_PW \
-           -v /home/gcer:/home/rstudio \
+           --detach \
            --restart=always \
            --name=rstudio \
            $RSTUDIO_DOCKER_IMAGE

@@ -15,10 +15,10 @@ write_files:
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
-    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/usr/bin/docker run -p 80:80 \
                                   -p 8004:8004 \
-                                  --name=opencpu-server \
+                                  --name=opencpu \
                                   %s
     ExecStop=/usr/bin/docker stop opencpu
     ExecStopPost=/usr/bin/docker rm opencpu
