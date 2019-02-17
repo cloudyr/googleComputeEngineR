@@ -10,21 +10,22 @@ write_files:
   owner: root
   content: |
     %
-                  
 - path: /etc/systemd/system/gcer.service
   permissions: 0644
   owner: root
   content: |
     [Unit]
-    Description=googleComputeEngineR generic Docker startup
-
+    Description=RStudio Docker startup
+    Requires=docker.service
+    After=docker.service
+    
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/etc/gcer/startup.sh
-    ExecStop=/usr/bin/docker stop %s
-    ExecStopPost=/usr/bin/docker rm %s
+    ExecStop=/usr/bin/docker stop rstudio
+    ExecStopPost=/usr/bin/docker rm rstudio
     
 runcmd:
 - systemctl daemon-reload

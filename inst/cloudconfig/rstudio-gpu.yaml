@@ -15,7 +15,7 @@ write_files:
   owner: root
   content: |
     [Unit]
-    Description=Start OpenCPU with RStudio
+    Description=googleComputeEngineR RStudio GPU Docker startup
     Requires=docker.service
     After=docker.service
     
@@ -24,9 +24,9 @@ write_files:
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/etc/gcer/startup.sh
-    ExecStop=/usr/bin/docker stop opencpu
-    ExecStopPost=/usr/bin/docker rm opencpu
-
+    ExecStop=/usr/bin/docker stop rstudio-gpu
+    ExecStopPost=/usr/bin/docker rm rstudio-gpu
+    
 runcmd:
 - systemctl daemon-reload
 - systemctl start gcer.service

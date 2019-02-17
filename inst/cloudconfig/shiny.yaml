@@ -5,7 +5,12 @@ users:
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/shinyserver.service
+- path: /etc/gcer/startup.sh
+  permissions: 0755
+  owner: root
+  content: |
+    %
+- path: /etc/systemd/system/gcer.service
   permissions: 0644
   owner: root
   content: |
@@ -18,12 +23,10 @@ write_files:
     Restart=always
     Environment="HOME=/home/gcer"
     ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
-    ExecStart=/usr/bin/docker run --name=shinyserver \
-                                  -p 80:3838 \
-                                  %s
-    ExecStop=/usr/bin/docker stop shinyserver
-    ExecStopPost=/usr/bin/docker rm shinyserver
+    ExecStart=/etc/gcer/startup.sh
+    ExecStop=/usr/bin/docker stop shiny
+    ExecStopPost=/usr/bin/docker rm shiny
 
 runcmd:
 - systemctl daemon-reload
-- systemctl start shinyserver.service
+- systemctl start gcer.service

@@ -3,7 +3,7 @@
 #' @import assertthat
 read_cloud_init_file <- function(template) {
   
-  the_file          <- get_template_file("generic", "cloudconfig")
+  the_file          <- get_template_file(template, "cloudconfig")
   
   # written to /etc/systemd/system/gcer.service
   cloud_init_file   <- readChar(the_file, nchars = file.info(the_file)$size)
@@ -11,15 +11,20 @@ read_cloud_init_file <- function(template) {
   # gets put into /etc/gcer/startup.sh
   shell_script_file <- read_shell_startup_file(template)
   
-  # gets nginx config file for /etc/nginx.conf
-  nginx_config <- read_and_indent(system.file("nginx", "r-proxy-pass.conf", 
-                                              package = "googleComputeEngineR"),
-                                  indent = 4)
+  # needs a nginx configuration as well
+  if(template == "rstudio-shiny"){
+    # gets nginx config file for /etc/nginx.conf
+    nginx_config <- read_and_indent(system.file("nginx", "r-proxy-pass.conf", 
+                                                package = "googleComputeEngineR"),
+                                    indent = 4)
+    return(sprintf(cloud_init_file, 
+                   shell_script_file, 
+                   nginx_config)
+    )
+  }
   
-  # make substitution for docker image
-  sprintf(cloud_init_file, 
-          shell_script_file, 
-          nginx_config)
-  
+  # most others only put in the shell script
+  sprintf(cloud_init_file, shell_script_file)
+
 }
 

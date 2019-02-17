@@ -5,5 +5,5 @@ GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/inst
 
 echo "Docker image: $GCER_DOCKER_IMAGE"
 
-docker run --name=gcer-docker -p 80:80 -p 8004:8004 $GCER_DOCKER_IMAGE
+docker run --name=opencpu -p 80:80 -p 8004:8004 $GCER_DOCKER_IMAGE
                   

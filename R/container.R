@@ -88,15 +88,13 @@ gce_vm_container <- function(file = NULL,
 #' @export
 gce_startup_logs <- function(instance, type = c("shell","cloud-config","nginx")){
   type <- match.arg(type)
-  if(type == "shell"){
-    gce_ssh(instance, "sudo journalctl -u google-startup-scripts.service")
-  } else if(type == "cloud-config"){
-    gce_ssh(instance, "sudo journalctl -u gcer.service")
-  } else if(type == "nginx"){
-    gce_ssh(instance, "sudo journalctl -u nginx.service")
-  } else {
-    stop("Unknown startup log type", call. = FALSE)
-  }
+  
+  cmd <- switch(type,
+         shell = "google-startup-scripts.service",
+         "cloud-config" = "gcer.service",
+         nginx = "nginx.service")
+  
+  gce_ssh(instance, sprintf("sudo journalctl -u %s", cmd))
 
 }
 
