@@ -10,6 +10,8 @@
 * Support minCpuPlatform in instance creation and via  `gce_set_mincpuplatform()` (#112)
 * Add ability to specify a startup-script in `gce_vm_container()`
 * Switch RStudio templates to use startup-scripts and metadata
+* Switch to applying a nginx proxy service to deal with port routing for templates
+* Add `gce_startup_logs()` to track whts going on when launching an instance
 
 # 0.2.0
 
