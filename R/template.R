@@ -105,8 +105,8 @@ gce_vm_template <- function(template = c("rstudio",
   
   dots <- modify_metadata(dots, upload_meta)
   
-  ## tag for http
-  dots$tags <- list(items = list("http-server"))
+  ## tag for http, shiny etc.
+  dots$tags <- template_tags(template)
 
   ## build VM
   job <- do.call(gce_vm_container,
@@ -139,6 +139,17 @@ gce_vm_template <- function(template = c("rstudio",
   print(ins)
   ins
   
+}
+
+template_tags <- function(template){
+  switch(template,
+         "rstudio" = list(items = list("http-server", "rstudio")),
+         "rstudio-gpu" = list(items = list("http-server","rstudio")),
+         "rstudio-shiny" = list(items = list("http-server","rstudio","shiny")),
+         "shiny" = list(items = list("http-server","shiny")),
+         "opencpu" = list(items = list("http-server","opencpu")),
+         "r-base" = list(items = list("r-base"))
+  )
 }
 
 #' Show the cloud-config template files

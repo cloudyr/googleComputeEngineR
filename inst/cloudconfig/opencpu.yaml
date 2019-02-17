@@ -9,7 +9,7 @@ write_files:
   permissions: 0755
   owner: root
   content: |
-    %
+%s
 - path: /etc/systemd/system/gcer.service
   permissions: 0644
   owner: root
