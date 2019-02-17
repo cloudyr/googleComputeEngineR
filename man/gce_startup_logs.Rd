@@ -4,7 +4,7 @@
 \alias{gce_startup_logs}
 \title{Get startup script logs}
 \usage{
-gce_startup_logs(instance, type = c("shell", "cloud-config"))
+gce_startup_logs(instance, type = c("shell", "cloud-config", "nginx"))
 }
 \arguments{
 \item{instance}{The instance to get startup script logs from

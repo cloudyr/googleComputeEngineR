@@ -1,3 +1,10 @@
+# read a file and turn into a character with an indent
+read_and_indent <- function(the_file, indent = 0){
+  tt <- readLines(the_file, warn = FALSE)
+  # indent and make one string
+  paste(paste(rep(" ", indent - 1), collapse =""), tt, collapse = "\n")
+}
+
 # is lowercase or hypens
 is.lower_hypen <- function(x){
   assertthat::assert_that(

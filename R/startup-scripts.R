@@ -1,19 +1,12 @@
 #' create the shell file to upload
 #' @keywords internal
 #' @import assertthat
-read_shell_startup_file <- function(template, indent = 0){
+read_shell_startup_file <- function(template){
   
   the_file <- get_template_file(template, "startupscripts")
-
-  # indent by 4 to fit in cloud-init.yaml
-  paste(strwrap(readChar(the_file, nchars = file.info(the_file)$size), 
-                     width = 16000, 
-                     indent = indent),
-             collapse = "\n")
   
-  tt <- readLines(the_file, warn = FALSE)
-  # indent and make one string again
-  paste(paste(rep(" ", indent - 1), collapse =""), tt, collapse = "\n")
+  read_and_indent(the_file, indent = 4)
+
 }
 
 setup_shell_metadata <- function(dots,

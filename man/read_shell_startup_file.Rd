@@ -4,7 +4,7 @@
 \alias{read_shell_startup_file}
 \title{create the shell file to upload}
 \usage{
-read_shell_startup_file(template, indent = 0)
+read_shell_startup_file(template)
 }
 \description{
 create the shell file to upload

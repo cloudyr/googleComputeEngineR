@@ -9,13 +9,17 @@ read_cloud_init_file <- function(template) {
   cloud_init_file   <- readChar(the_file, nchars = file.info(the_file)$size)
   
   # gets put into /etc/gcer/startup.sh
-  shell_script_file <- read_shell_startup_file(template, indent = 4)
+  shell_script_file <- read_shell_startup_file(template)
+  
+  # gets nginx config file for /etc/nginx.conf
+  nginx_config <- read_and_indent(system.file("nginx", "r-proxy-pass.conf", 
+                                              package = "googleComputeEngineR"),
+                                  indent = 4)
   
   # make substitution for docker image
   sprintf(cloud_init_file, 
           shell_script_file, 
-          template, 
-          template)
+          nginx_config)
   
 }
 
