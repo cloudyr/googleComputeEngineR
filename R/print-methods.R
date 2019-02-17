@@ -49,6 +49,8 @@ print.gce_instance <- function(x, ...){
   cat("\nExternal IP:        ", x$networkInterfaces$accessConfigs[[1]]$natIP)
   cat("\nDisks: \n")
   print(x$disks[ , c("deviceName","type","mode","boot","autoDelete")])
+  cat("\nMetadata:  \n")
+  print(x$metadata$items[!x$metadata$items$key %in% c("startup-script","user-data"),])
   
 }
 

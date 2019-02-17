@@ -5,7 +5,7 @@ users:
   uid: 2000
 
 write_files:
-- path: /etc/systemd/system/docker.service
+- path: /etc/systemd/system/custom-docker.service
   permissions: 0644
   owner: root
   content: |
@@ -15,11 +15,12 @@ write_files:
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
-    ExecStartPre=/usr/share/google/dockercfg_update.sh
-    ExecStart=/usr/bin/docker run --name=%s \
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+    ExecStart=/usr/bin/docker run --name=dynamic \
                                   %s
-    ExecStop=/usr/bin/docker stop %s
-
+    ExecStop=/usr/bin/docker stop dynamic
+    ExecStopPost=/usr/bin/docker rm dynamic
+    
 runcmd:
 - systemctl daemon-reload
-- systemctl start docker.service
+- systemctl start custom-docker.service

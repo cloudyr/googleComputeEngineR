@@ -4,17 +4,12 @@
 \alias{gce_vm_logs}
 \title{Open browser to the serial console output for a VM}
 \usage{
-gce_vm_logs(instance, open_browser = TRUE,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_vm_logs(instance, open_browser = TRUE)
 }
 \arguments{
 \item{instance}{The VM to see serial console output for}
 
 \item{open_browser}{Whether to return a URL or open the browser}
-
-\item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
-
-\item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \value{
 a URL

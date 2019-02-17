@@ -1,0 +1,55 @@
+#cloud-config
+
+users:
+- name: gcer
+  uid: 2000
+
+write_files:
+- path: /etc/gcer/startup.sh
+  permissions: 0755
+  owner: root
+  content: |
+%s
+- path: /etc/gcer/nginx.conf
+  permissions: 0755
+  owner: root
+  content: |
+%s
+- path: /etc/systemd/system/gcer.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=googleComputeEngineR generic Docker startup
+
+    [Service]
+    Restart=always
+    Type=simple
+    Environment="HOME=/home/gcer"
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+    ExecStartPre=/usr/bin/docker network create --driver=bridge r-net
+    ExecStart=/etc/gcer/startup.sh
+    ExecStop=/usr/bin/docker stop gcer-docker
+    ExecStopPost=/usr/bin/docker rm gcer-docker
+- path: /etc/systemd/system/nginx.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=nginx server for R services
+    # https://fardog.io/blog/2017/12/30/running-docker-containers-with-systemd/
+    [Service]
+    Restart=always
+    Type=simple
+    ExecStart=/usr/bin/docker run --name r-nginx \
+                             --network=r-net \
+                             -p 80:80 -p 443:443 \
+                             -v /etc/gcer/nginx.conf:/etc/nginx/nginx.conf:ro \
+                             nginx:1.14
+    ExecStop=/usr/bin/docker stop r-nginx
+    ExecStopPost=/usr/bin/docker rm r-nginx    
+runcmd:
+- systemctl daemon-reload
+- systemctl start gcer.service
+- systemctl start nginx.service
+

@@ -1,7 +1,7 @@
 #' Check if is a gce_zone_operation
 #' @param x The object to test if class \code{gce_zone_operation}
 #' @return TRUE or FALSE
-#' @export
+#' @noRd
 is.gce_zone_operation <- function(x){
   inherits(x, "gce_zone_operation")
 }
@@ -13,7 +13,7 @@ as.zone_operation <- function(x){
 #' Check if is a gce_global_operation
 #' @param x The object to test if class \code{gce_global_operation}
 #' @return TRUE or FALSE
-#' @export
+#' @noRd
 is.gce_global_operation <- function(x){
   inherits(x, "gce_global_operation")
 }
@@ -25,7 +25,7 @@ as.region_operation <- function(x){
 #' Check if is a gce_region_operation
 #' @param x The object to test if class \code{gce_region_operation}
 #' @return TRUE or FALSE
-#' @export
+#' @noRd
 is.gce_region_operation <- function(x){
   inherits(x, "gce_region_operation")
 }

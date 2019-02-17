@@ -17,7 +17,7 @@ write_files:
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
-    ExecStartPre=/usr/share/google/dockercfg_update.sh
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
     ExecStart=/usr/bin/docker run --name=r-base \
                                   --net=host \
                                   %s
