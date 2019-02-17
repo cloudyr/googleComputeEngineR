@@ -97,6 +97,7 @@ gce_vm_template <- function(template = c("rstudio",
   if(grepl("gpu$", template)){
     # setup GPU specific options
     dots <- set_gpu_template(dots)
+    
   }
   
   ## metadata
@@ -125,7 +126,7 @@ gce_vm_template <- function(template = c("rstudio",
   }
 
   ins <- gce_get_instance(dots$name, project = dots$project, zone = dots$zone)
-  ip <- gce_get_external_ip(dots$name, project = dots$project, zone = dots$zone, verbose = FALSE)
+  ip <- gce_get_external_ip(ins, verbose = FALSE)
   
   ## where to find application
   ip_suffix <- ""

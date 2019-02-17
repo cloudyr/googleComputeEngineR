@@ -1,8 +1,29 @@
 #' A deeplearning templated VM for use with gce_vm_template
 #' @noRd
 set_gpu_template <- function(dots){
-  dots$return_dots <- TRUE
-  do.call(gce_vm_gpu, args = dots)
+  
+  if(is.null(dots$scheduling)){
+    dots$scheduling <- list(
+      onHostMaintenance = "TERMINATE",
+      automaticRestart = TRUE
+    )
+  }
+  
+  if(is.null(dots$acceleratorCount)){
+    dots$acceleratorCount <- 1
+  }
+  
+  if(is.null(dots$acceleratorType)){
+    dots$acceleratorType <- "nvidia-tesla-p4"
+  }
+  
+  if(is.null(dots$predefined_type)){
+    dots$predefined_type <- "n1-standard-8"
+  }
+  
+  dots <- modify_metadata(dots, list("install-nvidia-driver" = "True"))
+  
+  dots
 }
 
 
@@ -56,7 +77,6 @@ gce_list_gpus <- function(filter = NULL,
 #' Helper function that fills in some defaults passed to \link{gce_vm}
 #' 
 #' @param ... arguments passed to \link{gce_vm}
-#' @param return_dots If TRUE will only return default options in a list, not launch the VM
 #' 
 #' @details 
 #' 
@@ -78,7 +98,7 @@ gce_list_gpus <- function(filter = NULL,
 #' @seealso \href{Deep Learning VM}{https://cloud.google.com/deep-learning-vm/docs/quickstart-cli}
 #' 
 #' @return A VM object
-gce_vm_gpu <- function(..., return_dots = FALSE){
+gce_vm_gpu <- function(...){
   
   dots <- list(...)
   
@@ -90,8 +110,10 @@ gce_vm_gpu <- function(..., return_dots = FALSE){
   }
   
   if(is.null(dots$acceleratorCount)){
-    
     dots$acceleratorCount <- 1
+  }
+  
+  if(is.null(dots$acceleratorType)){
     dots$acceleratorType <- "nvidia-tesla-p4"
   }
   

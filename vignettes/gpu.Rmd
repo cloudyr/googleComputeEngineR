@@ -1,0 +1,93 @@
+---
+title: "GPU Enabled instances"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GPU Enabled VMs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## GPUs
+
+Google Compute Engine has support for launching instances with GPUs.
+
+To use with `googleComputeEngineR` the main function is `gce_vm_gpu()` which will set some defaults for you before passing the arguments to `gce_vm()`:
+
+If not specified, this function will enter defaults to get a GPU instance up and running using the [deep learning VM project as specified in this google article](https://cloud.google.com/deep-learning-vm/docs/cli)
+
+Modify the defaults as you wish by passing them into the function.
+
+* acceleratorCount: 1
+* acceleratorType: "nvidia-tesla-p4"
+* scheduling: list(onHostMaintenance = "TERMINATE", automaticRestart = TRUE)
+* image_project: "deeplearning-platform-release"
+* image_family: "tf-latest-cu92"
+* predefined_type: "n1-standard-8"
+* metadata: "install-nvidia-driver" = "True"
+
+```r
+vm <- gce_vm_gpu(name = "gpu")
+
+# if you want most GPU units
+vm <- gce_vm_gpu(name = "gpu", acceleratorCount = 4)
+```
+
+You can check the installation via `gpu_check_gpu()` which returns the output of the nvidia status command via SSH.
+
+You can see the GPUs available for your project and zone via `gce_list_gpus()`
+
+```r
+gce_list_gpus(project="your-project")
+#==Google Compute Engine GPU List==
+#                   name                           description maximumCardsPerInstance           zone
+#1      nvidia-tesla-k80                      NVIDIA Tesla K80                       8 europe-west1-b
+#2     nvidia-tesla-p100                     NVIDIA Tesla P100                       4 europe-west1-b
+#3 nvidia-tesla-p100-vws NVIDIA Tesla P100 Virtual Workstation                       4 europe-west1-b
+#    creationTimestamp
+#1 1969-12-31 16:00:00
+#2 1969-12-31 16:00:00
+#3 1969-12-31 16:00:00
+```
+
+GPUs are more restricted in the zones they are available than normal GPUs, you will get an error if you try to use a GPU outside a zone its available within.
+
+From the above list, if you wanted to select another GPU you would then issue:
+
+```r
+vm <- gce_vm_gpu(name = "gpu", acceleratorCount = 4, acceleratorType = "nvidia-tesla-k80")
+```
+
+## Deeplearning for R - the rstudio-gpu template
+
+Rocker.org has a deeplearning Docker image available at `rocker/ml-gpu` that installs
+
+* NVIDIA GPU drivers via CUDA
+* RStudio/R/Tidyverse
+* Tensorflow
+* Keras
+
+This is an appropriate workstation to go through the "Deep Learning with R" book by François Chollet and J.J. Allaire.
+
+A template for `gce_vm()` is setup to launch the above image with GPU support for `nvidia-tesla-p4`.  It doesn't use `gce_vm_gpu()` as Tensorflow is installed within the container, instead using the container optimised images as other templates do.
+
+```r
+# assumes you have set gce_global_project() and gce_global_zone()
+dpvm <- gce_vm(name = "deeplearning-r", 
+               template = "rstudio-gpu", 
+               username = "mark", 
+               password = "mark123")
+```
+
+You may need to configure a zone that has the `nvidia-tesla-p4` GPU, or pick another in the project/zone you want to launch in - for example the below zone "europe-west1-b" didn't have the default GPU `nvidia-tesla-p4` so another that was is selected:
+
+```r
+dpvm <- gce_vm(name = "deeplearning-r", 
+               template = "rstudio-gpu", 
+               username = "mark", 
+               password = "mark123", 
+               acceleratorType = "nvidia-tesla-k80",
+               project = "your-project", 
+               zone = "europe-west1-b")
+```

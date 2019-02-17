@@ -22,6 +22,8 @@ navbar:
       href: articles/docker-ssh-futures.html
     - text: "Docker"
       href: articles/docker.html
+    - text: "GPUs"
+      href: articles/gpu.html
     - text: "Examples"
       menu:
       - text: "Introduction"

@@ -4,12 +4,10 @@
 \alias{gce_vm_gpu}
 \title{Launch a GPU enabled instance}
 \usage{
-gce_vm_gpu(..., return_dots = FALSE)
+gce_vm_gpu(...)
 }
 \arguments{
 \item{...}{arguments passed to \link{gce_vm}}
-
-\item{return_dots}{If TRUE will only return default options in a list, not launch the VM}
 }
 \value{
 A VM object

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Mark Edmondson" />
+
+<meta name="date" content="2019-02-17" />
+
+<title>GPU Enabled instances</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">GPU Enabled instances</h1>
+<h4 class="author"><em>Mark Edmondson</em></h4>
+<h4 class="date"><em>2019-02-17</em></h4>
+
+
+
+<div id="gpus" class="section level2">
+<h2>GPUs</h2>
+<p>Google Compute Engine has support for launching instances with GPUs.</p>
+<p>To use with <code>googleComputeEngineR</code> the main function is <code>gce_vm_gpu()</code> which will set some defaults for you before passing the arguments to <code>gce_vm()</code>:</p>
+<p>If not specified, this function will enter defaults to get a GPU instance up and running using the <a href="https://cloud.google.com/deep-learning-vm/docs/cli">deep learning VM project as specified in this google article</a></p>
+<p>Modify the defaults as you wish by passing them into the function.</p>
+<ul>
+<li>acceleratorCount: 1</li>
+<li>acceleratorType: “nvidia-tesla-p4”</li>
+<li>scheduling: list(onHostMaintenance = “TERMINATE”, automaticRestart = TRUE)</li>
+<li>image_project: “deeplearning-platform-release”</li>
+<li>image_family: “tf-latest-cu92”</li>
+<li>predefined_type: “n1-standard-8”</li>
+<li>metadata: “install-nvidia-driver” = “True”</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm_gpu</span>(<span class="dt">name =</span> <span class="st">&quot;gpu&quot;</span>)
+
+<span class="co"># if you want most GPU units</span>
+vm &lt;-<span class="st"> </span><span class="kw">gce_vm_gpu</span>(<span class="dt">name =</span> <span class="st">&quot;gpu&quot;</span>, <span class="dt">acceleratorCount =</span> <span class="dv">4</span>)</code></pre></div>
+<p>You can check the installation via <code>gpu_check_gpu()</code> which returns the output of the nvidia status command via SSH.</p>
+<p>You can see the GPUs available for your project and zone via <code>gce_list_gpus()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_list_gpus</span>(<span class="dt">project=</span><span class="st">&quot;your-project&quot;</span>)
+<span class="co">#==Google Compute Engine GPU List==</span>
+<span class="co">#                   name                           description maximumCardsPerInstance           zone</span>
+<span class="co">#1      nvidia-tesla-k80                      NVIDIA Tesla K80                       8 europe-west1-b</span>
+<span class="co">#2     nvidia-tesla-p100                     NVIDIA Tesla P100                       4 europe-west1-b</span>
+<span class="co">#3 nvidia-tesla-p100-vws NVIDIA Tesla P100 Virtual Workstation                       4 europe-west1-b</span>
+<span class="co">#    creationTimestamp</span>
+<span class="co">#1 1969-12-31 16:00:00</span>
+<span class="co">#2 1969-12-31 16:00:00</span>
+<span class="co">#3 1969-12-31 16:00:00</span></code></pre></div>
+<p>GPUs are more restricted in the zones they are available than normal GPUs, you will get an error if you try to use a GPU outside a zone its available within.</p>
+<p>From the above list, if you wanted to select another GPU you would then issue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm_gpu</span>(<span class="dt">name =</span> <span class="st">&quot;gpu&quot;</span>, <span class="dt">acceleratorCount =</span> <span class="dv">4</span>, <span class="dt">acceleratorType =</span> <span class="st">&quot;nvidia-tesla-k80&quot;</span>)</code></pre></div>
+</div>
+<div id="deeplearning-for-r---the-rstudio-gpu-template" class="section level2">
+<h2>Deeplearning for R - the rstudio-gpu template</h2>
+<p>Rocker.org has a deeplearning Docker image available at <code>rocker/ml-gpu</code> that installs</p>
+<ul>
+<li>NVIDIA GPU drivers via CUDA</li>
+<li>RStudio/R/Tidyverse</li>
+<li>Tensorflow</li>
+<li>Keras</li>
+</ul>
+<p>This is an appropriate workstation to go through the “Deep Learning with R” book by François Chollet and J.J. Allaire.</p>
+<p>A template for <code>gce_vm()</code> is setup to launch the above image with GPU support for <code>nvidia-tesla-p4</code>. It doesn’t use <code>gce_vm_gpu()</code> as Tensorflow is installed within the container, instead using the container optimised images as other templates do.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># assumes you have set gce_global_project() and gce_global_zone()</span>
+dpvm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;deeplearning-r&quot;</span>, 
+               <span class="dt">template =</span> <span class="st">&quot;rstudio-gpu&quot;</span>, 
+               <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, 
+               <span class="dt">password =</span> <span class="st">&quot;mark123&quot;</span>)</code></pre></div>
+<p>You may need to configure a zone that has the <code>nvidia-tesla-p4</code> GPU, or pick another in the project/zone you want to launch in - for example the below zone “europe-west1-b” didn’t have the default GPU <code>nvidia-tesla-p4</code> so another that was is selected:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dpvm &lt;-<span class="st"> </span><span class="kw">gce_vm</span>(<span class="dt">name =</span> <span class="st">&quot;deeplearning-r&quot;</span>, 
+               <span class="dt">template =</span> <span class="st">&quot;rstudio-gpu&quot;</span>, 
+               <span class="dt">username =</span> <span class="st">&quot;mark&quot;</span>, 
+               <span class="dt">password =</span> <span class="st">&quot;mark123&quot;</span>, 
+               <span class="dt">acceleratorType =</span> <span class="st">&quot;nvidia-tesla-k80&quot;</span>,
+               <span class="dt">project =</span> <span class="st">&quot;your-project&quot;</span>, 
+               <span class="dt">zone =</span> <span class="st">&quot;europe-west1-b&quot;</span>)</code></pre></div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
