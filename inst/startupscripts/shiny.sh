@@ -5,4 +5,4 @@ GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/inst
 
 echo "Docker image: $GCER_DOCKER_IMAGE"
 
-docker run -p 80:3838 --name=shiny $GCER_DOCKER_IMAGE
+docker run -p 80:3838 --name=gcer-docker $GCER_DOCKER_IMAGE

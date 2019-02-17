@@ -10,6 +10,6 @@ echo "Docker image: $GCER_DOCKER_IMAGE"
 nvidia-docker run -p 80:8787 \
            -e ROOT=TRUE \
            -e USER=$RSTUDIO_USER -e PASSWORD=$RSTUDIO_PW \
-           --name=rstudio-gpu \
+           --name=gcer-docker \
            $GCER_DOCKER_IMAGE
                   

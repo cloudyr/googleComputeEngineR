@@ -5,5 +5,5 @@ GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/inst
 
 echo "Docker image: $GCER_DOCKER_IMAGE"
 
-docker run --name=dynamic $GCER_DOCKER_IMAGE
+docker run --name=gcer-docker $GCER_DOCKER_IMAGE
                   
