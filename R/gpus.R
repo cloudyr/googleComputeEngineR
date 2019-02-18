@@ -2,28 +2,16 @@
 #' @noRd
 set_gpu_template <- function(dots){
   
-  if(is.null(dots$scheduling)){
-    dots$scheduling <- list(
-      onHostMaintenance = "TERMINATE",
-      automaticRestart = TRUE
-    )
-  }
+  dots <- do.call(gce_vm_gpu, 
+                  args = c(list(return_dots=TRUE), dots))
   
-  if(is.null(dots$acceleratorCount)){
-    dots$acceleratorCount <- 1
-  }
-  
-  if(is.null(dots$acceleratorType)){
-    dots$acceleratorType <- "nvidia-tesla-p4"
-  }
-  
-  if(is.null(dots$predefined_type)){
-    dots$predefined_type <- "n1-standard-8"
-  }
-  
-  dots <- modify_metadata(dots, list("install-nvidia-driver" = "True"))
+  # these are set explicity in gce_vm_container, so avoiding double-args
+  dots$image_project <- NULL
+  dots$image_family <- NULL
   
   dots
+
+
 }
 
 
@@ -77,6 +65,7 @@ gce_list_gpus <- function(filter = NULL,
 #' Helper function that fills in some defaults passed to \link{gce_vm}
 #' 
 #' @param ... arguments passed to \link{gce_vm}
+#' @param return_dots Only return the settings, do not call \link{gce_vm}
 #' 
 #' @details 
 #' 
@@ -98,7 +87,7 @@ gce_list_gpus <- function(filter = NULL,
 #' @seealso \href{Deep Learning VM}{https://cloud.google.com/deep-learning-vm/docs/quickstart-cli}
 #' 
 #' @return A VM object
-gce_vm_gpu <- function(...){
+gce_vm_gpu <- function(..., return_dots = FALSE){
   
   dots <- list(...)
   
@@ -132,6 +121,10 @@ gce_vm_gpu <- function(...){
   dots <- modify_metadata(dots, list("install-nvidia-driver" = "True"))
   
   myMessage("Launching VM with GPU support. If using docker_cmd() functions make sure to include nvidia=TRUE parameter", level = 3)
+  
+  if(return_dots){
+    return(dots)
+  }
   
   do.call(gce_vm,
           args = dots)

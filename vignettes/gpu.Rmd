@@ -68,9 +68,11 @@ Rocker.org has a deeplearning Docker image available at `rocker/ml-gpu` that ins
 * Tensorflow
 * Keras
 
-This is an appropriate workstation to go through the "Deep Learning with R" book by François Chollet and J.J. Allaire.
+This is an appropriate workstation to go through the ["Deep Learning with R" book by François Chollet and J.J. Allaire](https://www.manning.com/books/deep-learning-with-r).
 
-A template for `gce_vm()` is setup to launch the above image with GPU support for `nvidia-tesla-p4`.  It doesn't use `gce_vm_gpu()` as Tensorflow is installed within the container, instead using the container optimised images as other templates do.
+![](deeplearning-with-r-book.jpg)
+
+A template for `gce_vm()` is setup to launch the above image with GPU support for `nvidia-tesla-p4`.  It uses `gce_vm_gpu()` internally to configure the VM.
 
 ```r
 # assumes you have set gce_global_project() and gce_global_zone()
@@ -78,6 +80,17 @@ dpvm <- gce_vm(name = "deeplearning-r",
                template = "rstudio-gpu", 
                username = "mark", 
                password = "mark123")
+#2019-02-18 20:55:13> Creating template VM
+#2019-02-18 20:55:13> Launching VM with GPU support. If using docker_cmd() functions make sure to include nvidia=TRUE parameter
+#2019-02-18 20:55:13> Run gce_startup_logs(your-instance, 'shell') to track startup script logs
+#2019-02-18 20:55:16> Checking operation...PENDING
+#2019-02-18 20:55:27> Operation running...
+#2019-02-18 20:55:37> Operation running...
+#2019-02-18 20:55:47> Operation running...
+#2019-02-18 20:55:58> Operation running...
+#2019-02-18 20:56:18> Operation complete in 42 secs
+#2019-02-18 20:56:18> ## VM Template: 'rstudio-gpu' running at http://34.76.114.67
+#2019-02-18 20:56:18> On first boot, wait a few minutes for docker container to install before logging in.
 ```
 
 You may need to configure a zone that has the `nvidia-tesla-p4` GPU, or pick another in the project/zone you want to launch in - for example the below zone "europe-west1-b" didn't have the default GPU `nvidia-tesla-p4` so another that was is selected:
@@ -91,3 +104,42 @@ dpvm <- gce_vm(name = "deeplearning-r",
                project = "your-project", 
                zone = "europe-west1-b")
 ```
+
+### Testing rstudio-gpu template
+
+Wait for 5 mins on startup for the instance to bootup.  After that you should be able to login at the ip address it gives you.
+
+This is the "hello world" script from the Deep learning with R book.  You should be able to run it, and see from the message feedback that its using a `gpu_device` to compute the model:
+
+```r
+library(keras)
+
+mnist <- dataset_mnist()
+train_images <- mnist$train$x
+train_labels <- mnist$train$y
+test_images <- mnist$test$x
+test_labels <- mnist$test$y
+
+network <- keras_model_sequential() %>% 
+  layer_dense(units = 512, activation = "relu", input_shape = c(28*28)) %>% 
+  layer_dense(units = 10, activation = "softmax")
+
+network %>% compile(
+  optimizer = "rmsprop",
+  loss = "categorical_crossentropy",
+  metrics = c("accuracy")
+)
+
+train_images <- array_reshape(train_images, c(60000, 28*28))
+train_images <- train_images / 255
+
+test_images <- array_reshape(test_images, c(10000, 28*28))
+test_images <- test_images / 255
+
+train_labels <- to_categorical(train_labels)
+test_labels <- to_categorical(test_labels)
+
+network %>% fit(train_images, train_labels, epochs = 5, batch_size = 128)
+```
+
+![](rstudio-gpu.png)

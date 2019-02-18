@@ -28,7 +28,8 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 One of \code{file} or \code{cloud_init} or \code{shell_script} must be supplied}
   \item{cloud_init}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
   \item{shell_script}{contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}}
-  \item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
+  \item{image_family}{An image-family.  It must come from the \code{image_project} family.}
+  \item{image_project}{An image-project, where the image-family resides.}
 }}
 }
 \value{

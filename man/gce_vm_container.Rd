@@ -5,7 +5,7 @@
 \title{Launch a container-VM image}
 \usage{
 gce_vm_container(file = NULL, cloud_init = NULL, shell_script = NULL,
-  image_family = "cos-stable", ...)
+  image_family = "cos-stable", image_project = "cos-cloud", ...)
 }
 \arguments{
 \item{file}{file location of a valid cloud-init or shell_script file. 
@@ -15,7 +15,9 @@ One of \code{file} or \code{cloud_init} or \code{shell_script} must be supplied}
 
 \item{shell_script}{contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}}
 
-\item{image_family}{An image-family.  It must come from the \code{google-containers} family.}
+\item{image_family}{An image-family.  It must come from the \code{image_project} family.}
+
+\item{image_project}{An image-project, where the image-family resides.}
 
 \item{...}{Other arguments passed to \link{gce_vm_create}}
 }

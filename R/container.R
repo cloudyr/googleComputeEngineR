@@ -29,7 +29,8 @@ gce_check_container <- function(...){
 #'   One of \code{file} or \code{cloud_init} or \code{shell_script} must be supplied
 #' @param cloud_init contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}
 #' @param shell_script contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}
-#' @param image_family An image-family.  It must come from the \code{google-containers} family.
+#' @param image_family An image-family.  It must come from the \code{image_project} family.
+#' @param image_project An image-project, where the image-family resides.
 #' @param ... Other arguments passed to \link{gce_vm_create}
 #' 
 #' @details 
@@ -48,6 +49,7 @@ gce_vm_container <- function(file = NULL,
                              cloud_init = NULL, 
                              shell_script = NULL,
                              image_family = "cos-stable", 
+                             image_project = "cos-cloud",
                              ...){
   
   startup_type <- discern_startup_type(file, cloud_init, shell_script)
@@ -74,7 +76,7 @@ gce_vm_container <- function(file = NULL,
             level = 3)
   
   do.call(gce_vm_create, c(list(image_family = image_family,
-                                image_project = "cos-cloud"), 
+                                image_project = image_project), 
                            dots)
           )
   

@@ -83,10 +83,23 @@ gce_vm_template <- function(template = c("rstudio",
   if(is.null(dots$project)){
     dots$project <- gce_get_global_project()
   }
-
-  # creates cloud-config file that will call the startup script
-  cloud_init_file <- read_cloud_init_file(template)
   
+  # hack for gpu until nvidia-docker is supported on cos-cloud images
+  if(grepl("gpu$", template)){
+    # setup GPU specific options
+    dots            <- set_gpu_template(dots)
+    ss_file         <- get_template_file(template, "startupscripts")
+    startup_script  <- readChar(ss_file, nchars = file.info(ss_file)$size)
+    cloud_init_file <- NULL
+    image_family    <- "tf-latest-cu92"
+    image_project   <- "deeplearning-platform-release"
+  } else {
+    # creates cloud-config file that will call the startup script
+    cloud_init_file <- read_cloud_init_file(template)
+    startup_script  <- NULL
+    image_project   <-  "cos-cloud"
+  }
+
   # adds metadata startup script will read
   dots <- setup_shell_metadata(dots,
                                template = template,
@@ -94,17 +107,9 @@ gce_vm_template <- function(template = c("rstudio",
                                password = password, 
                                dynamic_image = dynamic_image)
 
-  if(grepl("gpu$", template)){
-    # setup GPU specific options
-    dots <- set_gpu_template(dots)
-    
-  }
-  
   ## metadata
-  upload_meta <- list(template = template,
-                      "google-logging-enabled" = "true")
-  
-  dots <- modify_metadata(dots, upload_meta)
+  dots <- modify_metadata(dots, list(template = template,
+                                     "google-logging-enabled" = "true"))
   
   ## tag for http, shiny etc.
   dots$tags <- template_tags(template)
@@ -113,7 +118,9 @@ gce_vm_template <- function(template = c("rstudio",
   job <- do.call(gce_vm_container,
                  args = c(list(
                      cloud_init = cloud_init_file,
-                     image_family = image_family
+                     shell_script = startup_script,
+                     image_family = image_family,
+                     image_project = image_project
                    ), 
                    dots)
                  )
@@ -126,7 +133,7 @@ gce_vm_template <- function(template = c("rstudio",
   }
 
   ins <- gce_get_instance(dots$name, project = dots$project, zone = dots$zone)
-  ip <- gce_get_external_ip(ins, verbose = FALSE)
+  ip  <- gce_get_external_ip(ins, verbose = FALSE)
   
   ## where to find application
   ip_suffix <- ""
