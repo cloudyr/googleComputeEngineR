@@ -61,12 +61,15 @@ vm <- gce_vm_gpu(name = "gpu", acceleratorCount = 4, acceleratorType = "nvidia-t
 
 ## Deeplearning for R - the rstudio-gpu template
 
-Rocker.org has a deeplearning Docker image available at `rocker/ml-gpu` that installs
+Rocker.org has [deeplearning Docker images available at `rocker/ml`](https://github.com/rocker-org/ml) that install:
 
 * NVIDIA GPU drivers via CUDA
 * RStudio/R/Tidyverse
 * Tensorflow
 * Keras
+* xgboost
+* mxnet
+* h20
 
 This is an appropriate workstation to go through the ["Deep Learning with R" book by François Chollet and J.J. Allaire](https://www.manning.com/books/deep-learning-with-r).
 
