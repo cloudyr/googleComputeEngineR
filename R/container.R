@@ -85,6 +85,7 @@ gce_vm_container <- function(file = NULL,
 #' Get startup script logs
 #' 
 #' @param instance The instance to get startup script logs from
+#' @param type The type of log to run
 #' 
 #' Will use SSH so that needs to be setup
 #' @export

@@ -23,3 +23,4 @@ _pkgdown\.yml
 ^index\.Rmd$
 ^index\.html$
 ^cran-comments\.md$
+^\.github

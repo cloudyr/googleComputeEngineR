@@ -100,7 +100,7 @@ as.cluster.gce_instance <- function(x,
 #' @return TRUE if successful
 #' @import future
 #' @importFrom utils install.packages
-#' @importFrom remotes install_github
+#' @importFrom remotes install_github github_pat
 #' @export
 gce_future_install_packages <- function(instance,
                                         docker_image,

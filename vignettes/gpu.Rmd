@@ -51,7 +51,7 @@ gce_list_gpus(project="your-project")
 #3 1969-12-31 16:00:00
 ```
 
-GPUs are more restricted in the zones they are available than normal GPUs, you will get an error if you try to use a GPU outside a zone its available within.
+GPUs are more restricted in the zones they are available than normal instances, you will get an error if you try to use a GPU outside a zone its available within.
 
 From the above list, if you wanted to select another GPU you would then issue:
 
