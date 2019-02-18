@@ -21,7 +21,7 @@
 #' \itemize{
 #'   \item rstudio An RStudio server docker image with tidyverse and devtools
 #'   \item rstudio-gpu An RStudio server with popular R machine learning libraries and GPU driver.  Will launch a GPU enabled VM.
-#'   \item rstudio-shiny An RStudio server with Shiny also installed.
+#'   \item rstudio-shiny An RStudio server with Shiny also installed, proxied to /shiny
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
 #'   \item r_base Latest version of R stable
