@@ -47,8 +47,8 @@ jobs <- lapply(vm_names, function(x) {
     gce_vm_template(template = "r-base",
                     predefined_type = "n1-highmem-2",
                     name = x,
-                    dynamic_image = my_docker),
-                    wait = FALSE
+                    dynamic_image = my_docker,
+                    wait = FALSE)
                     })
 jobs
 # [[1]]
@@ -167,8 +167,8 @@ jobs <- lapply(vm_names, function(x) {
     gce_vm_template(template = "r-base",
                     predefined_type = "n1-highmem-2",
                     name = x,
-                    dynamic_image = my_docker),
-                    wait = FALSE
+                    dynamic_image = my_docker,
+                    wait = FALSE)
                     })
                      
 ## wait for all the jobs to complete and VMs are ready
