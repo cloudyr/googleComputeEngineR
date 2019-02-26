@@ -120,7 +120,7 @@ plan(cluster, workers = as.cluster(
 
 ### Using the cluster
 
-The cluster is now ready to recieve jobs.  You can send them by simply using `%<-%` instead of `<-`.  Another useful function is `future::future_lapply` that lets you loop over a cluster.  Consult the [`future` documentation](https://github.com/HenrikBengtsson/future) for details. 
+The cluster is now ready to recieve jobs.  You can send them by simply using `%<-%` instead of `<-`.  Another useful function is `future.apply::future_lapply` that lets you loop over a cluster.  Consult the [`future.apply` documentation](https://github.com/HenrikBengtsson/future.apply) for details. 
 
 ```r
 ## use %<-% to send functions to work on cluster
@@ -153,7 +153,7 @@ resolved(result)
 The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via [build triggers](articles/docker.html#build-triggers).  Optimise by including the package `future` in these Docker images. 
 
 ```r
-library(future)
+library(future.apply) ## Will automatically load future too
 library(googleComputeEngineR)
 
 ## names for your cluster - just three for this example
@@ -205,7 +205,7 @@ cluster_f <- function(my_data, args = 4){
 }
 
 ## send to cluster
-result <- future::future_lapply(my_data, cluster_f, args = 4) 
+result <- future.apply::future_lapply(my_data, cluster_f, args = 4) 
 
 ## once done this will be TRUE
 resolved(result)
@@ -230,6 +230,7 @@ The example code is shown below, assuming your custom Docker image is available 
 library(raster)
 library(googleComputeEngineR)
 library(future)
+library(future.apply)
 library(SpaDES.tools)
 
 gce_global_project("your-project")
