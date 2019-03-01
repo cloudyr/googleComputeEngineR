@@ -78,22 +78,38 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../articles/installation-and-authentication.html">
-    <span class=" wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
   </a>
 </li>
 <li>
-  <a href="../articles/creating-vms.html">Creating VMs</a>
+  <a href="../articles/creating-vms.html">
+    <span class="fa fa-laptop"></span>
+     
+    Creating VMs
+  </a>
 </li>
 <li>
-  <a href="../articles/docker-ssh-futures.html">SSH</a>
+  <a href="../articles/docker-ssh-futures.html">
+    <span class="fa fa-terminal"></span>
+     
+    SSH
+  </a>
 </li>
 <li>
-  <a href="../articles/docker.html">Docker</a>
+  <a href="../articles/docker.html">
+    <span class="fa fa-docker"></span>
+     
+    Docker
+  </a>
 </li>
 <li>
-  <a href="../articles/gpu.html">GPUs</a>
+  <a href="../articles/gpu.html">
+    <span class="fa fa-memory"></span>
+     
+    GPUs
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -144,29 +160,33 @@
     <li>
       <a href="../articles/troubleshooting.html">Troubleshooting</a>
     </li>
+    <li>
+      <a href="https://cloud.google.com/compute/">
+        <span class="fa fa-google"></span>
+         
+        Google docs
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/cloudyr/googleComputeEngineR">
+        <span class="fa fa-github"></span>
+         
+        GitHub
+      </a>
+    </li>
+    <li>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
+        <span class="fa fa-slack"></span>
+         
+        Slack help
+      </a>
+    </li>
   </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://cloud.google.com/compute/">
-    <span class="fa fa-google fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://github.com/cloudyr/googleComputeEngineR">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
-    <span class="fa fa-slack fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -191,20 +211,6 @@
     </colgroup>
 
     <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-authentication" class="hasAnchor"><a href="#section-authentication" class="anchor"></a>Authentication</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="gce_auth.html">gce_auth()</a></code> </p>
-        </td>
-        <td><p>Defunct - Authenticate this session</p></td>
-      </tr>
-    </tbody><tbody>
       <tr>
         <th colspan="2">
           <h2 id="section-creating-a-vm-instance" class="hasAnchor"><a href="#section-creating-a-vm-instance" class="anchor"></a>Creating a VM instance</h2>
@@ -273,6 +279,42 @@
           <p><code><a href="gce_get_external_ip.html">gce_get_external_ip()</a></code> </p>
         </td>
         <td><p>Get the external IP of an instance</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="container_logs.html">container_logs()</a></code> </p>
+        </td>
+        <td><p>Retrieve logs for a container.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_container_logs.html">gce_container_logs()</a></code> <code><a href="gce_container_logs.html">gce_check_container()</a></code> </p>
+        </td>
+        <td><p>Check the docker logs of a container</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_shiny_logs.html">gce_shiny_logs()</a></code> </p>
+        </td>
+        <td><p>Get the latest shiny logs for a shinyapp</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_startup_logs.html">gce_startup_logs()</a></code> </p>
+        </td>
+        <td><p>Get startup script logs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_vm_logs.html">gce_vm_logs()</a></code> </p>
+        </td>
+        <td><p>Open browser to the serial console output for a VM</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_set_mincpuplatform.html">gce_set_mincpuplatform()</a></code> </p>
+        </td>
+        <td><p>Set a minCPU platform on a stopped instance</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -421,6 +463,18 @@
           <p><code><a href="gce_push_registry.html">gce_push_registry()</a></code> </p>
         </td>
         <td><p>Push to Google Container Registry</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="localhost.html">localhost</a></code> </p>
+        </td>
+        <td><p>An object representing the current computer that R is running on.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="makeDockerClusterPSOCK.html">makeDockerClusterPSOCK()</a></code> </p>
+        </td>
+        <td><p>Make the Docker cluster on Google Compute Engine</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -889,6 +943,12 @@
           <p><code><a href="gce_list_zone_op.html">gce_list_zone_op()</a></code> </p>
         </td>
         <td><p>Retrieves a list of Operation resources contained within the specified zone.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gce_wait.html">gce_wait()</a></code> </p>
+        </td>
+        <td><p>Wait for an operation to finish</p></td>
       </tr>
     </tbody>
     </table>
@@ -897,7 +957,6 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-authentication">Authentication</a></li>
       <li><a href="#section-creating-a-vm-instance">Creating a VM instance</a></li>
       <li><a href="#section-working-with-vm-instances">Working with VM instances</a></li>
       <li><a href="#section-scheduling-helpers">Scheduling helpers</a></li>

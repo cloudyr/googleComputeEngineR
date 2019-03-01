@@ -100,7 +100,7 @@ as.cluster.gce_instance <- function(x,
 #' @return TRUE if successful
 #' @import future
 #' @importFrom utils install.packages
-#' @importFrom remotes install_github github_pat
+#' @importFrom remotes install_github
 #' @export
 gce_future_install_packages <- function(instance,
                                         docker_image,
@@ -109,21 +109,21 @@ gce_future_install_packages <- function(instance,
   
   ## set up future cluster
   temp_name <- paste0("gceR-install-",idempotency())
-  clus <- future::as.cluster(instance, 
+  clus <- as.cluster(instance, 
                              docker_image = docker_image,
                              rscript = c("docker", "run",paste0("--name=",temp_name),"--net=host", docker_image, "Rscript"))
   
-  future::plan(future::cluster, workers = clus)
+  plan(cluster, workers = clus)
   
   if(!is.null(cran_packages)){
     cran <- NULL
-    cran %<-% utils::install.packages(cran_packages)
+    cran %<-% install.packages(cran_packages)
     cran
   }
   
   if(!is.null(github_packages)){
     devt <- NULL
-    devt %<-% remotes::install_github(github_packages, auth_token = remotes::github_pat())
+    devt %<-% install_github(github_packages, auth_token = github_pat())
     devt
   }
   

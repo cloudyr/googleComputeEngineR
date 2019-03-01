@@ -82,22 +82,38 @@ It passes the template on to gce_vm_container" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../articles/installation-and-authentication.html">
-    <span class=" wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
   </a>
 </li>
 <li>
-  <a href="../articles/creating-vms.html">Creating VMs</a>
+  <a href="../articles/creating-vms.html">
+    <span class="fa fa-laptop"></span>
+     
+    Creating VMs
+  </a>
 </li>
 <li>
-  <a href="../articles/docker-ssh-futures.html">SSH</a>
+  <a href="../articles/docker-ssh-futures.html">
+    <span class="fa fa-terminal"></span>
+     
+    SSH
+  </a>
 </li>
 <li>
-  <a href="../articles/docker.html">Docker</a>
+  <a href="../articles/docker.html">
+    <span class="fa fa-docker"></span>
+     
+    Docker
+  </a>
 </li>
 <li>
-  <a href="../articles/gpu.html">GPUs</a>
+  <a href="../articles/gpu.html">
+    <span class="fa fa-memory"></span>
+     
+    GPUs
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -148,29 +164,33 @@ It passes the template on to gce_vm_container" />
     <li>
       <a href="../articles/troubleshooting.html">Troubleshooting</a>
     </li>
+    <li>
+      <a href="https://cloud.google.com/compute/">
+        <span class="fa fa-google"></span>
+         
+        Google docs
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/cloudyr/googleComputeEngineR">
+        <span class="fa fa-github"></span>
+         
+        GitHub
+      </a>
+    </li>
+    <li>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
+        <span class="fa fa-slack"></span>
+         
+        Slack help
+      </a>
+    </li>
   </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://cloud.google.com/compute/">
-    <span class="fa fa-google fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://github.com/cloudyr/googleComputeEngineR">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
-    <span class="fa fa-slack fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -250,7 +270,7 @@ One of <code>file</code> or <code>cloud_init</code> or <code>shell_script</code>
 <ul>
 <li><p>rstudio An RStudio server docker image with tidyverse and devtools</p></li>
 <li><p>rstudio-gpu An RStudio server with popular R machine learning libraries and GPU driver.  Will launch a GPU enabled VM.</p></li>
-<li><p>rstudio-shiny An RStudio server with Shiny also installed.</p></li>
+<li><p>rstudio-shiny An RStudio server with Shiny also installed, proxied to /shiny</p></li>
 <li><p>shiny A Shiny docker image</p></li>
 <li><p>opencpu An OpenCPU docker image</p></li>
 <li><p>r_base Latest version of R stable</p></li>

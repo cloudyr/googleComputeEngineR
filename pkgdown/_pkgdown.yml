@@ -14,15 +14,19 @@ navbar:
   type: inverse
   left:
     - text: "Setup"
-      icon: wrench
+      icon: fa-wrench
       href: articles/installation-and-authentication.html
     - text: "Creating VMs"
+      icon: fa-laptop
       href: articles/creating-vms.html
     - text: "SSH"
+      icon: fa-terminal
       href: articles/docker-ssh-futures.html
     - text: "Docker"
+      icon: fa-docker
       href: articles/docker.html
     - text: "GPUs"
+      icon: fa-memory
       href: articles/gpu.html
     - text: "Examples"
       menu:
@@ -50,17 +54,16 @@ navbar:
         href: news/index.html
       - text: "Troubleshooting"
         href: articles/troubleshooting.html
-  right:
-    - icon: fa-google fa-lg
-      href: https://cloud.google.com/compute/
-    - icon: fa-github fa-lg
-      href: https://github.com/cloudyr/googleComputeEngineR
-    - icon: fa-slack fa-lg
-      href: https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform
+      - text: "GCE Homepage"
+        icon: fa-google
+        href: https://cloud.google.com/compute/
+      - text: "GitHub"
+        icon: fa-github
+        href: https://github.com/cloudyr/googleComputeEngineR
+      - text: "Slack channel"
+        icon: fa-slack
+        href: https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform
 reference:
-  - title: "Authentication"
-    contents:
-      - gce_auth
   - title: "Creating a VM instance"
     desc: >
       Functions for creating a new instance from various presets and options
@@ -78,6 +81,8 @@ reference:
       - gce_vm_reset
       - gce_vm_delete
       - gce_get_external_ip
+      - matches("logs")
+      - gce_set_mincpuplatform
   - title: "Scheduling helpers"
     contents:
       - matches("schedule")
@@ -87,6 +92,8 @@ reference:
       - matches("docker")
       - matches("template")
       - matches("registry")
+      - localhost
+      - makeDockerClusterPSOCK
   - title: "Template specific"
     desc: >
       Various functions that work with specific VM templates
@@ -148,3 +155,4 @@ reference:
       These functions let you work with those.
     contents:
       - matches("_op")
+      - gce_wait

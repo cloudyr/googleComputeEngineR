@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2019-02-18" />
+<meta name="date" content="2019-03-01" />
 
 <title>GPU Enabled instances</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">GPU Enabled instances</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2019-02-18</em></h4>
+<h4 class="date"><em>2019-03-01</em></h4>
 
 
 
@@ -105,7 +105,7 @@ vm &lt;-<span class="st"> </span><span class="kw">gce_vm_gpu</span>(<span class=
 <span class="co">#1 1969-12-31 16:00:00</span>
 <span class="co">#2 1969-12-31 16:00:00</span>
 <span class="co">#3 1969-12-31 16:00:00</span></code></pre></div>
-<p>GPUs are more restricted in the zones they are available than normal GPUs, you will get an error if you try to use a GPU outside a zone its available within.</p>
+<p>GPUs are more restricted in the zones they are available than normal instances, you will get an error if you try to use a GPU outside a zone its available within.</p>
 <p>From the above list, if you wanted to select another GPU you would then issue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw">gce_vm_gpu</span>(<span class="dt">name =</span> <span class="st">&quot;gpu&quot;</span>, <span class="dt">acceleratorCount =</span> <span class="dv">4</span>, <span class="dt">acceleratorType =</span> <span class="st">&quot;nvidia-tesla-k80&quot;</span>)</code></pre></div>
 </div>

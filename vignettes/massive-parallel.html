@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2018-03-03" />
+<meta name="date" content="2019-03-01" />
 
 <title>Massively parallel processing</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Massively parallel processing</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2018-03-03</em></h4>
+<h4 class="date"><em>2019-03-01</em></h4>
 
 
 
@@ -106,8 +106,8 @@ jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <spa
     <span class="kw">gce_vm_template</span>(<span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>,
                     <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>,
                     <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker),
-                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    <span class="dt">dynamic_image =</span> my_docker,
+                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
                     })
 jobs
 <span class="co"># [[1]]</span>
@@ -167,7 +167,7 @@ vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_se
 </div>
 <div id="using-the-cluster" class="section level3">
 <h3>Using the cluster</h3>
-<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code>future::future_lapply</code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future"><code>future</code> documentation</a> for details.</p>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code>future.apply::future_lapply</code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future.apply"><code>future.apply</code> documentation</a> for details.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## use %&lt;-% to send functions to work on cluster
 ## See future README for details: https://github.com/HenrikBengtsson/future
 a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">Sys.getpid</span>()
@@ -191,7 +191,7 @@ resolved(result)
 <div id="forecasting-a-large-data-set" class="section level3">
 <h3>Forecasting a large data set</h3>
 <p>The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package <code>future</code> in these Docker images.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future.apply) ## Will automatically load future too
 <span class="kw">library</span>(googleComputeEngineR)
 
 ## names for your cluster - just three for this example
@@ -205,8 +205,8 @@ jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <spa
     <span class="kw">gce_vm_template</span>(<span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>,
                     <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>,
                     <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker),
-                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    <span class="dt">dynamic_image =</span> my_docker,
+                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
                     })
                      
 ## wait for all the jobs to complete and VMs are ready
@@ -243,7 +243,7 @@ cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data
 }
 
 ## send to cluster
-result &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw">future_lapply</span>(my_data, cluster_f, <span class="dt">args =</span> <span class="dv">4</span>) 
+result &lt;-<span class="st"> </span>future.apply<span class="op">::</span><span class="kw">future_lapply</span>(my_data, cluster_f, <span class="dt">args =</span> <span class="dv">4</span>) 
 
 ## once done this will be TRUE
 <span class="kw">resolved</span>(result)
@@ -264,6 +264,7 @@ result</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
 <span class="kw">library</span>(googleComputeEngineR)
 <span class="kw">library</span>(future)
+<span class="kw">library</span>(future.apply)
 <span class="kw">library</span>(SpaDES.tools)
 
 <span class="kw">gce_global_project</span>(<span class="st">&quot;your-project&quot;</span>)

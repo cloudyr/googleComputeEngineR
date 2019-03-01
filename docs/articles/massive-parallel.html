@@ -44,22 +44,38 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../articles/installation-and-authentication.html">
-    <span class=" wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
   </a>
 </li>
 <li>
-  <a href="../articles/creating-vms.html">Creating VMs</a>
+  <a href="../articles/creating-vms.html">
+    <span class="fa fa-laptop"></span>
+     
+    Creating VMs
+  </a>
 </li>
 <li>
-  <a href="../articles/docker-ssh-futures.html">SSH</a>
+  <a href="../articles/docker-ssh-futures.html">
+    <span class="fa fa-terminal"></span>
+     
+    SSH
+  </a>
 </li>
 <li>
-  <a href="../articles/docker.html">Docker</a>
+  <a href="../articles/docker.html">
+    <span class="fa fa-docker"></span>
+     
+    Docker
+  </a>
 </li>
 <li>
-  <a href="../articles/gpu.html">GPUs</a>
+  <a href="../articles/gpu.html">
+    <span class="fa fa-memory"></span>
+     
+    GPUs
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -110,29 +126,31 @@
     <li>
       <a href="../articles/troubleshooting.html">Troubleshooting</a>
     </li>
+    <li>
+      <a href="https://cloud.google.com/compute/">
+        <span class="fa fa-google"></span>
+         
+        Google docs
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/cloudyr/googleComputeEngineR">
+        <span class="fa fa-github"></span>
+         
+        GitHub
+      </a>
+    </li>
+    <li>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
+        <span class="fa fa-slack"></span>
+         
+        Slack help
+      </a>
+    </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://cloud.google.com/compute/">
-    <span class="fa fa-google fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://github.com/cloudyr/googleComputeEngineR">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
-    <span class="fa fa-slack fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -147,7 +165,7 @@
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-02-18</h4>
+            <h4 class="date">2019-03-01</h4>
       
       
       <div class="hidden name"><code>massive-parallel.Rmd</code></div>
@@ -191,8 +209,8 @@ jobs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
     <span class="kw"><a href="../reference/gce_vm_template.html">gce_vm_template</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>,
                     <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>,
                     <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker),
-                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    <span class="dt">dynamic_image =</span> my_docker,
+                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
                     })
 jobs
 <span class="co"># [[1]]</span>
@@ -237,14 +255,14 @@ vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, gce_ssh_setup)</code></pre></div>
 <p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
 </div>
 <div id="using-your-own-docker-image" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-your-own-docker-image" class="anchor"></a>Using your own Docker image</h3>
 <p>The default uses <code>rocker/r-base</code> as its image, but if you want your own custom image then create your own Docker image, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
 <p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(
   vms, 
   <span class="dt">docker_image=</span><span class="st">"gcr.io/my-project/my-r"</span>,
   <span class="dt">rscript=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"docker"</span>, <span class="st">"run"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--net=host"</span>,<span class="st">"--shm-size=13G"</span>),
@@ -254,7 +272,7 @@ vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <div id="using-the-cluster" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-the-cluster" class="anchor"></a>Using the cluster</h3>
-<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code><a href="https://www.rdocumentation.org/packages/future/topics/future_lapply">future::future_lapply</a></code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future"><code>future</code> documentation</a> for details.</p>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future.apply::future_lapply</a></code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future.apply"><code>future.apply</code> documentation</a> for details.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## use %&lt;-% to send functions to work on cluster
 ## See future README for details: https://github.com/HenrikBengtsson/future
 a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getpid">Sys.getpid</a></span>()
@@ -280,7 +298,7 @@ resolved(result)
 <h3 class="hasAnchor">
 <a href="#forecasting-a-large-data-set" class="anchor"></a>Forecasting a large data set</h3>
 <p>The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package <code>future</code> in these Docker images.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future.apply) ## Will automatically load future too
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
 
 ## names for your cluster - just three for this example
@@ -294,8 +312,8 @@ jobs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
     <span class="kw"><a href="../reference/gce_vm_template.html">gce_vm_template</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>,
                     <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>,
                     <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker),
-                    wait =<span class="st"> </span><span class="ot">FALSE</span>
+                    <span class="dt">dynamic_image =</span> my_docker,
+                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
                     })
                      
 ## wait for all the jobs to complete and VMs are ready
@@ -312,8 +330,8 @@ my_rscript &lt;-<span class="st"> </span><span class="kw"><a href="https://www.r
                 <span class="st">"Rscript"</span>)
                 
 ## create the future cluster
-<span class="kw">plan</span>(cluster, 
-     <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, 
+<span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, 
+     <span class="dt">workers =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(vms, 
                           <span class="dt">docker_image=</span>my_docker,
                           <span class="dt">rscript=</span>my_rscript),
                           
@@ -332,10 +350,10 @@ cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data
 }
 
 ## send to cluster
-result &lt;-<span class="st"> </span>future<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(my_data, cluster_f, <span class="dt">args =</span> <span class="dv">4</span>) 
+result &lt;-<span class="st"> </span>future.apply<span class="op">::</span><span class="kw">future_lapply</span>(my_data, cluster_f, <span class="dt">args =</span> <span class="dv">4</span>) 
 
 ## once done this will be TRUE
-<span class="kw">resolved</span>(result)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/resolved">resolved</a></span>(result)
 
 ## Your list of forecasts are now available
 result</code></pre></div>
@@ -353,6 +371,7 @@ result</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(raster)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future.apply)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(SpaDES.tools)
 
 <span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"your-project"</span>)

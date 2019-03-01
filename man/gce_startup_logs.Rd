@@ -7,7 +7,9 @@
 gce_startup_logs(instance, type = c("shell", "cloud-config", "nginx"))
 }
 \arguments{
-\item{instance}{The instance to get startup script logs from
+\item{instance}{The instance to get startup script logs from}
+
+\item{type}{The type of log to run
 
 Will use SSH so that needs to be setup}
 }
