@@ -62,7 +62,7 @@ jobs
 # Started:  2016-11-16 06:53:09
 
 ## check status of jobs
-lapply(jobs, gce_get_zone_op)
+lapply(jobs, gce_get_op)
 # [[1]]
 # ==Operation insert :  DONE
 # Started:  2016-11-16 06:52:58
@@ -83,7 +83,7 @@ lapply(jobs, gce_get_zone_op)
 
 
 ## wait for all the jobs to complete and VMs are ready
-vms <- lapply(vm_names, gce_wait)
+jobs <- lapply(vm_names, gce_wait)
 
 
 ## get the VM objects
@@ -97,7 +97,16 @@ It is safest to setup the SSH keys seperately for multiple instances, using `gce
 vms <- lapply(vms, gce_ssh_setup)
 ```
 
+If everything has setup successfully, then you should be able to see the SSH commands return everything is ok:
+
+```r
+lapply(vms, function(x){
+  gce_ssh(vm, paste("echo", x$name, "ssh working"))
+})
+```
+
 We now make the VM cluster as per details given in the [future README](https://github.com/HenrikBengtsson/future)
+
 ```r
 ## make a future cluster
 plan(cluster, workers = vms)
@@ -107,14 +116,14 @@ plan(cluster, workers = vms)
 
 The default uses `rocker/r-base` as its image, but if you want your own custom image then create your own Docker image, for example via [this tutorial using Google Build Triggers](articles/docker.html#build-triggers).
 
-This will give you a docker image name such as `gcr.io/my-project/my-r` - use a version of the code below to use this in your cluster:
+This will give you a docker image name such as `gcr.io/my-project/my-r` - use a version of the code below to use this in your cluster.  The `--net=host` should be included so the Docker image uses the SSH ports the host VM has (e.g. it can connect to your SSH commands)
 
 ```r
 plan(cluster, workers = as.cluster(
   vms, 
   docker_image="gcr.io/my-project/my-r",
-  rscript=c("docker", "run", c("--net=host","--shm-size=13G"),
-			"gcr.io/my-rstudio", 
+  rscript=c("docker", "run", "--net=host",
+			"gcr.io/my-project/my-r", 
 			"Rscript")))
 ```
 
@@ -172,8 +181,11 @@ jobs <- lapply(vm_names, function(x) {
                     })
                      
 ## wait for all the jobs to complete and VMs are ready
-vms <- lapply(vm_names, gce_wait)
-                     
+jobs <- lapply(vm_names, gce_wait)
+
+## get running GCE VM objects    
+vms <- lapply(vm_names, gce_vm)
+
 ## set up SSH for the VMs
 vms <- lapply(vms, gce_ssh_setup)  # set any settings necessary here for SSH                    
 
@@ -284,7 +296,7 @@ my_single_function <- function(x){
   raster::predict(x, mod)
 }
 
-#parallel - working!
+#parallel - working?
 result <- future_lapply(o, my_single_function)
 
 ## tidy up

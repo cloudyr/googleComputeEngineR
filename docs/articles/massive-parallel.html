@@ -130,7 +130,7 @@
       <a href="https://cloud.google.com/compute/">
         <span class="fa fa-google"></span>
          
-        Google docs
+        GCE Homepage
       </a>
     </li>
     <li>
@@ -144,7 +144,7 @@
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSerjirmMpB3b7LmBs_Vx_XPIE9IrhpCpPg1jUcpfBcivA3uBw/viewform">
         <span class="fa fa-slack"></span>
          
-        Slack help
+        Slack channel
       </a>
     </li>
   </ul>
@@ -165,7 +165,7 @@
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-01</h4>
+            <h4 class="date">2019-03-25</h4>
       
       
       <div class="hidden name"><code>massive-parallel.Rmd</code></div>
@@ -224,7 +224,7 @@ jobs
 <span class="co"># Started:  2016-11-16 06:53:09</span>
 
 ## check status of jobs
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(jobs, gce_get_zone_op)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(jobs, gce_get_op)
 <span class="co"># [[1]]</span>
 <span class="co"># ==Operation insert :  DONE</span>
 <span class="co"># Started:  2016-11-16 06:52:58</span>
@@ -245,7 +245,7 @@ jobs
 
 
 ## wait for all the jobs to complete and VMs are ready
-vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vm_names, gce_wait)
+jobs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vm_names, gce_wait)
 
 
 ## get the VM objects
@@ -253,6 +253,10 @@ vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <p>It is safest to setup the SSH keys seperately for multiple instances, using <code><a href="../reference/gce_ssh_setup.html">gce_ssh_setup()</a></code> - this is normally called for you when you first connect to a VM.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set up SSH for the VMs
 vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, gce_ssh_setup)</code></pre></div>
+<p>If everything has setup successfully, then you should be able to see the SSH commands return everything is ok:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, <span class="cf">function</span>(x){
+  <span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"echo"</span>, x<span class="op">$</span>name, <span class="st">"ssh working"</span>))
+})</code></pre></div>
 <p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
 <span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
@@ -261,12 +265,12 @@ vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <h3 class="hasAnchor">
 <a href="#using-your-own-docker-image" class="anchor"></a>Using your own Docker image</h3>
 <p>The default uses <code>rocker/r-base</code> as its image, but if you want your own custom image then create your own Docker image, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
-<p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster:</p>
+<p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster. The <code>--net=host</code> should be included so the Docker image uses the SSH ports the host VM has (e.g. it can connect to your SSH commands)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/as.cluster">as.cluster</a></span>(
   vms, 
   <span class="dt">docker_image=</span><span class="st">"gcr.io/my-project/my-r"</span>,
-  <span class="dt">rscript=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"docker"</span>, <span class="st">"run"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--net=host"</span>,<span class="st">"--shm-size=13G"</span>),
-            <span class="st">"gcr.io/my-rstudio"</span>, 
+  <span class="dt">rscript=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"docker"</span>, <span class="st">"run"</span>, <span class="st">"--net=host"</span>,
+            <span class="st">"gcr.io/my-project/my-r"</span>, 
             <span class="st">"Rscript"</span>)))</code></pre></div>
 </div>
 <div id="using-the-cluster" class="section level3">
@@ -317,8 +321,11 @@ jobs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
                     })
                      
 ## wait for all the jobs to complete and VMs are ready
-vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vm_names, gce_wait)
-                     
+jobs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vm_names, gce_wait)
+
+## get running GCE VM objects    
+vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vm_names, gce_vm)
+
 ## set up SSH for the VMs
 vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, gce_ssh_setup)  <span class="co"># set any settings necessary here for SSH                    </span>
 
@@ -425,7 +432,7 @@ my_single_function &lt;-<span class="st"> </span><span class="cf">function</span
   raster<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/predict">predict</a></span>(x, mod)
 }
 
-<span class="co">#parallel - working!</span>
+<span class="co">#parallel - working?</span>
 result &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/future_lapply">future_lapply</a></span>(o, my_single_function)
 
 ## tidy up
