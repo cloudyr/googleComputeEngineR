@@ -7,6 +7,8 @@
 #' @param docker_image The docker image the jobs on the cluster will run on. Recommend this is derived from \code{rocker/r-parallel}
 #' @param ... Passed to \link{gce_vm_template}
 #' @param ssh_args A list of optional arguments that will be passed to \link{gce_ssh_setup}
+#' @param project The project to launch the cluster in
+#' @param zone The zone to launch the cluster in
 #' 
 #' @export
 #' @import assertthat

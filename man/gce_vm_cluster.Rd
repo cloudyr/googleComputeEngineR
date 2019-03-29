@@ -18,6 +18,10 @@ gce_vm_cluster(vm_prefix = "r-cluster-", cluster_size = 3,
 \item{...}{Passed to \link{gce_vm_template}}
 
 \item{ssh_args}{A list of optional arguments that will be passed to \link{gce_ssh_setup}}
+
+\item{project}{The project to launch the cluster in}
+
+\item{zone}{The zone to launch the cluster in}
 }
 \description{
 This wraps the commands for creating a cluster suitable for \link[future]{future} workloads.

@@ -34,7 +34,7 @@ The example below uses a default `rocker/r-parallel` template, but you can also 
 
 Instead of the more generic `gce_vm()` that is used for more interactive use, we create the instances directly using `gce_vm_cluster()`.  
 
-This creates a cluster, uploads and SSH settings you have and tests the connection, then returns the list of VMs suitable for use in `future::cluster()`.
+This creates a cluster, uploads any SSH settings you have and tests the connection, then returns the list of VMs suitable for use in `future::cluster()`.
 
 By default it makes a 3 size cluster called `r-cluster-1/2/3`:
 

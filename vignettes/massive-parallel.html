@@ -94,7 +94,7 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 <h3>Create the cluster</h3>
 <p>The example below uses a default <code>rocker/r-parallel</code> template, but you can also create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
 <p>Instead of the more generic <code>gce_vm()</code> that is used for more interactive use, we create the instances directly using <code>gce_vm_cluster()</code>.</p>
-<p>This creates a cluster, uploads and SSH settings you have and tests the connection, then returns the list of VMs suitable for use in <code>future::cluster()</code>.</p>
+<p>This creates a cluster, uploads any SSH settings you have and tests the connection, then returns the list of VMs suitable for use in <code>future::cluster()</code>.</p>
 <p>By default it makes a 3 size cluster called <code>r-cluster-1/2/3</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(googleComputeEngineR)
