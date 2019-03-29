@@ -128,7 +128,7 @@ gce_vm_template <- function(template = c("rstudio",
   if(wait){
     gce_wait(job, wait = 10)
   } else {
-    myMessage("Returning the VM startup job, not the VM instance.", level = 3)
+    myMessage("Returning the VM startup job, not the VM instance.", level = 2)
     return(job)
   }
 

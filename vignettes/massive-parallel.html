@@ -12,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2019-03-01" />
+<meta name="date" content="2019-03-29" />
 
 <title>Massively parallel processing</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Massively parallel processing</h1>
 <h4 class="author"><em>Mark Edmondson</em></h4>
-<h4 class="date"><em>2019-03-01</em></h4>
+<h4 class="date"><em>2019-03-29</em></h4>
 
 
 
@@ -92,78 +92,45 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 </ol>
 <div id="create-the-cluster" class="section level3">
 <h3>Create the cluster</h3>
-<p>The example below uses a default <code>r-base</code> template, but you can also create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
-<p>Instead of the more generic <code>gce_vm()</code> that is used for more interactive use, we create the instances directly using <code>gce_vm_template()</code> so it doesn’t wait for the job to complete before starting the next (not useful if you have a lot of VMs). You can then use <code>gce_get_zone_op()</code> to get the job status, and use <code>gce_wait()</code> to return when they are done.</p>
+<p>The example below uses a default <code>rocker/r-parallel</code> template, but you can also create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
+<p>Instead of the more generic <code>gce_vm()</code> that is used for more interactive use, we create the instances directly using <code>gce_vm_cluster()</code>.</p>
+<p>This creates a cluster, uploads and SSH settings you have and tests the connection, then returns the list of VMs suitable for use in <code>future::cluster()</code>.</p>
+<p>By default it makes a 3 size cluster called <code>r-cluster-1/2/3</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future)
 <span class="kw">library</span>(googleComputeEngineR)
 
-## names for your cluster
-vm_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;vm1&quot;</span>,<span class="st">&quot;vm2&quot;</span>,<span class="st">&quot;vm3&quot;</span>)
-
-## create the cluster using default template for r-base
-## creates jobs that are creating VMs in background
-jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <span class="cf">function</span>(x) {
-    <span class="kw">gce_vm_template</span>(<span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>,
-                    <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>,
-                    <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker,
-                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
-                    })
-jobs
-<span class="co"># [[1]]</span>
-<span class="co"># ==Operation insert :  PENDING</span>
-<span class="co"># Started:  2016-11-16 06:52:58</span>
-<span class="co"># [[2]]</span>
-<span class="co"># ==Operation insert :  PENDING</span>
-<span class="co"># Started:  2016-11-16 06:53:04</span>
-<span class="co"># [[3]]</span>
-<span class="co"># ==Operation insert :  PENDING</span>
-<span class="co"># Started:  2016-11-16 06:53:09</span>
-
-## check status of jobs
-<span class="kw">lapply</span>(jobs, gce_get_zone_op)
-<span class="co"># [[1]]</span>
-<span class="co"># ==Operation insert :  DONE</span>
-<span class="co"># Started:  2016-11-16 06:52:58</span>
-<span class="co"># Ended: 2016-11-16 06:53:14 </span>
-<span class="co"># Operation complete in 16 secs </span>
-
-<span class="co"># [[2]]</span>
-<span class="co"># ==Operation insert :  DONE</span>
-<span class="co"># Started:  2016-11-16 06:53:04</span>
-<span class="co"># Ended: 2016-11-16 06:53:20 </span>
-<span class="co"># Operation complete in 16 secs </span>
-
-<span class="co"># [[3]]</span>
-<span class="co"># ==Operation insert :  DONE</span>
-<span class="co"># Started:  2016-11-16 06:53:09</span>
-<span class="co"># Ended: 2016-11-16 06:53:30 </span>
-<span class="co"># Operation complete in 21 secs</span>
-
-
-## wait for all the jobs to complete and VMs are ready
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_wait)
-
-
-## get the VM objects
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm)</code></pre></div>
-<p>It is safest to setup the SSH keys seperately for multiple instances, using <code>gce_ssh_setup()</code> - this is normally called for you when you first connect to a VM.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## set up SSH for the VMs
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)</code></pre></div>
+vms &lt;-<span class="st"> </span><span class="kw">gce_vm_cluster</span>()
+<span class="co">#2019-03-29 23:24:54&gt; # Creating cluster with these arguments:template = r-base,dynamic_image = rocker/r-parallel,wait = #FALSE,predefined_type = n1-standard-1</span>
+<span class="co">#2019-03-29 23:25:04&gt; Operation running...</span>
+<span class="co">#2019-03-29 23:25:07&gt; Operation running...</span>
+<span class="co">#2019-03-29 23:25:10&gt; Operation running...</span>
+<span class="co">#2019-03-29 23:25:17&gt; Operation complete in 13 secs</span>
+<span class="co">#2019-03-29 23:25:20&gt; Operation complete in 13 secs</span>
+<span class="co">#2019-03-29 23:25:23&gt; Operation complete in 14 secs</span>
+<span class="co">#2019-03-29 23:25:25&gt; r-cluster-1 VM running</span>
+<span class="co">#2019-03-29 23:25:27&gt; r-cluster-2 VM running</span>
+<span class="co">#2019-03-29 23:25:29&gt; r-cluster-3 VM running</span>
+<span class="co">#2019-03-29 23:25:37&gt; Public SSH key uploaded to instance</span>
+<span class="co">#2019-03-29 23:25:45&gt; Public SSH key uploaded to instance</span>
+<span class="co">#2019-03-29 23:25:53&gt; Public SSH key uploaded to instance</span>
+<span class="co">#2019-03-29 23:25:53&gt; # Testing cluster:</span>
+<span class="co">#Warning: Permanently added '35.233.25.199' (ED25519) to the list of known hosts.</span>
+r<span class="op">-</span>cluster<span class="op">-</span><span class="dv">1</span> ssh working
+<span class="co">#Warning: Permanently added '35.187.54.41' (ED25519) to the list of known hosts.</span>
+r<span class="op">-</span>cluster<span class="op">-</span><span class="dv">2</span> ssh working
+<span class="co">#Warning: Permanently added '35.205.66.124' (ED25519) to the list of known hosts.</span>
+r<span class="op">-</span>cluster<span class="op">-</span><span class="dv">3</span> ssh working</code></pre></div>
 <p>We now make the VM cluster as per details given in the <a href="https://github.com/HenrikBengtsson/future">future README</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make a future cluster
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> vms)</code></pre></div>
+<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms))</code></pre></div>
+<p>You can pass in your own arguments to <code>gce_vm_cluster()</code> such as which docker image to use, name and custom SSH arguments you may have. See the function documentation for details.</p>
 </div>
 <div id="using-your-own-docker-image" class="section level3">
 <h3>Using your own Docker image</h3>
-<p>The default uses <code>rocker/r-base</code> as its image, but if you want your own custom image then create your own Docker image, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
-<p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(
-  vms, 
-  <span class="dt">docker_image=</span><span class="st">&quot;gcr.io/my-project/my-r&quot;</span>,
-  <span class="dt">rscript=</span><span class="kw">c</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;run&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;--net=host&quot;</span>,<span class="st">&quot;--shm-size=13G&quot;</span>),
-            <span class="st">&quot;gcr.io/my-rstudio&quot;</span>, 
-            <span class="st">&quot;Rscript&quot;</span>)))</code></pre></div>
+<p>The default uses <code>rocker/r-parallel</code> as its image, but if you want your own custom image then create your own Docker image based on that one, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
+<p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster.</p>
+<p>You can also customise the <code>RScript</code> command that launches your script, but always make sure to include <code>--net=host</code> as is shown in the default arguments, so the Docker image uses the SSH ports the host VM has (e.g. it can connect to your SSH commands)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, <span class="dt">docker_image=</span><span class="st">&quot;gcr.io/my-project/my-r&quot;</span>))</code></pre></div>
 </div>
 <div id="using-the-cluster" class="section level3">
 <h3>Using the cluster</h3>
@@ -194,39 +161,14 @@ resolved(result)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(future.apply) ## Will automatically load future too
 <span class="kw">library</span>(googleComputeEngineR)
 
-## names for your cluster - just three for this example
-vm_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;vm1&quot;</span>,<span class="st">&quot;vm2&quot;</span>,<span class="st">&quot;vm3&quot;</span>)
-
 my_docker &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;custom-image&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;my-project&quot;</span>)
 
-## create the cluster using custom docker image
-## creates jobs that are creating VMs in background
-jobs &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, <span class="cf">function</span>(x) {
-    <span class="kw">gce_vm_template</span>(<span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>,
-                    <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>,
-                    <span class="dt">name =</span> x,
-                    <span class="dt">dynamic_image =</span> my_docker,
-                    <span class="dt">wait =</span> <span class="ot">FALSE</span>)
-                    })
-                     
-## wait for all the jobs to complete and VMs are ready
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_wait)
-                     
-## set up SSH for the VMs
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)  <span class="co"># set any settings necessary here for SSH                    </span>
-
-## the Rscript command that will run in the cluster
-## customise as needed, this for example sets shared RAM to 13GB
-my_rscript &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;docker&quot;</span>, 
-                <span class="st">&quot;run&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;--net=host&quot;</span>,<span class="st">&quot;--shm-size=13G&quot;</span>),
-                docker_image, 
-                <span class="st">&quot;Rscript&quot;</span>)
+vms &lt;-<span class="st"> </span><span class="kw">gce_vm_cluster</span>(<span class="st">&quot;r-vm&quot;</span>, <span class="dt">cluster_size =</span> <span class="dv">3</span>, <span class="dt">docker_image =</span> my_docker)
                 
 ## create the future cluster
 <span class="kw">plan</span>(cluster, 
      <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, 
-                          <span class="dt">docker_image=</span>my_docker,
-                          <span class="dt">rscript=</span>my_rscript),
+                          <span class="dt">docker_image=</span>my_docker))
                           
 ## create the list of data to run on the cluster
 ## here we assume they are in a folder of CSVs
@@ -286,29 +228,12 @@ df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class=
 mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>layer, <span class="dt">data=</span>df)
 
 
-## create CPUs names
-vm_names &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;my-server&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
-
-## made via build triggers, installed raster on custom Docker image
-my_image &lt;-<span class="st"> </span><span class="kw">gce_tag_container</span>(<span class="st">&quot;raster&quot;</span>, <span class="dt">project =</span> <span class="st">&quot;your-project&quot;</span>)
-
-## start up VMs with custom Dockerfile
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vm_names, gce_vm, 
-              <span class="dt">predefined_type =</span> <span class="st">&quot;n1-standard-1&quot;</span>, 
-              <span class="dt">template =</span> <span class="st">&quot;r-base&quot;</span>, 
-              <span class="dt">dynamic_image =</span> my_image)
-
-## add any ssh details, username etc.
-vms &lt;-<span class="st"> </span><span class="kw">lapply</span>(vms, gce_ssh_setup)
+## create CPUs names - here we customise the CPU machine type
+vms &lt;-<span class="st"> </span><span class="kw">gce_vm_cluster</span>(<span class="st">&quot;myvms&quot;</span>, <span class="dt">predefined_type =</span> <span class="st">&quot;n1-highmem-2&quot;</span>)
 
 ## once all launched, add to cluster with custom Dockerfile
 ## use plan(sequential) for local testing
-<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(
-  vms, 
-  <span class="dt">docker_image=</span>my_image,
-  <span class="dt">rscript=</span><span class="kw">c</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;run&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;--net=host&quot;</span>),
-            my_image, 
-            <span class="st">&quot;Rscript&quot;</span>)))
+<span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, <span class="dt">docker_image=</span>my_image)
 
 ## make the vector of stuff to send to nodes
 o &lt;-<span class="st"> </span><span class="kw">lapply</span>(r_split, readAll)
@@ -318,7 +243,7 @@ my_single_function &lt;-<span class="st"> </span><span class="cf">function</span
   raster<span class="op">::</span><span class="kw">predict</span>(x, mod)
 }
 
-<span class="co">#parallel - working!</span>
+<span class="co">#parallel - working?</span>
 result &lt;-<span class="st"> </span><span class="kw">future_lapply</span>(o, my_single_function)
 
 ## tidy up
@@ -328,7 +253,10 @@ result &lt;-<span class="st"> </span><span class="kw">future_lapply</span>(o, my
 <h3>Cleanup</h3>
 <p>Remember to shut down your cluster. You are charged per second, per instance of uptime.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## shutdown instances when finished
-<span class="kw">lapply</span>(vms, gce_vm_stop)</code></pre></div>
+<span class="kw">gce_vm_stop</span>(vms)
+
+<span class="co"># or delete them</span>
+<span class="kw">gce_vm_delete</span>(vms)</code></pre></div>
 </div>
 <div id="pre-emptible-vms" class="section level3">
 <h3>Pre-emptible VMs</h3>

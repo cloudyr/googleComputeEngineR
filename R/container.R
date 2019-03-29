@@ -73,7 +73,7 @@ gce_vm_container <- function(file = NULL,
 
   myMessage(sprintf("Run gce_startup_logs(your-instance, '%s') to track startup script logs", 
                     file_type), 
-            level = 3)
+            level = 2)
   
   do.call(gce_vm_create, c(list(image_family = image_family,
                                 image_project = image_project), 

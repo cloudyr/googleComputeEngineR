@@ -94,9 +94,6 @@
     <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_extract_projectzone.html</loc>
   </url>
   <url>
-    <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_future_install_packages.html</loc>
-  </url>
-  <url>
     <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_get_disk.html</loc>
   </url>
   <url>
@@ -266,6 +263,9 @@
   </url>
   <url>
     <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_vm.html</loc>
+  </url>
+  <url>
+    <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_vm_cluster.html</loc>
   </url>
   <url>
     <loc>https://cloudyr.github.io/googleComputeEngineR//reference/gce_vm_container.html</loc>

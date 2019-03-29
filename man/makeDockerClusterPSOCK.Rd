@@ -4,9 +4,9 @@
 \alias{makeDockerClusterPSOCK}
 \title{Make the Docker cluster on Google Compute Engine}
 \usage{
-makeDockerClusterPSOCK(workers, docker_image = "rocker/r-base",
+makeDockerClusterPSOCK(workers, docker_image = "rocker/r-parallel",
   rscript = c("docker", "run", "--net=host", docker_image, "Rscript"),
-  rscript_args = NULL, install_future = TRUE, ..., verbose = FALSE)
+  rscript_args = NULL, install_future = FALSE, ..., verbose = FALSE)
 }
 \arguments{
 \item{workers}{The VMs being called upon}
@@ -17,7 +17,7 @@ makeDockerClusterPSOCK(workers, docker_image = "rocker/r-base",
 
 \item{rscript_args}{Arguments to the RScript}
 
-\item{install_future}{Whether to check if future is installed first}
+\item{install_future}{Whether to check if future is installed first (not needed if using docker derived from rocker/r-parallel which is recommended)}
 
 \item{...}{Other arguments passed to \link[future]{makeClusterPSOCK}}
 

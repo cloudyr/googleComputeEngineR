@@ -1,3 +1,21 @@
+#' Check if instance exists already, if it does return it
+#' @noRd
+check_vm_exists <- function(name, project, zone){
+  
+  stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)
+  
+  if(name %in% stopped$items$name){
+    myMessage("VM previously created but not running, starting VM", level = 3)
+    job <- gce_vm_start(name, project = project, zone = zone)
+    gce_wait(job)
+    return(gce_get_instance(name, project, zone))
+  }
+  
+  NULL
+
+}
+
+
 #' Extract zone and project from an instance object
 #' 
 #' @param instance The instance

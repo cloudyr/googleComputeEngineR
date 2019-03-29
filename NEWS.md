@@ -12,6 +12,8 @@
 * Switch RStudio templates to use startup-scripts and metadata
 * Switch to applying a nginx proxy service to deal with port routing for templates
 * Add `gce_startup_logs()` to track whts going on when launching an instance
+* Vectorise `gce_vm_delete`, `gce_vm_stop`, `gce_vm_start` and `gce_vm_reset` functions so you can pass in a list of instances
+* Add `gce_vm_cluster()` to make it easier to create clusters for `future`
 
 # 0.2.0
 

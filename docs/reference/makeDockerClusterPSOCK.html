@@ -213,9 +213,9 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>makeDockerClusterPSOCK</span>(<span class='no'>workers</span>, <span class='kw'>docker_image</span> <span class='kw'>=</span> <span class='st'>"rocker/r-base"</span>,
+    <pre class="usage"><span class='fu'>makeDockerClusterPSOCK</span>(<span class='no'>workers</span>, <span class='kw'>docker_image</span> <span class='kw'>=</span> <span class='st'>"rocker/r-parallel"</span>,
   <span class='kw'>rscript</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"docker"</span>, <span class='st'>"run"</span>, <span class='st'>"--net=host"</span>, <span class='no'>docker_image</span>, <span class='st'>"Rscript"</span>),
-  <span class='kw'>rscript_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>install_future</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>rscript_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>install_future</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -238,7 +238,7 @@
     </tr>
     <tr>
       <th>install_future</th>
-      <td><p>Whether to check if future is installed first</p></td>
+      <td><p>Whether to check if future is installed first (not needed if using docker derived from rocker/r-parallel which is recommended)</p></td>
     </tr>
     <tr>
       <th>...</th>
