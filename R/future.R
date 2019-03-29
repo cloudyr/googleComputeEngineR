@@ -172,9 +172,9 @@ as.cluster.gce_instance <- function(x,
   stopifnot(check_ssh_set(x))
   
   if (is.null(x$kind)) {
-    ips <- vapply(x, FUN = gce_get_external_ip, FUN.VALUE = character(1L))
+    ips <- vapply(x, FUN = gce_get_external_ip, FUN.VALUE = character(1L), verbose = FALSE)
   } else {
-    ips <- gce_get_external_ip(x)
+    ips <- gce_get_external_ip(x, verbose = FALSE)
   }
   stopifnot(!is.null(ips))
   

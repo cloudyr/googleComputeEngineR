@@ -478,7 +478,7 @@ gce_vm_reset_one <- function(instance,
 #' }
 #' 
 #' 
-#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
+#' @param instances Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 

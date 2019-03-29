@@ -8,11 +8,11 @@ gce_vm_start(instances, project = gce_get_global_project(),
   zone = gce_get_global_zone())
 }
 \arguments{
+\item{instances}{Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}}
+
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
-
-\item{instance}{Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}}
 }
 \value{
 An Operation object with pending status
