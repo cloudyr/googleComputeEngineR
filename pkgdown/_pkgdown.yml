@@ -72,6 +72,7 @@ reference:
       - gce_vm_create
       - gce_vm_container
       - gce_vm_template
+      - gce_vm_cluster
   - title: "Working with VM instances"
     desc: >
       Working with already created VM instances
