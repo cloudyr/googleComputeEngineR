@@ -1,7 +1,10 @@
 library(testthat)
 library(googleComputeEngineR)
 
-if(Sys.getenv("CI") != "true"){
+# change this to run tests
+do_test <- FALSE
+
+if(all(Sys.getenv("CI") != "true", do_test)){
   test_check("googleComputeEngineR")
 }
 
