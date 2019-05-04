@@ -1,4 +1,4 @@
-# 0.2.0.9001
+# 0.3.0
 
 * Fixed broken passing of `zone` and `project` arguments in `gce_vm`, `gce_vm_template`, `gce_get_external_ip`, and `gce_set_metadata`.
 * remove `gce_auth()` to favour auth with JSON key (#79)
