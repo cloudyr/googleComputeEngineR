@@ -6,7 +6,9 @@ Description: Interact with the 'Google Compute Engine' API in R. Lets you create
   start and stop instances in the 'Google Cloud'.  Support for preconfigured instances, 
   with templates for common R needs. 
 Authors@R: c(
-      person("Mark", "Edmondson", email = "r@sunholo.com", role = c("aut", "cre")),
+      person("Mark", "Edmondson", email = "m@sunholo.com",
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-8434-3881")),
       person("Scott", "Chamberlain", role = "ctb", email = "myrmecocystus@gmail.com"),
       person("Winston", "Chang", role = "ctb", email = "winston@stdout.org"),
       person("Henrik", "Bengtsson", role="ctb", email = "henrikb@braju.com"),
@@ -19,10 +21,9 @@ Depends:
 Imports:
     assertthat,
     future (>= 1.2.0),
-    googleAuthR (>= 0.6.0),
+    googleAuthR (>= 0.7.0),
     httr (>= 1.3.1),
     jsonlite (>= 1.1),
-    remotes,
     utils
 Suggests:
     covr,
@@ -34,4 +35,3 @@ License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
-Remotes: MarkEdmondson1234/googleAuthR
