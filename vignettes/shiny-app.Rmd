@@ -55,7 +55,7 @@ RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
     googleAuthR \
     devtools \
-    && Rscript -e "devtools::install_github(c('MarkEdmondson1234/googleID'))" \
+    && Rscript -e "remotes::install_github(c('MarkEdmondson1234/googleID'))" \
     ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
