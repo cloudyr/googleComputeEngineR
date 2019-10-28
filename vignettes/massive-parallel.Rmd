@@ -187,7 +187,7 @@ The final thing that we'll do before using our cluster is defining a convenience
 chunk_func <- function(x, n) split(x, cut(seq_along(x), n, labels = FALSE)) 
 ```
 
-We are now ready to use all 24 cores of the cluster. For this particular example, I'm going to loop over 48 iterations of our `slow_square()` function. (Note that this would take two minutes to run sequentially.) I'll use `future.lapply::future_sapply()` to run things in parallel will also use the `tictoc` package to record timing. I'm going to comment the next code block quite extensively, but just to quickly highlight the key conceptual stages:
+We are now ready to use all 24 cores of the cluster. For this particular example, I'm going to loop over 48 iterations of our `slow_square()` function. (Note that this would take two minutes to run sequentially.) I'll use `future.lapply::future_sapply()` to run things in parallel and will also use the `tictoc` package to record timing. I'm going to comment the next code block quite extensively, but just to quickly highlight the key conceptual stages:
 
 - First, we'll parallelize across the three VMs in our cluster via an outer `future_sapply()` call.
 - Next, we'll split our input data into chunks so that each VM could work on a separate part of the problem (i.e. VM1 gets `1:16`, VM2 gets `17:32`, and VM3 gets `33:48`)
