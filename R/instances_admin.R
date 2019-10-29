@@ -7,7 +7,7 @@ check_vm_exists <- function(name, project, zone){
   if(name %in% stopped$items$name){
     myMessage("VM previously created but not running, starting VM", level = 3)
     job <- gce_vm_start(name, project = project, zone = zone)
-    gce_wait(job)
+    gce_wait(job[[1]])
     return(gce_get_instance(name, project, zone))
   }
   

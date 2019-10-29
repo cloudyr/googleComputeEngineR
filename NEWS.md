@@ -1,6 +1,7 @@
 # 0.3.0.9000
 
 * Upgrade docker calls for `gce_push_registry` and friends (#151)
+* Fix being able to restart cluster VMs (#149)
 
 # 0.3.0
 

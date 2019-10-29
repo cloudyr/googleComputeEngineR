@@ -39,7 +39,6 @@ gce_vm_cluster <- function(vm_prefix = "r-cluster-",
   
   ## names for your cluster
   vm_names <- paste0(vm_prefix, 1:cluster_size)
-  
   vm_check <- lapply(vm_names, check_vm_exists, project = project, zone = zone)
   
   if(all(unlist(lapply(vm_check, is.gce_instance)))){

@@ -482,7 +482,7 @@ gce_vm_reset_one <- function(instance,
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
-#' @return An Operation object with pending status
+#' @return A list of operation objects with pending status
 #' 
 #' @importFrom googleAuthR gar_api_generator
 #' @export

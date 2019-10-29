@@ -15,7 +15,7 @@ gce_vm_start(instances, project = gce_get_global_project(),
 \item{zone}{The name of the zone for this request, default as set by \link{gce_get_global_zone}}
 }
 \value{
-An Operation object with pending status
+A list of operation objects with pending status
 }
 \description{
 Starts an instance that was stopped using the using the stop method.
