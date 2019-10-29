@@ -8,10 +8,12 @@
 
 <title>Schedule running a docker image upon a VM — gce_schedule_docker • googleComputeEngineR</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,11 +32,12 @@
 
 
 
-<meta property="og:title" content="Schedule running a docker image upon a VM — gce_schedule_docker" />
 
+<meta property="og:title" content="Schedule running a docker image upon a VM — gce_schedule_docker" />
 <meta property="og:description" content="Utility function to start a VM to run a docker container on a schedule.  
 You will need to create and build the Dockerfile first." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -74,7 +77,7 @@ You will need to create and build the Dockerfile first." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -188,7 +191,6 @@ You will need to create and build the Dockerfile first." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -209,15 +211,13 @@ You will need to create and build the Dockerfile first." />
     </div>
 
     <div class="ref-description">
-    
     <p>Utility function to start a VM to run a docker container on a schedule.  
 You will need to create and build the Dockerfile first.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>gce_schedule_docker</span>(<span class='no'>docker_image</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='st'>"53 4 * * *"</span>,
   <span class='kw'>vm</span> <span class='kw'>=</span> <span class='fu'><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></span>())</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -234,11 +234,10 @@ You will need to create and build the Dockerfile first.</p>
       <td><p>A VM object to schedule the script upon that you can SSH into</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The crontab schedule of the VM including your script</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>You may need to run <a href='gce_vm_scheduler.html'>gce_vm_scheduler</a> yourself first and then set 
@@ -256,11 +255,9 @@ then downloading and uploading data using <code><a href='https://www.rdocumentat
 or build via <a href='docker_build.html'>docker_build</a> to build on another VM or locally, 
 then push to a registry via <a href='gce_push_registry.html'>gce_push_registry</a></p>  
 <p>Any Docker image can be run, it does not have to be an R one.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other scheduler functions: <code><a href='gce_vm_scheduler.html'>gce_vm_scheduler</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -306,13 +303,9 @@ gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

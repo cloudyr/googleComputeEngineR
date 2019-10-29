@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>OpenCPU Server</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>opencpu-api-server.Rmd</code></div>
@@ -188,65 +188,66 @@
 <div id="launch-an-opencpu-instance" class="section level3">
 <h3 class="hasAnchor">
 <a href="#launch-an-opencpu-instance" class="anchor"></a>Launch an OpenCPU Instance</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-## start an opencpu template
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"opencpu"</span>, <span class="dt">template =</span> <span class="st">"opencpu"</span>, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)
-
-## wait for opencpu image to load
-<span class="kw"><a href="../reference/gce_container_logs.html">gce_check_container</a></span>(vm, <span class="st">"opencpu"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">## start an opencpu template</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"opencpu"</span>, <span class="dt">template =</span> <span class="st">"opencpu"</span>, <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">## wait for opencpu image to load</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="../reference/gce_container_logs.html">gce_check_container</a></span>(vm, <span class="st">"opencpu"</span>)</a></code></pre></div>
 </div>
 <div id="build-a-new-opencpu-image" class="section level3">
 <h3 class="hasAnchor">
 <a href="#build-a-new-opencpu-image" class="anchor"></a>Build a new OpenCPU image</h3>
 <p>This Dockerfile is available via <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("opencpu-installgithub")</a></code> and below. It installs an OpenCPU package from my <a href="code.markedmondson.me/predictClickOpenCPU/supercharge.html#1">prediction of user URLs for prefetching</a> application.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> opencpu/base
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install any package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    nano \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install your custom package from Github</span>
-<span class="ex">RUN</span> Rscript -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/predictClickOpenCPU'))"</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">FROM</span> opencpu/base</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># install any package dependencies</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    nano \</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    ## clean up</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    </a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">## Install your custom package from Github</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="ex">RUN</span> Rscript -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/predictClickOpenCPU'))"</span></a></code></pre></div>
 <p>The Dockerfile is used to build the custom image below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## build a docker image with your package installed
-<span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, 
-             <span class="dt">dockerfolder =</span> <span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"opencpu-installgithub"</span>),
-             <span class="dt">new_image =</span> <span class="st">"opencpu-predictclick"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## build a docker image with your package installed</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../reference/docker_build.html">docker_build</a></span>(vm, </a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">             <span class="dt">dockerfolder =</span> <span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"opencpu-installgithub"</span>),</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">             <span class="dt">new_image =</span> <span class="st">"opencpu-predictclick"</span>)</a></code></pre></div>
 </div>
 <div id="push-the-image-to-the-container-registry" class="section level3">
 <h3 class="hasAnchor">
 <a href="#push-the-image-to-the-container-registry" class="anchor"></a>Push the image to the Container Registry</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## push up to your private Google Container registry
-<span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, 
-                  <span class="dt">save_name =</span> <span class="st">"opencpu-predictclick"</span>, 
-                  <span class="dt">image_name =</span> <span class="st">"opencpu-predictclick"</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## push up to your private Google Container registry</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, </a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                  <span class="dt">save_name =</span> <span class="st">"opencpu-predictclick"</span>, </a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">                  <span class="dt">image_name =</span> <span class="st">"opencpu-predictclick"</span>)</a></code></pre></div>
 </div>
 <div id="deploy" class="section level3">
 <h3 class="hasAnchor">
 <a href="#deploy" class="anchor"></a>Deploy</h3>
 <p>In this case we don’t start a new instance, just stop the running OpenCPU container and start our own. We need to stop the default container to free up the ports <code>80</code> and <code>8004</code> that are needed for OpenCPU to work.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## stop default opencpu container
-<span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, <span class="st">"stop opencpu-server"</span>)
-
-## run custom opencpu server
-<span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(vm, 
-           <span class="dt">image =</span> <span class="st">"opencpu-predictclick"</span>, 
-           <span class="dt">name =</span> <span class="st">"predictclick"</span>, 
-           <span class="dt">detach =</span> <span class="ot">TRUE</span>, 
-           <span class="dt">docker_opts =</span> <span class="st">"-p 80:80 -p 8004:8004"</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## stop default opencpu container</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, <span class="st">"stop opencpu-server"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## run custom opencpu server</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(vm, </a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">           <span class="dt">image =</span> <span class="st">"opencpu-predictclick"</span>, </a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">           <span class="dt">name =</span> <span class="st">"predictclick"</span>, </a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">           <span class="dt">detach =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">           <span class="dt">docker_opts =</span> <span class="st">"-p 80:80 -p 8004:8004"</span>)</a></code></pre></div>
 <p>Clean up when you are done to avoid charges.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</a></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

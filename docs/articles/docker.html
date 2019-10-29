@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Docker</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>docker.Rmd</code></div>
@@ -180,27 +180,27 @@
 <p><code>googleComputeEngineR</code> has a lot of integration with <a href="https://www.docker.com/"><code>Docker</code></a>, using it to launch custom pre-made images via the <code>gce_vm_container</code> and <code>gce_vm_template</code> commands.</p>
 <p>Get an overview on how to <a href="https://cloud.google.com/compute/docs/containers/deploying-containers">install containers on Google Compute Engine here</a>.</p>
 <p>Use <code>Dockerfiles</code> to create the VM you want to run within, including R packages you want to install. As an example, this is a Dockerfile designed to install R packages for a Shiny app:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> rocker/shiny
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install R package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    libssl-dev \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install packages from CRAN</span>
-<span class="ex">RUN</span> install2.r --error <span class="dt">\ </span>
-    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    googleAuthR \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-<span class="co">## assume shiny app is in build folder /shiny</span>
-<span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">FROM</span> rocker/shiny</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    libssl-dev \</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    ## clean up</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">    </a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">    googleAuthR \</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">    ## clean up</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">## assume shiny app is in build folder /shiny</span></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
 <p>The <code>COPY</code> command copies from a folder in the same location as the <code>Dockerfile</code>, and then places it within the <code>/srv/shiny-server/</code> folder which is the default location for Shiny apps. This location means that the Shiny app will be avialable at <code>xxx.xxx.xxx.xxx/myapp/</code></p>
 <p>The example Dockerfile above installs <code>googleAuthR</code> from CRAN, <code>googleID</code> from GitHub and a Debian dependency for <code>googleAuthR</code> that is needed, <code>libssl-dev</code> via <code>apt-get</code>. Modify this for your own needs.</p>
 </div>
@@ -235,75 +235,67 @@ RUN install2.r --error \
 <li>The Dockerfile is pushed to GitHub (this example is in the googleComputeEngineR GitHub <a href="https://github.com/cloudyr/googleComputeEngineR/tree/master/inst/dockerfiles/testTrigger">here</a>)</li>
 <li>Login to the Google Cloud console and visit <a href="https://console.cloud.google.com/gcr/triggers">Build triggers</a>, and make a trigger with these settings:</li>
 </ol>
-<div class="figure">
-<img src="build-trigger-settings.png">
-</div>
+<p><img src="build-trigger-settings.png"></p>
 <p>Note the image name, folder to build from and that the tag is set to latest.</p>
 <p>This should then shown in the build trigger console like this:</p>
-<div class="figure">
-<img src="build-trigger-menu.png">
-</div>
+<p><img src="build-trigger-menu.png"></p>
 <p>This is in the public googleComputeEngineR image project, but should look similar for your own.</p>
 <ol start="4" style="list-style-type: decimal">
 <li>We now launch the VM with the custom image. Since it is an RStudio based template, we define template to be “rstudio” and supply a username and password. If it was a Shiny based Dockerfile, the template would be changed to “shiny”, etc.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-## auto auth messages
-## set default project ID to xxxxxx
-## set default zone to xxxxx
-
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"im-rstudio"</span>, 
-              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
-              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-              <span class="dt">username =</span> <span class="st">"test"</span>, 
-              <span class="dt">password =</span> <span class="st">"test1234"</span>, 
-              <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>))</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">## auto auth messages</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">## set default project ID to xxxxxx</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## set default zone to xxxxx</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"im-rstudio"</span>, </a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, </a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">              <span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">              <span class="dt">username =</span> <span class="st">"test"</span>, </a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">              <span class="dt">password =</span> <span class="st">"test1234"</span>, </a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">              <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>))</a></code></pre></div>
 <p>Note I change the project to the public one of the image, as its different from the paid project I put the VM into, but in your case it may be the same.</p>
 <p>The Dockerfile name is given by the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
-<span class="co"># [1] "gcr.io/gcer-public/test-trigger"</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"test-trigger"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># [1] "gcr.io/gcer-public/test-trigger"</span></a></code></pre></div>
 <p>You can use this function or pass in the image name directly as listed in the Build trigger console.</p>
 <ol start="4" style="list-style-type: decimal">
 <li>After a few mins visit the I.P. of the instance which should have RStudio running with the secret library installed:</li>
 </ol>
-<div class="figure">
-<img src="build-trigger-running.png">
-</div>
+<p><img src="build-trigger-running.png"></p>
 </div>
 </div>
 <div id="public-docker-images" class="section level2">
 <h2 class="hasAnchor">
 <a href="#public-docker-images" class="anchor"></a>Public Docker images</h2>
 <p>The <code>FROM</code> field in the <code>Dockerfile</code> could be a previously made image you or someone else has already created, allowing you to layer on top. The first example above is available via a public Google Continer Registry called <code>gcer-public</code>, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
-<div class="figure">
-<img src="build-trigger-menu.png">
-</div>
+<p><img src="build-trigger-menu.png"></p>
 <p>One example is <code>shiny-googleauthrdemo</code> - to construct the correct name we need this and the <code>gcer-public</code>project Id to use within the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-<span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
-<span class="co"># gcr.io/gcer-public/shiny-googleauthrdemo</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># gcr.io/gcer-public/shiny-googleauthrdemo</span></a></code></pre></div>
 <p>This can then be added to to top of your <code>Dockerfile</code>, and built upon with custom packages:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install R package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    ##### ADD YOUR DEPENDENCIES
-    <span class="co">## clean up</span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install packages from CRAN</span>
-<span class="ex">RUN</span> install2.r --error <span class="dt">\ </span>
-    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    ##### ADD YOUR CRAN PACKAGES
-    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span>
-    ## <span class="ex">clean</span> up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-<span class="co">## copy your shiny app folder below</span>
-<span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">    ##### ADD YOUR DEPENDENCIES</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="co">## clean up</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">    </a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">    ##### ADD YOUR CRAN PACKAGES</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">    ## <span class="ex">clean</span> up</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">## copy your shiny app folder below</span></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
 <p>Hopefully more images can be added in the future, along with community contributions. They are rebuilt every commit to the <code>googleComputeEngineR</code> GitHub repo.</p>
 </div>
 <div id="saving-a-running-container-to-the-container-registry" class="section level2">
@@ -312,7 +304,7 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <p>If not building via <code>Dockerfile</code> (which is preferred), you can save the state of a running container.</p>
 <p>For example, you may wish to install some R packages manually to an RStudio instance via its terminal window. Once done, then on your local machine you can save the running container to a new image on Google container registry via <code>gce_save_container</code>.</p>
 <p>This can take some time (10mins +) if its a new image. You should be able to see the image in the web UI when it is done.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gce_save_container</span>(vm, <span class="st">"my-rstudio"</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">gce_save_container</span>(vm, <span class="st">"my-rstudio"</span>)</a></code></pre></div>
 <p>Once saved, the new image can be used to launch new containers just like any other image.</p>
 </div>
 <div id="cloud-init" class="section level2">
@@ -320,45 +312,46 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <a href="#cloud-init" class="anchor"></a>Cloud Init</h2>
 <p>If you want to customise further, the docker commands are triggered upon start up via <a href="https://cloudinit.readthedocs.io/en/latest/"><code>cloud-init</code></a> files.</p>
 <p>These can be used to configured to do more system level commands such as starting the docker service, create users and running start up scripts. These are accessible via the <code>gce_vm_container</code> function when you supply the <code>cloud_init</code> file. You can examine the <code>cloud-config</code> files used in <code>googleComputeEngineR</code> in this folder:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"cloudconfig"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"cloudconfig"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</a></code></pre></div>
 <p>An example for the RStudio template is shown below. The <code>%s</code> are replaced with metadata passed via the <code>gce_vm_create</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="co">#cloud-config</span>
-
-<span class="ex">users</span>:
-<span class="ex">-</span> name: gcer
-  <span class="ex">uid</span>: 2000
-
-<span class="ex">write_files</span>:
-<span class="ex">-</span> path: /etc/systemd/system/rstudio.service
-  <span class="ex">permissions</span>: 0644
-  <span class="ex">owner</span>: root
-  <span class="ex">content</span>: <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span>
-    [<span class="ex">Unit</span>]
-    <span class="va">Description=</span>RStudio <span class="ex">Server</span>
-    <span class="va">Requires=</span>docker.service
-    <span class="va">After=</span>docker.service
-
-    [<span class="ex">Service</span>]
-    <span class="va">Restart=</span>always
-    <span class="va">Environment=</span><span class="st">"HOME=/home/gcer"</span>
-    <span class="va">ExecStartPre=</span>/usr/share/google/dockercfg_update.sh
-    <span class="va">ExecStart=</span>/usr/bin/docker <span class="ex">run</span> -p 80:8787 \
-                                  -e <span class="st">"ROOT=TRUE"</span> \
-                                  -e <span class="st">"R_LIBS_USER=/library/"</span> \
-                                  -e USER=%s -e PASSWORD=%s \
-                                  -v /home/gcer/library/:/library/ \
-                                  --name=rstudio \
-                                  %s
-    <span class="va">ExecStop=</span>/usr/bin/docker <span class="ex">stop</span> rstudio
-    <span class="va">ExecStopPost=</span>/usr/bin/docker <span class="fu">rm</span> rstudio
-
-<span class="ex">runcmd</span>:
-<span class="ex">-</span> systemctl daemon-reload
-<span class="ex">-</span> systemctl start rstudio.service</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">#cloud-config</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="ex">users</span>:</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="ex">-</span> name: gcer</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">  <span class="ex">uid</span>: 2000</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="ex">write_files</span>:</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="ex">-</span> path: /etc/systemd/system/rstudio.service</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">  <span class="ex">permissions</span>: 0644</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">  <span class="ex">owner</span>: root</a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">  <span class="ex">content</span>: <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">    [<span class="ex">Unit</span>]</a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">    <span class="va">Description=</span>RStudio <span class="ex">Server</span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">    <span class="va">Requires=</span>docker.service</a>
+<a class="sourceLine" id="cb9-15" data-line-number="15">    <span class="va">After=</span>docker.service</a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17">    [<span class="ex">Service</span>]</a>
+<a class="sourceLine" id="cb9-18" data-line-number="18">    <span class="va">Restart=</span>always</a>
+<a class="sourceLine" id="cb9-19" data-line-number="19">    <span class="va">Environment=</span><span class="st">"HOME=/home/gcer"</span></a>
+<a class="sourceLine" id="cb9-20" data-line-number="20">    <span class="va">ExecStartPre=</span>/usr/share/google/dockercfg_update.sh</a>
+<a class="sourceLine" id="cb9-21" data-line-number="21">    <span class="va">ExecStart=</span>/usr/bin/docker <span class="ex">run</span> -p 80:8787 \</a>
+<a class="sourceLine" id="cb9-22" data-line-number="22">                                  -e <span class="st">"ROOT=TRUE"</span> \</a>
+<a class="sourceLine" id="cb9-23" data-line-number="23">                                  -e <span class="st">"R_LIBS_USER=/library/"</span> \</a>
+<a class="sourceLine" id="cb9-24" data-line-number="24">                                  -e USER=%s -e PASSWORD=%s \</a>
+<a class="sourceLine" id="cb9-25" data-line-number="25">                                  -v /home/gcer/library/:/library/ \</a>
+<a class="sourceLine" id="cb9-26" data-line-number="26">                                  --name=rstudio \</a>
+<a class="sourceLine" id="cb9-27" data-line-number="27">                                  %s</a>
+<a class="sourceLine" id="cb9-28" data-line-number="28">    <span class="va">ExecStop=</span>/usr/bin/docker <span class="ex">stop</span> rstudio</a>
+<a class="sourceLine" id="cb9-29" data-line-number="29">    <span class="va">ExecStopPost=</span>/usr/bin/docker <span class="fu">rm</span> rstudio</a>
+<a class="sourceLine" id="cb9-30" data-line-number="30"></a>
+<a class="sourceLine" id="cb9-31" data-line-number="31"><span class="ex">runcmd</span>:</a>
+<a class="sourceLine" id="cb9-32" data-line-number="32"><span class="ex">-</span> systemctl daemon-reload</a>
+<a class="sourceLine" id="cb9-33" data-line-number="33"><span class="ex">-</span> systemctl start rstudio.service</a></code></pre></div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

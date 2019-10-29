@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Installation and Authentication</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>installation-and-authentication.Rmd</code></div>
@@ -211,37 +211,38 @@ GCE_DEFAULT_PROJECT_ID="mark-xxxxxxx"
 GCE_DEFAULT_ZONE="europe-west1-a"</code></pre>
 <p>The <code>GCE_AUTH_FILE</code> points to the file location of the <a href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">service account JSON file</a> taken from your Google Project. The other arguments set the default project and zone.</p>
 <p>This file will then used for authentication when you load the library:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## GCE_AUTH_FILE set so auto-authentication
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-Successfully authenticated via <span class="op">/</span>Users<span class="op">/</span>mark<span class="op">/</span>auth.json
-Set default project name to <span class="st">'mark-xxxxx'</span>
-Set default zone to <span class="st">'europe-west1-a'</span>
-
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="../reference/gce_get_project.html">gce_get_project</a></span>()
-<span class="op">$</span>kind
-[<span class="dv">1</span>] <span class="st">"compute#project"</span>
-
-<span class="op">$</span>id
-[<span class="dv">1</span>] <span class="st">"43534234234324324"</span>
-
-<span class="op">$</span>creationTimestamp
-[<span class="dv">1</span>] <span class="st">"2015-05-08T15:22:38.416-07:00"</span>
-
-<span class="op">$</span>name
-[<span class="dv">1</span>] <span class="st">"mark-xxxxx"</span>
-
-...etc.... </code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## GCE_AUTH_FILE set so auto-authentication</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">Successfully authenticated via <span class="op">/</span>Users<span class="op">/</span>mark<span class="op">/</span>auth.json</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">Set default project name to <span class="st">'mark-xxxxx'</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">Set default zone to <span class="st">'europe-west1-a'</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="../reference/gce_get_project.html">gce_get_project</a></span>()</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="op">$</span>kind</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">[<span class="dv">1</span>] <span class="st">"compute#project"</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="op">$</span>id</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">[<span class="dv">1</span>] <span class="st">"43534234234324324"</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="op">$</span>creationTimestamp</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">[<span class="dv">1</span>] <span class="st">"2015-05-08T15:22:38.416-07:00"</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="op">$</span>name</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">[<span class="dv">1</span>] <span class="st">"mark-xxxxx"</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">...etc.... </a></code></pre></div>
 </div>
 <div id="other-authentication-methods" class="section level2">
 <h2 class="hasAnchor">
 <a href="#other-authentication-methods" class="anchor"></a>Other authentication methods</h2>
 <p>If you can’t use an <code>.Renviron</code> you can set environment files within the script via <code>Sys.setenv</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.setenv">Sys.setenv</a></span>(<span class="st">"GCE_AUTH_FILE"</span> =<span class="st"> "/fullpath/to/auth.json"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.setenv">Sys.setenv</a></span>(<span class="st">"GCE_AUTH_FILE"</span> =<span class="st"> "/fullpath/to/auth.json"</span>)</a></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

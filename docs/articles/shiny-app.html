@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Shiny App</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>shiny-app.Rmd</code></div>
@@ -198,27 +198,28 @@
 <a href="#create-a-dockerfile-in-build-folder-including-copying-the-shiny-app-into-the-docker-image" class="anchor"></a>Create a Dockerfile in build folder, including copying the Shiny app into the Docker image</h2>
 <p>The <code>Dockerfile</code> includes a <code>COPY</code> command to copy necessary Shiny files such as <code>ui.R</code> and <code>server.R</code> into the Docker image.</p>
 <p>The Shiny app example below is the <a href="https://mark.shinyapps.io/googleAuthRexample/"><code>googleAuthR</code> demo app</a>, and the build directory can be found via: <code><a href="../reference/get_dockerfolder.html">get_dockerfolder("shiny-googleAuthRdemo")</a></code></p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> rocker/shiny
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install R package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    libssl-dev \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install packages from CRAN</span>
-<span class="ex">RUN</span> install2.r --error <span class="dt">\ </span>
-    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    googleAuthR \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-<span class="co">## assume shiny app is in build folder /shiny</span>
-<span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">FROM</span> rocker/shiny</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    libssl-dev \</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    ## clean up</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">    </a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">    googleAuthR \</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">    remotes \</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"remotes::install_github(c('MarkEdmondson1234/googleID'))"</span> \</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">    ## clean up</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">## assume shiny app is in build folder /shiny</span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
 <p>The <code>COPY</code> command copies from a folder in the same location as the <code>Dockerfile</code>, and then places it within the <code>/srv/shiny-server/</code> folder which is the default location for Shiny apps. This location means that the Shiny app will be avialable at <code>xxx.xxx.xxx.xxx/myapp/</code></p>
 <p>The example Dockerfile above installs <code>googleAuthR</code> from CRAN, <code>googleID</code> from GitHub and a Debian dependency for <code>googleAuthR</code> that is needed, <code>libssl-dev</code> via <code>apt-get</code>. Modify this for your own needs.</p>
 <div id="public-docker-images" class="section level3">
@@ -226,30 +227,30 @@
 <a href="#public-docker-images" class="anchor"></a>Public Docker images</h3>
 <p>The <code>FROM</code> field could be a previously made image you or someone else has already created, allowing you to layer on top. The above example is available via a public Google Continer Registry window, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
 <p>The <code>shiny-googleauthrdemo</code> is the Dockerfile above - the name for this can be created via the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-<span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a></code></pre></div>
 <p>This can then be added to your Dockerfile:</p>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install R package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    ##### ADD YOUR DEPENDENCIES
-    <span class="co">## clean up</span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install packages from CRAN</span>
-<span class="ex">RUN</span> install2.r --error <span class="dt">\ </span>
-    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    ##### ADD YOUR CRAN PACKAGES
-    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span>
-    ## <span class="ex">clean</span> up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-<span class="co">## copy your shiny app folder below</span>
-<span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">FROM</span> gcr.io/gcer-public/shiny-googleauthrdemo</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    ##### ADD YOUR DEPENDENCIES</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="co">## clean up</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">    </a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">    ##### ADD YOUR CRAN PACKAGES</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">    ## <span class="ex">clean</span> up</a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">## copy your shiny app folder below</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
 <p>Hopefully more images can be added in the future, along with community contributions. They are rebuilt every commit to the <code>googleComputeEngineR</code> GitHub repo.</p>
 </div>
 <div id="create-your-shiny-app-and-place-in-subfolder-of-your-build-folder" class="section level3">
@@ -264,8 +265,8 @@
 | Dockerfile
 </code></pre>
 <p>The file structure for this build is then:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">list.files</a></span>(<span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>)
-<span class="co"># "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">list.files</a></span>(<span class="kw"><a href="../reference/get_dockerfolder.html">get_dockerfolder</a></span>(<span class="st">"shiny-googleAuthRdemo"</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># "Dockerfile"        "shiny/DESCRIPTION" "shiny/readme.md"   "shiny/server.R"    "shiny/ui.R"</span></a></code></pre></div>
 </div>
 </div>
 <div id="build-your-shiny-app-docker-image" class="section level2">
@@ -285,11 +286,11 @@
 <h2 class="hasAnchor">
 <a href="#start-up-a-shiny-templated-google-compute-engine-vm-with-your-custom-image" class="anchor"></a>Start up a Shiny templated Google Compute Engine VM with your custom image</h2>
 <p>Start up a Shiny templated image, which makes sure the right ports are open etc. but also supply the <code>dynamic_image</code> argument pointing at the Docker image you have built in previous step.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## make new Shiny template VM for your self-contained Shiny app
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"myapp"</span>, 
-             <span class="dt">template =</span> <span class="st">"shiny"</span>,
-             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,
-             <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"custom-shiny-app"</span>, <span class="st">"your-project"</span>))</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## make new Shiny template VM for your self-contained Shiny app</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"myapp"</span>, </a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">             <span class="dt">template =</span> <span class="st">"shiny"</span>,</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">             <span class="dt">dynamic_image =</span> <span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"custom-shiny-app"</span>, <span class="st">"your-project"</span>))</a></code></pre></div>
 <div id="re-deploy-already-built-shiny-app-to-another-vm" class="section level3">
 <h3 class="hasAnchor">
 <a href="#re-deploy-already-built-shiny-app-to-another-vm" class="anchor"></a>Re-deploy already built Shiny app to another VM</h3>
@@ -300,13 +301,14 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <h2 class="hasAnchor">
 <a href="#tidy-up" class="anchor"></a>Tidy up</h2>
 <p>Clean up the VMs to avoid unnecessary costs:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># delete build VM</span>
-<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># delete build VM</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)</a></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Persistent RStudio Server</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>persistent-rstudio.Rmd</code></div>
@@ -190,11 +190,11 @@
 <a href="#using-base-vm-file-system" class="anchor"></a>Using base VM file system</h2>
 <p>These files will disappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well.</p>
 <p>If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the <code>disk_size_gb</code> argument:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"vm-larger-disk"</span>, 
-             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
-             <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"blah"</span>,
-             <span class="dt">disk_size_gb =</span> <span class="dv">100</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"vm-larger-disk"</span>, </a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, </a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">             <span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"blah"</span>,</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">             <span class="dt">disk_size_gb =</span> <span class="dv">100</span>)</a></code></pre></div>
 </div>
 <div id="github" class="section level2">
 <h2 class="hasAnchor">
@@ -206,11 +206,11 @@
 <li><a href="http://happygitwithr.com/" class="uri">http://happygitwithr.com/</a></li>
 </ul>
 <p>The below assumes you have started a VM using the <code>persistent-rstudio</code> image, which includes SSH tools:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"vm-ssh"</span>, 
-             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, 
-             <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"blah"</span>, 
-             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"vm-ssh"</span>, </a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>, </a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">             <span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"blah"</span>, </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</a></code></pre></div>
 <div id="first-time-you-launch-a-vm" class="section level3">
 <h3 class="hasAnchor">
 <a href="#first-time-you-launch-a-vm" class="anchor"></a>First time you launch a VM:</h3>
@@ -268,57 +268,53 @@ git config --global user.name "GitHubUserName"</code></pre>
 </ol>
 <p>Choose a bucket region that is closest to you and your VM for best performance</p>
 <ol start="2" style="list-style-type: decimal">
-<li>
-<p>Add that bucket to your <code>.Renviron</code> as the <code>GCS_SESSION_BUCKET</code> argument:</p>
-<pre><code>GCS_SESSION_BUCKET=gcer-bucket-name</code></pre>
-</li>
+<li>Add that bucket to your <code>.Renviron</code> as the <code>GCS_SESSION_BUCKET</code> argument:</li>
 </ol>
+<pre><code>GCS_SESSION_BUCKET=gcer-bucket-name</code></pre>
 <p>The <code>.Renviron</code> usually sits in your computer home directory, see <code><a href="https://www.rdocumentation.org/packages/base/topics/Startup">?Startup</a></code> for details.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Add the <code>gcs_first()</code> and <code>gcs_last()</code> functions to your <code>.RProfile</code> file like so:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">.First &lt;-<span class="st"> </span><span class="cf">function</span>(){
-
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Welcome Mark! Today is "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Loading .Rprofile from"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/path.expand">path.expand</a></span>(<span class="st">"~"</span>))
-
-  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_first</a></span>()
-}
-
-.Last &lt;-<span class="st"> </span><span class="cf">function</span>(){
-  <span class="co"># will only upload if a _gcssave.yaml in directory with bucketname</span>
-  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_last</a></span>()
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">message</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Goodbye Mark at "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)
-}
-</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">.First &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Welcome Mark! Today is "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Loading .Rprofile from"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/path.expand">path.expand</a></span>(<span class="st">"~"</span>))</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_first</a></span>()</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">}</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">.Last &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="co"># will only upload if a _gcssave.yaml in directory with bucketname</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_last</a></span>()</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">message</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Goodbye Mark at "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">}</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"></a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Create RStudio Project</li>
 <li>Make R stuff</li>
 <li>Add a <code>_gcssave.yaml</code> file specifying the GCS bucket to save to.</li>
 </ol>
 <p>It can carry various settings shown below:</p>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">## The GCS bucket to save/load R workspace from step 1</span>
-<span class="fu">bucket:</span><span class="at"> my-bucket</span>
-
-<span class="co">## set to FALSE if you want to load on R session startup</span>
-<span class="fu">load_on_startup:</span><span class="at"> FALSE</span>
-
-<span class="co">## on first load, whether to look for a different directory on GCS than present getwd()</span>
-<span class="fu">loaddir:</span>
-
-<span class="co">## regex to only save these files to GCS</span>
-<span class="fu">pattern:</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## The GCS bucket to save/load R workspace from step 1</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="fu">bucket:</span><span class="at"> my-bucket</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">## set to FALSE if you want to load on R session startup</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="fu">load_on_startup:</span><span class="at"> FALSE</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">## on first load, whether to look for a different directory on GCS than present getwd()</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="fu">loaddir:</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">## regex to only save these files to GCS</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="fu">pattern:</span></a></code></pre></div>
 <ol start="7" style="list-style-type: decimal">
-<li>
-<p>Exit RStudio project. You should see a message similar to:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Saving data to Google Cloud Storage<span class="op">:</span>
-your<span class="op">-</span>gcs<span class="op">-</span>bucket
-<span class="dv">2017</span><span class="op">-</span><span class="dv">08</span><span class="op">-</span><span class="dv">18</span> <span class="dv">23</span><span class="op">:</span><span class="dv">25</span><span class="op">:</span><span class="dv">43</span> <span class="op">--</span><span class="st"> </span>File size detected as <span class="fl">1.3</span> Mb</code></pre></div>
-</li>
+<li>Exit RStudio project. You should see a message similar to:</li>
 </ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">Saving data to Google Cloud Storage<span class="op">:</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">your<span class="op">-</span>gcs<span class="op">-</span>bucket</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="dv">2017-08-18</span> <span class="dv">23</span><span class="op">:</span><span class="dv">25</span><span class="op">:</span><span class="dv">43</span> <span class="op">--</span><span class="st"> </span>File size detected as <span class="fl">1.3</span> Mb</a></code></pre></div>
 <p>When you startup that project again you should see:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[Workspace loaded from<span class="op">:</span><span class="st"> </span>
-gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</span>gcs<span class="op">-</span>bucket<span class="op">/</span>Users<span class="op">/</span>the<span class="op">-</span>rproject<span class="op">-</span>folder]</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">[Workspace loaded from<span class="op">:</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</span>gcs<span class="op">-</span>bucket<span class="op">/</span>Users<span class="op">/</span>the<span class="op">-</span>rproject<span class="op">-</span>folder]</a></code></pre></div>
 <div id="summary" class="section level4">
 <h4 class="hasAnchor">
 <a href="#summary" class="anchor"></a>Summary</h4>
@@ -340,15 +336,15 @@ gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</spa
 <ol style="list-style-type: decimal">
 <li>Launch the RStudio Server image <code>gcr.io/gcer-public/persistent-rstudio</code> that has appropriate libraries loaded.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"mark-rstudio"</span>,
-             <span class="dt">template =</span> <span class="st">"rstudio"</span>,
-             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,
-             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,
-             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"mark-rstudio"</span>,</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">             <span class="dt">template =</span> <span class="st">"rstudio"</span>,</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Add a GCS_SESSION_BUCKET metadata, either via webUI or via:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm)</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Login to RStudio server and create an RStudio project</p></li>
 <li><p>As you did on your local machine, you need to create an .Rprofile so <code>googleCloudStorageR</code> can load and save and load data. For example:</p></li>
@@ -371,8 +367,8 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 <ol start="5" style="list-style-type: decimal">
 <li>Transfer the local RStudio project to this cloud VM by creating a <code>_gcssave.yaml</code> file at the root of the project with these entries:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">bucket:</span><span class="at"> your-gcs-bucket</span>
-<span class="fu">loaddir:</span><span class="at"> your-local-directory-name</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="fu">bucket:</span><span class="at"> your-gcs-bucket</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="fu">loaddir:</span><span class="at"> your-local-directory-name</span></a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Close and re-open the RStudio project. Your local files should now load from GCS</li>
 <li>Do work, then exit the project. It will be saved to a new folder on GCS</li>
@@ -397,15 +393,15 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 <ol style="list-style-type: decimal">
 <li>Add a <code>_gcssave.yaml</code> file to your home folder that will download/upload the configurations.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">## The GCS bucket to save/load R workspace from</span>
-<span class="fu">bucket:</span><span class="at"> gcer-store-my-rstudio-files</span>
-
-<span class="co">## regex to only save these files to GCS</span>
-<span class="fu">pattern:</span><span class="at"> </span><span class="st">"id_rsa|.gitconfig"</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">## The GCS bucket to save/load R workspace from</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="fu">bucket:</span><span class="at"> gcer-store-my-rstudio-files</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">## regex to only save these files to GCS</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="fu">pattern:</span><span class="at"> </span><span class="st">"id_rsa|.gitconfig"</span></a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>With no project open and your working directory the base (e.g. <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">getwd()</a></code> is <code>/home/you</code>) save the yaml file and quit the R session:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/quit">q</a></span>(<span class="dt">save =</span> <span class="st">"no"</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/quit">q</a></span>(<span class="dt">save =</span> <span class="st">"no"</span>)</a></code></pre></div>
 <p>You should see a message saying its saving the home folder. Upon restart, that folder will load from the bucket.</p>
 </div>
 <div id="loading-github-configurations" class="section level4">
@@ -414,18 +410,18 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 <ol style="list-style-type: decimal">
 <li>Start another VM, with the same details as before:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"mark-rstudio"</span>,
-             <span class="dt">template =</span> <span class="st">"rstudio"</span>,
-             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,
-             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,
-             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)
-
-<span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm2)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"mark-rstudio"</span>,</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">             <span class="dt">template =</span> <span class="st">"rstudio"</span>,</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">'mypassword'</span>,</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm2)</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Upon logging in, you should see a message saying its loading data from GCS:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">[Workspace loaded from<span class="op">:</span><span class="st"> </span>
-gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</span>session<span class="op">-</span>bucket<span class="op">/</span>home<span class="op">/</span>you]</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">[Workspace loaded from<span class="op">:</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</span>session<span class="op">-</span>bucket<span class="op">/</span>home<span class="op">/</span>you]</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>You should now be able to run <code>ssh -T git@github.com</code> successfully</li>
 <li>Pull/push (private) GitHub repos via the steps outlined in the GitHub section above.</li>
@@ -456,17 +452,17 @@ gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</spa
 <p>It will only download files to your folder that don’t exist, so local changes won’t be overwritten if they already exist. It is not git, treat it more as a backup that will load if the files are not already present (such as when you relaunch a Docker container)</p>
 <p>If you upload to GCS, make sure to load the directory and files you want - delete the GCS folder if you want to stop backups via <code>gcs_delete_all()</code></p>
 <p>Example <code>_gcssave.yaml</code>:</p>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">## The GCS bucket to save/load R workspace from</span>
-<span class="fu">bucket:</span><span class="at"> gcer-store-my-rstudio-files</span>
-
-<span class="co">## set to FALSE if you dont want to load on R session startup</span>
-<span class="fu">load_on_startup:</span><span class="at"> TRUE</span>
-
-<span class="co">## on first load and init, whether to look for a different directory on GCS than present getwd()</span>
-<span class="fu">loaddir:</span><span class="at"> /Users/mark/the/folder/on/local</span>
-
-<span class="co">## regex to only save these files to GCS</span>
-<span class="fu">pattern:</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">## The GCS bucket to save/load R workspace from</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="fu">bucket:</span><span class="at"> gcer-store-my-rstudio-files</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">## set to FALSE if you dont want to load on R session startup</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="fu">load_on_startup:</span><span class="at"> TRUE</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co">## on first load and init, whether to look for a different directory on GCS than present getwd()</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="fu">loaddir:</span><span class="at"> /Users/mark/the/folder/on/local</span></a>
+<a class="sourceLine" id="cb17-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb17-10" data-line-number="10"><span class="co">## regex to only save these files to GCS</span></a>
+<a class="sourceLine" id="cb17-11" data-line-number="11"><span class="fu">pattern:</span></a></code></pre></div>
 <p>An advantage on using R on a GCE instance is that you can reuse the authentication used to launch the VM for other cloud services, via <code><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">googleAuthR::gar_gce_auth()</a></code> so you don’t need to supply your own auth file.</p>
 <p>To use, the VM needs to be supplied with a bucket name environment. Using a separate bucket means the same files can be transferred across Docker RStudio stop/starts and VMs. This is set in the instance running the Docker’s metadata, that will get copied over to an environment argument R can see.</p>
 </div>
@@ -475,6 +471,7 @@ gs<span class="op">:</span><span class="er">//</span>your<span class="op">-</spa
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

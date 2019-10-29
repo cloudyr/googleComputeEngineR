@@ -8,10 +8,12 @@
 
 <title>Launch a container-VM image — gce_vm_container • googleComputeEngineR</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,10 +32,11 @@
 
 
 
-<meta property="og:title" content="Launch a container-VM image — gce_vm_container" />
 
+<meta property="og:title" content="Launch a container-VM image — gce_vm_container" />
 <meta property="og:description" content="This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -73,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -187,7 +190,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -208,14 +210,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This lets you specify docker images when creating the VM.  These are a special class of Google instances that are setup for running Docker containers.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>gce_vm_container</span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cloud_init</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>shell_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>, <span class='kw'>image_project</span> <span class='kw'>=</span> <span class='st'>"cos-cloud"</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -245,34 +245,28 @@ One of <code>file</code> or <code>cloud_init</code> or <code>shell_script</code>
       <td><p>Other arguments passed to <a href='gce_vm_create.html'>gce_vm_create</a></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A zone operation</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>file</code> expects a filepath to a <a href='cloud-init'>https://cloudinit.readthedocs.io/en/latest/topics/format.html</a> configuration file or a valid bash script e.g. has <code>!#/bin/</code> or <code>#cloud-config</code> at top of file.</p>
 <p><code>image_project</code> will be ignored if set, overriden to <code>cos-cloud</code>.  
 If you want to set it then use the <a href='gce_vm_create.html'>gce_vm_create</a> function directly that this function wraps with some defaults.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance'>https://cloud.google.com/container-optimized-os/docs/how-to/create-configure-instance</a> - <a href='https://www.freedesktop.org/software/systemd/man/systemd.service.html'>help using cloud-init files</a></p></div>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>

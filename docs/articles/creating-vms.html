@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Creating Virtual Machines (VM)</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>creating-vms.Rmd</code></div>
@@ -186,15 +186,15 @@
 <div id="start-an-existing-vm" class="section level3">
 <h3 class="hasAnchor">
 <a href="#start-an-existing-vm" class="anchor"></a>Start an existing VM</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-## auto auth, project and zone pre-set
-
-## list your VMs in the project/zone
-the_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_list_instances.html">gce_list_instances</a></span>()
-
-## start an existing instance
-job &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"markdev"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">## auto auth, project and zone pre-set</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">## list your VMs in the project/zone</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">the_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_list_instances.html">gce_list_instances</a></span>()</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">## start an existing instance</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">job &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"markdev"</span>)</a></code></pre></div>
 </div>
 <div id="reset-and-stop-vm" class="section level3">
 <h3 class="hasAnchor">
@@ -219,8 +219,8 @@ inst$status
 <h3 class="hasAnchor">
 <a href="#external-ip" class="anchor"></a>External IP</h3>
 <p>You can view the external IP for an instance via <code><a href="../reference/gce_get_external_ip.html">gce_get_external_ip()</a></code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span>ip &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_get_external_ip.html">gce_get_external_ip</a></span>(<span class="st">"xxxxx"</span>)
- External IP <span class="cf">for</span> instance xxxxxx  <span class="op">:</span><span class="st">  </span><span class="fl">146.</span>1xx.<span class="fl">24.</span>xx </code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span>ip &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_get_external_ip.html">gce_get_external_ip</a></span>(<span class="st">"xxxxx"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"> External IP <span class="cf">for</span> instance xxxxxx  <span class="op">:</span><span class="st">  </span><span class="fl">146.1</span>xx.<span class="fl">24.</span>xx </a></code></pre></div>
 </div>
 </div>
 <div id="creating-an-instance" class="section level2">
@@ -239,22 +239,22 @@ inst$status
 <h3 class="hasAnchor">
 <a href="#default-settings" class="anchor"></a>Default settings</h3>
 <p>The default settings let you create a VM like so:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## create a VM
-<span class="op">&gt;</span><span class="st"> </span>vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"test-vm"</span>)
-
-## VM metadata
-<span class="op">&gt;</span><span class="st"> </span>vm
-<span class="op">==</span>Google Compute Engine Instance<span class="op">==</span>
-
-Name<span class="op">:</span><span class="st">                </span>test<span class="op">-</span>vm
-Created<span class="op">:</span><span class="st">             </span><span class="dv">2016</span><span class="op">-</span><span class="dv">11</span><span class="op">-</span><span class="dv">11</span> <span class="dv">12</span><span class="op">:</span><span class="dv">27</span><span class="op">:</span><span class="dv">32</span>
-Machine Type<span class="op">:</span><span class="st">        </span>f1<span class="op">-</span>micro
-Status<span class="op">:</span><span class="st">              </span>RUNNING
-Zone<span class="op">:</span><span class="st">                </span>europe<span class="op">-</span>west1<span class="op">-</span>b
-External IP<span class="op">:</span><span class="st">         </span><span class="fl">104.199</span>.<span class="fl">72.152</span>
-Disks<span class="op">:</span><span class="st"> </span>
-<span class="st">             </span>deviceName       type       mode boot autoDelete
-<span class="dv">1</span> test<span class="op">-</span>vm<span class="op">-</span>boot<span class="op">-</span>disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## create a VM</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"test-vm"</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## VM metadata</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span>vm</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="op">==</span>Google Compute Engine Instance<span class="op">==</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">Name<span class="op">:</span><span class="st">                </span>test<span class="op">-</span>vm</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">Created<span class="op">:</span><span class="st">             </span><span class="dv">2016-11-11</span> <span class="dv">12</span><span class="op">:</span><span class="dv">27</span><span class="op">:</span><span class="dv">32</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">Machine Type<span class="op">:</span><span class="st">        </span>f1<span class="op">-</span>micro</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">Status<span class="op">:</span><span class="st">              </span>RUNNING</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">Zone<span class="op">:</span><span class="st">                </span>europe<span class="op">-</span>west1<span class="op">-</span>b</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">External IP<span class="op">:</span><span class="st">         </span><span class="dv">104</span>.<span class="dv">199</span>.<span class="fl">72.152</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">Disks<span class="op">:</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="st">             </span>deviceName       type       mode boot autoDelete</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="dv">1</span> test<span class="op">-</span>vm<span class="op">-</span>boot<span class="op">-</span>disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></a></code></pre></div>
 <p>The defaults for a new VM are:</p>
 <ul>
 <li><code>predefined_type = "f1-micro"</code></li>
@@ -269,20 +269,20 @@ Disks<span class="op">:</span><span class="st"> </span>
 <a href="#templated-container-based-vms" class="anchor"></a>Templated Container based VMs</h2>
 <p>There is support for RStudio, Shiny and OpenCPU docker images using the above to launch configurations. The configurations are located in the <a href="https://github.com/MarkEdmondson1234/googleComputeEngineR/tree/master/inst/cloudconfig"><code>/inst/cloudconfig</code></a> package folder.</p>
 <p>To launch those, use the <code><a href="../reference/gce_vm.html">gce_vm()</a></code> function and specify the argument <code>template</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## for rstudio, you also need to specify a username and password to login
-<span class="op">&gt;</span><span class="st"> </span>vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio"</span>,
-               <span class="dt">name =</span> <span class="st">"rstudio-server"</span>,
-               <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"mark1234"</span>)
-
-Checking job....
-Job running<span class="op">:</span><span class="st">  </span><span class="dv">0</span> <span class="op">/</span><span class="dv">100</span>
-Job running<span class="op">:</span><span class="st">  </span><span class="dv">0</span> <span class="op">/</span><span class="dv">100</span>
-Operation complete <span class="cf">in</span> <span class="dv">22</span> secs
- External IP <span class="cf">for</span> instance rstudio  <span class="op">:</span><span class="st">  </span><span class="fl">130.211</span>.<span class="fl">62.2</span> 
-
-##  rstudio running at 130.211.62.2:8787 
-
- You may need to wait a few minutes <span class="cf">for</span> the inital docker container to download and install before logging in.</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## for rstudio, you also need to specify a username and password to login</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span>vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio"</span>,</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">               <span class="dt">name =</span> <span class="st">"rstudio-server"</span>,</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">               <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"mark1234"</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">Checking job....</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">Job running<span class="op">:</span><span class="st">  </span><span class="dv">0</span> <span class="op">/</span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">Job running<span class="op">:</span><span class="st">  </span><span class="dv">0</span> <span class="op">/</span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">Operation complete <span class="cf">in</span> <span class="dv">22</span> secs</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"> External IP <span class="cf">for</span> instance rstudio  <span class="op">:</span><span class="st">  </span><span class="dv">130</span>.<span class="dv">211</span>.<span class="fl">62.2</span> </a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">##  rstudio running at 130.211.62.2:8787 </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"> You may need to wait a few minutes <span class="cf">for</span> the inital docker container to download and install before logging in.</a></code></pre></div>
 <p>You can then use <code>gce_vm_stop</code>, <code>gce_vm_start</code> etc. for your server. You are only charged for when the VM is running, so you can stop it until you need it.</p>
 <div id="container-based-vms" class="section level3">
 <h3 class="hasAnchor">
@@ -314,9 +314,9 @@ runcmd:
 - systemctl daemon-reload
 - systemctl start cloudservice.service</code></pre>
 <p>If the above is saved as <code>example.yaml</code> you can then launch a VM using its configuration via the <code><a href="../reference/gce_vm_container.html">gce_vm_container()</a></code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">cloud_init =</span> <span class="st">"example.yml"</span>,
-              <span class="dt">name =</span> <span class="st">"test-container"</span>,
-              <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"> vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">cloud_init =</span> <span class="st">"example.yml"</span>,</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">              <span class="dt">name =</span> <span class="st">"test-container"</span>,</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">              <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)</a></code></pre></div>
 </div>
 <div id="custom-settings-for-vms" class="section level3">
 <h3 class="hasAnchor">
@@ -326,13 +326,13 @@ runcmd:
 <h4 class="hasAnchor">
 <a href="#machine-type" class="anchor"></a>Machine type</h4>
 <p>A list of the predefined machine types:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_list_machinetype.html">gce_list_machinetype</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="../reference/gce_list_machinetype.html">gce_list_machinetype</a></span>()</a></code></pre></div>
 </div>
 <div id="images" class="section level4">
 <h4 class="hasAnchor">
 <a href="#images" class="anchor"></a>Images</h4>
 <p>A list of the image projects and families available is here: <code>https://cloud.google.com/compute/docs/images</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_list_images.html">gce_list_images</a></span>(<span class="dt">image_project =</span> <span class="st">"debian-cloud"</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/gce_list_images.html">gce_list_images</a></span>(<span class="dt">image_project =</span> <span class="st">"debian-cloud"</span>)</a></code></pre></div>
 </div>
 <div id="network" class="section level4">
 <h4 class="hasAnchor">
@@ -343,18 +343,18 @@ runcmd:
 <h4 class="hasAnchor">
 <a href="#disks" class="anchor"></a>Disks</h4>
 <p>You can also create another disk to attach to the VM via:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_make_disk.html">gce_make_disk</a></span>(<span class="st">"my-disk"</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/gce_make_disk.html">gce_make_disk</a></span>(<span class="st">"my-disk"</span>)</a></code></pre></div>
 <p>By default it will be a 500GB disk unless you specify otherwise. You can then attach this disk to the instance upon creation using the <code>disk_source</code> argument set to the disk resource URL.</p>
 <p>From version <code>0.1.0.9000</code> onwards you can also specify the size of the disk when creating a VM (Thanks to <span class="citation">@jburos</span>)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">build_vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_create.html">gce_vm_create</a></span>(<span class="st">'my-build-image3'</span>, <span class="dt">disk_size_gb =</span> <span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">build_vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_create.html">gce_vm_create</a></span>(<span class="st">'my-build-image3'</span>, <span class="dt">disk_size_gb =</span> <span class="dv">20</span>)</a></code></pre></div>
 </div>
 <div id="metadata" class="section level4">
 <h4 class="hasAnchor">
 <a href="#metadata" class="anchor"></a>Metadata</h4>
 <p>You can add custom metadata by passing a named list to the instance. More details from Google documentation is here <code>https://cloud.google.com/compute/docs/storing-retrieving-metadata</code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_create.html">gce_vm_create</a></span>(<span class="dt">name =</span> <span class="st">"test-vm2"</span>, 
-                      <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>,
-                      <span class="dt">metadata =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">start_date =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>())))</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_create.html">gce_vm_create</a></span>(<span class="dt">name =</span> <span class="st">"test-vm2"</span>, </a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                      <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>,</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">                      <span class="dt">metadata =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">start_date =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/character">as.character</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>())))</a></code></pre></div>
 <p>This includes useful utilities such as <code>startup-script</code> and <code>shutdown-script</code> that you can use to run shell scripts. In those cases the named list should include the script as its value.</p>
 </div>
 </div>
@@ -362,6 +362,7 @@ runcmd:
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

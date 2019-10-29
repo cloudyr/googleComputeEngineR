@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>Scheduled RStudio</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>single-scheduler.Rmd</code></div>
@@ -183,19 +183,19 @@
 <h2 class="hasAnchor">
 <a href="#tldr" class="anchor"></a>TL;DR</h2>
 <p>Run this, and you get an RStudio server instance running with <code>cronR</code>, the <code>tidyverse</code>and <code>googleAnalyticsR</code> etc. running on it:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-## set up and authenticate etc...
-
-## get tag name of public pre-made image
-tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"google-auth-r-cron-tidy"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
-
-## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, 
-              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,
-              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-              <span class="dt">dynamic_image =</span> tag, 
-              <span class="dt">username =</span> <span class="st">"mark"</span>, 
-              <span class="dt">password =</span> <span class="st">"mark1234"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">## set up and authenticate etc...</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## get tag name of public pre-made image</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"google-auth-r-cron-tidy"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">## rstudio template, but with custom rstudio build with cron, googleAuthR etc. </span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, </a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">              <span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">              <span class="dt">dynamic_image =</span> tag, </a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">              <span class="dt">username =</span> <span class="st">"mark"</span>, </a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">              <span class="dt">password =</span> <span class="st">"mark1234"</span>)</a></code></pre></div>
 </div>
 <div id="how-to-customise-your-own-rstudio-server" class="section level2">
 <h2 class="hasAnchor">
@@ -231,29 +231,29 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <li>
 <code>bnosac/cronR</code> - to help with creating cron jobs within RStudio.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">FROM</span> rocker/tidyverse
-<span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)
-
-<span class="co"># install cron and R package dependencies</span>
-<span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \
-    cron \
-    nano \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds
-    
-<span class="co">## Install packages from CRAN</span>
-<span class="ex">RUN</span> install2.r --error <span class="dt">\ </span>
-    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \
-    googleAuthR shinyFiles googleCloudStorageR bigQueryR gmailr googleAnalyticsR \
-    ## install Github packages
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('bnosac/cronR'))"</span> \
-    ## clean up
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds \
-
-<span class="co">## Start cron</span>
-<span class="ex">RUN</span> sudo service cron start</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">FROM</span> rocker/tidyverse</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># install cron and R package dependencies</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    cron \</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    nano \</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    ## clean up</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">## Install packages from CRAN</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">    googleAuthR shinyFiles googleCloudStorageR bigQueryR gmailr googleAnalyticsR \</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">    ## install Github packages</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('bnosac/cronR'))"</span> \</a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    ## clean up</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds \</a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">## Start cron</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="ex">RUN</span> sudo service cron start</a></code></pre></div>
 </div>
 <div id="create-a-container-registry-build-trigger" class="section level3">
 <h3 class="hasAnchor">
@@ -271,16 +271,16 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <a href="#launch-a-vm-to-run-your-custom-image" class="anchor"></a>Launch a VM to run your custom image</h3>
 <p>Once built, you can now launch instances using the constructed image.</p>
 <p>In this case the image project is different from the project the VM is created in, so the project needs specifing in the <code>gce_tag_container</code> call.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## get tag name of public pre-made image
-tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"hadleyverse-crontab"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)
-
-## rstudio template, but with custom rstudio build with cron, googleAuthR etc. 
-vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, 
-              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,
-              <span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-              <span class="dt">dynamic_image =</span> tag, 
-              <span class="dt">username =</span> <span class="st">"mark"</span>, 
-              <span class="dt">password =</span> <span class="st">"mark1234"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## get tag name of public pre-made image</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"hadleyverse-crontab"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## rstudio template, but with custom rstudio build with cron, googleAuthR etc. </span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"rstudio-cron-googleauthr"</span>, </a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">              <span class="dt">predefined_type =</span> <span class="st">"n1-standard-1"</span>,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">              <span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">              <span class="dt">dynamic_image =</span> tag, </a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">              <span class="dt">username =</span> <span class="st">"mark"</span>, </a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">              <span class="dt">password =</span> <span class="st">"mark1234"</span>)</a></code></pre></div>
 <p>You can also use your custom image to create further <code>Dockerfiles</code> that use it as a dependency, using <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> to get its correct name.</p>
 </div>
 <div id="a-demo-script" class="section level3">
@@ -296,63 +296,63 @@ vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.
 <li>Sends an email giving the daily total</li>
 </ol>
 <p>Log into your RStudio Server instance and create the following script:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleCloudStorageR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigQueryR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gmailr)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleAnalyticsR)
-
-## set options for authentication
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.client_id =</span> XXXXX)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.client_secret =</span> XXXX)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>,
-                                        <span class="st">"https://www.googleapis.com/auth/analytics.readonly"</span>))
-
-## authenticate
-## using service account, ensure service account email added to GA account, BigQuery user permissions set, etc.
-googleAuthR<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_auth_service.html">gar_auth_service</a></span>(<span class="st">"auth.json"</span>)
-
-## get Google Analytics data
-gadata &lt;-<span class="st"> </span><span class="kw"><a href="https://code.markedmondson.me/googleAnalyticsR//reference/google_analytics.html">google_analytics_4</a></span>(<span class="dv">123456</span>, 
-                             <span class="dt">date_range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),
-                             <span class="dt">metrics =</span> <span class="st">"sessions"</span>,
-                             <span class="dt">dimensions =</span> <span class="st">"medium"</span>,
-                             <span class="dt">anti_sample =</span> <span class="ot">TRUE</span>)
-
-## upload to Google BigQuery
-<span class="kw"><a href="https://www.rdocumentation.org/packages/bigQueryR/topics/bqr_upload_data">bqr_upload_data</a></span>(<span class="dt">projectId =</span> <span class="st">"myprojectId"</span>, 
-                <span class="dt">datasetId =</span> <span class="st">"mydataset"</span>,
-                <span class="dt">tableId =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"gadata_"</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/format">format</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>(),<span class="st">"%Y%m%d"</span>)),
-                <span class="dt">upload_data =</span> gadata,
-                <span class="dt">create =</span> <span class="ot">TRUE</span>)
-
-## upload to Google Cloud Storage
-<span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(gadata, <span class="dt">name =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"gadata_"</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>(),<span class="st">".csv"</span>))
-
-
-## get top medium referrer
-top_ref &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(gadata[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(gadata<span class="op">$</span>sessions, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>),][<span class="dv">1</span>, ], <span class="dt">collapse =</span> <span class="st">","</span>)
-<span class="co"># 3456, organic</span>
-
-## send email with todays figures
-daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
-  <span class="dt">To =</span> <span class="st">"bob@myclient.com"</span>,
-  <span class="dt">From =</span> <span class="st">"bill@cool-agency.com"</span>,
-  <span class="dt">Subject =</span> <span class="st">"Todays winner is...."</span>,
-  <span class="dt">body =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"Top referrer was: "</span>),top_ref)
-<span class="kw">send_message</span>(daily_email)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleCloudStorageR)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bigQueryR)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gmailr)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleAnalyticsR)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">## set options for authentication</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.client_id =</span> XXXXX)</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.client_secret =</span> XXXX)</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>,</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                                        <span class="st">"https://www.googleapis.com/auth/analytics.readonly"</span>))</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">## authenticate</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">## using service account, ensure service account email added to GA account, BigQuery user permissions set, etc.</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">googleAuthR<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_auth_service.html">gar_auth_service</a></span>(<span class="st">"auth.json"</span>)</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">## get Google Analytics data</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">gadata &lt;-<span class="st"> </span><span class="kw"><a href="https://code.markedmondson.me/googleAnalyticsR//reference/google_analytics.html">google_analytics_4</a></span>(<span class="dv">123456</span>, </a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">                             <span class="dt">date_range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19">                             <span class="dt">metrics =</span> <span class="st">"sessions"</span>,</a>
+<a class="sourceLine" id="cb4-20" data-line-number="20">                             <span class="dt">dimensions =</span> <span class="st">"medium"</span>,</a>
+<a class="sourceLine" id="cb4-21" data-line-number="21">                             <span class="dt">anti_sample =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">## upload to Google BigQuery</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="kw"><a href="https://www.rdocumentation.org/packages/bigQueryR/topics/bqr_upload_data">bqr_upload_data</a></span>(<span class="dt">projectId =</span> <span class="st">"myprojectId"</span>, </a>
+<a class="sourceLine" id="cb4-25" data-line-number="25">                <span class="dt">datasetId =</span> <span class="st">"mydataset"</span>,</a>
+<a class="sourceLine" id="cb4-26" data-line-number="26">                <span class="dt">tableId =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"gadata_"</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/format">format</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>(),<span class="st">"%Y%m%d"</span>)),</a>
+<a class="sourceLine" id="cb4-27" data-line-number="27">                <span class="dt">upload_data =</span> gadata,</a>
+<a class="sourceLine" id="cb4-28" data-line-number="28">                <span class="dt">create =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-29" data-line-number="29"></a>
+<a class="sourceLine" id="cb4-30" data-line-number="30"><span class="co">## upload to Google Cloud Storage</span></a>
+<a class="sourceLine" id="cb4-31" data-line-number="31"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(gadata, <span class="dt">name =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"gadata_"</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>(),<span class="st">".csv"</span>))</a>
+<a class="sourceLine" id="cb4-32" data-line-number="32"></a>
+<a class="sourceLine" id="cb4-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co">## get top medium referrer</span></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35">top_ref &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(gadata[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/order">order</a></span>(gadata<span class="op">$</span>sessions, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>),][<span class="dv">1</span>, ], <span class="dt">collapse =</span> <span class="st">","</span>)</a>
+<a class="sourceLine" id="cb4-36" data-line-number="36"><span class="co"># 3456, organic</span></a>
+<a class="sourceLine" id="cb4-37" data-line-number="37"></a>
+<a class="sourceLine" id="cb4-38" data-line-number="38"><span class="co">## send email with todays figures</span></a>
+<a class="sourceLine" id="cb4-39" data-line-number="39">daily_email &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gmailr/topics/gmailr-deprecated">mime</a></span>(</a>
+<a class="sourceLine" id="cb4-40" data-line-number="40">  <span class="dt">To =</span> <span class="st">"bob@myclient.com"</span>,</a>
+<a class="sourceLine" id="cb4-41" data-line-number="41">  <span class="dt">From =</span> <span class="st">"bill@cool-agency.com"</span>,</a>
+<a class="sourceLine" id="cb4-42" data-line-number="42">  <span class="dt">Subject =</span> <span class="st">"Todays winner is...."</span>,</a>
+<a class="sourceLine" id="cb4-43" data-line-number="43">  <span class="dt">body =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"Top referrer was: "</span>),top_ref)</a>
+<a class="sourceLine" id="cb4-44" data-line-number="44"><span class="kw"><a href="https://www.rdocumentation.org/packages/gmailr/topics/gmailr-deprecated">send_message</a></span>(daily_email)</a></code></pre></div>
 <p>Save the script within RStudio as <code>daily-report.R</code></p>
 <p>You can then use <a href="https://github.com/bnosac/cronR"><code>cronR</code></a> to schedule the script for a daily extract.</p>
 <p>Use <code>cronR</code>’s RStudio addin, or in the console issue:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cronR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/cronR/topics/cron_add">cron_add</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"Rscript "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/normalizePath">normalizePath</a></span>(<span class="st">"daily-report"</span>)), <span class="dt">frequency =</span> <span class="st">"daily"</span>)
-<span class="co"># Adding cronjob:</span>
-<span class="co"># ---------------</span>
-<span class="co">#</span>
-<span class="co"># ## cronR job</span>
-<span class="co"># ## id:   fe9168c7543cc83c1c2489de82216c0f</span>
-<span class="co"># ## tags: </span>
-<span class="co"># ## desc: </span>
-<span class="co"># 0 0 * * * Rscript /home/mark/demo-schedule.R</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cronR)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/cronR/topics/cron_add">cron_add</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"Rscript "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/normalizePath">normalizePath</a></span>(<span class="st">"daily-report"</span>)), <span class="dt">frequency =</span> <span class="st">"daily"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># Adding cronjob:</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co"># ---------------</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co"># ## cronR job</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co"># ## id:   fe9168c7543cc83c1c2489de82216c0f</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co"># ## tags: </span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co"># ## desc: </span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co"># 0 0 * * * Rscript /home/mark/demo-schedule.R</span></a></code></pre></div>
 <p>The script will then run every day.</p>
 <p>Test the script locally and with a test schedule before using in production. Once satisfied, you can run locally the <code><a href="../reference/gce_push_registry.html">gce_push_registry()</a></code> again to save the RStudio image with your scehduled script embedded within.</p>
 <p>If you want to call the scheduled data from a Shiny app, you can now fetch the data again via <code>bqr_query</code> from <code>bigQueryR</code> or <code>gcs_get_object</code> from <code>googleCloudStorageR</code> within your <code>server.R</code> to pull in the data into your app at runtime.</p>
@@ -362,6 +362,7 @@ daily_email &lt;-<span class="st"> </span><span class="kw">mime</span>(
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

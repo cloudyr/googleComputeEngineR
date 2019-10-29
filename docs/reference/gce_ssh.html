@@ -8,10 +8,12 @@
 
 <title>Remotely execute ssh code, upload &amp; download files. — gce_ssh • googleComputeEngineR</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,10 +32,11 @@
 
 
 
-<meta property="og:title" content="Remotely execute ssh code, upload &amp; download files. — gce_ssh" />
 
+<meta property="og:title" content="Remotely execute ssh code, upload &amp; download files. — gce_ssh" />
 <meta property="og:description" content="Assumes that you have ssh &amp;amp; scp installed.  If on Windows see website and examples for workarounds." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -73,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -187,7 +190,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -208,9 +210,7 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Assumes that you have ssh &amp; scp installed.  If on Windows see website and examples for workarounds.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>gce_ssh</span>(<span class='no'>instance</span>, <span class='no'>...</span>, <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -223,7 +223,7 @@
   <span class='kw'>username</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.info'>Sys.info</a></span>()<span class='kw'>[[</span><span class='st'>"user"</span>]], <span class='kw'>key.pub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>key.private</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -269,7 +269,7 @@
       <td><p>If TRUE, will overwrite the local file if exists.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Only works connecting to linux based instances.</p>
@@ -280,14 +280,12 @@
 <p>Otherwise, instructions for generating SSH keys can be found here: <a href='https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a>.</p>
 <p>Uploads and downloads are recursive, so if you specify a directory,
 everything inside the directory will also be downloaded.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/compute/docs/instances/connecting-to-instance'>https://cloud.google.com/compute/docs/instances/connecting-to-instance</a></p>
 <p>Other ssh functions: <code><a href='gce_ssh_addkeys.html'>gce_ssh_addkeys</a></code>,
   <code><a href='gce_ssh_browser.html'>gce_ssh_browser</a></code>,
   <code><a href='gce_ssh_setup.html'>gce_ssh_setup</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -326,11 +324,8 @@ everything inside the directory will also be downloaded.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

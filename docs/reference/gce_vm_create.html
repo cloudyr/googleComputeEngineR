@@ -8,10 +8,12 @@
 
 <title>Creates an instance resource in the specified project using the data included in the request. — gce_vm_create • googleComputeEngineR</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -30,10 +32,11 @@
 
 
 
-<meta property="og:title" content="Creates an instance resource in the specified project using the data included in the request. — gce_vm_create" />
 
+<meta property="og:title" content="Creates an instance resource in the specified project using the data included in the request. — gce_vm_create" />
 <meta property="og:description" content="Creates an instance resource in the specified project using the data included in the request." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -73,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -187,7 +190,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -208,9 +210,7 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Creates an instance resource in the specified project using the data included in the request.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>gce_vm_create</span>(<span class='no'>name</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>,
@@ -222,7 +222,7 @@
   <span class='kw'>project</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_project.html'>gce_get_global_project</a></span>(), <span class='kw'>zone</span> <span class='kw'>=</span> <span class='fu'><a href='gce_get_global_zone.html'>gce_get_global_zone</a></span>(),
   <span class='kw'>dry_run</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>disk_size_gb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>use_beta</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>acceleratorCount</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>acceleratorType</span> <span class='kw'>=</span> <span class='st'>"nvidia-tesla-p4"</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -323,11 +323,10 @@
       <td><p>Name of GPU to add, see <a href='gce_list_gpus.html'>gce_list_gpus</a></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A zone operation, or if the name already exists the VM object from <a href='gce_get_instance.html'>gce_get_instance</a></p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Authentication scopes used by this function are:</p><ul>
@@ -348,40 +347,31 @@
 </ul>
     <p>You can add metadata to the server such as <code>startup-script</code> and <code>shutdown-script</code>.  Details available here: <a href='https://cloud.google.com/compute/docs/storing-retrieving-metadata'>https://cloud.google.com/compute/docs/storing-retrieving-metadata</a></p> 
 <p>If you want to not have an external IP then modify the instance afterwards</p>
-    
     <h2 class="hasAnchor" id="preemptible-vms"><a class="anchor" href="#preemptible-vms"></a>Preemptible VMS</h2>
 
     
     <p>You can set <a href='https://cloud.google.com/compute/docs/instances/create-start-preemptible-instance'>preemptible</a> VMs by passing this in the <code>scheduling</code> arguments <code>scheduling = list(preemptible = TRUE)</code></p> 
 <p>This creates a VM that may be shut down prematurely by Google - you will need to sort out how to save state if that happens in a shutdown script etc.  However, these are much cheaper.</p>
-    
     <h2 class="hasAnchor" id="gpus"><a class="anchor" href="#gpus"></a>GPUs</h2>
 
     
     <p>Some defaults for launching GPU enabled VMs are available at <a href='gce_vm_gpu.html'>gce_vm_gpu</a></p>
 <p>You can add GPUs to your instance, but they must be present in the zone you have specified - use <a href='gce_list_gpus.html'>gce_list_gpus</a> to see which are available. Refer to <a href='https://cloud.google.com/compute/docs/gpus/#introduction'>this</a> link for a list of current GPUs per zone.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://developers.google.com/compute/docs/reference/latest/'>Google Documentation</a></p></div>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#preemptible-vms">Preemptible VMS</a></li>
-
       <li><a href="#gpus">GPUs</a></li>
-
       <li><a href="#see-also">See also</a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>

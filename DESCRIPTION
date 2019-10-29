@@ -1,6 +1,6 @@
 Package: googleComputeEngineR
 Type: Package
-Version: 0.3.0.9000
+Version: 0.3.0
 Title: R Interface with Google Compute Engine
 Description: Interact with the 'Google Compute Engine' API in R. Lets you create, 
   start and stop instances in the 'Google Cloud'.  Support for preconfigured instances, 

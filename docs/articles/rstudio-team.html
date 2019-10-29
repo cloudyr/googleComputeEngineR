@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>RStudio Server for a team</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>rstudio-team.Rmd</code></div>
@@ -190,22 +190,22 @@
 <h3 class="hasAnchor">
 <a href="#launch-the-rstudio-server-template" class="anchor"></a>Launch the RStudio server template</h3>
 <p>Here we are setting up a 13GB RAM instance, as found via <code><a href="../reference/gce_list_machinetype.html">gce_list_machinetype()</a></code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-## setting up a 13GB RAM instance 
-## see gce_list_machinetype() for options of predefined_type
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio-hadleyverse"</span>,
-             <span class="dt">name =</span> <span class="st">"rstudio-team"</span>,
-             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"mark1234"</span>,
-             <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>)
-
-## wait a bit, login at the IP it gives you</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">## setting up a 13GB RAM instance </span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## see gce_list_machinetype() for options of predefined_type</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio-hadleyverse"</span>,</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">             <span class="dt">name =</span> <span class="st">"rstudio-team"</span>,</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">             <span class="dt">username =</span> <span class="st">"mark"</span>, <span class="dt">password =</span> <span class="st">"mark1234"</span>,</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">             <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-2"</span>)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">## wait a bit, login at the IP it gives you</span></a></code></pre></div>
 </div>
 <div id="add-users-and-setting-up-packages" class="section level3">
 <h3 class="hasAnchor">
 <a href="#add-users-and-setting-up-packages" class="anchor"></a>Add users and setting up packages</h3>
 <p>You can add users via:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_rstudio_adduser.html">gce_rstudio_adduser</a></span>(vm, <span class="dt">username =</span> <span class="st">"bill"</span>, <span class="dt">password =</span> <span class="st">"flowerpot"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="../reference/gce_rstudio_adduser.html">gce_rstudio_adduser</a></span>(vm, <span class="dt">username =</span> <span class="st">"bill"</span>, <span class="dt">password =</span> <span class="st">"flowerpot"</span>)</a></code></pre></div>
 <p>You can then login at the IP address given via <code>vm</code> or <code><a href="../reference/gce_get_external_ip.html">gce_get_external_ip(vm)</a></code>, and install packages as you would on RStudio Desktop.</p>
 </div>
 <div id="saving-the-docker-container-to-google-container-registry" class="section level3">
@@ -214,9 +214,9 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <p>Every Google project has its own private Docker repo called the Container Registry.</p>
 <p>This command takes the running container that has your changes and saves it to there.</p>
 <p>By default, the RStudio container runs with name “rstudio” which you can see via <code><a href="../reference/containers.html">containers(vm)</a></code></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, 
-                  <span class="dt">save_name =</span> <span class="st">"my_rstudio"</span>,
-                  <span class="dt">container_name =</span> <span class="st">"rstudio"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/gce_push_registry.html">gce_push_registry</a></span>(vm, </a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">                  <span class="dt">save_name =</span> <span class="st">"my_rstudio"</span>,</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">                  <span class="dt">container_name =</span> <span class="st">"rstudio"</span>)</a></code></pre></div>
 <p>This can take a while the first time so go make a cup of tea. If successful you should be able to see your container saved at this URL <code>https://console.cloud.google.com/kubernetes/images/list</code></p>
 </div>
 <div id="start-up-another-vm-your-configuration" class="section level3">
@@ -225,30 +225,31 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <p>Now say you want a larger more powerful instance, or to launch another with your settings. You can now pull from the Container Registry and start up a VM with your settings enabled.</p>
 <p>We use <code>template=rstudio</code> to make sure the right ports and so forth are configured for your Rstudio, and <code>dynamic_image="my_rstudio"</code> to instruct the template to pull from your own image instead of using the default. You need to make sure the dynamic image is based on an RStudio one for this to work correctly.</p>
 <p>The function <code>gce_tag_container</code> constructs the name of the custom image on your Container Registry for you.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## construct the correct tag name for your custom image
-tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"my_rstudio"</span>)
-<span class="co"># gcr.io/mark-edmondson-gde/my_rstudio</span>
-
-## start a 50GB RAM instance
-vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"rstudio-big"</span>,
-              <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-8"</span>,
-              <span class="dt">template =</span> <span class="st">"rstudio"</span>,
-              <span class="dt">dynamic_image =</span> tag,
-              <span class="dt">username =</span> <span class="st">"me"</span>, <span class="dt">password =</span> <span class="st">"mypassword"</span>)
-
-## wait for it to launch</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## construct the correct tag name for your custom image</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">tag &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"my_rstudio"</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># gcr.io/mark-edmondson-gde/my_rstudio</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">## start a 50GB RAM instance</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">name =</span> <span class="st">"rstudio-big"</span>,</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">              <span class="dt">predefined_type =</span> <span class="st">"n1-highmem-8"</span>,</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">              <span class="dt">template =</span> <span class="st">"rstudio"</span>,</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">              <span class="dt">dynamic_image =</span> tag,</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">              <span class="dt">username =</span> <span class="st">"me"</span>, <span class="dt">password =</span> <span class="st">"mypassword"</span>)</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">## wait for it to launch</span></a></code></pre></div>
 </div>
 <div id="clean-up" class="section level3">
 <h3 class="hasAnchor">
 <a href="#clean-up" class="anchor"></a>Clean up</h3>
 <p>You don’t get charged for stopped containers, and the next time you start them they will start within 20 seconds.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm2)
-<span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm2)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vm)</a></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleComputeEngineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
       <h1>SSH, Docker, Container Registry and Futures</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-03-30</h4>
+            <h4 class="date">2019-10-29</h4>
       
       
       <div class="hidden name"><code>docker-ssh-futures.Rmd</code></div>
@@ -178,11 +178,9 @@
 <h2 class="hasAnchor">
 <a href="#logging-in-to-your-instance" class="anchor"></a>Logging in to your instance</h2>
 <p>Google Cloud comes with a browser based SSH application, which you can launch via <code>gce_ssh_browser</code> to set it up further to your liking.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-<span class="kw"><a href="../reference/gce_ssh_browser.html">gce_ssh_browser</a></span>(<span class="st">"my-server"</span>)</code></pre></div>
-<div class="figure">
-<img src="ssh-login.gif">
-</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="../reference/gce_ssh_browser.html">gce_ssh_browser</a></span>(<span class="st">"my-server"</span>)</a></code></pre></div>
+<p><img src="ssh-login.gif"></p>
 </div>
 <div id="ssh-commands" class="section level2">
 <h2 class="hasAnchor">
@@ -197,13 +195,13 @@
 <a href="#gcloud-default-keys" class="anchor"></a>gcloud default keys</h4>
 <p>For this you will need to connect once via the Google Cloud SDK <code>gcloud compute ssh</code> , or copy the default keys.</p>
 <p>After that step, you will then in future be able to connect via:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)
-  
-## run command on instance            
-<span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)
-<span class="co"># foo</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## run command on instance            </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># foo</span></a></code></pre></div>
 <p>Calling <code>gce_ssh</code> directly will call <code>gce_ssh_setup</code> with defaults set if it has not been run already. It will look for a username via <code>Sys.info()[["user"]]</code>.</p>
 </div>
 <div id="custom-ssh-keys" class="section level4">
@@ -211,18 +209,18 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.h
 <a href="#custom-ssh-keys" class="anchor"></a>Custom SSH keys</h4>
 <p>If you want more customisation over the SSH connection, then you will need to generate SSH crudentials yourself following this <a href="https://cloud.google.com/compute/docs/instances/connecting-to-instance">Google guide</a>.</p>
 <p>Once you have generated details for your username, the public and private key, you can connect via:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)
-
-## add SSH info to the VM object
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm,
-                    <span class="dt">username =</span> <span class="st">"mark"</span>, 
-                    <span class="dt">key.pub =</span> <span class="st">"filepath.to.public.key"</span>,
-                    <span class="dt">key.private =</span> <span class="st">"filepath.to.private.key"</span>)
-## run command on instance            
-<span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)
-<span class="co"># foo</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">## add SSH info to the VM object</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">                    <span class="dt">username =</span> <span class="st">"mark"</span>, </a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">                    <span class="dt">key.pub =</span> <span class="st">"filepath.to.public.key"</span>,</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">                    <span class="dt">key.private =</span> <span class="st">"filepath.to.private.key"</span>)</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">## run command on instance            </span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co"># foo</span></a></code></pre></div>
 <p>You may also need to specify the username if its not <code>SSH</code> safe - for instance uppercase or with symbols. The VM will generate a user account the same name as the one you log in with.</p>
 </div>
 </div>
@@ -236,18 +234,18 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_
 <p>Add the RStudio SSH client to your PATH variable, e.g. <code>C:\Program Files\RStudio\bin\msys-ssh-1000-18</code></p>
 <p>If you look in RStudio you can view the location of its stored SSH keys (<code>Options &gt; git/SVN</code>). These are the keys that we will add to the SSH information for the instance. By default they are <code>C://.ssh/id_rsa.pub</code> and <code>C://.ssh/id_rsa</code></p>
 <p>Create your VM as normal, and add the custom SHH information:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-## create a default RStudio VM
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)
-
-## add custom SSH keys to the VM object with assumed RStudio defaults
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm 
-                    <span class="dt">key.pub =</span> <span class="st">"C://.ssh/id_rsa.pub"</span>,
-                    <span class="dt">key.private =</span> <span class="st">"C://.ssh/id_rsa"</span>)
-                      
-## test ssh
-<span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">## create a default RStudio VM</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"my-instance"</span>)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">## add custom SSH keys to the VM object with assumed RStudio defaults</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_setup.html">gce_ssh_setup</a></span>(vm </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">                    <span class="dt">key.pub =</span> <span class="st">"C://.ssh/id_rsa.pub"</span>,</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">                    <span class="dt">key.private =</span> <span class="st">"C://.ssh/id_rsa"</span>)</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                      </a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">## test ssh</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw"><a href="../reference/gce_ssh.html">gce_ssh</a></span>(vm, <span class="st">"echo foo"</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="docker-commands" class="section level2">
@@ -255,158 +253,159 @@ vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_
 <a href="#docker-commands" class="anchor"></a>Docker commands</h2>
 <p>For docker containers, the <code>docker_cmd</code> functions run the shell commands within a docker container. These commands are derived from <a href="https://github.com/wch/harbor"><code>harbor</code></a>, which you may want to use for its other features. With harbor, you can also develop your docker container locally first using BootToDocker or similar before pushing it up.</p>
 <p>A demo using speaking to a docker container is below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-<span class="co"># Create a virtual machine on Google Compute Engine</span>
-ghost &lt;-<span class="st">   </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"demo"</span>, 
-                  <span class="dt">image_project =</span> <span class="st">"google-containers"</span>,
-                  <span class="dt">image_family =</span> <span class="st">"gci-stable"</span>,
-                  <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)
-
-ghost
-<span class="co">#&gt; ==Google Compute Engine Instance==</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Name:                demo</span>
-<span class="co">#&gt; Created:             2016-10-06 04:41:56</span>
-<span class="co">#&gt; Machine Type:        f1-micro</span>
-<span class="co">#&gt; Status:              RUNNING</span>
-<span class="co">#&gt; Zone:                europe-west1-b</span>
-<span class="co">#&gt; External IP:         104.155.0.147</span>
-<span class="co">#&gt; Disks: </span>
-<span class="co">#&gt;       deviceName       type       mode boot autoDelete</span>
-<span class="co">#&gt; 1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span>
-
-
-<span class="co"># Create and run a container in the virtual machine.</span>
-<span class="co"># 'user' is the one you used to create the SSH keys</span>
-
-<span class="co"># This might take a while.</span>
-con &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(ghost, <span class="st">"debian"</span>, <span class="st">"echo foo"</span>, <span class="dt">user =</span> <span class="st">"mark"</span>)
-<span class="co">#&gt; Warning: Permanently added '104.155.0.147' (RSA) to the list of known hosts.</span>
-<span class="co">#&gt; Unable to find image 'debian:latest' locally</span>
-<span class="co">#&gt; latest: Pulling from library/debian</span>
-<span class="co">#&gt; 6a5a5368e0c2: Pulling fs layer</span>
-<span class="co">#&gt; 6a5a5368e0c2: Verifying Checksum</span>
-<span class="co">#&gt; 6a5a5368e0c2: Download complete</span>
-<span class="co">#&gt; 6a5a5368e0c2: Pull complete</span>
-<span class="co">#&gt; Digest: sha256:677f184a5969847c0ad91d30cf1f0b925cd321e6c66e3ed5fbf9858f58425d1a</span>
-<span class="co">#&gt; Status: Downloaded newer image for debian:latest</span>
-<span class="co">#&gt; foo</span>
-
-con
-<span class="co">#&gt; &lt;container&gt;</span>
-<span class="co">#&gt;   ID:       92f96d32d081 </span>
-<span class="co">#&gt;   Name:     harbor_6rdevp </span>
-<span class="co">#&gt;   Image:    debian </span>
-<span class="co">#&gt;   Command:  echo foo </span>
-<span class="co">#&gt;   Host:     ==Google Compute Engine Instance==</span>
-<span class="co">#&gt;   </span>
-<span class="co">#&gt;   Name:                demo</span>
-<span class="co">#&gt;   Created:             2016-10-06 04:41:56</span>
-<span class="co">#&gt;   Machine Type:        f1-micro</span>
-<span class="co">#&gt;   Status:              RUNNING</span>
-<span class="co">#&gt;   Zone:                europe-west1-b</span>
-<span class="co">#&gt;  External IP:         104.155.0.147</span>
-<span class="co">#&gt;   Disks: </span>
-<span class="co">#&gt;         deviceName       type       mode boot autoDelete</span>
-<span class="co">#&gt;   1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span>
-  
-  
-<span class="co"># Destroy the virtual machine from Google Compute Engine</span>
-<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(ghost)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># Create a virtual machine on Google Compute Engine</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">ghost &lt;-<span class="st">   </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"demo"</span>, </a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                  <span class="dt">image_project =</span> <span class="st">"google-containers"</span>,</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                  <span class="dt">image_family =</span> <span class="st">"gci-stable"</span>,</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">                  <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">ghost</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; ==Google Compute Engine Instance==</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; Name:                demo</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; Created:             2016-10-06 04:41:56</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; Machine Type:        f1-micro</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; Status:              RUNNING</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; Zone:                europe-west1-b</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; External IP:         104.155.0.147</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; Disks: </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt;       deviceName       type       mode boot autoDelete</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co"># Create and run a container in the virtual machine.</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co"># 'user' is the one you used to create the SSH keys</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co"># This might take a while.</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">con &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(ghost, <span class="st">"debian"</span>, <span class="st">"echo foo"</span>, <span class="dt">user =</span> <span class="st">"mark"</span>)</a>
+<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; Warning: Permanently added '104.155.0.147' (RSA) to the list of known hosts.</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; Unable to find image 'debian:latest' locally</span></a>
+<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co">#&gt; latest: Pulling from library/debian</span></a>
+<a class="sourceLine" id="cb5-31" data-line-number="31"><span class="co">#&gt; 6a5a5368e0c2: Pulling fs layer</span></a>
+<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#&gt; 6a5a5368e0c2: Verifying Checksum</span></a>
+<a class="sourceLine" id="cb5-33" data-line-number="33"><span class="co">#&gt; 6a5a5368e0c2: Download complete</span></a>
+<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#&gt; 6a5a5368e0c2: Pull complete</span></a>
+<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#&gt; Digest: sha256:677f184a5969847c0ad91d30cf1f0b925cd321e6c66e3ed5fbf9858f58425d1a</span></a>
+<a class="sourceLine" id="cb5-36" data-line-number="36"><span class="co">#&gt; Status: Downloaded newer image for debian:latest</span></a>
+<a class="sourceLine" id="cb5-37" data-line-number="37"><span class="co">#&gt; foo</span></a>
+<a class="sourceLine" id="cb5-38" data-line-number="38"></a>
+<a class="sourceLine" id="cb5-39" data-line-number="39">con</a>
+<a class="sourceLine" id="cb5-40" data-line-number="40"><span class="co">#&gt; &lt;container&gt;</span></a>
+<a class="sourceLine" id="cb5-41" data-line-number="41"><span class="co">#&gt;   ID:       92f96d32d081 </span></a>
+<a class="sourceLine" id="cb5-42" data-line-number="42"><span class="co">#&gt;   Name:     harbor_6rdevp </span></a>
+<a class="sourceLine" id="cb5-43" data-line-number="43"><span class="co">#&gt;   Image:    debian </span></a>
+<a class="sourceLine" id="cb5-44" data-line-number="44"><span class="co">#&gt;   Command:  echo foo </span></a>
+<a class="sourceLine" id="cb5-45" data-line-number="45"><span class="co">#&gt;   Host:     ==Google Compute Engine Instance==</span></a>
+<a class="sourceLine" id="cb5-46" data-line-number="46"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb5-47" data-line-number="47"><span class="co">#&gt;   Name:                demo</span></a>
+<a class="sourceLine" id="cb5-48" data-line-number="48"><span class="co">#&gt;   Created:             2016-10-06 04:41:56</span></a>
+<a class="sourceLine" id="cb5-49" data-line-number="49"><span class="co">#&gt;   Machine Type:        f1-micro</span></a>
+<a class="sourceLine" id="cb5-50" data-line-number="50"><span class="co">#&gt;   Status:              RUNNING</span></a>
+<a class="sourceLine" id="cb5-51" data-line-number="51"><span class="co">#&gt;   Zone:                europe-west1-b</span></a>
+<a class="sourceLine" id="cb5-52" data-line-number="52"><span class="co">#&gt;  External IP:         104.155.0.147</span></a>
+<a class="sourceLine" id="cb5-53" data-line-number="53"><span class="co">#&gt;   Disks: </span></a>
+<a class="sourceLine" id="cb5-54" data-line-number="54"><span class="co">#&gt;         deviceName       type       mode boot autoDelete</span></a>
+<a class="sourceLine" id="cb5-55" data-line-number="55"><span class="co">#&gt;   1 demo-boot-disk PERSISTENT READ_WRITE TRUE       TRUE</span></a>
+<a class="sourceLine" id="cb5-56" data-line-number="56">  </a>
+<a class="sourceLine" id="cb5-57" data-line-number="57">  </a>
+<a class="sourceLine" id="cb5-58" data-line-number="58"><span class="co"># Destroy the virtual machine from Google Compute Engine</span></a>
+<a class="sourceLine" id="cb5-59" data-line-number="59"><span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(ghost)</a></code></pre></div>
 <p>To run R commands within a docker image in the cloud:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-## make instance using R-base
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>, <span class="dt">name =</span> <span class="st">"rbase"</span>)
-
-## add SSH info to the VM object
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_addkeys.html">gce_ssh_addkeys</a></span>(<span class="dt">username =</span> <span class="st">"mark"</span>, 
-                      <span class="dt">instance =</span> <span class="st">"your-instance"</span>, 
-                      <span class="dt">key.pub =</span> <span class="st">"filepath.to.public.key"</span>,
-                      <span class="dt">key.private =</span> <span class="st">"filepath.to.private.key"</span>)
-
-## run an R function on the instance within the R-base docker image
-<span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(vm, <span class="st">"rocker/r-base"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Rscript"</span>, <span class="st">"-e"</span>, <span class="st">"1+1"</span>))
-<span class="co">#&gt; [1] 2</span>
-
-<span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)
-<span class="co">#&gt; ==Operation delete :  PENDING</span>
-<span class="co">#&gt; Started:  2016-10-07 02:37:14</span>
-
-<span class="kw">gce_check_zone_op</span>(.Last.value)
-<span class="co">#&gt; Operation complete in 33 secs </span>
-<span class="co">#&gt; ==Operation delete :  DONE</span>
-<span class="co">#&gt; Started:  2016-10-07 02:37:14</span>
-<span class="co">#&gt; Ended: 2016-10-07 02:37:47 </span>
-<span class="co">#&gt; Operation complete in 33 secs </span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">## make instance using R-base</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"r-base"</span>, <span class="dt">name =</span> <span class="st">"rbase"</span>)</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">## add SSH info to the VM object</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_ssh_addkeys.html">gce_ssh_addkeys</a></span>(<span class="dt">username =</span> <span class="st">"mark"</span>, </a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">                      <span class="dt">instance =</span> <span class="st">"your-instance"</span>, </a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">                      <span class="dt">key.pub =</span> <span class="st">"filepath.to.public.key"</span>,</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">                      <span class="dt">key.private =</span> <span class="st">"filepath.to.private.key"</span>)</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">## run an R function on the instance within the R-base docker image</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="kw"><a href="../reference/docker_run.html">docker_run</a></span>(vm, <span class="st">"rocker/r-base"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Rscript"</span>, <span class="st">"-e"</span>, <span class="st">"1+1"</span>))</a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; [1] 2</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="kw"><a href="../reference/gce_vm_delete.html">gce_vm_delete</a></span>(vm)</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; ==Operation delete :  PENDING</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; Started:  2016-10-07 02:37:14</span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="kw">gce_check_zone_op</span>(.Last.value)</a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; Operation complete in 33 secs </span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; ==Operation delete :  DONE</span></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt; Started:  2016-10-07 02:37:14</span></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; Ended: 2016-10-07 02:37:47 </span></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; Operation complete in 33 secs </span></a></code></pre></div>
 <p>Using <code>harbor</code> you can see other metadata about your container from your local R:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(harbor)
-
-vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio"</span>, 
-             <span class="dt">username =</span> <span class="st">"mark"</span>, 
-             <span class="dt">password =</span> <span class="st">"mark1234"</span>, 
-             <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)
-                                         
-## get running rstudio container
-cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/containers.html">containers</a></span>(vm)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cont)
-<span class="st">"rstudio"</span>
-
-## see if its running
-<span class="kw"><a href="../reference/container_running.html">container_running</a></span>(con<span class="op">$</span>rstudio)
-[<span class="dv">1</span>] <span class="ot">TRUE</span>
-
-## get logs from container
-<span class="kw"><a href="../reference/container_logs.html">container_logs</a></span>(con<span class="op">$</span>rstudio)
-
-## get metadata
-<span class="kw"><a href="../reference/container_update_info.html">container_update_info</a></span>(con<span class="op">$</span>rstudio)
-<span class="op">&lt;</span>container<span class="op">&gt;</span>
-<span class="st">  </span>ID<span class="op">:</span><span class="st">       </span>05c5437ac968 
-  Name<span class="op">:</span><span class="st">     </span>rstudio 
-  Image<span class="op">:</span><span class="st">    </span>rocker<span class="op">/</span>rstudio 
-  Command<span class="op">:</span><span class="st">  </span><span class="er">/</span>init 
-  Host<span class="op">:</span><span class="st">     </span><span class="er">==</span>Google Compute Engine Instance<span class="op">==</span>
-<span class="st">  </span>
-<span class="st">  </span>Name<span class="op">:</span><span class="st">                </span>rstudio<span class="op">-</span>dev
-  Created<span class="op">:</span><span class="st">             </span><span class="dv">2016</span><span class="op">-</span><span class="dv">10</span><span class="op">-</span><span class="dv">07</span> <span class="dv">03</span><span class="op">:</span><span class="dv">30</span><span class="op">:</span><span class="dv">24</span>
-  Machine Type<span class="op">:</span><span class="st">        </span>f1<span class="op">-</span>micro
-  Status<span class="op">:</span><span class="st">              </span>RUNNING
-  Zone<span class="op">:</span><span class="st">                </span>europe<span class="op">-</span>west1<span class="op">-</span>b
-  External IP<span class="op">:</span><span class="st">         </span><span class="fl">104.199</span>.<span class="fl">19.222</span>
-  Disks<span class="op">:</span><span class="st"> </span>
-<span class="st">               </span>deviceName       type       mode boot autoDelete
-  <span class="dv">1</span> rstudio<span class="op">-</span>dev<span class="op">-</span>boot<span class="op">-</span>disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(harbor)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">vm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="dt">template =</span> <span class="st">"rstudio"</span>, </a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">             <span class="dt">username =</span> <span class="st">"mark"</span>, </a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">             <span class="dt">password =</span> <span class="st">"mark1234"</span>, </a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">             <span class="dt">predefined_type =</span> <span class="st">"f1-micro"</span>)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">                                         </a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">## get running rstudio container</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">cont &lt;-<span class="st"> </span><span class="kw"><a href="../reference/containers.html">containers</a></span>(vm)</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(cont)</a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="st">"rstudio"</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="co">## see if its running</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="kw"><a href="../reference/container_running.html">container_running</a></span>(con<span class="op">$</span>rstudio)</a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">[<span class="dv">1</span>] <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="co">## get logs from container</span></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="kw"><a href="../reference/container_logs.html">container_logs</a></span>(con<span class="op">$</span>rstudio)</a>
+<a class="sourceLine" id="cb7-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb7-21" data-line-number="21"><span class="co">## get metadata</span></a>
+<a class="sourceLine" id="cb7-22" data-line-number="22"><span class="kw"><a href="../reference/container_update_info.html">container_update_info</a></span>(con<span class="op">$</span>rstudio)</a>
+<a class="sourceLine" id="cb7-23" data-line-number="23"><span class="op">&lt;</span>container<span class="op">&gt;</span></a>
+<a class="sourceLine" id="cb7-24" data-line-number="24"><span class="st">  </span>ID<span class="op">:</span><span class="st">       </span>05c5437ac968 </a>
+<a class="sourceLine" id="cb7-25" data-line-number="25">  Name<span class="op">:</span><span class="st">     </span>rstudio </a>
+<a class="sourceLine" id="cb7-26" data-line-number="26">  Image<span class="op">:</span><span class="st">    </span>rocker<span class="op">/</span>rstudio </a>
+<a class="sourceLine" id="cb7-27" data-line-number="27">  Command<span class="op">:</span><span class="st">  </span><span class="er">/</span>init </a>
+<a class="sourceLine" id="cb7-28" data-line-number="28">  Host<span class="op">:</span><span class="st">     </span><span class="er">==</span>Google Compute Engine Instance<span class="op">==</span></a>
+<a class="sourceLine" id="cb7-29" data-line-number="29"><span class="st">  </span></a>
+<a class="sourceLine" id="cb7-30" data-line-number="30"><span class="st">  </span>Name<span class="op">:</span><span class="st">                </span>rstudio<span class="op">-</span>dev</a>
+<a class="sourceLine" id="cb7-31" data-line-number="31">  Created<span class="op">:</span><span class="st">             </span><span class="dv">2016-10-07</span> <span class="dv">03</span><span class="op">:</span><span class="dv">30</span><span class="op">:</span><span class="dv">24</span></a>
+<a class="sourceLine" id="cb7-32" data-line-number="32">  Machine Type<span class="op">:</span><span class="st">        </span>f1<span class="op">-</span>micro</a>
+<a class="sourceLine" id="cb7-33" data-line-number="33">  Status<span class="op">:</span><span class="st">              </span>RUNNING</a>
+<a class="sourceLine" id="cb7-34" data-line-number="34">  Zone<span class="op">:</span><span class="st">                </span>europe<span class="op">-</span>west1<span class="op">-</span>b</a>
+<a class="sourceLine" id="cb7-35" data-line-number="35">  External IP<span class="op">:</span><span class="st">         </span><span class="dv">104</span>.<span class="dv">199</span>.<span class="fl">19.222</span></a>
+<a class="sourceLine" id="cb7-36" data-line-number="36">  Disks<span class="op">:</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-37" data-line-number="37"><span class="st">               </span>deviceName       type       mode boot autoDelete</a>
+<a class="sourceLine" id="cb7-38" data-line-number="38">  <span class="dv">1</span> rstudio<span class="op">-</span>dev<span class="op">-</span>boot<span class="op">-</span>disk PERSISTENT READ_WRITE <span class="ot">TRUE</span>       <span class="ot">TRUE</span></a></code></pre></div>
 </div>
 <div id="futures" class="section level2">
 <h2 class="hasAnchor">
 <a href="#futures" class="anchor"></a>Futures</h2>
 <p>You can run R functions asynchronously over a cluster of Google VMs using the R package <a href="https://CRAN.R-project.org/package=future"><code>future</code></a>.</p>
 <p>Consult the <a href="https://github.com/HenrikBengtsson/future">future readme</a> for further details, but a quick demo is shown below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)
-
-vm1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster1"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)
-vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)
-vm3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)
-
-vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(vm1, vm2, vm3)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)
-
-## use futures %&lt;-% to send a function to the cluster
-si <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.info">Sys.info</a></span>()
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(si)
-
-## tidy up
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, <span class="dt">FUN =</span> gce_vm_stop)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">vm1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster1"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">vm2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">vm3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm.html">gce_vm</a></span>(<span class="st">"cluster2"</span>, <span class="dt">template =</span> <span class="st">"r-base"</span>)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">vms &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(vm1, vm2, vm3)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/future/topics/plan">plan</a></span>(cluster, <span class="dt">workers =</span> vms)</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">## use futures %&lt;-% to send a function to the cluster</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">si <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.info">Sys.info</a></span>()</a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(si)</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">## tidy up</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(vms, <span class="dt">FUN =</span> gce_vm_stop)</a></code></pre></div>
 <p>The package includes the function <code>gce_future_install_packages</code> which will load libraries onto your cluster and commit the r-base docker container they are running on.</p>
 <p>You can then save these containers to the Google Container registry as detailed via <code>gce_save_container</code>, for loading and use later for your asynchronous projects.</p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
