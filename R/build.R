@@ -51,7 +51,7 @@ gce_push_registry <- function(instance,
   ## tagging
   docker_cmd(instance, cmd = cmd, args = c(obj, build_tag))
   ## authenticatation
-  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  gce_ssh(instance, "/usr/bin/docker-credential-gcr configure-docker")
   
   myMessage("Uploading to Google Container Registry: ", 
             paste0("https://console.cloud.google.com/gcr/images/list?project=",project), level = 3)
@@ -110,7 +110,7 @@ gce_pull_registry <- function(instance,
                                  project = project,
                                  container_url = container_url)
   
-  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  gce_ssh(instance, "/usr/bin/docker-credential-gcr configure-docker")
   
   if(pull_only){
     docker_pull(instance, image = build_tag, ...)
@@ -149,7 +149,7 @@ gce_list_registry <- function(instance,
   
   search_string <- paste0(container_url, "/", project)
   
-  gce_ssh(instance, "/usr/share/google/dockercfg_update.sh")
+  gce_ssh(instance, "/usr/bin/docker-credential-gcr configure-docker")
   
   out <- docker_cmd(instance, cmd = "search", search_string, capture_text = TRUE)
   

@@ -1,6 +1,6 @@
 # 0.3.0.9000
 
-* ...
+* Upgrade docker calls for `gce_push_registry` and friends (#151)
 
 # 0.3.0
 
