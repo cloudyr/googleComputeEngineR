@@ -114,7 +114,120 @@ resolved(result)
 [1] TRUE
 ```
 
-## Examples
+### Nested parallelization
+
+(Contributed by [Grant McDermott](https://twitter.com/grant_mcdermott).)
+
+The above setup will parallelize across the VMs in your cluster. However, each VM will still only run tasks sequentially. In order to parallelize tasks on the VMs too, we need to tell our remote cluster (via `future`) to use a nested parallelization strategy. At a high level this will involve two steps:
+
+1. Parallelization across the remote VMs in our cluster.
+2. Parallelization within each VM, making sure that we "chunk" the input data appropriately to avoid duplication.
+
+To illustrate, consider an example where we wish to run a slow function across a cluster of three VMs that each have eight cores (yielding 24 cores in total). We again use `gce_vm_cluster()` to set this up. Note in passing that the default instantiation of the rocker/r-parallel Docker image on each VM is what allows us to run parallel processes on these machines themselves without having to install any additional packages.
+
+```r
+library(googleComputeEngineR)
+library(future.apply)
+
+## Emulate a slow function that can be sped up in parallel
+slow_square <- 
+  function(x = 1) {
+    x_sq <- x^2 
+    Sys.sleep(5)
+    return(x_sq)
+    }
+
+## Set up our cluster: 3 VMs with 8 cores each
+vms_nested <- 
+  gce_vm_cluster(
+    vm_prefix = "nested-cluster",        
+    cluster_size = 3,                    
+    #docker_image = "rocker/r-parallel",  ## Default 
+    predefined_type = "n1-highcpu-8",     
+    scheduling = list(preemptible = TRUE) ## Optional: Use cheaper, preemptible machines
+    )
+
+#2019-10-25 12:56:21> # Creating cluster with settings: predefined_type = n1-highcpu-8, scheduling = list(preemptible = TRUE), template = r-base, dynamic_image = rocker/r-parallel, wait = FALSE
+#2019-10-25 12:56:29> Operation running...
+#2019-10-25 12:56:35> Operation complete in 6 secs
+#2019-10-25 12:56:38> Operation complete in 4 secs
+#2019-10-25 12:56:42> Operation complete in 6 secs
+#2019-10-25 12:56:43> nested-cluster1 VM running
+#2019-10-25 12:56:44> nested-cluster2 VM running
+#2019-10-25 12:56:46> nested-cluster3 VM running
+#2019-10-25 12:56:54> Public SSH key uploaded to instance
+#2019-10-25 12:57:01> Public SSH key uploaded to instance
+#2019-10-25 12:57:09> Public SSH key uploaded to instance
+#2019-10-25 12:57:09> # Testing cluster:
+#Warning: Permanently added 'XX.XX.XX.XXX' (ED25519) to the list of known hosts.
+#nested-cluster1 ssh working
+#Warning: Permanently added 'YY.YY.YYY.YY' (ED25519) to the list of known hosts.
+#nested-cluster2 ssh working
+#Warning: Permanently added 'ZZ.ZZ.ZZZ.ZZ' (ED25519) to the list of known hosts.
+#nested-cluster3 ssh working
+```
+
+Next, we must tweak the cluster plan so that `future` is aware of the nested parallel structure. Nesting in the `future` framework is operationalised by defining a series of so-called [future "topologies"](https://cran.r-project.org/web/packages/future/vignettes/future-3-topologies.html). In this case, we are going to define two topology layers:
+
+- **Topology 1.** The "outer" plan, which tells `future` to use the cluster of three remote VMs.
+- **Topology 2.** The "inner" plan, which tells `future` to use all eight cores on each VM via the `multiprocess` option. 
+
+```r
+plan(list( 
+  ## Topology 1: Use the cluster of remote VMs 
+  tweak(cluster, workers = as.cluster(vms_nested)),  
+  ## Topology 2: Use all CPUs on each VM
+  tweak(multiprocess)  
+  ))
+```
+
+The final thing that we'll do before using our cluster is defining a convenience function for chunking the input arguments (i.e. data) to our function. Remember, we need to do this or else each VM will duplicate effort by working on the same parts of the problem. R provides lots of ways to split data into chunks, but here's one that I've borrowed from [StackOverflow](https://stackoverflow.com/a/16275428). The advantages of this particular function are that it only requires base R operations and is robust to complications like unequal chunk lengths and different input types (e.g. factors vs numeric).
+
+```r
+chunk_func <- function(x, n) split(x, cut(seq_along(x), n, labels = FALSE)) 
+```
+
+We are now ready to use all 24 cores of the cluster. For this particular example, I'm going to loop over 48 iterations of our `slow_square()` function. (Note that this would take two minutes to run sequentially.) I'll use `future.lapply::future_sapply()` to run things in parallel and will also use the `tictoc` package to record timing. I'm going to comment the next code block quite extensively, but just to quickly highlight the key conceptual stages:
+
+- First, we'll parallelize across the three VMs in our cluster via an outer `future_sapply()` call.
+- Next, we'll split our input data into chunks so that each VM could work on a separate part of the problem (i.e. VM1 gets `1:16`, VM2 gets `17:32`, and VM3 gets `33:48`)
+- Finally, we'll parallelize internally so that each VM uses all of its available cores via an inner `future_sapply()` call.
+
+```r
+## Input data (vector to be interated over by our function)
+input_data <- 1:48
+
+## Run the function in nested parallel on our cluster and record timing
+tictoc::tic()
+ans <-
+   ## Parallelise over the three VMS
+   future_sapply(seq_along(vms_nested), function(v) {
+   
+      ## Split the input data into distinct chunks for each VM
+      input_chunk <- chunk_func(input_data, length(vms_nested))[[v]] 
+   
+      ## Parallelise within each of the VMs  
+      future_vapply(input_chunk, slow_square)
+   })
+tictoc::toc()
+#11.451 sec elapsed
+
+## Show that it worked
+as.vector(ans)
+# [1]    1    4    9   16   25   36   49   64   81  100  121  144  169  196  225
+#[16]  256  289  324  361  400  441  484  529  576  625  676  729  784  841  900
+#[31]  961 1024 1089 1156 1225 1296 1369 1444 1521 1600 1681 1764 1849 1936 2025
+#[46] 2116 2209 2304
+```
+And there you have it: a 21x speed up compared to the sequential option. (There's a tiny bit of overhead, which is why we don't achieve the full theoretical speed-up of 24x. But those margins will improve as the scale of the problem increases.) The same general approach demonstrated here can be adapted fairly easily to greatly reduce computation times for even complex forms of analysis.
+
+Since we have been using preemptible machines for this example, they will automatically be deleted within 24 hours. However, we'll delete them manaully since there's no point incurring additional charges now that we're done with them.
+
+```r
+gce_vm_delete(vms_nested)
+```
+
+## More examples
 
 ### Forecasting a large data set
 
@@ -214,7 +327,7 @@ my_single_function <- function(x){
 result <- future_lapply(o, my_single_function)
 
 ## tidy up
-lapply(vms, FUN = gce_vm_stop)
+gce_vm_stop(vms)
 
 ```
 
