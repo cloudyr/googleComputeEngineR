@@ -58,9 +58,6 @@ gce_push_registry <- function(instance,
   
   docker_cmd(instance, cmd = "push", args = build_tag, wait = wait)
   
-  gce_list_registry(instance,
-                    container_url = container_url,
-                    project = project)
   build_tag
   
 }
@@ -140,20 +137,21 @@ gce_pull_registry <- function(instance,
 #'   gce_list_registry(vm)
 #' 
 #' }
-#' 
-#' @export
+#' @noRd
 #' @family container registry functions
 gce_list_registry <- function(instance,
                               container_url = "gcr.io",
                               project = gce_get_global_project()){
   
-  search_string <- paste0(container_url, "/", project)
-  
-  gce_ssh(instance, "/usr/bin/docker-credential-gcr configure-docker")
-  
-  out <- docker_cmd(instance, cmd = "search", search_string, capture_text = TRUE)
-  
-  out 
+  # search_string <- paste0(container_url, "/", project)
+  # 
+  # gce_ssh(instance, "/usr/bin/docker-credential-gcr configure-docker")
+  # 
+  # out <- docker_cmd(instance, cmd = "search", search_string, capture_text = TRUE)
+  # 
+  # out 
+  message("gce_list_registry() not working")
+  NULL
   
 }
 

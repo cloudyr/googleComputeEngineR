@@ -13,7 +13,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2019-10-29" />
+<meta name="date" content="2019-11-02" />
 
 <title>Massively parallel processing</title>
 
@@ -304,7 +304,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Massively parallel processing</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2019-10-29</h4>
+<h4 class="date">2019-11-02</h4>
 
 
 
@@ -454,7 +454,7 @@ resolved(result)
 <li>Next, we’ll split our input data into chunks so that each VM could work on a separate part of the problem (i.e. VM1 gets <code>1:16</code>, VM2 gets <code>17:32</code>, and VM3 gets <code>33:48</code>)</li>
 <li>Finally, we’ll parallelize internally so that each VM uses all of its available cores via an inner <code>future_sapply()</code> call.</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Input data (vector to be interated over by our function)</span></a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Input data (vector to be iterated over by our function)</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">input_data &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">48</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">## Run the function in nested parallel on our cluster and record timing</span></a>
@@ -467,7 +467,7 @@ resolved(result)
 <a class="sourceLine" id="cb9-11" data-line-number="11">      input_chunk &lt;-<span class="st"> </span><span class="kw">chunk_func</span>(input_data, <span class="kw">length</span>(vms_nested))[[v]] </a>
 <a class="sourceLine" id="cb9-12" data-line-number="12">   </a>
 <a class="sourceLine" id="cb9-13" data-line-number="13">      <span class="co">## Parallelise within each of the VMs  </span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">      <span class="kw">future_vapply</span>(input_chunk, slow_square)</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">      <span class="kw">future_sapply</span>(input_chunk, slow_square)</a>
 <a class="sourceLine" id="cb9-15" data-line-number="15">   })</a>
 <a class="sourceLine" id="cb9-16" data-line-number="16">tictoc<span class="op">::</span><span class="kw">toc</span>()</a>
 <a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">#11.451 sec elapsed</span></a>

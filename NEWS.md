@@ -2,6 +2,7 @@
 
 * Upgrade docker calls for `gce_push_registry` and friends (#151)
 * Fix being able to restart cluster VMs (#149)
+* Remove `gce_list_registry` as its not working
 
 # 0.3.0
 

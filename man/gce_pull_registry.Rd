@@ -34,8 +34,7 @@ The instance
 Load a previously saved private Google Container
 }
 \seealso{
-Other container registry functions: \code{\link{gce_list_registry}},
-  \code{\link{gce_push_registry}},
+Other container registry functions: \code{\link{gce_push_registry}},
   \code{\link{gce_tag_container}}
 }
 \concept{container registry functions}
