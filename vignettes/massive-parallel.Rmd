@@ -194,7 +194,7 @@ We are now ready to use all 24 cores of the cluster. For this particular example
 - Finally, we'll parallelize internally so that each VM uses all of its available cores via an inner `future_sapply()` call.
 
 ```r
-## Input data (vector to be interated over by our function)
+## Input data (vector to be iterated over by our function)
 input_data <- 1:48
 
 ## Run the function in nested parallel on our cluster and record timing
@@ -207,7 +207,7 @@ ans <-
       input_chunk <- chunk_func(input_data, length(vms_nested))[[v]] 
    
       ## Parallelise within each of the VMs  
-      future_vapply(input_chunk, slow_square)
+      future_sapply(input_chunk, slow_square)
    })
 tictoc::toc()
 #11.451 sec elapsed
