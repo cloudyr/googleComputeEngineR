@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GPU Enabled instances • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="GPU Enabled instances">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -159,13 +160,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>GPU Enabled instances</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-11-09</h4>
+            <h4 class="date">2019-11-25</h4>
       
       
       <div class="hidden name"><code>gpu.Rmd</code></div>
@@ -255,34 +257,34 @@
 <a href="#testing-rstudio-gpu-template" class="anchor"></a>Testing rstudio-gpu template</h3>
 <p>Wait for 5 mins on startup for the instance to bootup. After that you should be able to login at the ip address it gives you.</p>
 <p>This is the “hello world” script from the Deep learning with R book. You should be able to run it, and see from the message feedback that its using a <code>gpu_device</code> to compute the model:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(keras)</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(keras)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">mnist &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/dataset_mnist">dataset_mnist</a></span>()</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">mnist &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/dataset_mnist.html">dataset_mnist</a></span>()</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">train_images &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>x</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">train_labels &lt;-<span class="st"> </span>mnist<span class="op">$</span>train<span class="op">$</span>y</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">test_images &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>x</a>
 <a class="sourceLine" id="cb6-7" data-line-number="7">test_labels &lt;-<span class="st"> </span>mnist<span class="op">$</span>test<span class="op">$</span>y</a>
 <a class="sourceLine" id="cb6-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">network &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/keras_model_sequential">keras_model_sequential</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/layer_dense">layer_dense</a></span>(<span class="dt">units =</span> <span class="dv">512</span>, <span class="dt">activation =</span> <span class="st">"relu"</span>, <span class="dt">input_shape =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">28</span><span class="op">*</span><span class="dv">28</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/layer_dense">layer_dense</a></span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">"softmax"</span>)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">network &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span>(<span class="dt">units =</span> <span class="dv">512</span>, <span class="dt">activation =</span> <span class="st">"relu"</span>, <span class="dt">input_shape =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">28</span><span class="op">*</span><span class="dv">28</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">"softmax"</span>)</a>
 <a class="sourceLine" id="cb6-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">network <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/reexports">compile</a></span>(</a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">network <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/reexports.html">compile</a></span>(</a>
 <a class="sourceLine" id="cb6-14" data-line-number="14">  <span class="dt">optimizer =</span> <span class="st">"rmsprop"</span>,</a>
 <a class="sourceLine" id="cb6-15" data-line-number="15">  <span class="dt">loss =</span> <span class="st">"categorical_crossentropy"</span>,</a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">  <span class="dt">metrics =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"accuracy"</span>)</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">  <span class="dt">metrics =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"accuracy"</span>)</a>
 <a class="sourceLine" id="cb6-17" data-line-number="17">)</a>
 <a class="sourceLine" id="cb6-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19">train_images &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/reexports">array_reshape</a></span>(train_images, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">60000</span>, <span class="dv">28</span><span class="op">*</span><span class="dv">28</span>))</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">train_images &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/reexports.html">array_reshape</a></span>(train_images, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">60000</span>, <span class="dv">28</span><span class="op">*</span><span class="dv">28</span>))</a>
 <a class="sourceLine" id="cb6-20" data-line-number="20">train_images &lt;-<span class="st"> </span>train_images <span class="op">/</span><span class="st"> </span><span class="dv">255</span></a>
 <a class="sourceLine" id="cb6-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22">test_images &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/reexports">array_reshape</a></span>(test_images, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">10000</span>, <span class="dv">28</span><span class="op">*</span><span class="dv">28</span>))</a>
+<a class="sourceLine" id="cb6-22" data-line-number="22">test_images &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/reexports.html">array_reshape</a></span>(test_images, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">10000</span>, <span class="dv">28</span><span class="op">*</span><span class="dv">28</span>))</a>
 <a class="sourceLine" id="cb6-23" data-line-number="23">test_images &lt;-<span class="st"> </span>test_images <span class="op">/</span><span class="st"> </span><span class="dv">255</span></a>
 <a class="sourceLine" id="cb6-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb6-25" data-line-number="25">train_labels &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/to_categorical">to_categorical</a></span>(train_labels)</a>
-<a class="sourceLine" id="cb6-26" data-line-number="26">test_labels &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/to_categorical">to_categorical</a></span>(test_labels)</a>
+<a class="sourceLine" id="cb6-25" data-line-number="25">train_labels &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/to_categorical.html">to_categorical</a></span>(train_labels)</a>
+<a class="sourceLine" id="cb6-26" data-line-number="26">test_labels &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/to_categorical.html">to_categorical</a></span>(test_labels)</a>
 <a class="sourceLine" id="cb6-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb6-28" data-line-number="28">network <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/keras/topics/reexports">fit</a></span>(train_images, train_labels, <span class="dt">epochs =</span> <span class="dv">5</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb6-28" data-line-number="28">network <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/keras/man/reexports.html">fit</a></span>(train_images, train_labels, <span class="dt">epochs =</span> <span class="dv">5</span>, <span class="dt">batch_size =</span> <span class="dv">128</span>)</a></code></pre></div>
 <p><img src="rstudio-gpu.png"></p>
 </div>
 </div>
@@ -303,17 +305,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

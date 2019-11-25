@@ -18,13 +18,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -60,6 +62,7 @@ It passes the template on to gce_vm_container" />
 
   gtag('config', 'UA-47480439-2');
 </script>
+
 
   </head>
 
@@ -200,6 +203,7 @@ It passes the template on to gce_vm_container" />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -215,7 +219,7 @@ It passes the template on to gce_vm_container" />
 It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
+    <pre class="usage"><span class='fu'>gce_vm_template</span>(<span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"rstudio"</span>, <span class='st'>"shiny"</span>, <span class='st'>"opencpu"</span>, <span class='st'>"r-base"</span>,
   <span class='st'>"dynamic"</span>, <span class='st'>"rstudio-gpu"</span>, <span class='st'>"rstudio-shiny"</span>), <span class='kw'>username</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>password</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dynamic_image</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>image_family</span> <span class='kw'>=</span> <span class='st'>"cos-stable"</span>,
   <span class='kw'>wait</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
@@ -252,10 +256,11 @@ It passes the template on to <a href='gce_vm_container.html'>gce_vm_container</a
       <td><p>Arguments passed on to <code>gce_vm_container</code></p><dl class='dl-horizontal'>
   <dt>file</dt><dd><p>file location of a valid cloud-init or shell_script file. 
 One of <code>file</code> or <code>cloud_init</code> or <code>shell_script</code> must be supplied</p></dd>
-  <dt>cloud_init</dt><dd><p>contents of a cloud-init file, for example read via <code><a href='https://www.rdocumentation.org/packages/base/topics/readChar'>readChar(file, nchars = 32768)</a></code></p></dd>
-  <dt>shell_script</dt><dd><p>contents of a shell_script file, for example read via <code><a href='https://www.rdocumentation.org/packages/base/topics/readChar'>readChar(file, nchars = 32768)</a></code></p></dd>
+  <dt>cloud_init</dt><dd><p>contents of a cloud-init file, for example read via <code><a href='https://rdrr.io/r/base/readChar.html'>readChar(file, nchars = 32768)</a></code></p></dd>
+  <dt>shell_script</dt><dd><p>contents of a shell_script file, for example read via <code><a href='https://rdrr.io/r/base/readChar.html'>readChar(file, nchars = 32768)</a></code></p></dd>
   <dt>image_family</dt><dd><p>An image-family.  It must come from the <code>image_project</code> family.</p></dd>
   <dt>image_project</dt><dd><p>An image-project, where the image-family resides.</p></dd>
+
 </dl></td>
     </tr>
     </table>
@@ -275,26 +280,26 @@ One of <code>file</code> or <code>cloud_init</code> or <code>shell_script</code>
 <li><p>r_base Latest version of R stable</p></li>
 <li><p>dynamic Supply your own docker image within dynamic_image</p></li>
 </ul>
-    <p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
+ 
+<p>For <code>dynamic</code> templates you will need to launch the docker image with any ports you want opened, 
    other settings etc. via <a href='docker_run.html'>docker_run</a>.</p>
 <p>Use <code>dynamic_image</code> to override the default rocker images e.g. <code>rocker/shiny</code> for shiny, etc.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div><span class='co'># NOT RUN {</span>
- <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>googleComputeEngineR</span>)
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+ <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>googleComputeEngineR</span>)
 
  <span class='co'>## make instance using R-base</span>
  <span class='no'>vm</span> <span class='kw'>&lt;-</span> <span class='fu'>gce_vm_template</span>(<span class='st'>"r-base"</span>, <span class='kw'>predefined_type</span> <span class='kw'>=</span> <span class='st'>"f1-micro"</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"rbase"</span>)
 
  <span class='co'>## run an R function on the instance within the R-base docker image</span>
- <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>vm</span>, <span class='st'>"rocker/r-base"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Rscript"</span>, <span class='st'>"-e"</span>, <span class='st'>"1+1"</span>), <span class='kw'>user</span> <span class='kw'>=</span> <span class='st'>"mark"</span>)
+ <span class='fu'><a href='docker_run.html'>docker_run</a></span>(<span class='no'>vm</span>, <span class='st'>"rocker/r-base"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Rscript"</span>, <span class='st'>"-e"</span>, <span class='st'>"1+1"</span>), <span class='kw'>user</span> <span class='kw'>=</span> <span class='st'>"mark"</span>)
  <span class='co'>#&gt; [1] 2</span>
 
 
-<span class='co'># }</span><div class='input'>
-
-</div></pre>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -308,19 +313,23 @@ One of <code>file</code> or <code>cloud_init</code> or <code>shell_script</code>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by <a href='http://code.markedmondson.me'>Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

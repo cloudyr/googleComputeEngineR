@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Docker • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Docker">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -159,13 +160,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Docker</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-11-09</h4>
+            <h4 class="date">2019-11-25</h4>
       
       
       <div class="hidden name"><code>docker.Rmd</code></div>
@@ -184,20 +186,20 @@
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">    libssl-dev \</a>
 <a class="sourceLine" id="cb1-7" data-line-number="7">    ## clean up</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11">    </a>
 <a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
 <a class="sourceLine" id="cb1-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
 <a class="sourceLine" id="cb1-14" data-line-number="14">    <span class="ex">-r</span> <span class="st">'http://cran.rstudio.com'</span> \</a>
 <a class="sourceLine" id="cb1-15" data-line-number="15">    googleAuthR \</a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="ex">Rscript</span> -e <span class="st">"devtools::install_github(c('MarkEdmondson1234/googleID')"</span> \</a>
 <a class="sourceLine" id="cb1-17" data-line-number="17">    ## clean up</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
 <a class="sourceLine" id="cb1-19" data-line-number="19"></a>
 <a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">## assume shiny app is in build folder /shiny</span></a>
 <a class="sourceLine" id="cb1-21" data-line-number="21"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
@@ -243,7 +245,7 @@ RUN install2.r --error \
 <ol start="4" style="list-style-type: decimal">
 <li>We now launch the VM with the custom image. Since it is an RStudio based template, we define template to be “rstudio” and supply a username and password. If it was a Shiny based Dockerfile, the template would be changed to “shiny”, etc.</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">## auto auth messages</span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">## set default project ID to xxxxxx</span></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## set default zone to xxxxx</span></a>
@@ -271,7 +273,7 @@ RUN install2.r --error \
 <p>The <code>FROM</code> field in the <code>Dockerfile</code> could be a previously made image you or someone else has already created, allowing you to layer on top. The first example above is available via a public Google Continer Registry called <code>gcer-public</code>, made for this purpose, which you can see here: <code>https://console.cloud.google.com/gcr/images/gcer-public?project=gcer-public</code></p>
 <p><img src="build-trigger-menu.png"></p>
 <p>One example is <code>shiny-googleauthrdemo</code> - to construct the correct name we need this and the <code>gcer-public</code>project Id to use within the <code><a href="../reference/gce_tag_container.html">gce_tag_container()</a></code> function:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"shiny-googleauthrdemo"</span>, <span class="dt">project =</span> <span class="st">"gcer-public"</span>)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># gcr.io/gcer-public/shiny-googleauthrdemo</span></a></code></pre></div>
 <p>This can then be added to to top of your <code>Dockerfile</code>, and built upon with custom packages:</p>
@@ -279,12 +281,12 @@ RUN install2.r --error \
 <a class="sourceLine" id="cb6-2" data-line-number="2"><span class="ex">MAINTAINER</span> Mark Edmondson (r@sunholo.com)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># install R package dependencies</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="ex">RUN</span> apt-get update <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="ex">apt-get</span> install -y \</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">    ##### ADD YOUR DEPENDENCIES</a>
 <a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="co">## clean up</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="ex">apt-get</span> clean <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /var/lib/apt/lists/ <span class="dt">\ </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
 <a class="sourceLine" id="cb6-11" data-line-number="11">    </a>
 <a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">## Install packages from CRAN</span></a>
 <a class="sourceLine" id="cb6-13" data-line-number="13"><span class="ex">RUN</span> install2.r --error <span class="dt">\ </span></a>
@@ -292,7 +294,7 @@ RUN install2.r --error \
 <a class="sourceLine" id="cb6-15" data-line-number="15">    ##### ADD YOUR CRAN PACKAGES</a>
 <a class="sourceLine" id="cb6-16" data-line-number="16">    <span class="co">##### &amp;&amp; Rscript -e "devtools::install_github( ## ADD YOUR GITHUB PACKAGES )" \</span></a>
 <a class="sourceLine" id="cb6-17" data-line-number="17">    ## <span class="ex">clean</span> up</a>
-<a class="sourceLine" id="cb6-18" data-line-number="18">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">rm</span> -rf /tmp/downloaded_packages/ /tmp/*.rds</a>
 <a class="sourceLine" id="cb6-19" data-line-number="19"></a>
 <a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">## copy your shiny app folder below</span></a>
 <a class="sourceLine" id="cb6-21" data-line-number="21"><span class="ex">COPY</span> ./shiny/ /srv/shiny-server/myapp/</a></code></pre></div>
@@ -312,7 +314,7 @@ RUN install2.r --error \
 <a href="#cloud-init" class="anchor"></a>Cloud Init</h2>
 <p>If you want to customise further, the docker commands are triggered upon start up via <a href="https://cloudinit.readthedocs.io/en/latest/"><code>cloud-init</code></a> files.</p>
 <p>These can be used to configured to do more system level commands such as starting the docker service, create users and running start up scripts. These are accessible via the <code>gce_vm_container</code> function when you supply the <code>cloud_init</code> file. You can examine the <code>cloud-config</code> files used in <code>googleComputeEngineR</code> in this folder:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"cloudconfig"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"cloudconfig"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</a></code></pre></div>
 <p>An example for the RStudio template is shown below. The <code>%s</code> are replaced with metadata passed via the <code>gce_vm_create</code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">#cloud-config</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"></a>
@@ -324,7 +326,7 @@ RUN install2.r --error \
 <a class="sourceLine" id="cb9-8" data-line-number="8"><span class="ex">-</span> path: /etc/systemd/system/rstudio.service</a>
 <a class="sourceLine" id="cb9-9" data-line-number="9">  <span class="ex">permissions</span>: 0644</a>
 <a class="sourceLine" id="cb9-10" data-line-number="10">  <span class="ex">owner</span>: root</a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">  <span class="ex">content</span>: <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">|</a></span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">  <span class="ex">content</span>: <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">|</a></span></a>
 <a class="sourceLine" id="cb9-12" data-line-number="12">    [<span class="ex">Unit</span>]</a>
 <a class="sourceLine" id="cb9-13" data-line-number="13">    <span class="va">Description=</span>RStudio <span class="ex">Server</span></a>
 <a class="sourceLine" id="cb9-14" data-line-number="14">    <span class="va">Requires=</span>docker.service</a>
@@ -369,17 +371,20 @@ RUN install2.r --error \
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

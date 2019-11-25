@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Persistent RStudio Server • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Persistent RStudio Server">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -159,13 +160,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Persistent RStudio Server</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-11-09</h4>
+            <h4 class="date">2019-11-25</h4>
       
       
       <div class="hidden name"><code>persistent-rstudio.Rmd</code></div>
@@ -271,14 +273,14 @@ git config --global user.name "GitHubUserName"</code></pre>
 <li>Add that bucket to your <code>.Renviron</code> as the <code>GCS_SESSION_BUCKET</code> argument:</li>
 </ol>
 <pre><code>GCS_SESSION_BUCKET=gcer-bucket-name</code></pre>
-<p>The <code>.Renviron</code> usually sits in your computer home directory, see <code><a href="https://www.rdocumentation.org/packages/base/topics/Startup">?Startup</a></code> for details.</p>
+<p>The <code>.Renviron</code> usually sits in your computer home directory, see <code><a href="https://rdrr.io/r/base/Startup.html">?Startup</a></code> for details.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Add the <code>gcs_first()</code> and <code>gcs_last()</code> functions to your <code>.RProfile</code> file like so:</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">.First &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Welcome Mark! Today is "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Loading .Rprofile from"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/path.expand">path.expand</a></span>(<span class="st">"~"</span>))</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Welcome Mark! Today is "</span>, <span class="kw"><a href="https://rdrr.io/r/base/date.html">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st"># Loading .Rprofile from"</span>, <span class="kw"><a href="https://rdrr.io/r/base/path.expand.html">path.expand</a></span>(<span class="st">"~"</span>))</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_first</a></span>()</a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">}</a>
@@ -286,7 +288,7 @@ git config --global user.name "GitHubUserName"</code></pre>
 <a class="sourceLine" id="cb5-9" data-line-number="9">.Last &lt;-<span class="st"> </span><span class="cf">function</span>(){</a>
 <a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="co"># will only upload if a _gcssave.yaml in directory with bucketname</span></a>
 <a class="sourceLine" id="cb5-11" data-line-number="11">  googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_first.html">gcs_last</a></span>()</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">message</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Goodbye Mark at "</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/date">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">  <span class="kw"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Goodbye Mark at "</span>, <span class="kw"><a href="https://rdrr.io/r/base/date.html">date</a></span>(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</a>
 <a class="sourceLine" id="cb5-13" data-line-number="13">}</a>
 <a class="sourceLine" id="cb5-14" data-line-number="14"></a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
@@ -344,7 +346,7 @@ git config --global user.name "GitHubUserName"</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Add a GCS_SESSION_BUCKET metadata, either via webUI or via:</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm)</a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Login to RStudio server and create an RStudio project</p></li>
 <li><p>As you did on your local machine, you need to create an .Rprofile so <code>googleCloudStorageR</code> can load and save and load data. For example:</p></li>
@@ -399,9 +401,9 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 <a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">## regex to only save these files to GCS</span></a>
 <a class="sourceLine" id="cb13-5" data-line-number="5"><span class="fu">pattern:</span><span class="at"> </span><span class="st">"id_rsa|.gitconfig"</span></a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>With no project open and your working directory the base (e.g. <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">getwd()</a></code> is <code>/home/you</code>) save the yaml file and quit the R session:</li>
+<li>With no project open and your working directory the base (e.g. <code><a href="https://rdrr.io/r/base/getwd.html">getwd()</a></code> is <code>/home/you</code>) save the yaml file and quit the R session:</li>
 </ol>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/quit">q</a></span>(<span class="dt">save =</span> <span class="st">"no"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/quit.html">q</a></span>(<span class="dt">save =</span> <span class="st">"no"</span>)</a></code></pre></div>
 <p>You should see a message saying its saving the home folder. Upon restart, that folder will load from the bucket.</p>
 </div>
 <div id="loading-github-configurations" class="section level4">
@@ -416,7 +418,7 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 <a class="sourceLine" id="cb15-4" data-line-number="4">             <span class="dt">predefined_type =</span> <span class="st">"n1-standard-2"</span>,</a>
 <a class="sourceLine" id="cb15-5" data-line-number="5">             <span class="dt">dynamic_image =</span> <span class="st">"gcr.io/gcer-public/persistent-rstudio"</span>)</a>
 <a class="sourceLine" id="cb15-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm2)</a></code></pre></div>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw"><a href="../reference/gce_set_metadata.html">gce_set_metadata</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">GCS_SESSION_BUCKET =</span> <span class="st">"your-session-bucket"</span>), vm2)</a></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Upon logging in, you should see a message saying its loading data from GCS:</li>
 </ol>
@@ -490,17 +492,20 @@ message("n*** Successfully loaded .Rprofile ***n")</code></pre>
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

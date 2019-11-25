@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scheduled R scripts on Google Compute Engine • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Scheduled R scripts on Google Compute Engine">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -159,13 +160,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Scheduled R scripts on Google Compute Engine</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-11-09</h4>
+            <h4 class="date">2019-11-25</h4>
       
       
       <div class="hidden name"><code>scheduled-rscripts.Rmd</code></div>
@@ -195,8 +197,8 @@
 <h3 class="hasAnchor">
 <a href="#demo-script" class="anchor"></a>Demo script</h3>
 <p>A demo script is below, that may look like something you want to schedule:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleAuthR)         <span class="co">## authentication</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleCloudStorageR) <span class="co">## google cloud storage</span></a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleAuthR)         <span class="co">## authentication</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudStorageR) <span class="co">## google cloud storage</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## set authentication details for non-cloud services</span></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># options(googleAuthR.scopes.selected = "XXX",</span></a>
@@ -204,24 +206,24 @@
 <a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#         googleAuthR.client_secret = "")</span></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">## download or do something</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">something &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/conditions">tryCatch</a></span>({</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">something &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span>({</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11">    <span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_get_object.html">gcs_get_object</a></span>(<span class="st">"schedule/test.csv"</span>, </a>
 <a class="sourceLine" id="cb1-12" data-line-number="12">                   <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-files"</span>)</a>
 <a class="sourceLine" id="cb1-13" data-line-number="13">  }, <span class="dt">error =</span> <span class="cf">function</span>(ex) {</a>
 <a class="sourceLine" id="cb1-14" data-line-number="14">    <span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb1-15" data-line-number="15">  })</a>
 <a class="sourceLine" id="cb1-16" data-line-number="16">    </a>
-<a class="sourceLine" id="cb1-17" data-line-number="17">something_else &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">X1 =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">                             <span class="dt">time =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.time</a></span>(), </a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">                             <span class="dt">blah =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(letters, <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">collapse =</span> <span class="st">""</span>))</a>
-<a class="sourceLine" id="cb1-20" data-line-number="20">something &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(something, something_else)</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">something_else &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">X1 =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">                             <span class="dt">time =</span> <span class="kw"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), </a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">                             <span class="dt">blah =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(letters, <span class="dv">10</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>), <span class="dt">collapse =</span> <span class="st">""</span>))</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">something &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span>(something, something_else)</a>
 <a class="sourceLine" id="cb1-21" data-line-number="21"></a>
 <a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">## authenticate on GCE for google cloud services</span></a>
 <a class="sourceLine" id="cb1-23" data-line-number="23">googleAuthR<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">gar_gce_auth</a></span>()</a>
 <a class="sourceLine" id="cb1-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25">tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempfile</a></span>(<span class="dt">fileext =</span> <span class="st">".csv"</span>)</a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/on.exit">on.exit</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlink">unlink</a></span>(tmp))</a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/write.table">write.csv</a></span>(something, <span class="dt">file =</span> tmp, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb1-25" data-line-number="25">tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="dt">fileext =</span> <span class="st">".csv"</span>)</a>
+<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="kw"><a href="https://rdrr.io/r/base/on.exit.html">on.exit</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span>(tmp))</a>
+<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="kw"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span>(something, <span class="dt">file =</span> tmp, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co">## upload something</span></a>
 <a class="sourceLine" id="cb1-29" data-line-number="29"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(tmp, </a>
 <a class="sourceLine" id="cb1-30" data-line-number="30">           <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-files"</span>, </a>
@@ -233,15 +235,15 @@
 <a href="#schedule-setup-script" class="anchor"></a>Schedule setup script</h3>
 <p>The above script can then be scheduled via the below.</p>
 <p>We first create a <code>Dockerfile</code> that holds all your scripts dependencies. This is the magic of <code>containeRit</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(containeRit)){</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"MarkEdmondson1234/containerit"</span>) <span class="co">#use my fork until fix merged</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(containeRit)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(containeRit)){</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"MarkEdmondson1234/containerit"</span>) <span class="co">#use my fork until fix merged</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(containeRit)</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">}</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">script &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"schedulescripts"</span>, <span class="st">"schedule.R"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">script &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"schedulescripts"</span>, <span class="st">"schedule.R"</span>, <span class="dt">package =</span> <span class="st">"googleComputeEngineR"</span>)</a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">## put the "schedule.R" script in the working directory</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/files">file.copy</a></span>(script, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">getwd</a></span>())</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/files.html">file.copy</a></span>(script, <span class="kw"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span>())</a>
 <a class="sourceLine" id="cb2-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb2-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">## it will run the script whilst making the dockerfile</span></a>
@@ -249,7 +251,7 @@
 <a class="sourceLine" id="cb2-14" data-line-number="14">                        <span class="dt">copy =</span> <span class="st">"script_dir"</span>,</a>
 <a class="sourceLine" id="cb2-15" data-line-number="15">                        <span class="dt">cmd =</span> <span class="kw">CMD_Rscript</span>(<span class="st">"schedule.R"</span>),</a>
 <a class="sourceLine" id="cb2-16" data-line-number="16">                        <span class="dt">soft =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/write">write</a></span>(container, <span class="dt">file =</span> <span class="st">"Dockerfile"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/r/base/write.html">write</a></span>(container, <span class="dt">file =</span> <span class="st">"Dockerfile"</span>)</a></code></pre></div>
 <p>Now you have the Dockerfile, it can be used to create Docker images. There are several options here, including <code>docker_build</code> function to build on another VM or locally, but the easiest is to use a code repository such as GitHub, and the new Google Container Registry service, <a href="https://cloud.google.com/container-builder/docs/how-to/build-triggers">Build Triggers</a>.</p>
 <p>This creates the Docker image for you on every GitHub push, and makes it available either publically or privately to you.</p>
 <p>The example does this via this public <a href="https://console.cloud.google.com/gcr/triggers?project=gcer-public">Container Registry</a> service created for <code>googleComputeEngineR</code> and has the above scripts at <code>"demo-docker-scheduler"</code></p>
@@ -284,14 +286,14 @@
 <div id="the-master-and-slave-templates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-master-and-slave-templates" class="anchor"></a>The master and slave templates</h2>
-<p>These have been set up via a public Google Container Registry via <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build triggers</a>, tied to <code>googleComputeEngineR</code>’s repostiory on Github. You can see the <code>Dockerfiles</code> used in the dockerfiles in <code><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file("dockerfiles", "gceScheduler", package = "googleComputeEngineR")</a></code></p>
+<p>These have been set up via a public Google Container Registry via <a href="https://cloud.google.com/container-builder/docs/concepts/creating-build-triggers">build triggers</a>, tied to <code>googleComputeEngineR</code>’s repostiory on Github. You can see the <code>Dockerfiles</code> used in the dockerfiles in <code><a href="https://rdrr.io/r/base/system.file.html">system.file("dockerfiles", "gceScheduler", package = "googleComputeEngineR")</a></code></p>
 <p>Each time the GitHub repository is pushed, these Docker images are rebuilt, allowing for easy changes and versioning.</p>
 </div>
 <div id="setup-the-master-vm" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setup-the-master-vm" class="anchor"></a>Setup the master VM</h2>
 <p>Now we have the templates saved to Container Registry, make a ‘Master’ VM that is small, and will be on 24/7 to run cron. This costs ~$4.09 a month. Give it a strong password.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">username &lt;-<span class="st"> "mark"</span></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"></a>
@@ -309,8 +311,8 @@
 <a class="sourceLine" id="cb4-16" data-line-number="16"></a>
 <a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">## copy SSH keys into the docker container </span></a>
 <a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">## (probably more secure than keeping keys in Docker container itself)</span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"cp"</span>, <span class="dt">args =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sprintf">sprintf</a></span>(<span class="st">"~/.ssh/ rstudio:/home/%s/.ssh/"</span>, username)</a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"exec"</span>, <span class="dt">args =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sprintf">sprintf</a></span>(<span class="st">"rstudio chown -R %s /home/%s/.ssh/"</span>, username, username)</a></code></pre></div>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"cp"</span>, <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"~/.ssh/ rstudio:/home/%s/.ssh/"</span>, username)</a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(master, <span class="dt">cmd =</span> <span class="st">"exec"</span>, <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"rstudio chown -R %s /home/%s/.ssh/"</span>, username, username)</a></code></pre></div>
 </div>
 <div id="setup-slave-instance" class="section level2">
 <h2 class="hasAnchor">
@@ -336,8 +338,8 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_source.html">gcs_source</a></span>(<span class="st">'download.R'</span>, <span class="dt">bucket =</span> <span class="st">'your-gcs-bucket'</span>)</a></code></pre></div>
 <p>The example script below authenticates with Google Cloud Storage, downloads a <code>ga.httr-oauth</code> file that carries the Google Analytics authentication, runs the download then reauthenticates with Google Cloud Storage to upload the results. Modify for your own expensive operation.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## download.R - called from slave VM</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleCloudStorageR)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleAnalyticsR)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudStorageR)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleAnalyticsR)</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">## set defaults</span></a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"><span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)</a>
@@ -350,8 +352,8 @@
 <a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">## use GCS to download auth key (that you have previously uploaded)</span></a>
 <a class="sourceLine" id="cb7-14" data-line-number="14"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_get_object.html">gcs_get_object</a></span>(<span class="st">"ga.httr-oauth"</span>, <span class="dt">saveToDisk =</span> <span class="st">"ga.httr-oauth"</span>)</a>
 <a class="sourceLine" id="cb7-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">auth_token &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">readRDS</a></span>(<span class="st">"ga.httr-oauth"</span>)</a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"https://www.googleapis.com/auth/analytics"</span>, </a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">auth_token &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="st">"ga.httr-oauth"</span>)</a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="dt">googleAuthR.scopes.selected =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"https://www.googleapis.com/auth/analytics"</span>, </a>
 <a class="sourceLine" id="cb7-18" data-line-number="18">                                        <span class="st">"https://www.googleapis.com/auth/analytics.readonly"</span>),</a>
 <a class="sourceLine" id="cb7-19" data-line-number="19">        <span class="dt">googleAuthR.httr_oauth_cache =</span> <span class="st">"ga.httr-oauth"</span>)</a>
 <a class="sourceLine" id="cb7-20" data-line-number="20">googleAuthR<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_auth.html">gar_auth</a></span>(auth_token)</a>
@@ -359,8 +361,8 @@
 <a class="sourceLine" id="cb7-22" data-line-number="22"><span class="co">## fetch data</span></a>
 <a class="sourceLine" id="cb7-23" data-line-number="23"></a>
 <a class="sourceLine" id="cb7-24" data-line-number="24">gadata &lt;-<span class="st"> </span><span class="kw"><a href="https://code.markedmondson.me/googleAnalyticsR//reference/google_analytics.html">google_analytics_4</a></span>(<span class="dv">81416156</span>,</a>
-<a class="sourceLine" id="cb7-25" data-line-number="25">                             <span class="dt">date_range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">8</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb7-26" data-line-number="26">                             <span class="dt">dimensions =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"medium"</span>, <span class="st">"source"</span>, <span class="st">"landingPagePath"</span>),</a>
+<a class="sourceLine" id="cb7-25" data-line-number="25">                             <span class="dt">date_range =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">8</span>, <span class="kw"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>() <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb7-26" data-line-number="26">                             <span class="dt">dimensions =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"medium"</span>, <span class="st">"source"</span>, <span class="st">"landingPagePath"</span>),</a>
 <a class="sourceLine" id="cb7-27" data-line-number="27">                             <span class="dt">metrics =</span> <span class="st">"sessions"</span>,</a>
 <a class="sourceLine" id="cb7-28" data-line-number="28">                             <span class="dt">max =</span> <span class="dv">-1</span>)</a>
 <a class="sourceLine" id="cb7-29" data-line-number="29"></a>
@@ -369,7 +371,7 @@
 <a class="sourceLine" id="cb7-32" data-line-number="32"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(gadata, <span class="dt">name =</span> <span class="st">"uploads/gadata_81416156.csv"</span>)</a>
 <a class="sourceLine" id="cb7-33" data-line-number="33"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(<span class="st">"ga.httr-oauth"</span>)</a>
 <a class="sourceLine" id="cb7-34" data-line-number="34"></a>
-<a class="sourceLine" id="cb7-35" data-line-number="35"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">message</a></span>(<span class="st">"Upload complete"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.time</a></span>())</a></code></pre></div>
+<a class="sourceLine" id="cb7-35" data-line-number="35"><span class="kw"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Upload complete"</span>, <span class="kw"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>())</a></code></pre></div>
 </div>
 <div id="create-master-script" class="section level2">
 <h2 class="hasAnchor">
@@ -377,8 +379,8 @@
 <p>Create the script that will run on master VM. This will start the slave instance, run your scheduled script and stop the slave instance again.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## intended to be run on a small instance via cron</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">## use this script to launch other VMs with more expensive tasks</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleCloudStorageR)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudStorageR)</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"my-project"</span>)</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw"><a href="../reference/gce_global_zone.html">gce_global_zone</a></span>(<span class="st">"europe-west1-b"</span>)</a>
 <a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_global_bucket.html">gcs_global_bucket</a></span>(<span class="st">"your-gcs-bucket"</span>)</a>
@@ -396,7 +398,7 @@
 <a class="sourceLine" id="cb8-19" data-line-number="19">runme &lt;-<span class="st"> "Rscript -e </span><span class="ch">\"</span><span class="st">googleAuthR::gar_gce_auth();googleCloudStorageR::gcs_source('download.R', bucket = 'your-gcs-bucket')</span><span class="ch">\"</span><span class="st">"</span></a>
 <a class="sourceLine" id="cb8-20" data-line-number="20">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/docker_cmd.html">docker_cmd</a></span>(vm, </a>
 <a class="sourceLine" id="cb8-21" data-line-number="21">                  <span class="dt">cmd =</span> <span class="st">"exec"</span>, </a>
-<a class="sourceLine" id="cb8-22" data-line-number="22">                  <span class="dt">args =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"rstudio"</span>, runme), </a>
+<a class="sourceLine" id="cb8-22" data-line-number="22">                  <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"rstudio"</span>, runme), </a>
 <a class="sourceLine" id="cb8-23" data-line-number="23">                  <span class="dt">wait =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb8-24" data-line-number="24"></a>
 <a class="sourceLine" id="cb8-25" data-line-number="25"><span class="co">## once finished, stop the VM</span></a>
@@ -439,17 +441,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

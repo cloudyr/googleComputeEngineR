@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Massively parallel processing • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Massively parallel processing">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -159,13 +160,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Massively parallel processing</h1>
                         <h4 class="author">Mark Edmondson</h4>
             
-            <h4 class="date">2019-11-09</h4>
+            <h4 class="date">2019-11-25</h4>
       
       
       <div class="hidden name"><code>massive-parallel.Rmd</code></div>
@@ -197,10 +199,10 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 <a href="#create-the-cluster" class="anchor"></a>Create the cluster</h3>
 <p>The example below uses a default <code>rocker/r-parallel</code> template, but you can also create a <code>dynamic_template</code> pulled from the Container Registry if required.</p>
 <p>Instead of the more generic <code><a href="../reference/gce_vm.html">gce_vm()</a></code> that is used for more interactive use, we create the instances directly using <code><a href="../reference/gce_vm_cluster.html">gce_vm_cluster()</a></code>.</p>
-<p>This creates a cluster, uploads any SSH settings you have and tests the connection, then returns the list of VMs suitable for use in <code><a href="https://www.rdocumentation.org/packages/future/topics/cluster">future::cluster()</a></code>.</p>
+<p>This creates a cluster, uploads any SSH settings you have and tests the connection, then returns the list of VMs suitable for use in <code><a href="https://rdrr.io/pkg/future/man/cluster.html">future::cluster()</a></code>.</p>
 <p>By default it makes a 3 size cluster called <code>r-cluster-1/2/3</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(future)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">vms &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_vm_cluster.html">gce_vm_cluster</a></span>()</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#2019-03-29 23:24:54&gt; # Creating cluster with these arguments:template = r-base,dynamic_image = rocker/r-parallel,wait = #FALSE,predefined_type = n1-standard-1</span></a>
@@ -231,7 +233,7 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 <div id="using-your-own-docker-image" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-your-own-docker-image" class="anchor"></a>Using your own Docker image</h3>
-<p>The default uses <code>rocker/r-parallel</code> as its image, but if you want your own custom image then create your own Docker image based on that one, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
+<p>The default uses <code>rocker/r-parallel</code> as its image, but if you want your own custom image then create your own Docker image based on that one, for example via <a href="https://cloudyr.github.io/googleComputeEngineR/articles/docker.html">this tutorial using Google Build Triggers</a>.</p>
 <p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster.</p>
 <p>You can also customise the <code>RScript</code> command that launches your script, but always make sure to include <code>--net=host</code> as is shown in the default arguments, so the Docker image uses the SSH ports the host VM has (e.g. it can connect to your SSH commands)</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, <span class="dt">docker_image=</span><span class="st">"gcr.io/my-project/my-r"</span>))</a></code></pre></div>
@@ -239,10 +241,10 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 <div id="using-the-cluster" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-the-cluster" class="anchor"></a>Using the cluster</h3>
-<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future.apply::future_lapply</a></code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future.apply"><code>future.apply</code> documentation</a> for details.</p>
+<p>The cluster is now ready to recieve jobs. You can send them by simply using <code>%&lt;-%</code> instead of <code>&lt;-</code>. Another useful function is <code><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future.apply::future_lapply</a></code> that lets you loop over a cluster. Consult the <a href="https://github.com/HenrikBengtsson/future.apply"><code>future.apply</code> documentation</a> for details.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## use %&lt;-% to send functions to work on cluster</span></a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">## See future README for details: https://github.com/HenrikBengtsson/future</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getpid">Sys.getpid</a></span>()</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">a <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Sys.getpid.html">Sys.getpid</a></span>()</a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">## make a big function to run asynchronously</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6">f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, args){</a>
@@ -253,7 +255,7 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 <a class="sourceLine" id="cb4-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">## send to cluster</span></a>
 <a class="sourceLine" id="cb4-13" data-line-number="13">result <span class="op">%&lt;-%</span><span class="st"> </span><span class="kw">f</span>(my_data) </a></code></pre></div>
-<p>For long running jobs you can use <code><a href="https://www.rdocumentation.org/packages/future/topics/resolved">future::resolved</a></code> to check on its progress.</p>
+<p>For long running jobs you can use <code><a href="https://rdrr.io/pkg/future/man/resolved.html">future::resolved</a></code> to check on its progress.</p>
 <pre><code>## check if resolved
 resolved(result)
 [1] TRUE</code></pre>
@@ -268,15 +270,15 @@ resolved(result)
 <li>Parallelization within each VM, making sure that we “chunk” the input data appropriately to avoid duplication.</li>
 </ol>
 <p>To illustrate, consider an example where we wish to run a slow function across a cluster of three VMs that each have eight cores (yielding 24 cores in total). We again use <code><a href="../reference/gce_vm_cluster.html">gce_vm_cluster()</a></code> to set this up. Note in passing that the default instantiation of the rocker/r-parallel Docker image on each VM is what allows us to run parallel processes on these machines themselves without having to install any additional packages.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future.apply)</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(future.apply)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">## Emulate a slow function that can be sped up in parallel</span></a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">slow_square &lt;-<span class="st"> </span></a>
 <a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">  </span><span class="cf">function</span>(<span class="dt">x =</span> <span class="dv">1</span>) {</a>
 <a class="sourceLine" id="cb6-7" data-line-number="7">    x_sq &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span> </a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.sleep">Sys.sleep</a></span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/function">return</a></span>(x_sq)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="kw"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span>(x_sq)</a>
 <a class="sourceLine" id="cb6-10" data-line-number="10">    }</a>
 <a class="sourceLine" id="cb6-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">## Set up our cluster: 3 VMs with 8 cores each</span></a>
@@ -286,7 +288,7 @@ resolved(result)
 <a class="sourceLine" id="cb6-16" data-line-number="16">    <span class="dt">cluster_size =</span> <span class="dv">3</span>,                    </a>
 <a class="sourceLine" id="cb6-17" data-line-number="17">    <span class="co">#docker_image = "rocker/r-parallel",  ## Default </span></a>
 <a class="sourceLine" id="cb6-18" data-line-number="18">    <span class="dt">predefined_type =</span> <span class="st">"n1-highcpu-8"</span>,     </a>
-<a class="sourceLine" id="cb6-19" data-line-number="19">    <span class="dt">scheduling =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">preemptible =</span> <span class="ot">TRUE</span>) <span class="co">## Optional: Use cheaper, preemptible machines</span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">    <span class="dt">scheduling =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">preemptible =</span> <span class="ot">TRUE</span>) <span class="co">## Optional: Use cheaper, preemptible machines</span></a>
 <a class="sourceLine" id="cb6-20" data-line-number="20">    )</a>
 <a class="sourceLine" id="cb6-21" data-line-number="21"></a>
 <a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#2019-10-25 12:56:21&gt; # Creating cluster with settings: predefined_type = n1-highcpu-8, scheduling = list(preemptible = TRUE), template = r-base, dynamic_image = rocker/r-parallel, wait = FALSE</span></a>
@@ -314,40 +316,40 @@ resolved(result)
 <li>
 <strong>Topology 2.</strong> The “inner” plan, which tells <code>future</code> to use all eight cores on each VM via the <code>multiprocess</code> option.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">plan</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>( </a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">plan</span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>( </a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="co">## Topology 1: Use the cluster of remote VMs </span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">tweak</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms_nested)),  </a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="co">## Topology 2: Use all CPUs on each VM</span></a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="kw">tweak</span>(multiprocess)  </a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">  ))</a></code></pre></div>
 <p>The final thing that we’ll do before using our cluster is defining a convenience function for chunking the input arguments (i.e. data) to our function. Remember, we need to do this or else each VM will duplicate effort by working on the same parts of the problem. R provides lots of ways to split data into chunks, but here’s one that I’ve borrowed from <a href="https://stackoverflow.com/a/16275428">StackOverflow</a>. The advantages of this particular function are that it only requires base R operations and is robust to complications like unequal chunk lengths and different input types (e.g. factors vs numeric).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">chunk_func &lt;-<span class="st"> </span><span class="cf">function</span>(x, n) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/split">split</a></span>(x, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cut">cut</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_along</a></span>(x), n, <span class="dt">labels =</span> <span class="ot">FALSE</span>)) </a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">chunk_func &lt;-<span class="st"> </span><span class="cf">function</span>(x, n) <span class="kw"><a href="https://rdrr.io/r/base/split.html">split</a></span>(x, <span class="kw"><a href="https://rdrr.io/r/base/cut.html">cut</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(x), n, <span class="dt">labels =</span> <span class="ot">FALSE</span>)) </a></code></pre></div>
 <p>We are now ready to use all 24 cores of the cluster. For this particular example, I’m going to loop over 48 iterations of our <code>slow_square()</code> function. (Note that this would take two minutes to run sequentially.) I’ll use <code>future.lapply::future_sapply()</code> to run things in parallel and will also use the <code>tictoc</code> package to record timing. I’m going to comment the next code block quite extensively, but just to quickly highlight the key conceptual stages:</p>
 <ul>
-<li>First, we’ll parallelize across the three VMs in our cluster via an outer <code><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future_sapply()</a></code> call.</li>
+<li>First, we’ll parallelize across the three VMs in our cluster via an outer <code><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_sapply()</a></code> call.</li>
 <li>Next, we’ll split our input data into chunks so that each VM could work on a separate part of the problem (i.e. VM1 gets <code>1:16</code>, VM2 gets <code>17:32</code>, and VM3 gets <code>33:48</code>)</li>
-<li>Finally, we’ll parallelize internally so that each VM uses all of its available cores via an inner <code><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future_sapply()</a></code> call.</li>
+<li>Finally, we’ll parallelize internally so that each VM uses all of its available cores via an inner <code><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_sapply()</a></code> call.</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Input data (vector to be iterated over by our function)</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">input_data &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">48</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">## Run the function in nested parallel on our cluster and record timing</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">tictoc<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tictoc/topics/tic">tic</a></span>()</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">tictoc<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">tic</a></span>()</a>
 <a class="sourceLine" id="cb9-6" data-line-number="6">ans &lt;-</a>
 <a class="sourceLine" id="cb9-7" data-line-number="7"><span class="st">   </span><span class="co">## Parallelise over the three VMS</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">   </span><span class="kw"><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future_sapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_along</a></span>(vms_nested), <span class="cf">function</span>(v) {</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">   </span><span class="kw"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_sapply</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(vms_nested), <span class="cf">function</span>(v) {</a>
 <a class="sourceLine" id="cb9-9" data-line-number="9">   </a>
 <a class="sourceLine" id="cb9-10" data-line-number="10">      <span class="co">## Split the input data into distinct chunks for each VM</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">      input_chunk &lt;-<span class="st"> </span><span class="kw">chunk_func</span>(input_data, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(vms_nested))[[v]] </a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">      input_chunk &lt;-<span class="st"> </span><span class="kw">chunk_func</span>(input_data, <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(vms_nested))[[v]] </a>
 <a class="sourceLine" id="cb9-12" data-line-number="12">   </a>
 <a class="sourceLine" id="cb9-13" data-line-number="13">      <span class="co">## Parallelise within each of the VMs  </span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">      <span class="kw"><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future_sapply</a></span>(input_chunk, slow_square)</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">      <span class="kw"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_sapply</a></span>(input_chunk, slow_square)</a>
 <a class="sourceLine" id="cb9-15" data-line-number="15">   })</a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">tictoc<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/tictoc/topics/tic">toc</a></span>()</a>
+<a class="sourceLine" id="cb9-16" data-line-number="16">tictoc<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/tictoc/man/tic.html">toc</a></span>()</a>
 <a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">#11.451 sec elapsed</span></a>
 <a class="sourceLine" id="cb9-18" data-line-number="18"></a>
 <a class="sourceLine" id="cb9-19" data-line-number="19"><span class="co">## Show that it worked</span></a>
-<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/vector">as.vector</a></span>(ans)</a>
+<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="kw"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span>(ans)</a>
 <a class="sourceLine" id="cb9-21" data-line-number="21"><span class="co"># [1]    1    4    9   16   25   36   49   64   81  100  121  144  169  196  225</span></a>
 <a class="sourceLine" id="cb9-22" data-line-number="22"><span class="co">#[16]  256  289  324  361  400  441  484  529  576  625  676  729  784  841  900</span></a>
 <a class="sourceLine" id="cb9-23" data-line-number="23"><span class="co">#[31]  961 1024 1089 1156 1225 1296 1369 1444 1521 1600 1681 1764 1849 1936 2025</span></a>
@@ -363,8 +365,8 @@ resolved(result)
 <h3 class="hasAnchor">
 <a href="#forecasting-a-large-data-set" class="anchor"></a>Forecasting a large data set</h3>
 <p>The below splits a dataset into chunks that are each run on a seperate VMs, using a custom Docker image that has the necessary packages installed, for instance via <a href="articles/docker.html#build-triggers">build triggers</a>. Optimise by including the package <code>future</code> in these Docker images.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future.apply) <span class="co">## Will automatically load future too</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(future.apply) <span class="co">## Will automatically load future too</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb11-4" data-line-number="4">my_docker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gce_tag_container.html">gce_tag_container</a></span>(<span class="st">"custom-image"</span>, <span class="dt">project =</span> <span class="st">"my-project"</span>)</a>
 <a class="sourceLine" id="cb11-5" data-line-number="5"></a>
@@ -378,14 +380,14 @@ resolved(result)
 <a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">## create the list of data to run on the cluster</span></a>
 <a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">## here we assume they are in a folder of CSVs</span></a>
 <a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">## and there are as many files as VMs to run it upon</span></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16">my_files &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">list.files</a></span>(<span class="st">"myfolder"</span>)</a>
+<a class="sourceLine" id="cb11-16" data-line-number="16">my_files &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span>(<span class="st">"myfolder"</span>)</a>
 <a class="sourceLine" id="cb11-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb11-18" data-line-number="18">my_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(my_files, read.csv)</a>
+<a class="sourceLine" id="cb11-18" data-line-number="18">my_data &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(my_files, read.csv)</a>
 <a class="sourceLine" id="cb11-19" data-line-number="19"></a>
 <a class="sourceLine" id="cb11-20" data-line-number="20"><span class="co">## make a big function to run asynchronously</span></a>
 <a class="sourceLine" id="cb11-21" data-line-number="21">cluster_f &lt;-<span class="st"> </span><span class="cf">function</span>(my_data, <span class="dt">args =</span> <span class="dv">4</span>){</a>
 <a class="sourceLine" id="cb11-22" data-line-number="22">   </a>
-<a class="sourceLine" id="cb11-23" data-line-number="23">   forecast<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/forecast/topics/forecast">forecast</a></span>(forecast<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/forecast/topics/auto.arima">auto.arima</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/ts">ts</a></span>(my_data, <span class="dt">frequency =</span> args)))</a>
+<a class="sourceLine" id="cb11-23" data-line-number="23">   forecast<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/forecast/man/forecast.html">forecast</a></span>(forecast<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/forecast/man/auto.arima.html">auto.arima</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span>(my_data, <span class="dt">frequency =</span> args)))</a>
 <a class="sourceLine" id="cb11-24" data-line-number="24">   </a>
 <a class="sourceLine" id="cb11-25" data-line-number="25">}</a>
 <a class="sourceLine" id="cb11-26" data-line-number="26"></a>
@@ -406,11 +408,11 @@ resolved(result)
 <p><img src="https://user-images.githubusercontent.com/3155884/36549126-494a99ca-17f2-11e8-8338-f5769a629749.png"></p>
 <p>Make sure the VMs are created in the same project as the build triggers to ensure authentication is smooth.</p>
 <p>The example code is shown below, assuming your custom Docker image is available at <code>gcr.io/your-project/raster</code></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(raster)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(googleComputeEngineR)</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(future.apply)</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(SpaDES.tools)</a>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(raster)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleComputeEngineR)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(future)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(future.apply)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(SpaDES.tools)</a>
 <a class="sourceLine" id="cb12-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw"><a href="../reference/gce_global_project.html">gce_global_project</a></span>(<span class="st">"your-project"</span>)</a>
 <a class="sourceLine" id="cb12-8" data-line-number="8"></a>
@@ -420,15 +422,15 @@ resolved(result)
 <a class="sourceLine" id="cb12-12" data-line-number="12">r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="dt">nrows=</span>row, <span class="dt">ncols=</span>col,</a>
 <a class="sourceLine" id="cb12-13" data-line-number="13">            <span class="dt">xmn=</span><span class="dv">0</span>, <span class="dt">xmx=</span>row, </a>
 <a class="sourceLine" id="cb12-14" data-line-number="14">            <span class="dt">ymn=</span><span class="dv">0</span>, <span class="dt">ymx=</span>col, </a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">            <span class="dt">vals=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span><span class="op">:</span>(row<span class="op">*</span>col)))</a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(r)</a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">            <span class="dt">vals=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span><span class="op">:</span>(row<span class="op">*</span>col)))</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(r)</a>
 <a class="sourceLine" id="cb12-17" data-line-number="17"></a>
 <a class="sourceLine" id="cb12-18" data-line-number="18"><span class="co">## Split</span></a>
 <a class="sourceLine" id="cb12-19" data-line-number="19">r_split &lt;-<span class="st"> </span><span class="kw">splitRaster</span>(r, <span class="dt">nx=</span><span class="dv">2</span>, <span class="dt">ny=</span><span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb12-20" data-line-number="20"></a>
 <a class="sourceLine" id="cb12-21" data-line-number="21"><span class="co">## create model</span></a>
-<a class="sourceLine" id="cb12-22" data-line-number="22">df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),<span class="dt">layer=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">8</span><span class="op">:</span><span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb12-23" data-line-number="23">mod &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/glm">glm</a></span>(y<span class="op">~</span>layer, <span class="dt">data=</span>df)</a>
+<a class="sourceLine" id="cb12-22" data-line-number="22">df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),<span class="dt">layer=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">8</span><span class="op">:</span><span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb12-23" data-line-number="23">mod &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span>(y<span class="op">~</span>layer, <span class="dt">data=</span>df)</a>
 <a class="sourceLine" id="cb12-24" data-line-number="24"></a>
 <a class="sourceLine" id="cb12-25" data-line-number="25"></a>
 <a class="sourceLine" id="cb12-26" data-line-number="26"><span class="co">## create CPUs names - here we customise the CPU machine type</span></a>
@@ -439,15 +441,15 @@ resolved(result)
 <a class="sourceLine" id="cb12-31" data-line-number="31"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, <span class="dt">docker_image=</span>my_image)</a>
 <a class="sourceLine" id="cb12-32" data-line-number="32"></a>
 <a class="sourceLine" id="cb12-33" data-line-number="33"><span class="co">## make the vector of stuff to send to nodes</span></a>
-<a class="sourceLine" id="cb12-34" data-line-number="34">o &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(r_split, readAll)</a>
+<a class="sourceLine" id="cb12-34" data-line-number="34">o &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(r_split, readAll)</a>
 <a class="sourceLine" id="cb12-35" data-line-number="35"></a>
 <a class="sourceLine" id="cb12-36" data-line-number="36"><span class="co">## the action you want to perform on the elements in the cluster</span></a>
 <a class="sourceLine" id="cb12-37" data-line-number="37">my_single_function &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb12-38" data-line-number="38">  raster<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/predict">predict</a></span>(x, mod)</a>
+<a class="sourceLine" id="cb12-38" data-line-number="38">  raster<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/raster/man/predict.html">predict</a></span>(x, mod)</a>
 <a class="sourceLine" id="cb12-39" data-line-number="39">}</a>
 <a class="sourceLine" id="cb12-40" data-line-number="40"></a>
 <a class="sourceLine" id="cb12-41" data-line-number="41"><span class="co">#parallel - working?</span></a>
-<a class="sourceLine" id="cb12-42" data-line-number="42">result &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/future.apply/topics/future_lapply">future_lapply</a></span>(o, my_single_function)</a>
+<a class="sourceLine" id="cb12-42" data-line-number="42">result &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future_lapply</a></span>(o, my_single_function)</a>
 <a class="sourceLine" id="cb12-43" data-line-number="43"></a>
 <a class="sourceLine" id="cb12-44" data-line-number="44"><span class="co">## tidy up</span></a>
 <a class="sourceLine" id="cb12-45" data-line-number="45"><span class="kw"><a href="../reference/gce_vm_stop.html">gce_vm_stop</a></span>(vms)</a></code></pre></div>
@@ -498,17 +500,20 @@ resolved(result)
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="http://code.markedmondson.me">Mark Edmondson</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

@@ -76,7 +76,7 @@ You can pass in your own arguments to `gce_vm_cluster()` such as which docker im
 
 ### Using your own Docker image
 
-The default uses `rocker/r-parallel` as its image, but if you want your own custom image then create your own Docker image based on that one, for example via [this tutorial using Google Build Triggers](articles/docker.html#build-triggers).
+The default uses `rocker/r-parallel` as its image, but if you want your own custom image then create your own Docker image based on that one, for example via [this tutorial using Google Build Triggers](https://cloudyr.github.io/googleComputeEngineR/articles/docker.html).
 
 This will give you a docker image name such as `gcr.io/my-project/my-r` - use a version of the code below to use this in your cluster.  
 

@@ -7,11 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>R Interface with Google Compute Engine • googleComputeEngineR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="R Interface with Google Compute Engine">
-<meta property="og:description" content="Interact with the 'Google Compute Engine' API in R. Lets you create, 
-  start and stop instances in the 'Google Cloud'.  Support for preconfigured instances, 
+<meta property="og:description" content="Interact with the Google Compute Engine API in R. Lets you create, 
+  start and stop instances in the Google Cloud.  Support for preconfigured instances, 
   with templates for common R needs. ">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -26,7 +27,7 @@
 </script>
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -161,43 +162,34 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
-  <div class="col-md-9 contents">
-    
+  <div class="contents col-md-9">
+<div id="googlecomputeenginer" class="section level1">
 
-    
-    
 
-<p><img src="articles/img/logo.png"><!-- --></p>
-<div id="mission-statement" class="section level2">
+<p><code>googleComputeEngineR</code> provides an R interface to the Google Cloud Compute Engine API, for launching virtual machines. It looks to make the deployment of cloud resources for R as painless as possible, and includes some special templates to launch R-specific resources such as RStudio, Shiny, and OpenCPU with a few lines from your local R session.</p>
+<blockquote>
+<p>See all documentation on the <a href="https://cloudyr.github.io/googleComputeEngineR/">googleComputeEngineR website</a></p>
+</blockquote>
+<div id="tldr---creating-an-rstudio-server-vm" class="section level2">
 <h2 class="hasAnchor">
-<a href="#mission-statement" class="anchor"></a>Mission statement</h2>
-<p><code>googleComputeEngineR</code> provides an R interface to the Google Cloud Compute Engine API, for launching virtual machines.</p>
-<p>It looks to make the deployment of cloud resources for R as painless as possible, and includes some special templates to launch R-specific resources such as RStudio, Shiny, and OpenCPU with a few lines from your local R session.</p>
-</div>
-<div id="quick-startup---creating-an-rstudio-server-vm" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quick-startup---creating-an-rstudio-server-vm" class="anchor"></a>Quick startup - Creating an RStudio server VM</h2>
-<ol style="list-style-type: decimal">
-<li>Configure a Google Cloud Project with billing (see <a href="articles/installation-and-authentication.html">setup</a>)</li>
-<li>Download a service acount key JSON file</li>
-<li>Put your default project, zone and JSON file location in your <code>.Renviron</code>
-</li>
-<li>Run <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(googleComputeEngineR)</a></code> and auto-authenticate</li>
+<a href="#tldr---creating-an-rstudio-server-vm" class="anchor"></a>TL;DR - Creating an RStudio server VM</h2>
+<ol>
+<li>Configure a Google Cloud Project with billing.</li>
+<li>Download a service account key JSON file.</li>
+<li>Put your default project, zone and JSON file location in your <code>.Renviron</code>.</li>
+<li>Run <code><a href="https://rdrr.io/r/base/library.html">library(googleComputeEngineR)</a></code> and auto-authenticate.</li>
 <li>Run <code>vm &lt;- gce_vm(template = "rstudio", name = "rstudio-server", username = "mark", password = "mark1234")</code> (or other credentials) to start up an RStudio Server.</li>
 <li>Wait for it to install, login via the returned URL.</li>
 </ol>
-<div id="setup-video-guide" class="section level3">
-<h3 class="hasAnchor">
-<a href="#setup-video-guide" class="anchor"></a>Setup video guide</h3>
 <p>A video guide to setup and launching an RStudio server has been kindly created by Donal Phipps and is <a href="https://www.youtube.com/watch?v=1oM0NZbRhSI">available at this link</a>.</p>
-<iframe src="https://www.youtube.com/embed/1oM0NZbRhSI?rel=0" width="700" height="400px">
+<iframe width="560" height="315" src="http://www.youtube.com/embed/1oM0NZbRhSI?rel=0" frameborder="0" allowfullscreen>
 </iframe>
-</div>
 </div>
 <div id="thanks-to" class="section level2">
 <h2 class="hasAnchor">
-<a href="#thanks-to" class="anchor"></a>Thanks to:</h2>
+<a href="#thanks-to" class="anchor"></a>Thanks to</h2>
 <ul>
 <li>Scott Chamberlin for the <a href="https://github.com/sckott/analogsea">analogsea</a> package for launching Digital Ocean VMs, which inspired the SSH connector functions for this one.</li>
 <li>Winston Chang for the <a href="https://github.com/wch/harbor/">harbor</a> package where the docker functions come from. If <code>harbor</code> will be published to CRAN, it will become a dependency for this one.</li>
@@ -209,14 +201,15 @@
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
 <p>CRAN version:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"googleComputeEngineR"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"googleComputeEngineR"</span>)</a></code></pre></div>
 <p>Development version:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(<span class="st">"ghit"</span>)) {</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"ghit"</span>)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="st">"ghit"</span>)) {</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ghit"</span>)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">}</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">ghit<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"cloudyr/googleComputeEngineR"</span>)</a></code></pre></div>
 <hr>
 <p><a href="https://github.com/cloudyr"><img src="http://i.imgur.com/JHS98Y7.png" alt="cloudyr project logo"></a></p>
+</div>
 </div>
   </div>
 
@@ -242,13 +235,12 @@
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="http://code.markedmondson.me">Mark Edmondson</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8434-3881" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<a href="http://code.markedmondson.me">Mark Edmondson</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8434-3881" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-
-      <div class="dev-status">
+  <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="http://cran.r-project.org/package=googleComputeEngineR"><img src="http://www.r-pkg.org/badges/version/googleComputeEngineR" alt="CRAN"></a></li>
@@ -257,7 +249,6 @@
 </ul>
 </div>
 </div>
-
 </div>
 
 
@@ -266,12 +257,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
