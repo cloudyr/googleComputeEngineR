@@ -20,6 +20,7 @@ RUN install2.r --error \
     ## install Github packages
     && installGithub.r MarkEdmondson1234/youtubeAnalyticsR \
                        MarkEdmondson1234/googleID \
+                       MarkEdmondson1234/googleCloudRunner \
     ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
 
