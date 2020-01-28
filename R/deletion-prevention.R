@@ -25,7 +25,7 @@
 #'     }
 #'   }
 #' 
-#' #' status <- lapply(zones$name, function(x){
+#' deletes <- lapply(zones$name, function(x){
 #'   lapply(instances_e[[x]], function(y) {
 #'     gce_vm_delete(y, zone = x)))
 #'     }
