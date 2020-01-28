@@ -71,7 +71,7 @@ gce_list_zones <- function(project,
   f <- gar_api_generator(url, 
                          "GET", 
                          pars_args = pars, 
-                         data_parse_function = function(x) x)
+                         data_parse_function = function(x) x$items)
   
   f()
   

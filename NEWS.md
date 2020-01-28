@@ -3,6 +3,7 @@
 * Upgrade docker calls for `gce_push_registry` and friends (#151)
 * Fix being able to restart cluster VMs (#149)
 * Remove `gce_list_registry` as its not working
+* Add `gce_vm_deletion_protection` to help add or remove deletion protection for VMs
 
 # 0.3.0
 
