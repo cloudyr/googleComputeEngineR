@@ -12,6 +12,7 @@
 #' 
 #' \dontrun{
 #' 
+#' # a workflow for deleting lots of VMs across zones that have deletion protection
 #' zones <- gce_list_zones()
 #' instances <- lapply(zones$name, function(x) gce_list_instances(zone = x))
 #' 
@@ -24,8 +25,11 @@
 #'     }
 #'   }
 #' 
-#' lapply(zones$name, function(x) lapply(instances_e[[x]], function(y) gce_vm_deletion_protection(y, cmd = "false", projectId = "mark-edmondson-gde", zone = x))) -> sss
-#' 
+#' #' status <- lapply(zones$name, function(x){
+#'   lapply(instances_e[[x]], function(y) {
+#'     gce_vm_delete(y, zone = x)))
+#'     }
+#'   }
 #' }
 gce_vm_deletion_protection <- function(instance,
                                        cmd = c("status", "true", "false"),
