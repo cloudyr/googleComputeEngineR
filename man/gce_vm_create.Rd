@@ -48,7 +48,7 @@ gce_vm_create(
 
 \item{disk_source}{Specifies a valid URL to an existing Persistent Disk resource.}
 
-\item{network}{The name of the network interface}
+\item{network}{A network object created by \link{gce_make_network}}
 
 \item{externalIP}{An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.}
 

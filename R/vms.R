@@ -137,7 +137,7 @@ gce_vm <- function(name,
 #' }
 #' 
 #' 
-#' @param instances Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
+#' @param instances Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}, or a list of instances to delete
 #' @param project Project ID for this request, default as set by \link{gce_get_global_project}
 #' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
 #' 
@@ -147,7 +147,11 @@ gce_vm <- function(name,
 gce_vm_delete <- function(instances,
                           project = gce_get_global_project(), 
                           zone = gce_get_global_zone()) {
-  lapply(instances, gce_vm_delete_one, project = project, zone = zone)
+  if(is.gce_instance(instances)){
+    instances <- list(instances)
+  }
+  vms <- lapply(instances, as.gce_instance_name)
+  lapply(vms, gce_vm_delete_one, project = project, zone = zone)
 }
 
 
@@ -160,9 +164,9 @@ gce_vm_delete_one <- function(instance,
     is.string(project),
     is.string(zone)
   )
-  
+
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
-                 project, zone, as.gce_instance_name(instance))
+                 project, zone, instance)
   # compute.instances.delete
   f <- gar_api_generator(url, 
                          "DELETE", 

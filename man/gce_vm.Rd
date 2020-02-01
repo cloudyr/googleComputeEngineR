@@ -22,7 +22,7 @@ gce_vm(
     \item{\code{image}}{Name of the image resource to return}
     \item{\code{image_family}}{Name of the image family to search for}
     \item{\code{disk_source}}{Specifies a valid URL to an existing Persistent Disk resource.}
-    \item{\code{network}}{The name of the network interface}
+    \item{\code{network}}{A network object created by \link{gce_make_network}}
     \item{\code{externalIP}}{An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.}
     \item{\code{minCpuPlatform}}{Specify a minimum CPU platform as per \href{these Google docs}{https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform}}
     \item{\code{dry_run}}{whether to just create the request JSON}

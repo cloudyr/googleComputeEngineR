@@ -5,6 +5,7 @@
 * Remove `gce_list_registry` as its not working
 * Add `gce_vm_deletion_protection` to help add or remove deletion protection for VMs
 * Support subnetworks (#154) and expose making your own networks via `gce_make_network`
+* Fix vectorised VM deletions (#144)
 
 # 0.3.0
 

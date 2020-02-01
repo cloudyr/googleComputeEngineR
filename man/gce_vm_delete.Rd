@@ -11,7 +11,7 @@ gce_vm_delete(
 )
 }
 \arguments{
-\item{instances}{Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}}
+\item{instances}{Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}, or a list of instances to delete}
 
 \item{project}{Project ID for this request, default as set by \link{gce_get_global_project}}
 
