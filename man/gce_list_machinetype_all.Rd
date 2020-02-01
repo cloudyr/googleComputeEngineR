@@ -4,8 +4,12 @@
 \alias{gce_list_machinetype_all}
 \title{Retrieves an aggregated list of machine types from all zones.}
 \usage{
-gce_list_machinetype_all(filter = NULL, maxResults = NULL,
-  pageToken = NULL, project = gce_get_global_project())
+gce_list_machinetype_all(
+  filter = NULL,
+  maxResults = NULL,
+  pageToken = NULL,
+  project = gce_get_global_project()
+)
 }
 \arguments{
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}

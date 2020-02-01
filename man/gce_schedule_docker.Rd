@@ -4,8 +4,11 @@
 \alias{gce_schedule_docker}
 \title{Schedule running a docker image upon a VM}
 \usage{
-gce_schedule_docker(docker_image, schedule = "53 4 * * *",
-  vm = gce_vm_scheduler())
+gce_schedule_docker(
+  docker_image,
+  schedule = "53 4 * * *",
+  vm = gce_vm_scheduler()
+)
 }
 \arguments{
 \item{docker_image}{the hosted docker image to run on a schedule}
@@ -83,6 +86,7 @@ gce_schedule_docker(docker_tag, schedule = "53 4 * * *", vm = vm)
 
 }
 \seealso{
-Other scheduler functions: \code{\link{gce_vm_scheduler}}
+Other scheduler functions: 
+\code{\link{gce_vm_scheduler}()}
 }
 \concept{scheduler functions}

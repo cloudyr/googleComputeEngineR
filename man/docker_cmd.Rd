@@ -4,8 +4,14 @@
 \alias{docker_cmd}
 \title{Run a docker command on a host.}
 \usage{
-docker_cmd(host, cmd = NULL, args = NULL, docker_opts = NULL,
-  capture_text = FALSE, ...)
+docker_cmd(
+  host,
+  cmd = NULL,
+  args = NULL,
+  docker_opts = NULL,
+  capture_text = FALSE,
+  ...
+)
 }
 \arguments{
 \item{host}{A host object.}

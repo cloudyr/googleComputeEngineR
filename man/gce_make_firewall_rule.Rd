@@ -4,8 +4,14 @@
 \alias{gce_make_firewall_rule}
 \title{Add one firewall rule to the network}
 \usage{
-gce_make_firewall_rule(name, protocol, ports, sourceRanges = NULL,
-  sourceTags = NULL, project = gce_get_global_project())
+gce_make_firewall_rule(
+  name,
+  protocol,
+  ports,
+  sourceRanges = NULL,
+  sourceTags = NULL,
+  project = gce_get_global_project()
+)
 }
 \arguments{
 \item{name}{Name of the firewall rule}
@@ -49,9 +55,10 @@ If both properties are set,
 \seealso{
 API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/insert}
 
-Other firewall functions: \code{\link{gce_delete_firewall_rule}},
-  \code{\link{gce_get_firewall_rule}},
-  \code{\link{gce_list_firewall_rules}},
-  \code{\link{gce_make_firewall_webports}}
+Other firewall functions: 
+\code{\link{gce_delete_firewall_rule}()},
+\code{\link{gce_get_firewall_rule}()},
+\code{\link{gce_list_firewall_rules}()},
+\code{\link{gce_make_firewall_webports}()}
 }
 \concept{firewall functions}

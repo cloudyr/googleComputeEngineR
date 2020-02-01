@@ -4,8 +4,13 @@
 \alias{gce_rstudio_adduser}
 \title{Creates a user on an RStudio templated instance}
 \usage{
-gce_rstudio_adduser(instance, username, password, admin = TRUE,
-  container = "rstudio")
+gce_rstudio_adduser(
+  instance,
+  username,
+  password,
+  admin = TRUE,
+  container = "rstudio"
+)
 }
 \arguments{
 \item{instance}{An instance with RStudio installed via \link{gce_vm_template}}

@@ -33,7 +33,8 @@ If not specified, this function will enter defaults to get a GPU instance up and
 \seealso{
 \href{Deep Learning VM}{https://cloud.google.com/deep-learning-vm/docs/quickstart-cli}
 
-Other GPU instances: \code{\link{gce_check_gpu}},
-  \code{\link{gce_list_gpus}}
+Other GPU instances: 
+\code{\link{gce_check_gpu}()},
+\code{\link{gce_list_gpus}()}
 }
 \concept{GPU instances}

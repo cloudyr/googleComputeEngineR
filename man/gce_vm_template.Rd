@@ -4,10 +4,16 @@
 \alias{gce_vm_template}
 \title{Create a template container VM}
 \usage{
-gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
-  "dynamic", "rstudio-gpu", "rstudio-shiny"), username = NULL,
-  password = NULL, dynamic_image = NULL, image_family = "cos-stable",
-  wait = TRUE, ...)
+gce_vm_template(
+  template = c("rstudio", "shiny", "opencpu", "r-base", "dynamic", "rstudio-gpu",
+    "rstudio-shiny"),
+  username = NULL,
+  password = NULL,
+  dynamic_image = NULL,
+  image_family = "cos-stable",
+  wait = TRUE,
+  ...
+)
 }
 \arguments{
 \item{template}{The template available}
@@ -22,15 +28,15 @@ gce_vm_template(template = c("rstudio", "shiny", "opencpu", "r-base",
 
 \item{wait}{Whether to wait for the VM to launch before returning. Default \code{TRUE}.}
 
-\item{...}{Arguments passed on to \code{gce_vm_container}
-\describe{
-  \item{file}{file location of a valid cloud-init or shell_script file. 
+\item{...}{
+  Arguments passed on to \code{\link[=gce_vm_container]{gce_vm_container}}
+  \describe{
+    \item{\code{file}}{file location of a valid cloud-init or shell_script file. 
 One of \code{file} or \code{cloud_init} or \code{shell_script} must be supplied}
-  \item{cloud_init}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
-  \item{shell_script}{contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}}
-  \item{image_family}{An image-family.  It must come from the \code{image_project} family.}
-  \item{image_project}{An image-project, where the image-family resides.}
-}}
+    \item{\code{cloud_init}}{contents of a cloud-init file, for example read via \code{readChar(file, nchars = 32768)}}
+    \item{\code{shell_script}}{contents of a shell_script file, for example read via \code{readChar(file, nchars = 32768)}}
+    \item{\code{image_project}}{An image-project, where the image-family resides.}
+  }}
 }
 \value{
 The VM object, or the VM startup operation if \code{wait=FALSE}

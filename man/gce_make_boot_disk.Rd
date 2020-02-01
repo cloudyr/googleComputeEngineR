@@ -4,9 +4,13 @@
 \alias{gce_make_boot_disk}
 \title{Make a boot disk for attachment to an instance}
 \usage{
-gce_make_boot_disk(diskName = NULL, diskSizeGb = NULL,
-  diskType = NULL, sourceImage = NULL,
-  sourceImageEncryptionKey = NULL)
+gce_make_boot_disk(
+  diskName = NULL,
+  diskSizeGb = NULL,
+  diskType = NULL,
+  sourceImage = NULL,
+  sourceImageEncryptionKey = NULL
+)
 }
 \arguments{
 \item{diskName}{Specifies the disk name}

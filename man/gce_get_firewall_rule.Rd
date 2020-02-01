@@ -17,9 +17,10 @@ Get a firewall rule of name specified
 \seealso{
 API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/get}
 
-Other firewall functions: \code{\link{gce_delete_firewall_rule}},
-  \code{\link{gce_list_firewall_rules}},
-  \code{\link{gce_make_firewall_rule}},
-  \code{\link{gce_make_firewall_webports}}
+Other firewall functions: 
+\code{\link{gce_delete_firewall_rule}()},
+\code{\link{gce_list_firewall_rules}()},
+\code{\link{gce_make_firewall_rule}()},
+\code{\link{gce_make_firewall_webports}()}
 }
 \concept{firewall functions}

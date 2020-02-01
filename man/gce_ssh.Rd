@@ -6,16 +6,38 @@
 \alias{gce_ssh_download}
 \title{Remotely execute ssh code, upload & download files.}
 \usage{
-gce_ssh(instance, ..., key.pub = NULL, key.private = NULL,
-  wait = TRUE, capture_text = "", username = Sys.info()[["user"]])
+gce_ssh(
+  instance,
+  ...,
+  key.pub = NULL,
+  key.private = NULL,
+  wait = TRUE,
+  capture_text = "",
+  username = Sys.info()[["user"]]
+)
 
-gce_ssh_upload(instance, local, remote, username = Sys.info()[["user"]],
-  key.pub = NULL, key.private = NULL, verbose = FALSE, wait = TRUE)
+gce_ssh_upload(
+  instance,
+  local,
+  remote,
+  username = Sys.info()[["user"]],
+  key.pub = NULL,
+  key.private = NULL,
+  verbose = FALSE,
+  wait = TRUE
+)
 
-gce_ssh_download(instance, remote, local,
-  username = Sys.info()[["user"]], key.pub = NULL,
-  key.private = NULL, verbose = FALSE, overwrite = FALSE,
-  wait = TRUE)
+gce_ssh_download(
+  instance,
+  remote,
+  local,
+  username = Sys.info()[["user"]],
+  key.pub = NULL,
+  key.private = NULL,
+  verbose = FALSE,
+  overwrite = FALSE,
+  wait = TRUE
+)
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -72,7 +94,7 @@ everything inside the directory will also be downloaded.
   #> foo
   
   ## if running on Windows, use the RStudio default SSH client
-  ## e.g. add C:\\Program Files\\RStudio\\bin\\msys-ssh-1000-18 to your PATH
+  ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
   ## then run: 
   vm2 <- gce_vm("my-instance2")
 
@@ -94,8 +116,9 @@ everything inside the directory will also be downloaded.
 \seealso{
 \url{https://cloud.google.com/compute/docs/instances/connecting-to-instance}
 
-Other ssh functions: \code{\link{gce_ssh_addkeys}},
-  \code{\link{gce_ssh_browser}},
-  \code{\link{gce_ssh_setup}}
+Other ssh functions: 
+\code{\link{gce_ssh_addkeys}()},
+\code{\link{gce_ssh_browser}()},
+\code{\link{gce_ssh_setup}()}
 }
 \concept{ssh functions}

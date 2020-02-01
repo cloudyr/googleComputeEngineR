@@ -4,8 +4,12 @@
 \alias{gce_vm_deletion_protection}
 \title{Toggle deletion protection for existing instances}
 \usage{
-gce_vm_deletion_protection(instance, cmd = c("status", "true", "false"),
-  projectId = gce_get_global_project(), zone = gce_get_global_zone())
+gce_vm_deletion_protection(
+  instance,
+  cmd = c("status", "true", "false"),
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{instance}{The vm to work with its deletion protection}
@@ -13,10 +17,34 @@ gce_vm_deletion_protection(instance, cmd = c("status", "true", "false"),
 \item{cmd}{Whether to get the status, or toggle "true" or "false" 
 on deletion protection for this VM}
 
-\item{projectId}{The projectId}
+\item{project}{The projectId}
 
 \item{zone}{The zone}
 }
 \description{
 Toggle deletion protection for existing instances
+}
+\examples{
+
+\dontrun{
+
+# a workflow for deleting lots of VMs across zones that have deletion protection
+zones <- gce_list_zones()
+instances <- lapply(zones$name, function(x) gce_list_instances(zone = x))
+
+instances_e <- lapply(instances, function(x) x$items$name)
+names(instances_e) <- zones$name
+
+status <- lapply(zones$name, function(x){
+  lapply(instances_e[[x]], function(y) {
+    gce_vm_deletion_protection(y, cmd = "false", zone = x)))
+    }
+  }
+
+deletes <- lapply(zones$name, function(x){
+  lapply(instances_e[[x]], function(y) {
+    gce_vm_delete(y, zone = x)))
+    }
+  }
+}
 }

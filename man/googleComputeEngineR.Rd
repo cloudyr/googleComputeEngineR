@@ -3,7 +3,6 @@
 \docType{package}
 \name{googleComputeEngineR}
 \alias{googleComputeEngineR}
-\alias{googleComputeEngineR-package}
 \title{Working with Google Compute Engine from R}
 \description{
 See demos and examples at the \href{googleComputeEngineR website}{https://cloudyr.github.io/googleComputeEngineR/}.

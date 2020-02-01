@@ -4,9 +4,15 @@
 \alias{makeDockerClusterPSOCK}
 \title{Make the Docker cluster on Google Compute Engine}
 \usage{
-makeDockerClusterPSOCK(workers, docker_image = "rocker/r-parallel",
+makeDockerClusterPSOCK(
+  workers,
+  docker_image = "rocker/r-parallel",
   rscript = c("docker", "run", "--net=host", docker_image, "Rscript"),
-  rscript_args = NULL, install_future = FALSE, ..., verbose = FALSE)
+  rscript_args = NULL,
+  install_future = FALSE,
+  ...,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{workers}{The VMs being called upon}

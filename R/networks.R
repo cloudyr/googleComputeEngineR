@@ -28,14 +28,17 @@ gce_get_external_ip <- function(instance,
 #' @param network Name of network resource
 #' @param externalIP An external IP you have created previously, leave NULL to have one assigned or "none" for none
 #' @param project Project ID for this request
+#' @param subnetwork A subnetwork name if its exists
 #' 
 #' You need to provide accessConfig explicitly if you want an ephemeral IP assigned, see \code{https://cloud.google.com/compute/docs/vm-ip-addresses}
 #' 
 #' @return A Network object
-#' @keywords internal
-gce_make_network <- function(name,
-                             network = "default",
+#' @export
+gce_make_network <- function(network = "default",
+                             name = NULL,
+                             subnetwork = NULL,
                              externalIP = NULL,
+                             reservedIp = NULL,
                              project = gce_get_global_project()){
   
   make_ac <- function(externalIP, name){
@@ -44,8 +47,7 @@ gce_make_network <- function(name,
     list(
       list(
         natIP = jsonlite::unbox(externalIP),
-        type = jsonlite::unbox("ONE_TO_ONE_NAT"),
-        name = jsonlite::unbox(name)
+        type = jsonlite::unbox("ONE_TO_ONE_NAT")
       )
     )
   }
@@ -54,14 +56,20 @@ gce_make_network <- function(name,
   
   structure(
     list(
-      list(
+      rmNullObs(list(
         network = jsonlite::unbox(net$selfLink),
+        subnetwork = jsonlite::unbox(subnetwork),
+        name = name,
         accessConfigs = make_ac(externalIP, name)
-      )
+      ))
     ),
     class = c("gce_networkInterface", "list")
   )
   
+}
+
+is.gce_networkInterface <- function(x){
+  inherits(x, "gce_networkInterface")
 }
 
 #' Returns the specified network.
@@ -122,7 +130,9 @@ gce_list_networks <- function(filter = NULL,
                pageToken = pageToken)
   pars <- rmNullObs(pars)
   
-  f <- gar_api_generator(url, "GET", pars_args = pars, data_parse_function = function(x) x)
+  f <- gar_api_generator(url, "GET", 
+                         pars_args = pars, 
+                         data_parse_function = function(x) x$items)
   f()
   
 }

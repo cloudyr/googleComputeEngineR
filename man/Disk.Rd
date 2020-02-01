@@ -4,10 +4,18 @@
 \alias{Disk}
 \title{Disk Object}
 \usage{
-Disk(name = NULL, sourceImage = NULL, sizeGb = NULL,
-  description = NULL, diskEncryptionKey = NULL, licenses = NULL,
-  sourceImageEncryptionKey = NULL, sourceSnapshot = NULL,
-  sourceSnapshotEncryptionKey = NULL, type = NULL)
+Disk(
+  name = NULL,
+  sourceImage = NULL,
+  sizeGb = NULL,
+  description = NULL,
+  diskEncryptionKey = NULL,
+  licenses = NULL,
+  sourceImageEncryptionKey = NULL,
+  sourceSnapshot = NULL,
+  sourceSnapshotEncryptionKey = NULL,
+  type = NULL
+)
 }
 \arguments{
 \item{name}{Name of the resource}

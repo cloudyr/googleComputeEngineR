@@ -4,15 +4,32 @@
 \alias{gce_vm_create}
 \title{Creates an instance resource in the specified project using the data included in the request.}
 \usage{
-gce_vm_create(name, predefined_type = "f1-micro",
-  image_project = "debian-cloud", image_family = "debian-8",
-  cpus = NULL, memory = NULL, image = "", disk_source = NULL,
-  network = "default", externalIP = NULL, canIpForward = NULL,
-  description = NULL, metadata = NULL, scheduling = NULL,
-  serviceAccounts = NULL, tags = NULL, minCpuPlatform = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone(),
-  dry_run = FALSE, disk_size_gb = NULL, use_beta = FALSE,
-  acceleratorCount = NULL, acceleratorType = "nvidia-tesla-p4")
+gce_vm_create(
+  name,
+  predefined_type = "f1-micro",
+  image_project = "debian-cloud",
+  image_family = "debian-9",
+  cpus = NULL,
+  memory = NULL,
+  image = "",
+  disk_source = NULL,
+  network = gce_make_network("default"),
+  externalIP = NULL,
+  canIpForward = NULL,
+  description = NULL,
+  metadata = NULL,
+  scheduling = NULL,
+  serviceAccounts = NULL,
+  tags = NULL,
+  minCpuPlatform = NULL,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone(),
+  dry_run = FALSE,
+  disk_size_gb = NULL,
+  use_beta = FALSE,
+  acceleratorCount = NULL,
+  acceleratorType = "nvidia-tesla-p4"
+)
 }
 \arguments{
 \item{name}{The name of the resource, provided by the client when initially creating the resource}

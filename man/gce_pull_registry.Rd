@@ -4,8 +4,14 @@
 \alias{gce_pull_registry}
 \title{Load a previously saved private Google Container}
 \usage{
-gce_pull_registry(instance, container_name, container_url = "gcr.io",
-  pull_only = FALSE, project = gce_get_global_project(), ...)
+gce_pull_registry(
+  instance,
+  container_name,
+  container_url = "gcr.io",
+  pull_only = FALSE,
+  project = gce_get_global_project(),
+  ...
+)
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -34,7 +40,8 @@ The instance
 Load a previously saved private Google Container
 }
 \seealso{
-Other container registry functions: \code{\link{gce_push_registry}},
-  \code{\link{gce_tag_container}}
+Other container registry functions: 
+\code{\link{gce_push_registry}()},
+\code{\link{gce_tag_container}()}
 }
 \concept{container registry functions}

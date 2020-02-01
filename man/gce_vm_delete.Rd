@@ -4,8 +4,11 @@
 \alias{gce_vm_delete}
 \title{Deletes the specified Instance resource.}
 \usage{
-gce_vm_delete(instances, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_vm_delete(
+  instances,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{instances}{Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}}

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -13,7 +12,7 @@
 
 <meta name="author" content="Mark Edmondson" />
 
-<meta name="date" content="2019-11-02" />
+<meta name="date" content="2020-02-01" />
 
 <title>Massively parallel processing</title>
 
@@ -304,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Massively parallel processing</h1>
 <h4 class="author">Mark Edmondson</h4>
-<h4 class="date">2019-11-02</h4>
+<h4 class="date">2020-02-01</h4>
 
 
 
@@ -361,7 +360,7 @@ You can do this to throw up expensive computations by spinning up a cluster and 
 </div>
 <div id="using-your-own-docker-image" class="section level3">
 <h3>Using your own Docker image</h3>
-<p>The default uses <code>rocker/r-parallel</code> as its image, but if you want your own custom image then create your own Docker image based on that one, for example via <a href="articles/docker.html#build-triggers">this tutorial using Google Build Triggers</a>.</p>
+<p>The default uses <code>rocker/r-parallel</code> as its image, but if you want your own custom image then create your own Docker image based on that one, for example via <a href="https://cloudyr.github.io/googleComputeEngineR/articles/docker.html">this tutorial using Google Build Triggers</a>.</p>
 <p>This will give you a docker image name such as <code>gcr.io/my-project/my-r</code> - use a version of the code below to use this in your cluster.</p>
 <p>You can also customise the <code>RScript</code> command that launches your script, but always make sure to include <code>--net=host</code> as is shown in the default arguments, so the Docker image uses the SSH ports the host VM has (e.g. it can connect to your SSH commands)</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">plan</span>(cluster, <span class="dt">workers =</span> <span class="kw">as.cluster</span>(vms, <span class="dt">docker_image=</span><span class="st">&quot;gcr.io/my-project/my-r&quot;</span>))</a></code></pre></div>

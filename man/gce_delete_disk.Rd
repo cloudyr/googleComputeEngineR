@@ -4,8 +4,11 @@
 \alias{gce_delete_disk}
 \title{Deletes the specified persistent disk.}
 \usage{
-gce_delete_disk(disk, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_delete_disk(
+  disk,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{disk}{Name of the persistent disk to delete}

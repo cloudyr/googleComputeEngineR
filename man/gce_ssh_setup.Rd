@@ -4,8 +4,13 @@
 \alias{gce_ssh_setup}
 \title{Setup a SSH connection with GCE from a new SSH key-pair}
 \usage{
-gce_ssh_setup(instance, key.pub = NULL, key.private = NULL,
-  ssh_overwrite = FALSE, username = Sys.info()[["user"]])
+gce_ssh_setup(
+  instance,
+  key.pub = NULL,
+  key.private = NULL,
+  ssh_overwrite = FALSE,
+  username = Sys.info()[["user"]]
+)
 }
 \arguments{
 \item{instance}{Name of the instance of run ssh command upon}
@@ -50,7 +55,7 @@ These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"
   
   
   ## if running on Windows, use the RStudio default SSH client
-  ## e.g. add C:\\Program Files\\RStudio\\bin\\msys-ssh-1000-18 to your PATH
+  ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
   ## then run: 
   vm2 <- gce_vm("my-instance2")
 
@@ -73,7 +78,9 @@ These will be looked for and used if found, at \code{file.path(Sys.getenv("HOME"
 \seealso{
 \url{https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys}
 
-Other ssh functions: \code{\link{gce_ssh_addkeys}},
-  \code{\link{gce_ssh_browser}}, \code{\link{gce_ssh}}
+Other ssh functions: 
+\code{\link{gce_ssh_addkeys}()},
+\code{\link{gce_ssh_browser}()},
+\code{\link{gce_ssh}()}
 }
 \concept{ssh functions}

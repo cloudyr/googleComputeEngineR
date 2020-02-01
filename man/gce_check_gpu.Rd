@@ -18,7 +18,8 @@ Check GPU installed ok
 \seealso{
 \url{https://cloud.google.com/compute/docs/gpus/add-gpus#verify-driver-install}
 
-Other GPU instances: \code{\link{gce_list_gpus}},
-  \code{\link{gce_vm_gpu}}
+Other GPU instances: 
+\code{\link{gce_list_gpus}()},
+\code{\link{gce_vm_gpu}()}
 }
 \concept{GPU instances}

@@ -4,8 +4,11 @@
 \alias{gce_get_disk}
 \title{Returns a specified persistent disk.}
 \usage{
-gce_get_disk(disk, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_get_disk(
+  disk,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{disk}{Name of the persistent disk to return}

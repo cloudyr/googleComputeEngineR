@@ -20,9 +20,10 @@ This will invoke \link{gce_make_firewall_rule} and look for the rules named \cod
 If not present, it will create them.
 }
 \seealso{
-Other firewall functions: \code{\link{gce_delete_firewall_rule}},
-  \code{\link{gce_get_firewall_rule}},
-  \code{\link{gce_list_firewall_rules}},
-  \code{\link{gce_make_firewall_rule}}
+Other firewall functions: 
+\code{\link{gce_delete_firewall_rule}()},
+\code{\link{gce_get_firewall_rule}()},
+\code{\link{gce_list_firewall_rules}()},
+\code{\link{gce_make_firewall_rule}()}
 }
 \concept{firewall functions}

@@ -9,13 +9,14 @@ gce_vm_scheduler(vm_name = "scheduler", ...)
 \arguments{
 \item{vm_name}{The name of the VM scheduler to create or return}
 
-\item{...}{Arguments passed on to \code{gce_vm}
-\describe{
-  \item{name}{The name of the instance}
-  \item{open_webports}{If TRUE, will open firewall ports 80 and 443 if not open already}
-  \item{project}{Project ID for this request}
-  \item{zone}{The name of the zone for this request}
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=gce_vm]{gce_vm}}
+  \describe{
+    \item{\code{name}}{The name of the instance}
+    \item{\code{open_webports}}{If TRUE, will open firewall ports 80 and 443 if not open already}
+    \item{\code{project}}{Project ID for this request}
+    \item{\code{zone}}{The name of the zone for this request}
+  }}
 }
 \value{
 A VM object
@@ -24,6 +25,7 @@ A VM object
 This starts up a VM with cron and docker installed that can be used to schedule scripts
 }
 \seealso{
-Other scheduler functions: \code{\link{gce_schedule_docker}}
+Other scheduler functions: 
+\code{\link{gce_schedule_docker}()}
 }
 \concept{scheduler functions}

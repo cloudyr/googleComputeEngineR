@@ -4,9 +4,15 @@
 \alias{gce_push_registry}
 \title{Push to Google Container Registry}
 \usage{
-gce_push_registry(instance, save_name, container_name = NULL,
-  image_name = NULL, container_url = "gcr.io",
-  project = gce_get_global_project(), wait = FALSE)
+gce_push_registry(
+  instance,
+  save_name,
+  container_name = NULL,
+  image_name = NULL,
+  container_url = "gcr.io",
+  project = gce_get_global_project(),
+  wait = FALSE
+)
 }
 \arguments{
 \item{instance}{The VM to run within}
@@ -36,7 +42,8 @@ The tag the image was tagged with on GCE
 Commit and save a running container or docker image to the Google Container Registry
 }
 \seealso{
-Other container registry functions: \code{\link{gce_pull_registry}},
-  \code{\link{gce_tag_container}}
+Other container registry functions: 
+\code{\link{gce_pull_registry}()},
+\code{\link{gce_tag_container}()}
 }
 \concept{container registry functions}

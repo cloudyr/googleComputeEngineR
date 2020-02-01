@@ -4,8 +4,13 @@
 \alias{gce_list_zone_op}
 \title{Retrieves a list of Operation resources contained within the specified zone.}
 \usage{
-gce_list_zone_op(filter = NULL, maxResults = NULL, pageToken = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_list_zone_op(
+  filter = NULL,
+  maxResults = NULL,
+  pageToken = NULL,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}

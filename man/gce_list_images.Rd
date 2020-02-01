@@ -4,8 +4,12 @@
 \alias{gce_list_images}
 \title{Retrieves the list of private images available to the specified project.}
 \usage{
-gce_list_images(image_project, filter = NULL, maxResults = NULL,
-  pageToken = NULL)
+gce_list_images(
+  image_project,
+  filter = NULL,
+  maxResults = NULL,
+  pageToken = NULL
+)
 }
 \arguments{
 \item{image_project}{Project ID for this request}

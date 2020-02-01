@@ -223,7 +223,7 @@ gce_vm_delete_one <- function(instance,
 #' @param image Name of the image resource to return
 #' @param image_family Name of the image family to search for
 #' @param disk_source Specifies a valid URL to an existing Persistent Disk resource.
-#' @param network The name of the network interface
+#' @param network A network object created by \link{gce_make_network}
 #' @param externalIP An external IP you have previously reserved, leave NULL to have one assigned or \code{"none"} for no external access.
 #' @param minCpuPlatform Specify a minimum CPU platform as per \href{these Google docs}{https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform}
 #' @param project Project ID for this request
@@ -243,12 +243,12 @@ gce_vm_delete_one <- function(instance,
 gce_vm_create <- function(name,
                           predefined_type = "f1-micro",
                           image_project = "debian-cloud",
-                          image_family = "debian-8",
+                          image_family = "debian-9",
                           cpus = NULL,
                           memory = NULL,
                           image = "",
                           disk_source = NULL,
-                          network = "default", 
+                          network = gce_make_network("default"), 
                           externalIP = NULL,
                           canIpForward = NULL, 
                           description = NULL, 
@@ -266,7 +266,8 @@ gce_vm_create <- function(name,
                           acceleratorType = "nvidia-tesla-p4") {
   
   assert_that(
-    is.string(name)
+    is.string(name),
+    is.gce_networkInterface(network)
   )
   
   ## missing only works within function its called from
@@ -323,7 +324,8 @@ gce_vm_create <- function(name,
     if(nchar(image_family) > 0){
       
       ## creation from image_family
-      source_image_url <- gce_make_image_source_url(image_project, family = image_family)
+      source_image_url <- gce_make_image_source_url(image_project, 
+                                                    family = image_family)
     } else {
       ## creation from image
       stopifnot(nchar(image) > 0)
@@ -367,10 +369,7 @@ gce_vm_create <- function(name,
                                           zone = zone)
   
   ## make network interface
-  networkInterfaces <- gce_make_network(name = paste0(name, "-ip"),
-                                        network = network, 
-                                        externalIP = externalIP,
-                                        project = project)
+  networkInterfaces <- network
   
   ## make serviceAccounts
   if(is.null(serviceAccounts)){

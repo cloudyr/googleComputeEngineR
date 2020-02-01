@@ -4,8 +4,14 @@
 \alias{docker_build}
 \title{Build image on an instance from a local Dockerfile}
 \usage{
-docker_build(host = localhost, dockerfolder, new_image,
-  folder = "buildimage", wait = FALSE, ...)
+docker_build(
+  host = localhost,
+  dockerfolder,
+  new_image,
+  folder = "buildimage",
+  wait = FALSE,
+  ...
+)
 }
 \arguments{
 \item{host}{A host object.}

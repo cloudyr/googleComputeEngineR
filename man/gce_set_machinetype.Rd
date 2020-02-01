@@ -4,8 +4,14 @@
 \alias{gce_set_machinetype}
 \title{Changes the machine type for a stopped instance to the machine type specified in the request.}
 \usage{
-gce_set_machinetype(predefined_type, cpus, memory, instance,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_set_machinetype(
+  predefined_type,
+  cpus,
+  memory,
+  instance,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{predefined_type}{A predefined machine type from \link{gce_list_machinetype}}

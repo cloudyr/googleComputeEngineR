@@ -4,8 +4,14 @@
 \alias{gce_vm_container}
 \title{Launch a container-VM image}
 \usage{
-gce_vm_container(file = NULL, cloud_init = NULL, shell_script = NULL,
-  image_family = "cos-stable", image_project = "cos-cloud", ...)
+gce_vm_container(
+  file = NULL,
+  cloud_init = NULL,
+  shell_script = NULL,
+  image_family = "cos-stable",
+  image_project = "cos-cloud",
+  ...
+)
 }
 \arguments{
 \item{file}{file location of a valid cloud-init or shell_script file. 

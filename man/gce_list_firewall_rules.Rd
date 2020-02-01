@@ -4,8 +4,12 @@
 \alias{gce_list_firewall_rules}
 \title{List firewall rules}
 \usage{
-gce_list_firewall_rules(filter = NULL, maxResults = NULL,
-  pageToken = NULL, project = gce_get_global_project())
+gce_list_firewall_rules(
+  filter = NULL,
+  maxResults = NULL,
+  pageToken = NULL,
+  project = gce_get_global_project()
+)
 }
 \arguments{
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}
@@ -22,9 +26,10 @@ Get a firewall rule of name specified
 \seealso{
 API Documentation \url{https://cloud.google.com/compute/docs/reference/latest/firewalls/list}
 
-Other firewall functions: \code{\link{gce_delete_firewall_rule}},
-  \code{\link{gce_get_firewall_rule}},
-  \code{\link{gce_make_firewall_rule}},
-  \code{\link{gce_make_firewall_webports}}
+Other firewall functions: 
+\code{\link{gce_delete_firewall_rule}()},
+\code{\link{gce_get_firewall_rule}()},
+\code{\link{gce_make_firewall_rule}()},
+\code{\link{gce_make_firewall_webports}()}
 }
 \concept{firewall functions}

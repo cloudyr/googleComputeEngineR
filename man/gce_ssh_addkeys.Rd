@@ -4,8 +4,13 @@
 \alias{gce_ssh_addkeys}
 \title{Add SSH details to a gce_instance}
 \usage{
-gce_ssh_addkeys(instance, key.pub = NULL, key.private = NULL,
-  username = Sys.info()[["user"]], overwrite = FALSE)
+gce_ssh_addkeys(
+  instance,
+  key.pub = NULL,
+  key.private = NULL,
+  username = Sys.info()[["user"]],
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{instance}{The gce_instance}
@@ -48,7 +53,7 @@ If key.pub is NULL then will look for default Google credentials at
   
   
   ## if running on Windows, use the RStudio default SSH client
-  ## e.g. add C:\\Program Files\\RStudio\\bin\\msys-ssh-1000-18 to your PATH
+  ## e.g. add C:\Program Files\RStudio\bin\msys-ssh-1000-18 to your PATH
   ## then run: 
   vm2 <- gce_vm("my-instance2")
 
@@ -69,7 +74,9 @@ If key.pub is NULL then will look for default Google credentials at
 }
 }
 \seealso{
-Other ssh functions: \code{\link{gce_ssh_browser}},
-  \code{\link{gce_ssh_setup}}, \code{\link{gce_ssh}}
+Other ssh functions: 
+\code{\link{gce_ssh_browser}()},
+\code{\link{gce_ssh_setup}()},
+\code{\link{gce_ssh}()}
 }
 \concept{ssh functions}

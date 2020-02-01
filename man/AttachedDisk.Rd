@@ -4,10 +4,19 @@
 \alias{AttachedDisk}
 \title{AttachedDisk Object}
 \usage{
-AttachedDisk(autoDelete = NULL, boot = NULL, deviceName = NULL,
-  diskEncryptionKey = NULL, index = NULL, initializeParams = NULL,
-  interface = NULL, licenses = NULL, mode = NULL, source = NULL,
-  type = NULL)
+AttachedDisk(
+  autoDelete = NULL,
+  boot = NULL,
+  deviceName = NULL,
+  diskEncryptionKey = NULL,
+  index = NULL,
+  initializeParams = NULL,
+  interface = NULL,
+  licenses = NULL,
+  mode = NULL,
+  source = NULL,
+  type = NULL
+)
 }
 \arguments{
 \item{autoDelete}{Specifies whether the disk will be auto-deleted when the instance is deleted (but not when the disk is detached from the instance)}
@@ -42,7 +51,8 @@ AttachedDisk Object
 An instance-attached disk resource.
 }
 \seealso{
-Other AttachedDisk functions: \code{\link{gce_attach_disk}}
+Other AttachedDisk functions: 
+\code{\link{gce_attach_disk}()}
 }
 \concept{AttachedDisk functions}
 \keyword{internal}

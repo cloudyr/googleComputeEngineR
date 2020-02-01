@@ -4,8 +4,7 @@
 \alias{gce_list_zones}
 \title{Retrieves the list of Zone resources available to the specified project.}
 \usage{
-gce_list_zones(project, filter = NULL, maxResults = NULL,
-  pageToken = NULL)
+gce_list_zones(project, filter = NULL, maxResults = NULL, pageToken = NULL)
 }
 \arguments{
 \item{project}{Project ID for this request}

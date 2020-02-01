@@ -4,8 +4,16 @@
 \alias{docker_run}
 \title{Run a command in a new container on a host.}
 \usage{
-docker_run(host = localhost, image = NULL, cmd = NULL, name = NULL,
-  rm = FALSE, detach = FALSE, docker_opts = NULL, ...)
+docker_run(
+  host = localhost,
+  image = NULL,
+  cmd = NULL,
+  name = NULL,
+  rm = FALSE,
+  detach = FALSE,
+  docker_opts = NULL,
+  ...
+)
 }
 \arguments{
 \item{host}{An object representing the host where the container will be run.}

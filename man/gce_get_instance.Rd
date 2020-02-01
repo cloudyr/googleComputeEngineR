@@ -4,8 +4,11 @@
 \alias{gce_get_instance}
 \title{Returns the specified Instance resource.}
 \usage{
-gce_get_instance(instance, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_get_instance(
+  instance,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{instance}{Name of the instance resource}

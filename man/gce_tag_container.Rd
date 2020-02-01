@@ -4,8 +4,11 @@
 \alias{gce_tag_container}
 \title{Return a container tag for Google Container Registry}
 \usage{
-gce_tag_container(container_name, project = gce_get_global_project(),
-  container_url = "gcr.io")
+gce_tag_container(
+  container_name,
+  project = gce_get_global_project(),
+  container_url = "gcr.io"
+)
 }
 \arguments{
 \item{container_name}{A running docker container. Can't be set if \code{image_name} is too.}
@@ -27,7 +30,8 @@ A tag for use in Google Container Registry
 Return a container tag for Google Container Registry
 }
 \seealso{
-Other container registry functions: \code{\link{gce_pull_registry}},
-  \code{\link{gce_push_registry}}
+Other container registry functions: 
+\code{\link{gce_pull_registry}()},
+\code{\link{gce_push_registry}()}
 }
 \concept{container registry functions}

@@ -4,8 +4,13 @@
 \alias{gce_list_gpus}
 \title{Retrieves a list GPUs you can attach to an instance}
 \usage{
-gce_list_gpus(filter = NULL, maxResults = NULL, pageToken = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_list_gpus(
+  filter = NULL,
+  maxResults = NULL,
+  pageToken = NULL,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{filter}{Sets a filter expression for filtering listed resources, in the form filter={expression}}
@@ -28,7 +33,8 @@ To filter you need a single string in the form \code{field_name eq|ne string}
 \seealso{
 \href{https://cloud.google.com/compute/docs/gpus/#introduction}{GPUs on Compute Engine}
 
-Other GPU instances: \code{\link{gce_check_gpu}},
-  \code{\link{gce_vm_gpu}}
+Other GPU instances: 
+\code{\link{gce_check_gpu}()},
+\code{\link{gce_vm_gpu}()}
 }
 \concept{GPU instances}

@@ -16,7 +16,8 @@ Metadata object
 Metadata Object
 }
 \seealso{
-Other Metadata functions: \code{\link{gce_set_metadata}}
+Other Metadata functions: 
+\code{\link{gce_set_metadata}()}
 }
 \concept{Metadata functions}
 \keyword{internal}

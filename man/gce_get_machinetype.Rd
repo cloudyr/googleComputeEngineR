@@ -4,8 +4,11 @@
 \alias{gce_get_machinetype}
 \title{Returns the specified machine type.}
 \usage{
-gce_get_machinetype(machineType, project = gce_get_global_project(),
-  zone = gce_get_global_zone())
+gce_get_machinetype(
+  machineType,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{machineType}{Name of the machine type to return}

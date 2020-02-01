@@ -4,9 +4,15 @@
 \alias{gce_vm_cluster}
 \title{Make a VM cluster suitable for running parallel workloads}
 \usage{
-gce_vm_cluster(vm_prefix = "r-cluster-", cluster_size = 3,
-  docker_image = "rocker/r-parallel", ..., ssh_args = NULL,
-  project = gce_get_global_project(), zone = gce_get_global_zone())
+gce_vm_cluster(
+  vm_prefix = "r-cluster-",
+  cluster_size = 3,
+  docker_image = "rocker/r-parallel",
+  ...,
+  ssh_args = NULL,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
 }
 \arguments{
 \item{vm_prefix}{The prefix of the VMs you want to make. Will be appended the cluster number}
