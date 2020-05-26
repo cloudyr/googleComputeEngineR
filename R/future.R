@@ -4,7 +4,7 @@
 #' 
 #' @param vm_prefix The prefix of the VMs you want to make. Will be appended the cluster number
 #' @param cluster_size The number of VMs in your cluster
-#' @param docker_image The docker image the jobs on the cluster will run on. Recommend this is derived from \code{rocker/r-parallel}
+#' @param docker_image The docker image the jobs on the cluster will run on. Default NULL will use \code{rocker/r-parallel}
 #' @param ... Passed to \link{gce_vm_template}
 #' @param ssh_args A list of optional arguments that will be passed to \link{gce_ssh_setup}
 #' @param project The project to launch the cluster in
@@ -26,7 +26,7 @@
 #' }
 gce_vm_cluster <- function(vm_prefix = "r-cluster-",
                            cluster_size = 3,
-                           docker_image = "rocker/r-parallel",
+                           docker_image = NULL,
                            ...,
                            ssh_args = NULL,
                            project = gce_get_global_project(), 
@@ -50,7 +50,7 @@ gce_vm_cluster <- function(vm_prefix = "r-cluster-",
   
   # defaults
   dots$name <- NULL
-  dots$template <- "r-base"
+  dots$template <- "r-parallel"
   dots$dynamic_image <- docker_image
   dots$wait <- FALSE
   
