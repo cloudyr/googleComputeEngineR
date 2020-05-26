@@ -6,6 +6,7 @@
 * Add `gce_vm_deletion_protection` to help add or remove deletion protection for VMs
 * Support subnetworks (#154) and expose making your own networks via `gce_make_network`
 * Fix vectorised VM deletions (#144)
+* Add new template "r-parallel" (#161)
 
 # 0.3.0
 

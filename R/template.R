@@ -24,7 +24,8 @@
 #'   \item rstudio-shiny An RStudio server with Shiny also installed, proxied to /shiny
 #'   \item shiny A Shiny docker image
 #'   \item opencpu An OpenCPU docker image
-#'   \item r_base Latest version of R stable
+#'   \item r-base Latest version of R stable
+#'   \item r-parallel Image with future enabled for parallel workloads
 #'   \item dynamic Supply your own docker image within dynamic_image
 #'  }
 #'  
@@ -58,6 +59,7 @@ gce_vm_template <- function(template = c("rstudio",
                                          "shiny",
                                          "opencpu",
                                          "r-base",
+                                         "r-parallel",
                                          "dynamic",
                                          "rstudio-gpu", 
                                          "rstudio-shiny"),
@@ -156,6 +158,7 @@ template_tags <- function(template){
          "rstudio-shiny" = list(items = list("http-server","rstudio","shiny")),
          "shiny" = list(items = list("http-server","shiny")),
          "opencpu" = list(items = list("http-server","opencpu")),
+         "r-parallel" = list(items = list("r-parallel")),
          "r-base" = list(items = list("r-base"))
   )
 }

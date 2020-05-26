@@ -1,0 +1,32 @@
+#cloud-config
+
+users:
+- name: gcer
+  uid: 2000
+
+write_files:
+- path: /etc/gcer/startup.sh
+  permissions: 0755
+  owner: root
+  content: |
+%s
+- path: /etc/systemd/system/gcer.service
+  permissions: 0644
+  owner: root
+  content: |
+    [Unit]
+    Description=R Base
+    Requires=docker.service
+    After=docker.service
+
+    [Service]
+    Restart=always
+    Environment="HOME=/home/gcer"
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+    ExecStart=/etc/gcer/startup.sh
+    ExecStop=/usr/bin/docker stop r-parallel
+    ExecStopPost=/usr/bin/docker rm r-parallel
+
+runcmd:
+- systemctl daemon-reload
+- systemctl start gcer.service

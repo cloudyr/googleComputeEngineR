@@ -25,7 +25,8 @@ setup_shell_metadata <- function(dots,
       "rstudio-shiny" = "rocker/tidyverse",
       "shiny" = "rocker/shiny",
       "opencpu" = "opencpu/base",
-      "r-base" = "rocker/r-base"
+      "r-base" = "rocker/r-base",
+      "r-parallel" = "rocker/r-parallel"
     )
   }
   
