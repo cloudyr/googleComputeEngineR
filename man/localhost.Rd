@@ -4,7 +4,9 @@
 \name{localhost}
 \alias{localhost}
 \title{An object representing the current computer that R is running on.}
-\format{An object of class \code{localhost} (inherits from \code{host}) of length 0.}
+\format{
+An object of class \code{localhost} (inherits from \code{host}) of length 0.
+}
 \usage{
 localhost
 }

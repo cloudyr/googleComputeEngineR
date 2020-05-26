@@ -5,8 +5,8 @@
 \title{Create a template container VM}
 \usage{
 gce_vm_template(
-  template = c("rstudio", "shiny", "opencpu", "r-base", "dynamic", "rstudio-gpu",
-    "rstudio-shiny"),
+  template = c("rstudio", "shiny", "opencpu", "r-base", "r-parallel", "dynamic",
+    "rstudio-gpu", "rstudio-shiny"),
   username = NULL,
   password = NULL,
   dynamic_image = NULL,
@@ -54,7 +54,8 @@ Templates available are:
   \item rstudio-shiny An RStudio server with Shiny also installed, proxied to /shiny
   \item shiny A Shiny docker image
   \item opencpu An OpenCPU docker image
-  \item r_base Latest version of R stable
+  \item r-base Latest version of R stable
+  \item r-parallel Image with future enabled for parallel workloads
   \item dynamic Supply your own docker image within dynamic_image
  }
  
