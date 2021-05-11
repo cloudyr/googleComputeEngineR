@@ -89,6 +89,23 @@ test_that("We can get an external IP", {
   expect_equal(ip, "146.148.24.37")
 })
 
+test_that("We can suspend a VM", {
+  skip_on_cran()
+  
+  job <- gce_vm_suspend("markdev")
+  
+  expect_equal(job$kind, "compute#operation")
+  
+  gce_wait(job, wait = 10)
+  
+  cat("\nmarkdev VM suspended")
+  inst <- gce_get_instance("markdev")
+  
+  expect_equal(inst$status, "SUSPENDED")
+  
+  
+})
+
 
 test_that("We can stop a VM", {
   skip_on_cran()

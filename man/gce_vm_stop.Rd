@@ -2,9 +2,16 @@
 % Please edit documentation in R/vms.R
 \name{gce_vm_stop}
 \alias{gce_vm_stop}
+\alias{gce_vm_suspend}
 \title{Stops a running instance, shutting it down cleanly, and allows you to restart the instance at a later time.}
 \usage{
 gce_vm_stop(
+  instances,
+  project = gce_get_global_project(),
+  zone = gce_get_global_zone()
+)
+
+gce_vm_suspend(
   instances,
   project = gce_get_global_project(),
   zone = gce_get_global_zone()
