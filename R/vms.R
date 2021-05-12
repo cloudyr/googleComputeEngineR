@@ -584,6 +584,32 @@ gce_vm_suspend <- function(instances,
 }
 
 
+gce_vm_resume_one <- function(instance,
+                               project, 
+                               zone) {
+  
+  url <- 
+    sprintf("https://www..googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/resume",
+            project, zone, as.gce_instance_name(instance))
+  # compute.instances.stop
+  f <- gar_api_generator(url, 
+                         "POST",
+                         data_parse_function = function(x) x)
+  out <- f()
+  
+  as.zone_operation(out)
+}
+
+#' @export
+#' @rdname gce_vm_stop
+gce_vm_resume <- function(instances,
+                           project = gce_get_global_project(), 
+                           zone = gce_get_global_zone()){
+  
+  lapply(instances, gce_vm_resume_one, project = project, zone = zone)
+}
+
+
 #' Open browser to the serial console output for a VM
 #' 
 #' Saves a few clicks
