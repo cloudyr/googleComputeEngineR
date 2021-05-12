@@ -38,7 +38,6 @@ gce_make_network <- function(network = "default",
                              name = NULL,
                              subnetwork = NULL,
                              externalIP = NULL,
-                             reservedIp = NULL,
                              project = gce_get_global_project()){
   
   make_ac <- function(externalIP, name){

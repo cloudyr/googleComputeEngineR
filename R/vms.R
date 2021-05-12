@@ -563,7 +563,7 @@ gce_vm_suspend_one <- function(instance,
                                zone) {
   
   url <- 
-    sprintf("https://www..googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/suspend",
+    sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/suspend",
             project, zone, as.gce_instance_name(instance))
   # compute.instances.stop
   f <- gar_api_generator(url, 
@@ -589,7 +589,7 @@ gce_vm_resume_one <- function(instance,
                                zone) {
   
   url <- 
-    sprintf("https://www..googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/resume",
+    sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/resume",
             project, zone, as.gce_instance_name(instance))
   # compute.instances.stop
   f <- gar_api_generator(url, 

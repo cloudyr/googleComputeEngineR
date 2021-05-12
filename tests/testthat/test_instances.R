@@ -107,6 +107,24 @@ test_that("We can suspend a VM", {
 })
 
 
+test_that("We can resume a VM", {
+  skip_on_cran()
+  
+  job <- gce_vm_resume("markdev")
+  
+  expect_equal(job$kind, "compute#operation")
+  
+  gce_wait(job, wait = 10)
+  
+  cat("\nmarkdev VM resumed")
+  inst <- gce_get_instance("markdev")
+  
+  expect_equal(inst$status, "RUNNING")
+  
+  
+})
+
+
 test_that("We can stop a VM", {
   skip_on_cran()
 

@@ -43,7 +43,7 @@ gce_vm_deletion_protection <- function(instance,
     f <- gar_api_generator("https://compute.googleapis.com/compute/v1/",
                            "GET",
                            path_args = list(
-                             projects = projectId,
+                             projects = project,
                              zones = zone,
                              instances = as.gce_instance_name(instance)
                            ),
@@ -54,7 +54,7 @@ gce_vm_deletion_protection <- function(instance,
     f <- gar_api_generator("https://compute.googleapis.com/compute/v1/",
                            "POST",
                            path_args = list(
-                             projects = projectId,
+                             projects = project,
                              zones = zone,
                              instances = as.gce_instance_name(instance),
                              setDeletionProtection = ""
