@@ -2,17 +2,34 @@
 #' @noRd
 check_vm_exists <- function(name, project, zone){
   
-  stopped <- gce_list_instances("status eq TERMINATED", project = project, zone = zone)
+  # for stopped VMs
+  for (status in c("TERMINATED", "STOPPING")) {
+    stopped <- gce_list_instances(paste0("status eq ", status), 
+                                  project = project, zone = zone)
+    
+    if (name %in% stopped$items$name){
+      myMessage("VM previously created but not running, starting VM", level = 3)
+      job <- gce_vm_start(name, project = project, zone = zone)
+      gce_wait(job[[1]])
+      return(gce_get_instance(name, project, zone))
+    }
+  }
   
-  if(name %in% stopped$items$name){
-    myMessage("VM previously created but not running, starting VM", level = 3)
-    job <- gce_vm_start(name, project = project, zone = zone)
-    gce_wait(job[[1]])
-    return(gce_get_instance(name, project, zone))
+  # for Suspended
+  for (status in c("SUSPENDING", "SUSPENDED")) {
+    stopped <- gce_list_instances(paste0("status eq ", status), 
+                                  project = project, zone = zone)
+    
+    if (name %in% stopped$items$name){
+      myMessage("VM previously created but not suspended, resuming VM", level = 3)
+      job <- gce_vm_resume(name, project = project, zone = zone)
+      gce_wait(job[[1]])
+      return(gce_get_instance(name, project, zone))
+    }  
   }
   
   NULL
-
+  
 }
 
 
@@ -62,7 +79,7 @@ gce_list_instances <- function(filter = NULL,
                                pageToken = NULL,
                                project = gce_get_global_project(), 
                                zone = gce_get_global_zone()) {
-
+  
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
                  project, zone)
   
@@ -75,7 +92,7 @@ gce_list_instances <- function(filter = NULL,
                pageToken = pageToken)
   pars <- rmNullObs(pars)
   
-
+  
   # compute.instances.list
   f <- gar_api_generator(url, 
                          "GET", 
