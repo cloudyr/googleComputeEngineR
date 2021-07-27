@@ -6,7 +6,7 @@
 \usage{
 gce_vm_template(
   template = c("rstudio", "shiny", "opencpu", "r-base", "r-parallel", "dynamic",
-    "rstudio-gpu", "rstudio-shiny"),
+    "rstudio-gpu", "rstudio-shiny", "rstudio-noauth"),
   username = NULL,
   password = NULL,
   dynamic_image = NULL,
