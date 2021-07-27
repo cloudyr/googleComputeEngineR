@@ -294,18 +294,13 @@ gce_vm_create <- function(name,
     )
   }
 
-  
-  if(!use_beta){
-    url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
-                   project, zone)
-    
-
-  } else {
+  gcp_api_version = ifelse(use_beta, "beta", "v1")
+  if(use_beta){
     warning("This is using the beta version of the Google Compute Engine API and may not work in the future.")
-    url <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances", 
-                   project, zone)
   }
-  
+  url <- sprintf("https://www.googleapis.com/compute/%s/projects/%s/zones/%s/instances", 
+                 gcp_api_version, project, zone)
+ 
   
   if(is.null(predefined_type) && !assertthat::is.string(predefined_type)){
     if(any(is.null(cpus), is.null(memory))){
