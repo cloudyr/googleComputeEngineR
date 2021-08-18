@@ -21,7 +21,7 @@ setup_shell_metadata <- function(dots,
   } else {
     the_image <- switch(template,
       "rstudio" = "rocker/tidyverse",
-      "rstudio-gpu" = "rocker/ml-gpu",
+      "rstudio-gpu" = "rocker/ml",
       "rstudio-shiny" = "rocker/tidyverse",
       "shiny" = "rocker/shiny",
       "opencpu" = "opencpu/base",
