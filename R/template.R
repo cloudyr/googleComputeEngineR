@@ -93,7 +93,10 @@ gce_vm_template <- function(template = c("rstudio",
     ss_file         <- get_template_file(template, "startupscripts")
     startup_script  <- readChar(ss_file, nchars = file.info(ss_file)$size)
     cloud_init_file <- NULL
-    image_family    <- "tf-latest-cu92"
+    # respect user choice if specifying it
+    if(image_family != "cos-stable"){
+      image_family    <- "tf2-ent-latest-gpu"
+    }
     image_project   <- "deeplearning-platform-release"
   } else {
     # creates cloud-config file that will call the startup script
