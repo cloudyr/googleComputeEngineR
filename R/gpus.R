@@ -111,7 +111,7 @@ gce_vm_gpu <- function(..., return_dots = FALSE){
   }
   
   if(is.null(dots$image_family)){
-    dots$image_family <- "tf-latest-cu92"
+    dots$image_family <- "tf2-ent-latest-gpu"
   }
   
   if(is.null(dots$predefined_type)){

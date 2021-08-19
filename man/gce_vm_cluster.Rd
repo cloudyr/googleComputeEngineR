@@ -7,7 +7,7 @@
 gce_vm_cluster(
   vm_prefix = "r-cluster-",
   cluster_size = 3,
-  docker_image = "rocker/r-parallel",
+  docker_image = NULL,
   ...,
   ssh_args = NULL,
   project = gce_get_global_project(),
@@ -19,7 +19,7 @@ gce_vm_cluster(
 
 \item{cluster_size}{The number of VMs in your cluster}
 
-\item{docker_image}{The docker image the jobs on the cluster will run on. Recommend this is derived from \code{rocker/r-parallel}}
+\item{docker_image}{The docker image the jobs on the cluster will run on. Default NULL will use \code{rocker/r-parallel}}
 
 \item{...}{Passed to \link{gce_vm_template}}
 
