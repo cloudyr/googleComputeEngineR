@@ -76,7 +76,7 @@ gce_list_gpus <- function(filter = NULL,
 #'   \item \code{acceleratorType: "nvidia-tesla-p4"}
 #'   \item \code{scheduling: list(onHostMaintenance = "TERMINATE", automaticRestart = TRUE)}
 #'   \item \code{image_project: "deeplearning-platform-release"}
-#'   \item \code{image_family: "tf-latest-cu92"}
+#'   \item \code{image_family: "tf2-ent-latest-gpu"}
 #'   \item \code{predefined_type: "n1-standard-8"}
 #'   \item \code{metadata: "install-nvidia-driver" = "True"}
 #'  }
@@ -111,7 +111,7 @@ gce_vm_gpu <- function(..., return_dots = FALSE){
   }
   
   if(is.null(dots$image_family)){
-    dots$image_family <- "tf-latest-cu92"
+    dots$image_family <- "tf2-ent-latest-gpu"
   }
   
   if(is.null(dots$predefined_type)){

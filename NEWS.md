@@ -7,6 +7,7 @@
 * Support subnetworks (#154) and expose making your own networks via `gce_make_network`
 * Fix vectorised VM deletions (#144)
 * Add new template "r-parallel" (#161)
+* Update rocker/ml-gpu image to rocker/ml (#179)
 
 # 0.3.0
 

@@ -25,7 +25,7 @@ If not specified, this function will enter defaults to get a GPU instance up and
   \item \code{acceleratorType: "nvidia-tesla-p4"}
   \item \code{scheduling: list(onHostMaintenance = "TERMINATE", automaticRestart = TRUE)}
   \item \code{image_project: "deeplearning-platform-release"}
-  \item \code{image_family: "tf-latest-cu92"}
+  \item \code{image_family: "tf2-ent-latest-gpu"}
   \item \code{predefined_type: "n1-standard-8"}
   \item \code{metadata: "install-nvidia-driver" = "True"}
  }
