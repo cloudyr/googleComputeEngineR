@@ -10,15 +10,15 @@
 gce_get_external_ip <- function(instance, 
                                 verbose = TRUE,
                                 ...){
-
+  
   ins <- as.gce_instance(instance, ...)
-
+  
   ip <- ins$networkInterfaces$accessConfigs[[1]]$natIP
   
   if(verbose){
     myMessage("External IP for instance ", as.gce_instance_name(ins), " : ", ip, level = 3)
   }
-
+  
   invisible(ip)
 }
 
@@ -135,3 +135,51 @@ gce_list_networks <- function(filter = NULL,
   f()
   
 }
+
+
+#' Deletes an Access Config, Typically for an External IP Address.
+#' 
+#' 
+#' @seealso \href{https://developers.google.com/compute/docs/reference/latest/}{Google Documentation}
+#' 
+#' @details 
+#' Authentication scopes used by this function are:
+#' \itemize{
+#'   \item https://www.googleapis.com/auth/cloud-platform
+#' \item https://www.googleapis.com/auth/compute
+#' }
+#' 
+#' 
+#' @param instance Name of the instance resource, or an instance object e.g. from \link{gce_get_instance}
+#' @param access_config The name of the access config to delete.
+#' @param network_interface The name of the network interface.
+#' @param project Project ID for this request, default as set by \link{gce_get_global_project}
+#' @param zone The name of the zone for this request, default as set by \link{gce_get_global_zone}
+#' 
+#' @return A list of operation objects with pending status
+#' 
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+gce_delete_access_config <- function(
+  instance,
+  access_config = "external-nat",
+  network_interface = "nic0",
+  project = gce_get_global_project(), 
+  zone = gce_get_global_zone()){
+  
+  url <- sprintf(
+    "https://compute.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s/deleteAccessConfig", 
+    project, zone, as.gce_instance_name(instance))
+  
+  pars <- list(accessConfig = access_config,
+               networkInterface = network_interface)
+  pars <- rmNullObs(pars)
+  
+  # compute.instances.deleteAccessConfig
+  f <- gar_api_generator(url, 
+                         "POST", 
+                         pars_args = pars, 
+                         data_parse_function = function(x) x)
+  f()
+}
+
