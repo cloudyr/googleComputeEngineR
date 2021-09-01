@@ -77,6 +77,7 @@ gce_vm <- function(name,
     is.string(zone),
     is.flag(open_webports)
   )
+  validate_zone(zone)
   
   existing_vm <- check_vm_exists(name, project = project, zone = zone)
   

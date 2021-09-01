@@ -131,6 +131,7 @@ gce_get_instance <- function(instance,
                              project = gce_get_global_project(), 
                              zone = gce_get_global_zone()) {
   
+  validate_zone(zone)
   url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances/%s", 
                  project, zone, as.gce_instance_name(instance))
   # compute.instances.get
