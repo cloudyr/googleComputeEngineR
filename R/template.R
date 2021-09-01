@@ -106,8 +106,7 @@ gce_vm_template <- function(template = c("rstudio",
     image_project   <-  "cos-cloud"
   }
 
-  if (grepl("gcr.io/", dynamic_image) && 
-      grepl("^http(s|)://", dynamic_image)) {
+  if (grepl("^http(s|)://gcr.io/", dynamic_image)) {
     dynamic_image = sub("http(s|)://", "", dynamic_image)
   }
   # adds metadata startup script will read
