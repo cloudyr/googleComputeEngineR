@@ -77,7 +77,9 @@ gce_vm <- function(name,
     is.string(zone),
     is.flag(open_webports)
   )
+  
   validate_zone(zone)
+  validate_vm_name(name)
   
   existing_vm <- check_vm_exists(name, project = project, zone = zone)
   
@@ -124,6 +126,23 @@ gce_vm <- function(name,
   myMessage(name, " VM running", level = 3)
   vm
 }
+
+# using the partial list of rules at
+# https://cloud.google.com/compute/docs/labeling-resources 
+# and the conventions required in the GUI.
+validate_vm_name = function(name) {
+  ss = strsplit(name, "")[[1]]
+  assertthat::assert_that(
+    is.character(name),
+    length(name) == 1,
+    nchar(name) > 0,
+    nchar(name) <= 63,
+    !grepl("-$", name),
+    !grepl("^[[:lower:]]", name),
+    all(grepl("[[:lower:]]|-|\\d", ss))
+  )
+}
+
 
 #' Deletes the specified Instance resource.
 #' 
@@ -274,6 +293,7 @@ gce_vm_create <- function(name,
     is.string(name),
     is.gce_networkInterface(network)
   )
+  validate_vm_name(name)
   
   ## missing only works within function its called from
   if(missing(predefined_type)){
