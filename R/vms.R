@@ -138,7 +138,7 @@ validate_vm_name = function(name) {
     nchar(name) > 0,
     nchar(name) <= 63,
     !grepl("-$", name),
-    !grepl("^[[:lower:]]", name),
+    grepl("^[[:lower:]]", name),
     all(grepl("[[:lower:]]|-|\\d", ss))
   )
 }
