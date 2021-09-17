@@ -78,6 +78,15 @@ gce_list_zones <- function(project,
   
 }
 
+validate_zone = function(zone) {
+  x = strsplit(zone, split = "-")[[1]]
+  stopifnot(!any(grepl("/", x)))
+  stopifnot(length(x) == 3,
+            nchar(x[3]) == 1)
+  ends_with_number = substr(x[2], nchar(x[2]), nchar(x[2]))
+  stopifnot(!is.na(as.numeric(ends_with_number)))
+  zone
+}
 
 #' Set global zone name
 #'
@@ -100,7 +109,7 @@ gce_global_zone <- function(zone){
   
   stopifnot(inherits(zone, "character"),
             length(zone) == 1)
-  
+  validate_zone(zone)
   .gce_env$zone <- zone
   message("Set default zone name to '", zone,"'")
   return(invisible(.gce_env$zone))
@@ -125,6 +134,5 @@ gce_get_global_zone <- function(){
          Set it via gce_global_zone")
   }
   
-  .gce_env$zone
-  
+  validate_zone(.gce_env$zone)
   }

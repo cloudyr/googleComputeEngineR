@@ -78,6 +78,9 @@ gce_vm <- function(name,
     is.flag(open_webports)
   )
   
+  validate_zone(zone)
+  validate_vm_name(name)
+  
   existing_vm <- check_vm_exists(name, project = project, zone = zone)
   
   if(is.gce_instance(existing_vm)){
@@ -123,6 +126,23 @@ gce_vm <- function(name,
   myMessage(name, " VM running", level = 3)
   vm
 }
+
+# using the partial list of rules at
+# https://cloud.google.com/compute/docs/labeling-resources 
+# and the conventions required in the GUI.
+validate_vm_name = function(name) {
+  ss = strsplit(name, "")[[1]]
+  assertthat::assert_that(
+    is.character(name),
+    length(name) == 1,
+    nchar(name) > 0,
+    nchar(name) <= 63,
+    !grepl("-$", name),
+    grepl("^[[:lower:]]", name),
+    all(grepl("[[:lower:]]|-|\\d", ss))
+  )
+}
+
 
 #' Deletes the specified Instance resource.
 #' 
@@ -252,7 +272,7 @@ gce_vm_create <- function(name,
                           memory = NULL,
                           image = "",
                           disk_source = NULL,
-                          network = gce_make_network("default"), 
+                          network = gce_make_network("default", project = project), 
                           externalIP = NULL,
                           canIpForward = NULL, 
                           description = NULL, 
@@ -273,6 +293,7 @@ gce_vm_create <- function(name,
     is.string(name),
     is.gce_networkInterface(network)
   )
+  validate_vm_name(name)
   
   ## missing only works within function its called from
   if(missing(predefined_type)){
@@ -294,18 +315,13 @@ gce_vm_create <- function(name,
     )
   }
 
-  
-  if(!use_beta){
-    url <- sprintf("https://www.googleapis.com/compute/v1/projects/%s/zones/%s/instances", 
-                   project, zone)
-    
-
-  } else {
+  gcp_api_version = ifelse(use_beta, "beta", "v1")
+  if(use_beta){
     warning("This is using the beta version of the Google Compute Engine API and may not work in the future.")
-    url <- sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances", 
-                   project, zone)
   }
-  
+  url <- sprintf("https://www.googleapis.com/compute/%s/projects/%s/zones/%s/instances", 
+                 gcp_api_version, project, zone)
+ 
   
   if(is.null(predefined_type) && !assertthat::is.string(predefined_type)){
     if(any(is.null(cpus), is.null(memory))){
@@ -557,6 +573,58 @@ gce_vm_stop_one <- function(instance,
   
   as.zone_operation(out)
 }
+
+gce_vm_suspend_one <- function(instance,
+                               project, 
+                               zone) {
+  
+  url <- 
+    sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/suspend",
+            project, zone, as.gce_instance_name(instance))
+  # compute.instances.stop
+  f <- gar_api_generator(url, 
+                         "POST",
+                         data_parse_function = function(x) x)
+  out <- f()
+  
+  as.zone_operation(out)
+}
+
+#' @export
+#' @rdname gce_vm_stop
+gce_vm_suspend <- function(instances,
+                        project = gce_get_global_project(), 
+                        zone = gce_get_global_zone()){
+  
+  lapply(instances, gce_vm_suspend_one, project = project, zone = zone)
+}
+
+
+gce_vm_resume_one <- function(instance,
+                               project, 
+                               zone) {
+  
+  url <- 
+    sprintf("https://www.googleapis.com/compute/beta/projects/%s/zones/%s/instances/%s/resume",
+            project, zone, as.gce_instance_name(instance))
+  # compute.instances.stop
+  f <- gar_api_generator(url, 
+                         "POST",
+                         data_parse_function = function(x) x)
+  out <- f()
+  
+  as.zone_operation(out)
+}
+
+#' @export
+#' @rdname gce_vm_stop
+gce_vm_resume <- function(instances,
+                           project = gce_get_global_project(), 
+                           zone = gce_get_global_zone()){
+  
+  lapply(instances, gce_vm_resume_one, project = project, zone = zone)
+}
+
 
 #' Open browser to the serial console output for a VM
 #' 

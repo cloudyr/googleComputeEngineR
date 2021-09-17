@@ -158,7 +158,8 @@ gce_make_firewall_webports <- function(project = gce_get_global_project()){
   } else {
     myMessage("Creating http firewall rule", level = 3)
     ## make the firewall
-    op <- gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80)
+    op <- gce_make_firewall_rule("allow-http", protocol = "tcp", ports = 80,
+                                 project = project)
     out1 <- gce_wait(op)
   }
   

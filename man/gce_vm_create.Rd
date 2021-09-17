@@ -13,7 +13,7 @@ gce_vm_create(
   memory = NULL,
   image = "",
   disk_source = NULL,
-  network = gce_make_network("default"),
+  network = gce_make_network("default", project = project),
   externalIP = NULL,
   canIpForward = NULL,
   description = NULL,
