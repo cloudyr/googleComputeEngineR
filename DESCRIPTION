@@ -20,6 +20,7 @@ Depends:
     R (>= 3.3.0)
 Imports:
     assertthat,
+    cli,
     gargle,
     future (>= 1.2.0),
     googleAuthR (>= 0.7.0),

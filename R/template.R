@@ -87,6 +87,12 @@ gce_vm_template <- function(template = c("rstudio",
     dots$project <- gce_get_global_project()
   }
   
+  if(is.null(dots$predefined_type)){
+    myMessage("Starting template VM with type n1-standard-1 - see gce_list_machinetype() for other options and specify via argument 'predefined_type'", level = 3)
+    dots$predefined_type <- "n1-standard-1"
+  }
+  
+  
   # hack for gpu until nvidia-docker is supported on cos-cloud images
   if(grepl("gpu$", template)){
     # setup GPU specific options
