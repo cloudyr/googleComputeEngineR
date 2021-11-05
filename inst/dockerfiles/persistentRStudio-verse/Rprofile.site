@@ -1,0 +1,11 @@
+.First <- function(){
+  message("\n# Welcome to RStudio Server on Google Compute Engine! Today is ", date(), "\n")
+  
+  googleCloudStorageR::gcs_first()
+}
+
+
+.Last <- function(){
+  googleCloudStorageR::gcs_last()
+  message("\nGoodbye at ", date(), "\n")
+}
