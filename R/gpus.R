@@ -98,6 +98,10 @@ gce_vm_gpu <- function(..., return_dots = FALSE){
     )
   }
   
+  if(!is.null(dots$template)){
+    warning("Use template argument within gce_vm calling a GPU template (e.g. rstudio-gpu) - its not supported in gce_vm_gpu().", call. = FALSE)
+  }
+  
   if(is.null(dots$acceleratorCount)){
     dots$acceleratorCount <- 1
   }
