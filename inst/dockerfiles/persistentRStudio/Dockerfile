@@ -14,6 +14,7 @@ RUN wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key ad
 RUN apt-get -qqy update && apt-get install -qqy \
     openssh-client \
     qpdf \
+    libsodium-dev \
     gcsfuse
         
 ## Install packages from CRAN
