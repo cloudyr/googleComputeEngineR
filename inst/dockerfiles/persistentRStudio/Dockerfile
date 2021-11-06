@@ -25,11 +25,11 @@ RUN install2.r --error \
     bigQueryR \ 
     googleCloudRunner \
     zip \
-## install Github packages
+    ## install Github packages
     && installGithub.r cloudyr/googleCloudStorageR \
                        cloudyr/googleComputeEngineR \
                        MarkEdmondson1234/googleCloudRunner \
-## clean up
+    ## clean up
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 COPY Rprofile.site /usr/local/lib/R/etc/Rprofile.site
