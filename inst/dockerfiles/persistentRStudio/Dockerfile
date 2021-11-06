@@ -1,14 +1,16 @@
 FROM rocker/tidyverse
 MAINTAINER Mark Edmondson (r@sunholo.com)
 
-# install gcsfuse
-ENV GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
-RUN echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | \
-    sudo tee /etc/apt/sources.list.d/gcsfuse.list \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
-    sudo apt-key add -
+# install gcsfuse deps
+RUN apt-get update && apt-get install -y gnupg lsb-release
+RUN lsb_release -c -s > /tmp/lsb_release
 
+RUN GCSFUSE_REPO=$(cat /tmp/lsb_release); \
+    echo "deb http://packages.cloud.google.com/apt gcsfuse-$GCSFUSE_REPO main" | \
+    tee /etc/apt/sources.list.d/gcsfuse.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
+# install system deps
 RUN apt-get -qqy update && apt-get install -qqy \
     openssh-client \
     qpdf \
