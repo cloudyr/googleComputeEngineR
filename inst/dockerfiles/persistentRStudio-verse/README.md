@@ -12,7 +12,7 @@ A combination of the above should be used for what best fits your workflow.
 
 ## Using base VM
 
-These files will dissappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods.
+These files will disappear if you delete the VM, so it is recommend if they are important to write them somewhere else as well using say the below two methods.
 
 If relying on this, you will probably want to create a larger VM disk than the default 10GBs using the `disk_size_gb` argument:
 

@@ -123,7 +123,7 @@ gce_vm <- function(name,
     gce_make_firewall_webports(project = project)
   }
   
-  myMessage(name, " VM running", level = 3)
+  myMessage(name, "VM running", level = 3)
   vm
 }
 
