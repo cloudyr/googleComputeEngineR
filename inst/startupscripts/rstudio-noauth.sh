@@ -16,4 +16,5 @@ docker run -p 8787:8787 \
            -e ROOT=TRUE \
            -e USER=rstudio -e DISABLE_AUTH=true \
            --name=rstudio \
+           --privileged=true \
            $GCER_DOCKER_IMAGE
