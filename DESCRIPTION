@@ -36,4 +36,4 @@ Suggests:
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2.9000
+RoxygenNote: 7.1.1
