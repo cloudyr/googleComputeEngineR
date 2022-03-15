@@ -11,7 +11,7 @@ GCER_DOCKER_IMAGE=$(curl http://metadata.google.internal/computeMetadata/v1/inst
 
 echo "Docker image: $GCER_DOCKER_IMAGE"
 
-if [ -f /home/gcer ];
+if [ -d /home/gcer ];
 then
   chmod 775 /home/gcer
   vol_code="-v /home/gcer:/home/gcer"
