@@ -16,6 +16,11 @@ then
   chmod 775 /home/gcer
   vol_code="-v /home/gcer:/home/gcer"
 fi
+# Need to mount in / because of filesystem noexec
+# https://cloud.google.com/container-optimized-os/docs/concepts/security
+mkdir -p /R
+vol_code="${vol_code} -v /R:/R"
+
 # as per https://www.rocker-project.org/use/managing_users/
 docker run -p 8787:8787 \
            -e ROOT=TRUE \
