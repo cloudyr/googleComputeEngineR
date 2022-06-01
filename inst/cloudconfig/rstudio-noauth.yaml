@@ -22,7 +22,7 @@ write_files:
     [Service]
     Restart=always
     Environment="HOME=/home/gcer"
-    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
+    ExecStartPre=/usr/bin/docker-credential-gcr configure-docker --registries=asia.gcr.io,eu.gcr.io,gcr.io,marketplace.gcr.io,us.gcr.io,docker.pkg.dev,us-docker.pkg.dev,eu-docker.pkg.dev,asia-docker.pkg.dev
     ExecStart=/etc/gcer/startup.sh
     ExecStop=/usr/bin/docker stop rstudio
     ExecStopPost=/usr/bin/docker rm rstudio
