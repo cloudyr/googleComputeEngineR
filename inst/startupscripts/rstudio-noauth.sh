@@ -18,7 +18,8 @@ then
 fi
 # Need to mount in / because of filesystem noexec
 # https://cloud.google.com/container-optimized-os/docs/concepts/security
-mkdir -p /R
+mkdir -p /R/library
+chown gcer:gcer -R /R
 vol_code="${vol_code} -v /R:/R"
 
 # as per https://www.rocker-project.org/use/managing_users/
