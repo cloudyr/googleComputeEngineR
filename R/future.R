@@ -108,10 +108,10 @@ gce_vm_cluster <- function(vm_prefix = "r-cluster-",
 #' @param rscript The Rscript command to run on the cluster
 #' @param rscript_args Arguments to the RScript
 #' @param install_future Whether to check if future is installed first (not needed if using docker derived from rocker/r-parallel which is recommended)
-#' @param ... Other arguments passed to \link[future]{makeClusterPSOCK}
+#' @param ... Other arguments passed to \link[parallelly]{makeClusterPSOCK}
 #' @param verbose How much feedback to show
 #' 
-#' @importFrom future makeClusterPSOCK
+#' @importFrom parallelly makeClusterPSOCK
 #' @author Henrik Bengtsson \email{henrikb@@braju.com}
 #' @export
 makeDockerClusterPSOCK <- function(workers, 
@@ -136,7 +136,7 @@ makeDockerClusterPSOCK <- function(workers,
 
 #' Create a future cluster for GCE objects
 #' 
-#' S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
+#' S3 method for \code{\link[parallelly:as.cluster]{as.cluster}()} in the \pkg{future} package.
 #' 
 #' @details 
 #' 
@@ -160,7 +160,7 @@ makeDockerClusterPSOCK <- function(workers,
 #' print(x)
 #' }}
 #'
-#' @importFrom future as.cluster
+#' @importFrom parallelly as.cluster
 #' @export
 as.cluster.gce_instance <- function(x, 
                                     project = gce_get_global_project(), 

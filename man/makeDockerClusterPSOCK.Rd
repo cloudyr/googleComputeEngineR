@@ -25,7 +25,7 @@ makeDockerClusterPSOCK(
 
 \item{install_future}{Whether to check if future is installed first (not needed if using docker derived from rocker/r-parallel which is recommended)}
 
-\item{...}{Other arguments passed to \link[future]{makeClusterPSOCK}}
+\item{...}{Other arguments passed to \link[parallelly]{makeClusterPSOCK}}
 
 \item{verbose}{How much feedback to show}
 }
