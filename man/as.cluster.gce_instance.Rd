@@ -30,7 +30,7 @@
 A \code{cluster} object.
 }
 \description{
-S3 method for \code{\link[future:as.cluster]{as.cluster}()} in the \pkg{future} package.
+S3 method for \code{\link[parallelly:as.cluster]{as.cluster}()} in the \pkg{future} package.
 }
 \details{
 Only works for r-base containers created via \code{gce_vm_template("r-base")} or for 
